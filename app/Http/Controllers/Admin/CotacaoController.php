@@ -236,9 +236,10 @@ class CotacaoController extends Controller
 
     public function montarValoresFormularioAcomodacao(Request $request)
     {
+        
         $cot = Cotacao::where('cliente_id',$request->cliente_id)->first();
         /** Cliente Ja Possui Cotacao??? */    
-       
+        $chaves = [];
         if(!$cot) {
             $cotacao = new Cotacao();
             $cotacao->cliente_id = $request->cliente_id;
@@ -247,7 +248,7 @@ class CotacaoController extends Controller
             $cotacao->corretora_id = auth()->user()->corretora_id;
            
             $cotacao->save();
-            $faixas = $request->faixas[0];
+            $faixas = $request->faixas;
             foreach($faixas as $k => $v) {
                 if($v != 0) {
                     $orcamentoFaixaEtaria = new CotacaoFaixaEtaria();
@@ -258,7 +259,21 @@ class CotacaoController extends Controller
                     $chaves[] = $k;
                 } 
             }
+            
             $cot = $cotacao;
+            $valores = DB::table("tabelas")
+            ->selectRaw("SUM((valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria LIMIT 1))) AS total")
+            ->selectRaw("(SELECT id FROM acomodacao WHERE tabelas.modelo LIKE acomodacao.nome) AS id_acomodacao")
+            ->selectRaw("modelo")
+            ->selectRaw("(SELECT nome FROM planos WHERE tabelas.plano_id = planos.id) AS plano")
+            ->selectRaw("if(coparticipacao = 0,'Sem Coparticipacao','Com Coparticipacao') AS coparticipacao")
+            ->selectRaw("if(odonto = 0,'Sem Odonto','Com Odonto') AS odonto")
+            ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS operadora")
+            ->whereRaw("cidade_id = ".$request->cidade." AND operadora_id = ".$request->operadora." AND administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND plano_id = ".$request->plano." AND faixa_etaria IN(".implode(",",$chaves).")")
+            
+            ->groupBy("modelo")
+            ->get();
+            
         } else {
             
             $cot->update($request->all());
@@ -275,10 +290,7 @@ class CotacaoController extends Controller
                 } 
             }
             
-        }
-
-
-        $valores = DB::table("tabelas")
+            $valores = DB::table("tabelas")
             ->selectRaw("SUM((valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria LIMIT 1))) AS total")
             ->selectRaw("(SELECT id FROM acomodacao WHERE tabelas.modelo LIKE acomodacao.nome) AS id_acomodacao")
             ->selectRaw("modelo")
@@ -286,16 +298,22 @@ class CotacaoController extends Controller
             ->selectRaw("if(coparticipacao = 0,'Sem Coparticipacao','Com Coparticipacao') AS coparticipacao")
             ->selectRaw("if(odonto = 0,'Sem Odonto','Com Odonto') AS odonto")
             ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS operadora")
-            ->whereRaw("cidade_id = ".$request->cidade." AND operadora_id = ".$request->operadora." AND administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND plano_id = ".$request->plano)
-            ->whereIn("faixa_etaria",array_values($chaves))
+            ->whereRaw("cidade_id = ".$request->cidade." AND operadora_id = ".$request->operadora." AND administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND plano_id = ".$request->plano." AND faixa_etaria IN(".implode(",",$chaves).")")
+            
             ->groupBy("modelo")
             ->get();
+            
+        }
+        
+        $orcamentoFaixaEtaria = CotacaoFaixaEtaria::where("cotacao_id",$cot->id)->delete();
+        $cot->delete();
            
             
            
         return view("admin.pages.cotacao.acomodacao",[
             "valores" => $valores
         ]);
+
     }
 
 

@@ -10,5 +10,8 @@ class Tarefa extends Model
     use HasFactory;
     protected $table = "tarefas";
     protected $fillable = ["cliente_id","data","title","descricao"];
-    
+        
+
+
+
 }

@@ -4,14 +4,29 @@
 
 @section('content_header')
     <div class="row">
-        
-        <div class="col">
-            <h1>
-                Clientes <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning">
-                    <i class="fas fa-plus"></i>
-                </a>
-            </h1>     
-        </div>
+        <h1>Clientes <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning"><i class="fas fa-plus"></i></a></h1>    
+        <div class="btn-group-vertical ml-auto dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar</button>
+                <ul class="dropdown-menu">
+                    @if(count($etiquetas) >= 1)
+                        @foreach($etiquetas as $et)
+                            <li>
+                                <a class="dropdown-item etiquetas" href="#" data-etiqueta="{{$et->id}}">
+                                    <div style="display:flex;align-items: center;">
+                                        <div style="width:20px;height:20px;border-radius:50%;background-color:{{$et->cor}}"></div> 
+                                        &nbsp;{{$et->nome}}
+                                    </div>    
+                                </a>
+                            </li>
+                        
+                        @endforeach
+                    @endif
+                    <div class="dropdown-divider"></div>
+                    <li class="text-center">
+                        <a class="dropdown-item listar-todos" href="#" style="color:black;">Listar Todos</a>
+                    </li>
+                </ul>    
+            </div>
        
     </div>
     
@@ -24,11 +39,11 @@
                 @foreach($clientes as $c)
                     <div style="border:1px solid black;display:flex;margin-bottom:5px;justify-content:space-between;padding:5px 0;box-sizing: border-box;align-items: center;">
                         <div style="flex-basis:3%;justify-content: flex-end;margin-left:5px;">
-                            <div style="width:20px;height:20px;border-radius:50%;background-color:{{$c->cor}}"></div>
+                            <div class="status" data-toggle="modal" data-target="#alterarModal" data-id="{{$c->etiqueta_id}}" data-cliente="{{$c->id}}" style="width:20px;height:20px;border-radius:50%;background-color:{{$c->cor}}"></div>
                         </div>
                     
                         <div style="flex-basis:25%;">
-                            <div>{{$c->nome}}</div>
+                            <div><b>{{$c->nome}}</b></div>
                             <div>{{$c->email}}</div>
                             <div style="display:flex;">
                                 <span>{{date('d/m/Y',strtotime($c->created_at))}}</span>
@@ -47,8 +62,8 @@
                             </div>
                         </div>
                         <div style="flex-basis:15%;">
-                            <div>{{$c->quantidade}}</div>
-                            <div>{{$c->pessoa_fisica == 1 ? "PF" : "PJ"}}</div>
+                            <div>Vidas {{$c->quantidade}}</div>
+                            <div>{{$c->pessoa_fisica == 1 ? "Pessoa Física" : "Pessoa Jurídico"}}</div>
                             <div>{{$c->nome_etiqueta}}</div>
                         </div>
                         <div style="flex-basis:20%;justify-content: space-between;display:flex;flex-direction: column;">
@@ -91,7 +106,36 @@
     
    
     </div>
-
+    <div class="modal fade" id="alterarModal" tabindex="-1" aria-labelledby="alterarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alterarModalLabel">Mudar Status</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{route('clientes.mudarStatus')}}" method="POST" name="alterar_valor" id="alterar_valor">
+                                @csrf    
+                                <input type="hidden" name="id" id="id">
+                                <input type="hidden" name="cliente" id="cliente">
+                                @foreach($etiquetas as $etique)
+                                    <div class="d-flex align-items-center justify-content-between mb-2 border-bottom" style="width: 60%;">
+                                        <div><input type="radio" value="{{$etique->id}}" name="status" id="status_{{$etique->id}}">{{$etique->nome}}</input></div>
+                                        <div style="display:block;align-self:end;margin-left:15px;width:20px;height:20px;border-radius:50%;background-color:{{$etique->cor}}"></div>
+                                    </div>
+                                @endforeach
+                                <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Alterar Dados</button>
+                    </div>                    
+                        </form>
+                    </div>
+                        
+                </div>
+            </div>
+        </div>    
     
 @stop
 @section('js')
@@ -104,8 +148,11 @@
             });
             $('#alterarModal').on('show.bs.modal', function (event) {
                 var alvo = $('input[name="id"]').val();
+                
+                
                 $('input[type="radio"]').attr('checked',false);
                 $('input[id="status_'+alvo+'"]').attr('checked',true);
+                console.log(alvo);
             });
             $('.status').click(function(){
                 let id = $(this).attr('data-id');
@@ -141,6 +188,40 @@
                 
                 return false;
             });
+
+            $('body').on('click','.etiquetas',function(){
+                
+                let etiqueta = $(this).attr("data-etiqueta");
+                $.ajax({
+                    url:"{{route('cliente.listarPorEtiqueta')}}",
+                    method:"POST",
+                    data:"id="+etiqueta,
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                    
+                });
+                return false;
+            });
+
+            $('body').on('click','.listar-todos',function(){
+                $.ajax({
+                    url:"{{route('cliente.listarPorEtiquetaAll')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            });
+
+
+
+
 
         });
     </script>  

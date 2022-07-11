@@ -27,6 +27,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/comissoes/apagar","App\Http\Controllers\Admin\HomeController@comissoesAPagar")->name("comissoes.apagar");
     Route::get("/comissoes/areceber","App\Http\Controllers\Admin\HomeController@areceber")->name("comissoes.areceber");
     
+    
 
 
     Route::resource("corretora","App\Http\Controllers\Admin\CorretoraController");
@@ -142,7 +143,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::delete("/etiquetas/deletar/{id}","App\Http\Controllers\Admin\EtiquetasController@deletar")->name("etiquetas.destroy");
 
     Route::put("/etiquetas/{id}/update","App\Http\Controllers\Admin\EtiquetasController@update")->name("etiquetas.update");
-
+    Route::get("/etiqueta/{id}","App\Http\Controllers\Admin\EtiquetasController@listarPorEtiquetaEspefifica")->name("home.listarPorEtiquetaEspecifica");
 
    
 
@@ -213,6 +214,9 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\ClienteController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
     Route::post("/clientes/deletar","App\Http\Controllers\Admin\ClienteController@deletarCliente")->name("cliente.deletarCliente");
     Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\ClienteController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
+    Route::post("/cliente/listarPorEtiqueta","App\Http\Controllers\Admin\ClienteController@listarPorEtiqueta")->name("cliente.listarPorEtiqueta");
+    Route::post("/cliente/listarPorEtiquetaAll","App\Http\Controllers\Admin\ClienteController@listarPorEtiquetaAll")->name("cliente.listarPorEtiquetaAll");
+    
 
     /** Fim Cliente */
 

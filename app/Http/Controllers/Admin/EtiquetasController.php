@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Models\Etiquetas;
 
@@ -96,6 +97,17 @@ class EtiquetasController extends Controller
         } 
         $etiqueta->update($data);
         return redirect()->route("etiquetas.index");        
+    }
+
+    public function listarPorEtiquetaEspefifica($id)
+    {
+        $nome = Etiquetas::where("id",$id)->first()->nome;
+        $clientes = Cliente::where("etiqueta_id",$id)->where("user_id",auth()->user()->id)->get();
+        return view("admin.pages.etiquetas.clientes",[
+            "clientes" => $clientes,
+            "nome" => $nome
+        ]);
+
     }
 
     public function deletar($id)

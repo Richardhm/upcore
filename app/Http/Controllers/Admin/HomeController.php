@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\{
     User,
     Cidade,
+    Cliente,
     Orcamento,
     Contrato,
     ComissoesVendedor,
-    Cotacao
+    Cotacao,
+    Etiquetas,
+    Tarefa
 };
 
 use Illuminate\Support\Facades\DB;
@@ -44,17 +47,26 @@ class HomeController extends Controller
 
             
             
-            $totalCliente    = Cotacao::where("user_id",auth()->user()->id)->count();
+            $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
             $clienteFechados = Cotacao::where("user_id",auth()->user()->id)->whereHas('clientes',function($query){
                 $query->where('etiqueta_id','=',3);
             })->count();
-            
+            $etiquetas = Etiquetas::selectRaw('id,nome,cor')->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id) AS quantidade')->paginate(5);
+            $tarefas = Tarefa::paginate(5,['*'], 'tarefas');
 
+            $tarefas->withPath('/admin');
+            $clientes = Cliente::where("user_id",auth()->user()->id)->where('etiqueta_id',"!=",3)
+                ->selectRaw("created_at,nome,telefone")    
+                ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS status")
+
+                ->paginate(5,['*'], 'clientes');
 
             return view('admin.pages.home.colaborador',[
                 "totalCliente" => $totalCliente,
-                "clienteFechados" => $clienteFechados
-                
+                "clienteFechados" => $clienteFechados,
+                "etiquetas" => $etiquetas,
+                "tarefas" => $tarefas,
+                "clientes" => $clientes
 
             ]);    
         }

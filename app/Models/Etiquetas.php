@@ -10,4 +10,5 @@ class Etiquetas extends Model
     use HasFactory;
     protected $table = "etiquetas";
     protected $fillable = ["nome","cor","padrao"];
+    
 }

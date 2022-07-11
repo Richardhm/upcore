@@ -30,12 +30,13 @@ class ClienteController extends Controller
         $id = auth()->user()->id;
         
         $clientes = Cliente::where("user_id",$id)->where("etiqueta_id","!=",3)
-            ->selectRaw("nome,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+            ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
             ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
             ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
             ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
             ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
             ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+            
             ->get();
                    
         $etiquetas = Etiquetas::all();
@@ -295,11 +296,52 @@ class ClienteController extends Controller
         $newStatus = $request->status;
         $etiquetaId = $request->id;
         $cliente = $this->repository->find($request->cliente);
-        $cliente->status = $newStatus;
+        $cliente->etiqueta_id = $newStatus;
         $cliente->save();
         return true;
     }
 
+    public function listarPorEtiqueta(Request $request)
+    {
+       $id_etiqueta = $request->id;
+       $id = auth()->user()->id;
+       $clientes = $this->repository->where("user_id",$id)->where("etiqueta_id",$id_etiqueta)
+        ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+        ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+        ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+        ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+        ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+        ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+       ->get();
+       if(count($clientes) >= 1) {
+            return view('admin.pages.clientes.listar-por-etiqueta',[
+                'clientes' => $clientes
+                
+            ]);    
+       } else {
+            return "Sem Clientes Para Listar Com esse status";
+       }       
+    }
 
+
+    public function listarPorEtiquetaAll()
+    {
+       $id = auth()->user()->id;
+       $clientes = $this->repository->where("user_id",$id)
+        ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+        ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+        ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+        ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+        ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+        ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+       ->get();
+       if(count($clientes) >= 1) {
+        return view('admin.pages.clientes.listar-por-etiqueta',[
+            'clientes' => $clientes
+        ]);    
+        } else {
+            return "Sem Clientes Para Listar Com esse status";
+        }
+    }
     
 }

@@ -66,23 +66,20 @@
                
             
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="vitalicio">Vitalicio:</label>
                 <input type="checkbox" id="vitalicio_status" {{$administradora->vitalicio ? 'checked' : ''}}>
                 <div id="area_vitalicio">
                     <input placeholder='%' type='text' name='vitalicio' id='vitalicio' class='form-control' value="{{$administradora->vitalicio}}" />
                 </div>
-            </div>
+            </div> -->
 
             <div class="form-group">
                 <label for="premiacao_corretora">Premiação Corretora:</label>
-                <input type="text" class="form-control" id="premiacao_corretora" name="premiacao_corretora" placeholder="Premiação Corretora" value="{{($administradora->premiacao_corretora != null ? $administradora->premiacao_corretora : null) ?? old('premiacao_corretora')}}">
+                <input type="text" class="form-control" id="premiacao_corretora" name="premiacao_corretora" placeholder="Premiação Corretora" value="{{($administradora->premiacao_corretora != null ? number_format($administradora->premiacao_corretora,2,',','.')  : null) ?? old('premiacao_corretora')}}">
             </div>
 
-            <div class="form-group">
-                <label for="premiacao_corretor">Premiação Corretor:</label>
-                <input type="text" class="form-control" id="premiacao_corretor" name="premiacao_corretor" placeholder="Premiação Corretor" value="{{($administradora->premiacao_corretor != null ? $administradora->premiacao_corretor : null)   ?? old('premiacao_corretor')}}">
-            </div>
+            
 
             
             <button class="btn btn-primary btn-primary btn-block" type="submit">Editar Administradora</button>

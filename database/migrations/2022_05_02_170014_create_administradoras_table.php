@@ -17,10 +17,11 @@ class CreateAdministradorasTable extends Migration
             $table->id();
             $table->string("nome");
             $table->string("logo")->nullable();
-            $table->string("vitalicio")->nullable();
-            $table->string("premiacao_corretora")->nullable();
-            $table->string("premiacao_corretor")->nullable();
-            $table->integer('quantidade_parcelas')->nullable();
+            $table->decimal("premiacao_corretora",10,2);
+            // $table->string("vitalicio")->nullable();
+            // $table->string("premiacao_corretora")->nullable();
+            // $table->string("premiacao_corretor")->nullable();
+            // $table->integer('quantidade_parcelas')->nullable();
             $table->timestamps();
             
         });

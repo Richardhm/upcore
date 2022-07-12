@@ -15,11 +15,11 @@ class CreateComissoesTable extends Migration
     {
         Schema::create('comissoes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('contrato_id');
+            $table->unsignedBigInteger('cotacao_id');
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('user_id');
            
-            $table->foreign('contrato_id')->references('id')->on('contratos');
+            $table->foreign('cotacao_id')->references('id')->on('cotacoes');
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

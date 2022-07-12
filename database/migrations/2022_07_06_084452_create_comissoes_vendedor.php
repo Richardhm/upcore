@@ -21,6 +21,7 @@ class CreateComissoesVendedor extends Migration
             $table->date("data");
             $table->decimal("valor",10,2);
             $table->boolean("status")->default(0);
+            
             $table->timestamps();
         });
     }

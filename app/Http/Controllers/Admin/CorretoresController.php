@@ -9,6 +9,7 @@ use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreUpdateColaboradores;
+use App\Models\Administradora;
 use Illuminate\Support\Facades\Storage;
 use App\Support\Thumb;
 
@@ -35,9 +36,12 @@ class CorretoresController extends Controller
 
     public function create()
     {
+        $administradoras = Administradora::all();
+
         $permission = Permission::all();
         return view('admin.pages.corretores.create',[
-            "permissions" => $permission
+            "permissions" => $permission,
+            "administradoras" => $administradoras
         ]);
     }
 

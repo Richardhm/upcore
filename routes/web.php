@@ -26,6 +26,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/orcamentos/corretor/especifico/ver","App\Http\Controllers\Admin\HomeController@corretorOrcamentoEspecifico")->name("corretor.especifico.orcamento.table");
     Route::get("/comissoes/apagar","App\Http\Controllers\Admin\HomeController@comissoesAPagar")->name("comissoes.apagar");
     Route::get("/comissoes/areceber","App\Http\Controllers\Admin\HomeController@areceber")->name("comissoes.areceber");
+    Route::get("/listartarefas","App\Http\Controllers\Admin\HomeController@listarTarefasHome")->name("home.listarTarefasHome");
+    Route::get("/listarclientes","App\Http\Controllers\Admin\HomeController@listarClientesHome")->name("home.listarClientesHome");
     
     
 
@@ -129,7 +131,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
         // Route::post("/orcamentos/mudar/status","App\Http\Controllers\Admin\OrcamentoController@mudarStatusEtiqueta")->name("orcamentos.mudar.etiqueta");
 
         /** Criar PDF */
-        Route::get("/criar/pdf/{id_orcamento}/{id_cidade}/{plano_id}/{coparticipacao}/{odonto}/{operadora_id}/{administradora_id}","App\Http\Controllers\Admin\OrcamentoController@criarPDF")->name("orcamento.pdf");
+        //Route::get("/criar/pdf/{id_orcamento}/{id_cidade}/{plano_id}/{coparticipacao}/{odonto}/{operadora_id}/{administradora_id}","App\Http\Controllers\Admin\OrcamentoController@criarPDF")->name("orcamento.pdf");
 
     /**************************************************** Fim Orcamentos *********************************************************/
     

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdministradoraParcelas extends Migration
+class CreateComissoesCorretoraAdministradorasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,17 @@ class CreateAdministradoraParcelas extends Migration
      */
     public function up()
     {
-        Schema::create('administradora_parcelas', function (Blueprint $table) {
+        Schema::create('comissoes_corretora_administradoras', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('administradora_id');
-            $table->decimal("valor",10,2);
-            $table->integer("ordem");
+            $table->unsignedBigInteger('corretora_id');
             
+            $table->integer("parcela");
+            $table->date("data")->nullable();
+            $table->decimal("valor",10,2);
+            $table->boolean("status")->default(0);
             $table->foreign('administradora_id')->references('id')->on('administradoras');
+            $table->foreign('corretora_id')->references('id')->on('corretoras');
             $table->timestamps();
         });
     }
@@ -31,6 +35,6 @@ class CreateAdministradoraParcelas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('administradora_parcelas');
+        Schema::dropIfExists('comissoes_corretora_administradoras');
     }
 }

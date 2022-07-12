@@ -43,13 +43,16 @@
     </div>
 </section> 
 
+
+
+
 <section class="row">
     @foreach($etiquetas as $et)
         <div class="col-md-3 col-sm-6 col-12">
             
             <div class="info-box shadow">
-                <span class="info-box-icon border border-dark">
-                    <div style="width:20px;height:20px;border-radius:50%;background-color:{{$et->cor}}"></div> 
+                <span class="info-box-icon border border-dark" style="background-color:{{$et->cor}}">
+                    
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text"><i><u><a href="{{route('home.listarPorEtiquetaEspecifica',$et->id)}}" class="text-dark">{{$et->nome}}</a></u></i></span>
@@ -61,6 +64,8 @@
     @endforeach
 
 </section>
+
+
 
 
 <section class="row">
@@ -78,57 +83,23 @@
                 </div>
             </div>
             <div class="card-body">
-                <ul class="todo-list ui-sortable" data-widget="todo-list">
-                    @if(count($tarefas) >= 1)
-                        <div class="d-flex justify-content-between">
-                            <span>Data</span>
-                            <span>Cliente</span>
-                            <span>Titulo</span>
-                        </div>
-                        @foreach($tarefas as $tt)
-                        <li>
-                            <div class="icheck-primary d-inline ml-2">
-                                {{date("d/m/Y",strtotime($tt->data))}}
-                            </div>
-                            <span class="text">{{$tt->title}}</span>
-                            <small class="badge badge-danger"><i class="far fa-clock"></i> 2 minutos</small>
-                            <div class="tools">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash-o"></i>
-                            </div>
-                        </li>
+                <table class="table listartarefas">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Titulo</th>
+                            <th>Dias Faltando</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-
-
-                        @endforeach
-
-                    @endif
-                
-                
-                </ul>
+                    </tbody>
+                    
+                </table>
             </div>
 
-            <div class="card-footer clearfix">
-                <div class="row">
-                    <div class="col">
-                        <ul class="pagination">
-                            <li class="page-item"><a href="#" class="page-link">«</a></li>
-                            @for($i=1;$i<=$tarefas->lastPage();$i++)
-                            <li class="page-item {{$i == $tarefas->currentPage() ? 'active' : ''}}">
-                                <a class="page-link" href="{{isset($filtro) && count($filtro) >= 1 ? $tarefas->appends($filtro)->url($i) : $tarefas->url($i)}}">{{$i}}</a>
-                            </li>
-                            @endfor
-                           
-                           
-                            <li class="page-item"><a href="#" class="page-link">»</a></li>
-                        </ul>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-primary float-right">Ver Todas</button>
-                    </div>
-                </div>
-                
-            </div>
+           
         </div>
 
     </div>
@@ -147,7 +118,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table">
+                <table class="table listarclientes">
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -157,29 +128,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($clientes as $c)
-                            <tr>
-                                <td>{{date('d/m/Y',strtotime($c->created_at))}}</td>
-                                <td>{{$c->nome}}</td>
-                                <td>{{$c->telefone}}</td>
-                                <td align="center"><div style="width:20px;height:20px;border-radius:50%;background-color:{{$c->status}}"></div></td>
-                                
-                            </tr>
-                        @endforeach
+                       
                     </tbody>
                 </table>
             </div>
 
             <div class="card-footer clearfix">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a href="#" class="page-link">«</a></li>
-                    @for($ii=1;$ii<=$clientes->lastPage();$ii++)
-                        <li class="page-item {{$ii == $clientes->currentPage() ? 'active' : ''}}">
-                            <a class="page-link" href="{{isset($filtro) && count($filtro) >= 1 ? $clientes->appends($filtro)->url($ii) : $clientes->url($ii)}}">{{$ii}}</a>
-                        </li>
-                    @endfor
-                    <li class="page-item"><a href="#" class="page-link">»</a></li>
-                </ul>
+               
                 
             </div>
         </div>
@@ -193,19 +148,73 @@
 
     
 </section>
-
-
-
-
-
-
-
-
 @stop
+
 @section('js')
     <script>
          $(document).ready(function(){
-          
+            $(".listartarefas").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('home.listarTarefasHome') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [5,10,15],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                order: [[3, "asc"]],
+                columns: [
+                    {data:"data",name:"data"},
+                    {data:"cliente",name:"cliente"},
+                    {data:"title",name:"title"},
+                    {data:"falta",name:"falta"},
+                ]
+                
+            });
+
+            $(".listarclientes").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('home.listarClientesHome') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [5,10,15],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                
+                columns: [
+                    {data:"data",name:"data"},
+                    {data:"nome",name:"nome"},
+                    {data:"telefone",name:"telefone"},
+                    {data:"status",name:"status"},
+                ],
+                "columnDefs": [ {
+                    "targets": 3,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).html("<div style='width:20px;height:20px;border-radius:50%;background-color:"+cellData+"'></div>")
+                       
+                    
+                    }
+                } ]
+                
+            });
+
+
+
+
+
          });
     </script>
 @stop        

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Administradora;
 use App\Models\AdministradoraParcelas;
-use App\Models\CorretoraAdministradora;
+//use App\Models\CorretoraAdministradora;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\ComissoesCorretoraAdministradora;
 
 class AdministradoraController extends Controller
 {
@@ -55,14 +55,21 @@ class AdministradoraController extends Controller
      */
     public function store(Request $request)
     {
+        
+
+
+
         $roles = [
             "nome" => "required",
-            "logo" => "required"
+            "logo" => "required",
+            "premiacao_corretora" => "required"
         ];
         $messages = [
             "nome.required" => "O campo nome e campo obrigatorio",
-            "logo.required" => "O campo logo e campo obrigatorio"
+            "logo.required" => "O campo logo e campo obrigatorio",
+            "premiacao_corretora.required" => "O campo Premiacao Corretora e campo obrigatorio"
         ];
+
         $request->validate($roles,$messages);
         $parcelas = array_values($request->parcelas);       
         $administradora = new Administradora();
@@ -71,16 +78,17 @@ class AdministradoraController extends Controller
             $administradora->logo = $request->file('logo')->store('administradoras','public');
         }
         $administradora->premiacao_corretora = $request->premiacao_corretora;
-        $administradora->premiacao_corretor = $request->premiacao_corretor;
-        $administradora->vitalicio = $request->vitalicio;
-        $administradora->quantidade_parcelas = count($request->parcelas);
+        // $administradora->premiacao_corretor = $request->premiacao_corretor;
+        // $administradora->vitalicio = $request->vitalicio;
+        //$administradora->quantidade_parcelas = count($request->parcelas);
         $administradora->save();
         
         foreach($parcelas as $k => $v) {
-            $aa = new AdministradoraParcelas();
+            $aa = new ComissoesCorretoraAdministradora();
             $aa->administradora_id = $administradora->id;
+            $aa->corretora_id = auth()->user()->corretora_id;
             $aa->valor = $v['parcelas'];
-            $aa->ordem = $k+1;
+            $aa->parcela = $k+1;
             $aa->save();    
             
         }
@@ -117,8 +125,8 @@ class AdministradoraController extends Controller
 
     public function update(Request $request, $id)
     {
-        $vitalicio = isset($request->vitalicio) && !empty($request->vitalicio) && $request->vitalicio != null ? $request->vitalicio : null;
-        AdministradoraParcelas::where('administradora_id',$id)->delete();
+        //$vitalicio = isset($request->vitalicio) && !empty($request->vitalicio) && $request->vitalicio != null ? $request->vitalicio : null;
+        ComissoesCorretoraAdministradora::where('administradora_id',$id)->delete();
         $data = [];
         if($request->parcelas != null) {
             foreach($request->parcelas as $k => $v) {
@@ -142,14 +150,15 @@ class AdministradoraController extends Controller
         }
         $ii=1;
         foreach($dados as $kk => $vv) {
-            $admP = new AdministradoraParcelas();
+            $admP = new ComissoesCorretoraAdministradora();
             $admP->administradora_id = $administradora->id;
             $admP->valor = $vv;
-            $admP->ordem = $ii++;
+            $admP->corretora_id = auth()->user()->corretora_id;
+            $admP->parcela = $ii++;
             $admP->save();
         }
-        $administradora->vitalicio = $vitalicio;
-        $administradora->quantidade_parcelas = count($request->parcelas_bd);
+        //$administradora->vitalicio = $vitalicio;
+        //$administradora->quantidade_parcelas = count($request->parcelas_bd);
         $administradora->save();
         return redirect()->route('administradora.index');
     }
@@ -157,6 +166,10 @@ class AdministradoraController extends Controller
     
     public function destroy($id)
     {
+        $comissoes = ComissoesCorretoraAdministradora::where('administradora_id',$id)->first();
+        if($comissoes) {
+            ComissoesCorretoraAdministradora::where('administradora_id',$id)->delete();
+        }
         $administradora = $this->repository->find($id);
         if(!$administradora) {
             return redirect()->back();

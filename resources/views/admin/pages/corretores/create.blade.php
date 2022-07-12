@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('title', 'Cadastrar Corretor')
-
+@section('plugins.bootstrapSwitch', true)
 @section('content_header')
     <h1>Cadastrar Corretor</h1>
 @stop
@@ -16,7 +16,7 @@
           
         </div>
         <div class="card-body">
-           <form action="{{route('corretores.store')}}" method="post" enctype="multipart/form-data">
+           <form action="{{route('corretores.store')}}" method="post" enctype="multipart/form-data" class="invoice-repeater">
             @csrf
             
             <div class="form-row">
@@ -127,6 +127,57 @@
                     @endif
                 </div>        
             </div>
+            
+            <div data-repeater-list="parcelas">
+                
+                <div data-repeater-item>
+                    
+                    <input type="text" id="parcelas" name="parcelas" placeholder="%" />
+                    <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
+                </div>
+                
+            </div>
+            <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
+            
+
+            <div class="d-flex justify-content-center">
+            
+                <div class="card text-white mb-3 justify-center-center">
+                    <div class="card-header bg-dark">Este Usuario Possui Comissao?</div>
+                    <div class="card-body">
+                        <div class="bootstrap-switch-null bootstrap-switch-undefined bootstrap-switch-undefined bootstrap-switch-undefined bootstrap-switch-undefined bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-animate bootstrap-switch-off bootstrap-switch-on">
+                            <input id="switch-offColor" type="checkbox" data-off-color="default">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        
+            <div id="campos_comissao" class="ds-none">
+                <h1>Campos Ocultos</h1>
+                <div style="display:flex;flex-wrap: wrap;">
+                    <div data-repeater-list="parcelas">
+                        @foreach($administradoras as $a) 
+                            <p class="">{{$a->nome}}</p> 
+                    
+                    
+                            <div data-repeater-item>
+                                <div class="titulos">
+                                    <input type="text" id="parcelas_{{$a->nome}}" name="parcelas_{{$a->nome}}" placeholder="%" />
+                                    <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
+                                </div>
+                            </div>
+                        
+                        <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
+                    @endforeach
+                    </div>    
+                </div>
+            </div>     
+            
+
+
+
+
             <div class="form-group">
                 <a class="btn btn-warning btn-sm mb-3" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
                     <i class="fas fa-lock"></i>
@@ -154,6 +205,11 @@
 @section('css')
     <link rel="stylesheet" href="{{asset('vendor/select2/css/select2.min.css')}}" />    
     <link rel="stylesheet" href="{{asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.css')}}" />    
+    <style>
+        .ds-none {
+            display:none;
+        }
+    </style>
 @stop
 
 
@@ -162,6 +218,9 @@
 @section('js')
 <script src="{{asset('js/jquery.mask.min.js')}}"></script>
 <script src="{{asset('vendor/select2/js/select2.min.js')}}"></script>
+<script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
+    <script src="{{ asset('js/form-repeater-create.js') }}"></script>
+    
 <script>
         $(function(){
             $('#cpf').mask('000.000.000-00', {reverse: true});
@@ -169,6 +228,19 @@
             $('#estado').select2({
                 theme: 'bootstrap4',
             });
+            
+            $("#switch-offColor").bootstrapSwitch({
+                onSwitchChange: function(e, state) { 
+                    if(state) {
+                        $("#campos_comissao").removeClass('ds-none')
+                    } else {
+                        $("#campos_comissao").addClass('ds-none')    
+                    }
+                }
+            });
+
+
+    
         });
     </script>
 @endsection

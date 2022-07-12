@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Administradora extends Model
 {
     use HasFactory;
-    protected $fillable = ["nome","logo","vitalicio","premiacao_corretora","premiacao_corretor"];
+    protected $fillable = ["nome","logo","vitalicio","premiacao_corretora"];
 
     public function parcelas()
     {
-        return $this->hasMany(AdministradoraParcelas::class);
+        return $this->hasMany(ComissoesCorretoraAdministradora::class);
     }
 
 

@@ -282,13 +282,6 @@ return [
                     'active' => ['corretora',"http://localhost:8000/admin/corretora/*"]
                 ],
                 [
-                    'text' => 'Corretor',
-                    'url'  => 'admin/corretores',
-                    'icon' => 'fas fa-users',
-                    'can'  => 'corretor',
-                    'active' => ['corretores',"http://localhost:8000/admin/corretores/*"]
-                ],
-                [
                     'text'    => 'Operadora',
                     'url'     => 'admin/operadora',
                     'icon'    => 'fab fa-centos',
@@ -301,6 +294,13 @@ return [
                     'icon' => 'fab fa-superpowers',
                     'can'  => 'administradora',
                     'active' => ['administradora',"http://localhost:8000/admin/administradora/*"]
+                ],
+                [
+                    'text' => 'Corretor',
+                    'url'  => 'admin/corretores',
+                    'icon' => 'fas fa-users',
+                    'can'  => 'corretor',
+                    'active' => ['corretores',"http://localhost:8000/admin/corretores/*"]
                 ],
                 [
                     "text" => "Cidades",
@@ -433,6 +433,7 @@ return [
                 ],
             ],
         ],
+
         'Pace' => [
             'active' => false,
             'files' => [
@@ -464,6 +465,21 @@ return [
                 ],
                
             ]
+        ],
+        'bootstrapSwitch' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bootstrap-switch/js/bootstrap-switch.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css',
+                ],
+            ],
         ],
         'jqueryUi' => [
             'active' => false,

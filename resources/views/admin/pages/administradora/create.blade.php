@@ -37,12 +37,16 @@
             </div>
 
             <div class="form-group">
-                <label for="comissao">Comissão<small>(%)</small></label>
-                <!-- <input type="text" name="parcela01" id="parcela01" class="form-control" placeholder="1º Parcela">
-                <input type="text" name="parcela02" id="parcela02" class="form-control" placeholder="2º Parcela">
-                <input type="text" name="parcela03" id="parcela03" class="form-control" placeholder="3º Parcela">
-                <input type="text" name="parcela04" id="parcela04" class="form-control" placeholder="4º Parcela">
-                <input type="text" name="parcela05" id="parcela05" class="form-control" placeholder="5º Parcela"> -->
+                <label for="premiacao_corretora">Premiação Corretora: *</label>
+                <input type="text" class="form-control" id="premiacao_corretora" name="premiacao_corretora" placeholder="Premiação Corretora">
+                @if($errors->has('premiacao_corretora'))
+                    <p class="alert alert-danger">{{$errors->first('premiacao_corretora')}}</p>
+                @endif
+            </div>
+
+            <div class="form-group">
+                <label for="comissao">Comissão Corretora:<small>(%)</small></label>
+                
             </div>
             
             <div data-repeater-list="parcelas">
@@ -57,23 +61,17 @@
             <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
             
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="vitalicio">Vitalicio:</label>
                 <input type="checkbox" id="vitalicio_status">
                 <div id="area_vitalicio">
 
                 </div>
-            </div>
+            </div> -->
 
-            <div class="form-group">
-                <label for="premiacao_corretora">Premiação Corretora:</label>
-                <input type="text" class="form-control" id="premiacao_corretora" name="premiacao_corretora" placeholder="Premiação Corretora">
-            </div>
+           
 
-            <div class="form-group">
-                <label for="premiacao_corretor">Premiação Corretor:</label>
-                <input type="text" class="form-control" id="premiacao_corretor" name="premiacao_corretor" placeholder="Premiação Corretor">
-            </div>
+            
 
             <!-- <div class="form-row">
                 <div class="col-md-12 mb-3">
@@ -83,7 +81,7 @@
                 </div>
             </div> -->
    
-            <button class="btn btn-primary btn-block" type="submit">Cadastrar Administradora</button>
+            <button class="btn btn-primary btn-block mt-5" type="submit">Cadastrar Administradora</button>
            </form>
 
 @stop

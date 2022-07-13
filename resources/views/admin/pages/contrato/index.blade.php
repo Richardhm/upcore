@@ -21,6 +21,7 @@
                         <th>Acomodação</th>
                         <th>Cidade</th>
                         <th>Valor</th>
+                        <th>Detalhes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,11 +29,12 @@
                         <tr>
                             <td>{{date('d/m/Y',strtotime($c->created_at))}}</td>
                             <td>{{$c->cotacao->codigo_externo}}</td>
-                            <td>{{$c->user->name}}</td>
+                            <td>{{$c->nome}}</td>
                             <td>{{$c->cotacao->administradora->nome}}</td>
                             <td>{{$c->cotacao->acomodacao->nome}}</td>
                             <td>{{$c->cidade->nome}}</td>
                             <td>{{number_format($c->cotacao->valor,2,",",".")}}</td>
+                            <td><a href="{{route('cotacao.comissao.detalhes',$c->id)}}">Detalhes</a></td>
                         </tr>
                         
                     @endforeach

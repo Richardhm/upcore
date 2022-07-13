@@ -55,10 +55,6 @@ class AdministradoraController extends Controller
      */
     public function store(Request $request)
     {
-        
-
-
-
         $roles = [
             "nome" => "required",
             "logo" => "required",

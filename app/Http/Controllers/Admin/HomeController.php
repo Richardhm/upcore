@@ -74,44 +74,44 @@ class HomeController extends Controller
 
     public function orcamentosAdministrador(Request $request)
     {
-        // if($request->ajax()) {
-        //     $user = User::find(auth()->user()->id);
-        //     if(!$user || !$user->admin) {
-        //          return redirect()->back();
-        //     }  
-        //     $orcamentos = $user
-        //         ->orcamentos()
-        //         ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = orcamentos.cliente_id) AS cliente")
-        //         //->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = orcamentos.administradora_id) AS administradora")
-        //         ->selectRaw("(SELECT COUNT(*) FROM cliente_orcamento WHERE cliente_orcamento.cliente_id = orcamentos.cliente_id) AS quantidade")
-        //         ->groupByRaw("orcamentos.cliente_id")
-        //         ->get();
-        //     return response()->json($orcamentos);
-        // }
+        if($request->ajax()) {
+            $user = User::find(auth()->user()->id);
+            if(!$user || !$user->admin) {
+                 return redirect()->back();
+            }  
+            $orcamentos = $user
+                ->orcamentos()
+                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = orcamentos.cliente_id) AS cliente")
+                //->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = orcamentos.administradora_id) AS administradora")
+                ->selectRaw("(SELECT COUNT(*) FROM cliente_orcamento WHERE cliente_orcamento.cliente_id = orcamentos.cliente_id) AS quantidade")
+                ->groupByRaw("orcamentos.cliente_id")
+                ->get();
+            return response()->json($orcamentos);
+        }
        
     }
 
     public function outherorcamentos(Request $request)
     {
-        // if($request->ajax()) {
-        //     $user = User::find(auth()->user()->id);
+        if($request->ajax()) {
+            $user = User::find(auth()->user()->id);
             
-        //     $corretores = User::where("corretora_id",$user->corretora_id)->where("id","!=",$user->id)->get();
+            $corretores = User::where("corretora_id",$user->corretora_id)->where("id","!=",$user->id)->get();
 
-        //     $user = User::find(auth()->user()->id);       
-        //     $corretores = DB::table("orcamentos")
-        //         //>selectRaw("(case when (STATUS = 1) then '<span class=\"badge badge-primary\">Em Aberto</span>' when (STATUS = 2) then 'Finalizado' when (STATUS = 3) then 'Vai Fechar' when (STATUS = 4) then 'Sem Interesse' when (STATUS = 5) then 'Aguardando Documentação' END) AS status_texto")
-        //         ->selectRaw("(SELECT name FROM users WHERE orcamentos.user_id = users.id) AS corretor")
-        //         ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = orcamentos.cliente_id) as cliente")
-        //         //->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = orcamentos.administradora_id) AS administradora")
-        //         ->whereRaw("user_id !=".$user->id)
-        //         ->whereRaw("corretora_id = ".$user->corretora_id)
-        //         ->get();
+            $user = User::find(auth()->user()->id);       
+            $corretores = DB::table("orcamentos")
+                //>selectRaw("(case when (STATUS = 1) then '<span class=\"badge badge-primary\">Em Aberto</span>' when (STATUS = 2) then 'Finalizado' when (STATUS = 3) then 'Vai Fechar' when (STATUS = 4) then 'Sem Interesse' when (STATUS = 5) then 'Aguardando Documentação' END) AS status_texto")
+                ->selectRaw("(SELECT name FROM users WHERE orcamentos.user_id = users.id) AS corretor")
+                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = orcamentos.cliente_id) as cliente")
+                //->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = orcamentos.administradora_id) AS administradora")
+                ->whereRaw("user_id !=".$user->id)
+                ->whereRaw("corretora_id = ".$user->corretora_id)
+                ->get();
             
              
-        //     return response()->json($corretores);
+            return response()->json($corretores);
             
-        // }
+        }
             
     }
 

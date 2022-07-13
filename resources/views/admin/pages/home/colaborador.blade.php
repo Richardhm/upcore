@@ -32,7 +32,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 

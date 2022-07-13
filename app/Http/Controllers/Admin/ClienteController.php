@@ -29,21 +29,45 @@ class ClienteController extends Controller
     {
         $id = auth()->user()->id;
         
-        $clientes = Cliente::where("user_id",$id)->where("etiqueta_id","!=",3)
-            ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
-            ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
-            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
-            ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
-            ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
-            ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
-            
-            ->get();
-                   
-        $etiquetas = Etiquetas::all();
-        return view('admin.pages.clientes.index',[
-            'clientes' => $clientes,
-            'etiquetas' => $etiquetas
-        ]);
+        if(auth()->user()->admin) {
+            $clientes = Cliente::where("etiqueta_id","!=",3)
+                ->selectRaw("(SELECT name FROM users WHERE users.id = clientes.user_id) as user")
+                ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+                ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+                ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+                ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+                ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+                ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+                
+                ->get();
+                    
+            $etiquetas = Etiquetas::all();
+            return view('admin.pages.clientes.index',[
+                'clientes' => $clientes,
+                'etiquetas' => $etiquetas
+            ]);
+        } else {
+            $clientes = Cliente::where("user_id",$id)->where("etiqueta_id","!=",3)
+                ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+                ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+                ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+                ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+                ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+                ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+                
+                ->get();
+                    
+            $etiquetas = Etiquetas::all();
+            return view('admin.pages.clientes.index',[
+                'clientes' => $clientes,
+                'etiquetas' => $etiquetas
+            ]);
+        }
+
+
+
+
+        
     }
 
     public function create()
@@ -116,9 +140,7 @@ class ClienteController extends Controller
         }
 
 
-        // $cliente->e = "Orçamento";
-        // $cliente->ultimo_contato = date('Y-m-d');
-        // $cliente->save();
+        
         
         $cidades = Cidade::all();
         $administradoras = Administradora::all();
@@ -235,14 +257,33 @@ class ClienteController extends Controller
         return true;
     }
 
+    public function listarContratos()
+    {
+        $id = auth()->user()->id;
+        $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)->with(['cotacao','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
+        return view("admin.pages.contrato.index",[
+            "contratos" => $contratos
+        ]);    
+    }
+
+    public function clientesCorretores()
+    {
+        $etiquetas = Etiquetas::all();
+        return view('admin.pages.clientes.corretores',[
+           
+            'etiquetas' => $etiquetas
+        ]);
+    }
+
     public function pegarClientesCorretores()
     {
         $idAdmin = auth()->user()->id;
         $clientes = DB::table('clientes')
-            ->selectRaw("status,nome")
-            ->selectRaw("DATE_FORMAT(`created_at`,'%d/%m/%Y') as datas")
-            ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.status) AS etiqueta")
-            ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.status)  AS cor")
+            ->selectRaw("DATE_FORMAT(`created_at`,'%d/%m/%Y') as data")
+            ->selectRaw("nome")
+            
+            ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS etiqueta")
+            ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id)  AS cor")
             ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
             ->selectRaw("(SELECT NAME FROM users WHERE clientes.user_id = users.id) AS corretor")
             ->where("user_id","!=",$idAdmin)
@@ -276,17 +317,7 @@ class ClienteController extends Controller
 
 
 
-    public function clientesCorretores()
-    {
-       
-        
-        // dd($clientes);    
-        $etiquetas = Etiquetas::all();
-        return view('admin.pages.clientes.corretores',[
-           
-            'etiquetas' => $etiquetas
-        ]);
-    }
+    
 
 
 

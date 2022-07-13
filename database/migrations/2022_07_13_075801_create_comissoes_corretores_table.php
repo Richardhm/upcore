@@ -19,7 +19,8 @@ class CreateComissoesCorretoresTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('administradora_id');
             
-            $table->decimal('valor',10,2);
+            $table->string('valor');
+            $table->integer('parcela');
             $table->foreign('plano_id')->references('id')->on('planos');
             $table->foreign('user_id')->references('id')->on('planos');
             $table->foreign('administradora_id')->references('id')->on('administradoras');

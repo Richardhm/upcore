@@ -3,6 +3,9 @@
 @section('title', 'Clientes')
 
 @section('content_header')
+@can('clientes_dos_corretores')
+                    <a href="{{route('clientes.corretores')}}" class="text-info"><i class="fas fa-users"></i></a>
+                @endcan     
     <div class="row">
         <h1>Clientes <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning"><i class="fas fa-plus"></i></a></h1>    
         <div class="btn-group-vertical ml-auto dropleft">
@@ -33,6 +36,7 @@
 @stop
 
 @section('content')
+
     <div class="card">
         <div class="card-body">
             @if(count($clientes) >= 1)
@@ -43,7 +47,7 @@
                         </div>
                     
                         <div style="flex-basis:25%;">
-                            <div><b>{{$c->nome}}</b></div>
+                            <div><b>{{$c->nome}}</b> | {{isset($c->user) && !empty($c->user) ? $c->user : ""}}</div>
                             <div>{{$c->email}}</div>
                             <div style="display:flex;">
                                 <span>{{date('d/m/Y',strtotime($c->created_at))}}</span>

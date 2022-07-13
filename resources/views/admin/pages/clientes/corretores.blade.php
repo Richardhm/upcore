@@ -2,6 +2,7 @@
 
 @section('title', 'Clientes Corretores')
 @section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
 @section('content_header')
     
     
@@ -13,6 +14,7 @@
     <div class="card">
        
         <div class="card-body">
+        
             <table class="table table-bordered clientes">
                 <thead>
                     <tr>
@@ -58,10 +60,13 @@
                 "info": true,
                 "autoWidth": false,
                 "responsive": true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf',"print", "colvis"
+                    
+                ],
                 columns: [
-                    {
-                        data:"datas",name:"datas"
-                    },
+                    {data:"data",name:"data"},
                     {data:"corretor",name:"corretor"},
                     {data:"nome",name:"cliente"},
                     {data:"cidade",name:"cidade"},
@@ -72,7 +77,7 @@
                     }
 
                 ]
-            });
+            })
 
         });
     </script>  

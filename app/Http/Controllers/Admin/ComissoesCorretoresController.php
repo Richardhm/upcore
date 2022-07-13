@@ -78,7 +78,7 @@ class ComissoesCorretoresController extends Controller
         ];
 
         $request->validate($rules,$message);
-        $ii=0;
+        $ii=1;
         foreach($request->parcelas as $k => $v):
             $cad = new ComissoesCorretores();
             $cad->user_id = $request->user_id;
@@ -97,11 +97,26 @@ class ComissoesCorretoresController extends Controller
 
     public function detalhes($user,$plano,$administradora) 
     {
-        $comissao = ComissoesCorretores::where("user_id",$user)->where("plano_id",$plano)->where("administradora_id",$administradora)->get();
+        $comissao = ComissoesCorretores::
+            selectRaw("parcela,valor")
+            ->where("user_id",$user)
+            ->where("plano_id",$plano)
+            ->where("administradora_id",$administradora)
+            ->get();
         if(count($comissao) == 0) {
             return redirect()->back();
         }
-
+        
+        $plano = Planos::where("id",$plano)->first();
+        $admin = Administradora::where("id",$administradora)->first();
+        $user = User::where("id",$user)->first();
+        return view('admin.pages.corretores.comissoes.detalhes',[
+            "comissao" => $comissao,
+            "plano" => $plano->nome,
+            "admin" => $admin->nome,
+            "user" => $user->name,
+            "id" => $user->id
+        ]);
         
         
     }

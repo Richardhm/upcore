@@ -13,6 +13,9 @@ use App\Models\{
     Cotacao,
     CotacaoFaixaEtaria,
     Administradora,
+    Comissao,
+    ComissoesCorretores,
+    ComissoesVendedor,
     Operadora,
     Planos
 };
@@ -189,6 +192,14 @@ class CotacaoController extends Controller
         }       
     }
 
+    public function detalhesDoContratoComissoes($id)
+    {
+        $comissoes = ComissoesVendedor::whereRaw("comissao_id = (SELECT id FROM comissoes WHERE cliente_id = ".$id.")")->get();
+        return view('admin.pages.contrato.detalhes',[
+            "comissoes" => $comissoes
+        ]);
+    }
+
 
     public function contrato($id)
     {
@@ -320,8 +331,11 @@ class CotacaoController extends Controller
 
     public function storeContrato(Request $request)
     {
+        
         //$request->valor = str_replace([",","."],[".",""],$request->valor);
         //$valor = number_format($request->valor,2,",",".");
+        
+        /** Vai Na Tabela CLiente E acaba de realizar o cadastro */
         
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->etiqueta_id = 3;
@@ -330,6 +344,8 @@ class CotacaoController extends Controller
         $cliente->data_nascimento = date('Y-m-d',strtotime($request->data_nascimento));
         $cliente->save();
 
+
+        /** Tabela Cotacao Cadastrao/Update */
         $cotacao = Cotacao::where("cliente_id",$request->cliente_id)->first();
         
         if($cotacao) {
@@ -356,7 +372,7 @@ class CotacaoController extends Controller
 
 
         
-        
+        /** Tabela CotacaoFaixaEtaria */
         CotacaoFaixaEtaria::where("cotacao_id",$cotacao->id)->delete();
 
         $faixas = $request->faixas_etarias;
@@ -369,8 +385,31 @@ class CotacaoController extends Controller
                 $orcamentoFaixaEtaria->save();
             } 
         }
-
         
+        
+        /*Gera Comissao Para O Corretor*/
+
+        /** Tabela Comissao */    
+        $comissao = new Comissao();
+        $comissao->cotacao_id = $cotacao->id;
+        $comissao->cliente_id = $request->cliente_id;
+        $comissao->user_id = auth()->user()->id;
+        $comissao->save();    
+
+
+        $comissoes = ComissoesCorretores::where("plano_id",$request->plano)->where("administradora_id",$request->administradora)->get();
+        
+        foreach($comissoes as $c) {
+            $comissaoVendedor = new ComissoesVendedor();
+            $comissaoVendedor->comissao_id = $comissao->id;
+            $comissaoVendedor->parcela = $c->parcela;
+            $comissaoVendedor->data = date("Y-m-d");
+            $comissaoVendedor->valor = ($request->valor * $c->valor) / 100;
+            $comissaoVendedor->save();    
+        }   
+        
+
+
 
         return redirect()->route('clientes.index');
     }

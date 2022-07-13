@@ -44,7 +44,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/cotacao/cadastrarContrato","App\Http\Controllers\Admin\CotacaoController@storeContrato")->name("contrato.store");
     Route::post("/cotacao/montarValoresFormularioAcomodacao","App\Http\Controllers\Admin\CotacaoController@montarValoresFormularioAcomodacao")->name("contrato.montarValoresFormularioAcomodacao");
 
-
+    Route::get("/cotacao/contrato/comissao/{id_cliente}","App\Http\Controllers\Admin\CotacaoController@detalhesDoContratoComissoes")->name("cotacao.comissao.detalhes");
 
 
     Route::get("/corretores","App\Http\Controllers\Admin\CorretoresController@index")->name("corretores.index");
@@ -181,7 +181,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/profile/{id}","App\Http\Controllers\Admin\UserController@getUser")->name("profile.getUser");
     Route::put("/profile/{id}","App\Http\Controllers\Admin\UserController@setUser")->name("profile.setUser");
 
-    Route::get("/contratos","App\Http\Controllers\Admin\ContratoController@index")->name("contratos.index");
+    //Route::get("/contratos","App\Http\Controllers\Admin\ContratoController@index")->name("contratos.index");
     //Route::post("/contratos/pessoa_fisica","App\Http\Controllers\Admin\ContratoController@cadastrarPF")->name("contrato.cadastrarPF");
     //Route::post("/contratos/sem_orcamento/pessoa_fisica","App\Http\Controllers\Admin\ContratoController@montarContratoSemOrcamento")->name("contrato.montarContratoSemOrcamento");
     //Route::post("/contratos/store/pf","App\Http\Controllers\Admin\ContratoController@cadastrarContratoSemOrcamento")->name("contrato.cadastrarPFSemOrcamento");
@@ -223,6 +223,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\ClienteController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
     Route::post("/cliente/listarPorEtiqueta","App\Http\Controllers\Admin\ClienteController@listarPorEtiqueta")->name("cliente.listarPorEtiqueta");
     Route::post("/cliente/listarPorEtiquetaAll","App\Http\Controllers\Admin\ClienteController@listarPorEtiquetaAll")->name("cliente.listarPorEtiquetaAll");
+    Route::get("/contratos","App\Http\Controllers\Admin\ClienteController@listarContratos")->name("contratos.index");
     
 
     /** Fim Cliente */

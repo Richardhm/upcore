@@ -15,6 +15,8 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
+                            <th>Comissões</th>
+                            <th>Premiações</th>
                             <th>Editar/Deletar</th>
                         </tr>
                     </thead>
@@ -26,6 +28,8 @@
                             </form>    
                             <tr>
                                 <td>{{$c->name}}</td>
+                                <td><a href="{{route('comissao.corretores.index',$c->id)}}"><i class="fas fa-money-check-alt"></i></a></td>
+                                <td><i class="fas fa-money-check-alt"></i></td>
                                 <td>
                                     <a href="{{route('corretores.edit',$c->id)}}" class="btn btn-info btn-sm">
                                         <i class="fas fa-edit"></i>

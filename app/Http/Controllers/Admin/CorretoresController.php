@@ -48,6 +48,7 @@ class CorretoresController extends Controller
     public function store(StoreUpdateColaboradores $request)
     {
         $dados = $request->all();
+        
         $dados['password'] = bcrypt($request->password);
         if(!empty($request->file('image'))) {
             $dados['image'] = $request->file('image')->store('users','public');

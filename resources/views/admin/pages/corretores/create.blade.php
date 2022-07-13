@@ -127,31 +127,7 @@
                     @endif
                 </div>        
             </div>
-            
-            <div data-repeater-list="parcelas">
-                
-                <div data-repeater-item>
                     
-                    <input type="text" id="parcelas" name="parcelas" placeholder="%" />
-                    <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
-                </div>
-                
-            </div>
-            <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
-            
-
-            <div class="d-flex justify-content-center">
-            
-                <div class="card text-white mb-3 justify-center-center">
-                    <div class="card-header bg-dark">Este Usuario Possui Comissao?</div>
-                    <div class="card-body">
-                        <div class="bootstrap-switch-null bootstrap-switch-undefined bootstrap-switch-undefined bootstrap-switch-undefined bootstrap-switch-undefined bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-animate bootstrap-switch-off bootstrap-switch-on">
-                            <input id="switch-offColor" type="checkbox" data-off-color="default">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
         
             <div id="campos_comissao" class="ds-none">
                 <h1>Campos Ocultos</h1>
@@ -218,8 +194,7 @@
 @section('js')
 <script src="{{asset('js/jquery.mask.min.js')}}"></script>
 <script src="{{asset('vendor/select2/js/select2.min.js')}}"></script>
-<script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
-    <script src="{{ asset('js/form-repeater-create.js') }}"></script>
+
     
 <script>
         $(function(){
@@ -229,16 +204,7 @@
                 theme: 'bootstrap4',
             });
             
-            $("#switch-offColor").bootstrapSwitch({
-                onSwitchChange: function(e, state) { 
-                    if(state) {
-                        $("#campos_comissao").removeClass('ds-none')
-                    } else {
-                        $("#campos_comissao").addClass('ds-none')    
-                    }
-                }
-            });
-
+           
 
     
         });

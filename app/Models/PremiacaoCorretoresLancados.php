@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ComissoesCorretores extends Model
+class PremiacaoCorretoresLancados extends Model
 {
     use HasFactory;
-    protected $table = "comissoes_corretores";
-
-   
-
-
+    protected $table = "premiacao_corretores_lancados";
+    
 }

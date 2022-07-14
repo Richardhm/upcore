@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComissoesCorretoresTable extends Migration
+class CreateComissoesCorretoresConfiguracoesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateComissoesCorretoresTable extends Migration
      */
     public function up()
     {
-        Schema::create('comissoes_corretores', function (Blueprint $table) {
+        Schema::create('comissoes_corretores_configuracoes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('plano_id');
             $table->unsignedBigInteger('user_id');
@@ -22,7 +22,7 @@ class CreateComissoesCorretoresTable extends Migration
             $table->string('valor');
             $table->integer('parcela');
             $table->foreign('plano_id')->references('id')->on('planos');
-            $table->foreign('user_id')->references('id')->on('planos');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('administradora_id')->references('id')->on('administradoras');
             $table->timestamps();
         });
@@ -35,6 +35,6 @@ class CreateComissoesCorretoresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comissoes_corretores');
+        Schema::dropIfExists('comissoes_corretores_configuracoes');
     }
 }

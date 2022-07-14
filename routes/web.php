@@ -54,10 +54,17 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::put("/corretores/{id}/update","App\Http\Controllers\Admin\CorretoresController@update")->name("corretores.update");
     Route::delete("/corretores/deletar/{id}","App\Http\Controllers\Admin\CorretoresController@destroy")->name("corretores.destroy");    
 
-    Route::get("/corretores/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresController@index")->name('comissao.corretores.index');
-    Route::get("/corretores/cadastrar/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresController@create")->name('comissao.corretores.cadastrar');
-    Route::post("/corretores/comissao/store","App\Http\Controllers\Admin\ComissoesCorretoresController@store")->name('comissao.corretores.store');
-    Route::get("/corretores/{id_corretor}/detalhes/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\ComissoesCorretoresController@detalhes")->name('comissao.corretores.detalhes');
+    Route::get("/corretores/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@index")->name('comissao.corretores.index');
+    Route::get("/corretores/cadastrar/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@create")->name('comissao.corretores.cadastrar');
+    Route::post("/corretores/comissao/store","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@store")->name('comissao.corretores.store');
+    Route::get("/corretores/{id_corretor}/detalhes/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@detalhes")->name('comissao.corretores.detalhes');
+
+    Route::get("/corretores/premiacao/{id}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@index")->name('premiacao.corretores.index');
+    Route::get("/corretores/cadastrar/premiacao/{id}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@create")->name('premiacao.corretores.cadastrar');
+    Route::post("/corretores/premiacao/store","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@store")->name('premiacao.corretores.store');
+    //Route::get("/corretores/{id_corretor}/detalhes/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@detalhes")->name('premiacao.corretores.detalhes');
+
+
 
 
     

@@ -20,6 +20,7 @@ class CreateCotacoesTable extends Migration
             $table->unsignedBigInteger('operadora_id')->nullable();
             $table->unsignedBigInteger('administradora_id')->nullable();
             $table->unsignedBigInteger('acomodacao_id')->nullable();
+            $table->unsignedBigInteger('plano_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('corretora_id');
             $table->string("codigo_externo")->nullable();
@@ -31,6 +32,7 @@ class CreateCotacoesTable extends Migration
             $table->foreign('acomodacao_id')->references('id')->on('acomodacao')->onDelete("cascade");
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
             $table->foreign('corretora_id')->references('id')->on('corretoras')->onDelete("cascade");
+            $table->foreign('plano_id')->references('id')->on('planos')->onDelete("cascade");
             $table->timestamps();
         });
     }

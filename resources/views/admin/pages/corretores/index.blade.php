@@ -29,7 +29,7 @@
                             <tr>
                                 <td>{{$c->name}}</td>
                                 <td><a href="{{route('comissao.corretores.index',$c->id)}}"><i class="fas fa-money-check-alt"></i></a></td>
-                                <td><i class="fas fa-money-check-alt"></i></td>
+                                <td><a href="{{route('premiacao.corretores.index',$c->id)}}"><i class="fas fa-money-check-alt"></i></a></td>
                                 <td>
                                     <a href="{{route('corretores.edit',$c->id)}}" class="btn btn-info btn-sm">
                                         <i class="fas fa-edit"></i>

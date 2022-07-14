@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Administradora;
-use App\Models\AdministradoraParcelas;
-//use App\Models\CorretoraAdministradora;
+//use App\Models\AdministradoraParcelas;
+
 use Illuminate\Support\Facades\Storage;
-use App\Models\ComissoesCorretoraAdministradora;
+use App\Models\ComissoesCorretoraConfiguracoes;
 
 class AdministradoraController extends Controller
 {
@@ -23,11 +23,7 @@ class AdministradoraController extends Controller
     public function index()
     {
         $corretora = auth()->user()->corretora_id;
-        // $administradoras = Administradora::whereIn('administradoras.id', function($query) use($corretora) {
-        //     $query->select('corretora_administradora.administradora_id');
-        //     $query->from('corretora_administradora');
-        //     $query->whereRaw("corretora_administradora.corretora_id={$corretora}");
-        // })->get();
+        
 
         $administradoras = Administradora::all();    
 
@@ -55,6 +51,7 @@ class AdministradoraController extends Controller
      */
     public function store(Request $request)
     {
+        
         $roles = [
             "nome" => "required",
             "logo" => "required",
@@ -80,7 +77,7 @@ class AdministradoraController extends Controller
         $administradora->save();
         
         foreach($parcelas as $k => $v) {
-            $aa = new ComissoesCorretoraAdministradora();
+            $aa = new ComissoesCorretoraConfiguracoes();
             $aa->administradora_id = $administradora->id;
             $aa->corretora_id = auth()->user()->corretora_id;
             $aa->valor = $v['parcelas'];
@@ -88,16 +85,6 @@ class AdministradoraController extends Controller
             $aa->save();    
             
         }
-
-        //$administradora->save();
-        // $corretora = auth()->user()->corretora_id;
-        // $ca = new CorretoraAdministradora();        
-        // $ca->corretora_id = $corretora;
-        // $ca->administradora_id = $administradora->id;
-        // $ca->save(); 
-
-
-
 
         return redirect()->route("administradora.index");
     }
@@ -122,7 +109,7 @@ class AdministradoraController extends Controller
     public function update(Request $request, $id)
     {
         //$vitalicio = isset($request->vitalicio) && !empty($request->vitalicio) && $request->vitalicio != null ? $request->vitalicio : null;
-        ComissoesCorretoraAdministradora::where('administradora_id',$id)->delete();
+        ComissoesCorretoraConfiguracoes::where('administradora_id',$id)->delete();
         $data = [];
         if($request->parcelas != null) {
             foreach($request->parcelas as $k => $v) {
@@ -146,7 +133,7 @@ class AdministradoraController extends Controller
         }
         $ii=1;
         foreach($dados as $kk => $vv) {
-            $admP = new ComissoesCorretoraAdministradora();
+            $admP = new ComissoesCorretoraConfiguracoes();
             $admP->administradora_id = $administradora->id;
             $admP->valor = $vv;
             $admP->corretora_id = auth()->user()->corretora_id;
@@ -162,9 +149,9 @@ class AdministradoraController extends Controller
     
     public function destroy($id)
     {
-        $comissoes = ComissoesCorretoraAdministradora::where('administradora_id',$id)->first();
+        $comissoes = ComissoesCorretoraConfiguracoes::where('administradora_id',$id)->first();
         if($comissoes) {
-            ComissoesCorretoraAdministradora::where('administradora_id',$id)->delete();
+            ComissoesCorretoraConfiguracoes::where('administradora_id',$id)->delete();
         }
         $administradora = $this->repository->find($id);
         if(!$administradora) {

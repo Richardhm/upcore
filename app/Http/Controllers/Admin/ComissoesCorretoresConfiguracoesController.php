@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ComissoesCorretores;
+use App\Models\ComissoesCorretoresConfiguracoes;
 use App\Models\User;
 use App\Models\Administradora;
 
 use App\Models\Planos;
 
-class ComissoesCorretoresController extends Controller
+class ComissoesCorretoresConfiguracoesController extends Controller
 {
     public function index($id)
     {
@@ -20,12 +20,12 @@ class ComissoesCorretoresController extends Controller
             return redirect()->back();
         }
 
-        $comissoes = ComissoesCorretores::where("user_id",$id)
+        $comissoes = ComissoesCorretoresConfiguracoes::where("user_id",$id)
             ->selectRaw("user_id")
-            ->selectRaw("(SELECT nome FROM planos WHERE planos.id = comissoes_corretores.plano_id) as plano")
-            ->selectRaw("(SELECT id FROM planos WHERE planos.id = comissoes_corretores.plano_id) as id_plano")
-            ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = comissoes_corretores.administradora_id) as administradora")
-            ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = comissoes_corretores.administradora_id) as id_administradora")
+            ->selectRaw("(SELECT nome FROM planos WHERE planos.id = comissoes_corretores_configuracoes.plano_id) as plano")
+            ->selectRaw("(SELECT id FROM planos WHERE planos.id = comissoes_corretores_configuracoes.plano_id) as id_plano")
+            ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = comissoes_corretores_configuracoes.administradora_id) as administradora")
+            ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = comissoes_corretores_configuracoes.administradora_id) as id_administradora")
             ->groupByRaw("plano_id,administradora_id")
             ->get();
 
@@ -80,7 +80,7 @@ class ComissoesCorretoresController extends Controller
         $request->validate($rules,$message);
         $ii=1;
         foreach($request->parcelas as $k => $v):
-            $cad = new ComissoesCorretores();
+            $cad = new ComissoesCorretoresConfiguracoes();
             $cad->user_id = $request->user_id;
             $cad->plano_id = $request->plano_id;
             $cad->administradora_id = $request->administradora_id;
@@ -97,7 +97,7 @@ class ComissoesCorretoresController extends Controller
 
     public function detalhes($user,$plano,$administradora) 
     {
-        $comissao = ComissoesCorretores::
+        $comissao = ComissoesCorretoresConfiguracoes::
             selectRaw("parcela,valor")
             ->where("user_id",$user)
             ->where("plano_id",$plano)

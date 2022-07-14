@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComissoesCorretoraAdministradorasTable extends Migration
+class CreatePremiacaoCorretoresConfiguracoesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateComissoesCorretoraAdministradorasTable extends Migration
      */
     public function up()
     {
-        Schema::create('comissoes_corretora_administradoras', function (Blueprint $table) {
+        Schema::create('premiacao_corretores_configuracoes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('plano_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('administradora_id');
-            $table->unsignedBigInteger('corretora_id');
             
-            $table->integer("parcela");
-            $table->date("data")->nullable();
-            $table->decimal("valor",10,2);
-            $table->boolean("status")->default(0);
+            $table->string('valor');
+            
+            $table->foreign('plano_id')->references('id')->on('planos');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('administradora_id')->references('id')->on('administradoras');
-            $table->foreign('corretora_id')->references('id')->on('corretoras');
+
             $table->timestamps();
         });
     }
@@ -35,6 +36,6 @@ class CreateComissoesCorretoraAdministradorasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comissoes_corretora_administradoras');
+        Schema::dropIfExists('premiacao_corretores_configuracoes');
     }
 }

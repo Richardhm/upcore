@@ -12,7 +12,7 @@ class Administradora extends Model
 
     public function parcelas()
     {
-        return $this->hasMany(ComissoesCorretoraAdministradora::class);
+        return $this->hasMany(ComissoesCorretoraConfiguracoes::class);
     }
 
 

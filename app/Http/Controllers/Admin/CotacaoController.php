@@ -14,10 +14,16 @@ use App\Models\{
     CotacaoFaixaEtaria,
     Administradora,
     Comissao,
-    ComissoesCorretores,
-    ComissoesVendedor,
+    
     Operadora,
-    Planos
+    Planos,
+    ComissoesCorretoresConfiguracoes,
+    ComissoesCorretoraConfiguracoes,
+    ComissoesCorretoraLancadas,
+    ComissoesCorretorLancados,
+    PremiacaoCorretoresConfiguracoes,
+    PremiacaoCorretoresLancados,
+    PremiacaoCorretoraLancadas
 };
 use Illuminate\Support\Facades\DB;
 
@@ -194,7 +200,7 @@ class CotacaoController extends Controller
 
     public function detalhesDoContratoComissoes($id)
     {
-        $comissoes = ComissoesVendedor::whereRaw("comissao_id = (SELECT id FROM comissoes WHERE cliente_id = ".$id.")")->get();
+        $comissoes = ComissoesCorretorLancados::whereRaw("comissao_id = (SELECT id FROM comissoes WHERE cliente_id = ".$id.")")->get();
         return view('admin.pages.contrato.detalhes',[
             "comissoes" => $comissoes
         ]);
@@ -351,6 +357,7 @@ class CotacaoController extends Controller
         if($cotacao) {
             $cotacao->operadora_id = $request->operadora;
             $cotacao->administradora_id = $request->administradora;
+            $cotacao->plano_id = $request->plano;
             $cotacao->acomodacao_id = $request->acomodacao;
             $cotacao->codigo_externo = $request->codigo_externo;
             $cotacao->valor = $request->valor;
@@ -362,6 +369,7 @@ class CotacaoController extends Controller
             $cotacao->cidade_id = $request->cidade;
             $cotacao->operadora_id = $request->operadora;
             $cotacao->administradora_id = $request->administradora;
+            $cotacao->plano_id = $request->plano;
             $cotacao->acomodacao_id = $request->acomodacao;
             $cotacao->user_id = auth()->user()->id;
             $cotacao->corretora_id = auth()->user()->corretora_id;
@@ -374,7 +382,7 @@ class CotacaoController extends Controller
         
         /** Tabela CotacaoFaixaEtaria */
         CotacaoFaixaEtaria::where("cotacao_id",$cotacao->id)->delete();
-
+        $totalVidas = 0;
         $faixas = $request->faixas_etarias;
         foreach($faixas as $k => $v) {
             if($v != 0) {
@@ -383,8 +391,10 @@ class CotacaoController extends Controller
                 $orcamentoFaixaEtaria->faixa_etaria_id = $k;
                 $orcamentoFaixaEtaria->quantidade = $v;
                 $orcamentoFaixaEtaria->save();
+                $totalVidas += $v;
             } 
         }
+        
         
         
         /*Gera Comissao Para O Corretor*/
@@ -397,19 +407,59 @@ class CotacaoController extends Controller
         $comissao->save();    
 
 
-        $comissoes = ComissoesCorretores::where("plano_id",$request->plano)->where("administradora_id",$request->administradora)->get();
-        
-        foreach($comissoes as $c) {
-            $comissaoVendedor = new ComissoesVendedor();
-            $comissaoVendedor->comissao_id = $comissao->id;
-            $comissaoVendedor->parcela = $c->parcela;
-            $comissaoVendedor->data = date("Y-m-d");
-            $comissaoVendedor->valor = ($request->valor * $c->valor) / 100;
-            $comissaoVendedor->save();    
-        }   
-        
+        /** Comissao Corretor */
+        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes::where("plano_id",$request->plano)->where("administradora_id",$request->administradora)->where("user_id",auth()->user()->id)->get();
+        if(count($comissoes_configuradas_corretor) >= 1) {
+            foreach($comissoes_configuradas_corretor as $c) {
+                $comissaoVendedor = new ComissoesCorretorLancados();
+                $comissaoVendedor->comissao_id = $comissao->id;
+                $comissaoVendedor->parcela = $c->parcela;
+                $comissaoVendedor->data = date("Y-m-d");
+                $comissaoVendedor->valor = ($request->valor * $c->valor) / 100;
+                $comissaoVendedor->save();    
+            }
+        }
 
+        /** Premiacao Corretor Por Total de Vida */
+        $premiacao_configurada_corretor = PremiacaoCorretoresConfiguracoes::where("plano_id",$request->plano)->where("administradora_id",$request->administradora)->where("user_id",auth()->user()->id)->first();
+        // dd($premiacao_configurada_corretor->valor);
+        // $dd = (float) $premiacao_configurada_corretor->valor * $totalVidas;
+       
+        if($premiacao_configurada_corretor) {
+            $premiacaoCorretoresLancados = new PremiacaoCorretoresLancados();
+            $premiacaoCorretoresLancados->comissao_id = $comissao->id;
+            $premiacaoCorretoresLancados->user_id = auth()->user()->id;
+            $premiacaoCorretoresLancados->total = (float) $premiacao_configurada_corretor->valor * $totalVidas;
+            $premiacaoCorretoresLancados->save();
+        }
+        
+        /** Comissao Corretora */   
+        $comissoes_configurada_corretora = ComissoesCorretoraConfiguracoes::where("administradora_id",$request->administradora)->get();
+        if(count($comissoes_configurada_corretora)>=1) {
+            foreach($comissoes_configurada_corretora as $cc) {
+                $comissaoCorretoraLancadas = new ComissoesCorretoraLancadas();
+                $comissaoCorretoraLancadas->comissao_id = $comissao->id;            
+                $comissaoCorretoraLancadas->parcela = $c->parcela;
+                $comissaoCorretoraLancadas->data = date("Y-m-d");
+                
+                $comissaoCorretoraLancadas->valor = ($request->valor * $cc->valor) / 100;
+                $comissaoCorretoraLancadas->save();
+            }
+            
 
+        }
+
+        
+        /** Premiação Corretora */
+        $premiacao_administradora_corretora = Administradora::where("id",$request->administradora)->first();
+        if($premiacao_administradora_corretora) {
+            $premiacaoCorretoraLancadas = new PremiacaoCorretoraLancadas();
+            $premiacaoCorretoraLancadas->comissao_id = $comissao->id;
+            $premiacaoCorretoraLancadas->user_id = auth()->user()->id;
+            $premiacaoCorretoraLancadas->total = (float) $premiacao_administradora_corretora->premiacao_corretora * $totalVidas;
+            $premiacaoCorretoraLancadas->save();
+
+        }
 
         return redirect()->route('clientes.index');
     }

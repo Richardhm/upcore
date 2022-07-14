@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComissoesVendedor extends Migration
+class CreateComissoesCorretorLancados extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateComissoesVendedor extends Migration
      */
     public function up()
     {
-        Schema::create('comissoes_vendedor', function (Blueprint $table) {
+        Schema::create('comissoes_corretor_lancados', function (Blueprint $table) {
             $table->id();          
             $table->unsignedBigInteger('comissao_id');
             $table->foreign('comissao_id')->references('id')->on('comissoes');
@@ -33,6 +33,6 @@ class CreateComissoesVendedor extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comissoes_vendedor');
+        Schema::dropIfExists('comissoes_corretor_lancados');
     }
 }

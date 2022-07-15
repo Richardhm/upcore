@@ -18,9 +18,9 @@ class CreatePremiacaoCorretoresLancadosTable extends Migration
             $table->unsignedBigInteger('comissao_id');
             $table->unsignedBigInteger('user_id');
             $table->decimal('total',10,2);
-
-            $table->foreign('comissao_id')->references('id')->on('comissoes');
-            $table->foreign('user_id')->references('id')->on('comissoes');
+            $table->boolean('status')->default(0);
+            $table->foreign('comissao_id')->references('id')->on('comissoes')->onDelete("cascade");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
             $table->timestamps();
         });
     }

@@ -22,8 +22,8 @@ class CreateComissoesCorretoraConfiguracoesTable extends Migration
             
             $table->string("valor");
             $table->boolean("status")->default(0);
-            $table->foreign('administradora_id')->references('id')->on('administradoras');
-            $table->foreign('corretora_id')->references('id')->on('corretoras');
+            $table->foreign('administradora_id')->references('id')->on('administradoras')->onDelete("cascade");
+            $table->foreign('corretora_id')->references('id')->on('corretoras')->onDelete("cascade");
             $table->timestamps();
         });
     }

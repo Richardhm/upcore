@@ -35,9 +35,9 @@ class CreateClientesTable extends Migration
             
             
             $table->date("ultimo_contato")->nullable();
-            $table->foreign('cidade_id')->references('id')->on('cidades');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('etiqueta_id')->references('id')->on('etiquetas');
+            $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete("cascade");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
+            $table->foreign('etiqueta_id')->references('id')->on('etiquetas')->onDelete("cascade");
 
 
             $table->timestamps();

@@ -19,7 +19,7 @@ class CreateTarefasTable extends Migration
             $table->date('data');
             $table->string('title');
             $table->text('descricao');
-            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete("cascade");
             $table->timestamps();
         });
     }

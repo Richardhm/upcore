@@ -51,7 +51,11 @@ class HomeController extends Controller
             $clienteFechados = Cotacao::where("user_id",auth()->user()->id)->whereHas('clientes',function($query){
                 $query->where('etiqueta_id','=',3);
             })->count();
-            $etiquetas = Etiquetas::selectRaw('id,nome,cor')->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id) AS quantidade')->paginate(5);
+            $etiquetas = Etiquetas::
+                
+                selectRaw('id,nome,cor')
+                ->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id AND user_id = '.auth()->user()->id.') AS quantidade')
+                ->paginate(5);
             $tarefas = Tarefa::paginate(5,['*'], 'tarefas');
 
             $tarefas->withPath('/admin');

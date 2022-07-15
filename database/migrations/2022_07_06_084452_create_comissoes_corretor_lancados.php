@@ -16,7 +16,7 @@ class CreateComissoesCorretorLancados extends Migration
         Schema::create('comissoes_corretor_lancados', function (Blueprint $table) {
             $table->id();          
             $table->unsignedBigInteger('comissao_id');
-            $table->foreign('comissao_id')->references('id')->on('comissoes');
+            $table->foreign('comissao_id')->references('id')->on('comissoes')->onDelete("cascade");
             $table->integer("parcela");
             $table->date("data");
             $table->decimal("valor",10,2);

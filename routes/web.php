@@ -217,6 +217,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/cliente/orcamento/{id}","App\Http\Controllers\Admin\ClienteController@clienteOrcamento")->name("cliente.orcamento");
     Route::get("/cliente/contrato/{id}","App\Http\Controllers\Admin\ClienteController@clienteContrato")->name("cliente.contrato");
     Route::post("/clientes/store","App\Http\Controllers\Admin\ClienteController@store")->name("clientes.store");
+    Route::post("/cliente/existe","App\Http\Controllers\Admin\ClienteController@clienteExisteAjax")->name("cliente.existe");
+
     Route::post("/clientes/definirStatus","App\Http\Controllers\Admin\ClienteController@definirStatus")->name("clientes.definirStatus");
     Route::post("/clientes/mudarStatus","App\Http\Controllers\Admin\ClienteController@mudarStatus")->name("clientes.mudarStatus");
     Route::get("/clientes/corretores","App\Http\Controllers\Admin\ClienteController@clientesCorretores")->name("clientes.corretores");

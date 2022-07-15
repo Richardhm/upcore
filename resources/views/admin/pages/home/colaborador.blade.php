@@ -43,7 +43,47 @@
     </div>
 </section> 
 
+<div class="row">
+    
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box bg-navy">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-number">41,410</span>
+                <span class="info-box-text">Comissões a Receber</span>
+                
+                
+            </div>
+        </div>
+    </div>
 
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box bg-lightblue">
+            <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-number">41,410</span>
+                <span class="info-box-text">Premiações a Receber</span>
+                
+               
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box bg-olive">
+            <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-number">41,410</span>
+                <span class="info-box-text">Total a Receber</span>
+                
+                
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
 
 
 <section class="row">

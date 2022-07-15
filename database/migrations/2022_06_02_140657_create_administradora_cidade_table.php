@@ -17,8 +17,8 @@ class CreateAdministradoraCidadeTable extends Migration
             $table->id();
             $table->unsignedBigInteger('administradora_id');
             $table->unsignedBigInteger('cidade_id');
-            $table->foreign('administradora_id')->references('id')->on('administradoras');
-            $table->foreign('cidade_id')->references('id')->on('cidades');
+            $table->foreign('administradora_id')->references('id')->on('administradoras')->onDelete("cascade");
+            $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete("cascade");
             $table->timestamps();
         });
     }

@@ -149,6 +149,29 @@
                             $('.errortelefone').html('');  
                         }
 
+                        if(res == "clienteexiste") {
+                            $.ajax({
+                                url:"{{route('cliente.existe')}}",
+                                method:"POST",
+                                data:"nome="+$('input[name="nome"]').val()+"&email="+$('input[name="email"]').val()+"&telefone="+$('input[name="telefone"]').val()
+                            }).done(function(data){
+                                Swal.fire({
+                                    title: '<h4>Cliente '+data.nome+' já esta cadastrado!</h4>',
+                                    icon: 'info',
+                                    type: 'info',
+                                    showCloseButton: true,
+                                    html:
+                                        '<hr />'+
+                                        '<p>Cadastrado em '+data.cadastrado+' pelo corretor '+data.user+'</p><p>Seu status atual é <b>'+data.etiqueta+'</b> </p>'+
+                                        '<p>O que deseja fazer?</p><hr />'+
+                                        "<a class='btn btn-primary btn-sm mr-5' href='/admin/cotacao/orcamento/"+data.id+"'>Orçamento</a> <a class='btn btn-info btn-sm mr-5' href='/admin/cotacao/contrato/"+data.id+"'>Contrato</a><a class='btn btn-secondary btn-sm mr-5' href='{{route('clientes.index')}}'>Listar Clientes</a></div>",
+                                    showCancelButton: false,
+                                    showConfirmButton: false                            
+                                });
+                            });
+                            return false;   
+                        }
+
                         Swal.fire({
                             title: '<p>Cliente <b><u>'+res.nome+'</u></b> cadastrado com sucesso!</p>',
                             icon: 'success',

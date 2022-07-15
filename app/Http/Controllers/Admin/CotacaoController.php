@@ -200,7 +200,9 @@ class CotacaoController extends Controller
 
     public function detalhesDoContratoComissoes($id)
     {
+       
         $comissoes = ComissoesCorretorLancados::whereRaw("comissao_id = (SELECT id FROM comissoes WHERE cliente_id = ".$id.")")->get();
+        
         return view('admin.pages.contrato.detalhes',[
             "comissoes" => $comissoes
         ]);
@@ -439,7 +441,7 @@ class CotacaoController extends Controller
             foreach($comissoes_configurada_corretora as $cc) {
                 $comissaoCorretoraLancadas = new ComissoesCorretoraLancadas();
                 $comissaoCorretoraLancadas->comissao_id = $comissao->id;            
-                $comissaoCorretoraLancadas->parcela = $c->parcela;
+                $comissaoCorretoraLancadas->parcela = $cc->parcela;
                 $comissaoCorretoraLancadas->data = date("Y-m-d");
                 
                 $comissaoCorretoraLancadas->valor = ($request->valor * $cc->valor) / 100;

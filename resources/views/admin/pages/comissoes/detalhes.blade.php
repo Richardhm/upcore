@@ -1,12 +1,13 @@
 @extends('adminlte::page')
 @section('title', 'Comissões')
 @section('content_header')
-    <h3>Comissoes</h3>
+    <h3>Corretor</h3>
 @stop
 @section('content')
     <div class="card">
 
         <div class="card-body">
+            <h4>Comissão</h4>
             <table class="table">
                 <thead>
                     <tr>
@@ -22,7 +23,7 @@
                     <tr>
                         <td>{{date('d/m/Y',strtotime($c->data))}}</td>
                         <td>{{$c->parcela}}</td>
-                        <td>{{$c->valor}}</td>
+                        <td>{{number_format($c->valor,2,",",".")}}</td>
                        
                         <td>
                             <i 
@@ -37,12 +38,41 @@
                     @endforeach
                 </tbody>
             </table>
+            <hr>    
+            
+            
+
+
         </div>
 
 
     </div>
 
+    <div class="card">
+        <div class="card-header">
+            <h3>Premiação</h3>
+        </div>
+        <div class="card-body">
+        
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Premiacao</th>
+                        
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{number_format($premiacao->total,2,",",".")}}</td>
+                        <td>status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
+    <h4>Corretora</h4>
 
 
 @stop   

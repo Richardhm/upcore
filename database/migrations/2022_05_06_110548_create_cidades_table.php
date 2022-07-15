@@ -19,7 +19,7 @@ class CreateCidadesTable extends Migration
             
             $table->string("nome")->unique();
             $table->string("uf");
-            $table->foreign('corretora_id')->references('id')->on('corretoras');
+            $table->foreign('corretora_id')->references('id')->on('corretoras')->onDelete("cascade");
             $table->timestamps();
         });
     }

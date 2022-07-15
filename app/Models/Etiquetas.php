@@ -11,4 +11,10 @@ class Etiquetas extends Model
     protected $table = "etiquetas";
     protected $fillable = ["nome","cor","padrao"];
     
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
 }

@@ -102,6 +102,11 @@ class ClienteController extends Controller
             return "errortelefone";
         }    
 
+        $clientes = Cliente::where("nome",$request->nome)->where("email",$request->email)->where("telefone",$request->telefone)->first();
+        if($clientes) {
+            return "clienteexiste";
+        }
+
         $dados = $request->all();
         $dados['pessoa_fisica'] = $request->modelo == "pf" ? 1 : 0;
         $dados['pessoa_juridica'] = $request->modelo == "pj" ? 1 : 0;
@@ -115,6 +120,20 @@ class ClienteController extends Controller
 
 
     }
+
+    public function clienteExisteAjax(Request $request)
+    {
+        $cliente = Cliente::where("nome",$request->nome)->where("email",$request->email)->where("telefone",$request->telefone)
+            ->selectRaw("nome,email,telefone,id")
+            ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS etiqueta")
+            ->selectRaw("(SELECT name FROM users WHERE users.id = clientes.user_id) AS user")
+            ->selectRaw("DATE_FORMAT(created_at,'%d/%m/%Y') as cadastrado")
+            ->first();
+        return $cliente;
+    }
+
+
+
 
     public function clienteOrcamento($id)
     {

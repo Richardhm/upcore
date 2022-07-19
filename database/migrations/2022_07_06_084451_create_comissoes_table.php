@@ -18,7 +18,11 @@ class CreateComissoesTable extends Migration
             $table->unsignedBigInteger('cotacao_id');
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('user_id');
-           
+            
+            $table->boolean('status')->default(0);
+            $table->date('data')->nullable();
+
+
             $table->foreign('cotacao_id')->references('id')->on('cotacoes')->onDelete("cascade");
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete("cascade");
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");

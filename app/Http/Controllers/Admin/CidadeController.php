@@ -63,35 +63,7 @@ class CidadeController extends Controller
 
 
 
-    public function search(Request $request)
-    {
-        $filtro = $request->except("_token");    
-        
-        // $search = DB::table('administradora_cidade')
-        //     ->selectRaw("id")
-        //     ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = administradora_cidade.administradora_id) AS administradora")
-        //     ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = administradora_cidade.cidade_id) AS cidade")
-        //     ->havingRaw("cidade LIKE '%".$filtro['search']."%' OR administradora LIKE '%".$filtro['search']."%'")->paginate();
-        
-        //$search = DB::table('administradora')
-            //->selectRaw("id,nome")
-            //->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = cidades.administradora_id) AS administradora")
-            //->whereRaw("nome LIKE ".$filtro['nome']);
-            //->toSql();
-        //dd($search);    
-        
-        $search = DB::table('cidades')
-            ->selectRaw('id,nome')
-            ->selectRaw('(SELECT nome FROM administradoras WHERE administradoras.id = cidades.administradora_id) AS administradora')
-            ->whereRaw("nome LIKE '%".$filtro['search']."%'")
-            ->paginate();
-            
-        
-        return view('admin.pages.cidades.index',[
-            "cidades" => $search,
-            "filtro" => $filtro
-        ]);    
-    }
+   
 
 
 

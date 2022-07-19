@@ -7,7 +7,11 @@
 
 
 <div class="card">
-    
+    @if (session('success'))
+        <div class="alert alert-success">
+            <p class="text-center">{{ session('success') }}</p>
+        </div>
+    @endif    
     <div class="card-body">
 
         @if(count($contratos) >= 1)
@@ -34,7 +38,7 @@
                             <td>{{$c->cotacao->acomodacao->nome}}</td>
                             <td>{{$c->cidade->nome}}</td>
                             <td>{{number_format($c->cotacao->valor,2,",",".")}}</td>
-                            <td><a href="{{route('cotacao.comissao.detalhes',$c->id)}}">Detalhes</a></td>
+                            <td><a href="{{route('cotacao.comissao.detalhes',$c->comissoes->id)}}">Detalhes</a></td>
                         </tr>
                         
                     @endforeach

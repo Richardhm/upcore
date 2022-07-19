@@ -11,8 +11,9 @@
     <div class="card">
         <div class="card-body">
         <form action="{{route('tabela.pesquisar')}}" method="POST" name="pesquisar_modal">
-                <input type="hidden" name="city" id="city" value="{{old('cidade_search')}}">
-                <input type="hidden" name="plans" id="plans" value="{{old('planos_search')}}">
+                <input type="hidden" name="city" id="city" value="{{$cidade_id ?? old('cidade_search')}}">
+                <input type="hidden" name="plans" id="plans" value="{{$plano_id ?? old('planos_search')}}">
+                
                         @csrf
                         <input type="hidden" name="old_operadora" id="old_operadora">
                         <div class="form-row">
@@ -68,8 +69,8 @@
                                 <label for="coparticipacao_search">Coparticipação:</label><br />
                                 <select name="coparticipacao_search" id="coparticipacao_search" class="form-control">
                                     <option value="">--Escolher Coparticipacao--</option>
-                                    <option value="sim" {{old('coparticipacao_search') == "sim" ? 'selected' : (!empty($coparticipao) && $coparticipacao == 1 ? 'selected' : '')  }}>Sim</option>
-                                    <option value="nao" {{old('coparticipacao_search') == "nao" ? 'selected' : (!empty($coparticipao) && $coparticipacao == 0 ? 'selected' : '') }}>Não</option>
+                                    <option value="sim" {{isset($coparticipacao) && $coparticipacao == 1 ? 'selected' : ''  }}>Sim</option>
+                                    <option value="nao" {{isset($coparticipacao) && $coparticipacao == 0 ? 'selected' : '' }}>Não</option>
                                 </select>
                                 @if($errors->has('coparticipacao_search'))
                                     <p class="alert alert-danger">{{$errors->first('coparticipacao_search')}}</p>
@@ -79,8 +80,8 @@
                                 <label for="odonto_search">Odonto:</label><br />
                                 <select name="odonto_search" id="odonto_search" class="form-control">
                                     <option value="">--Escolher Odonto--</option>
-                                    <option value="sim" {{old('odonto_search') == "sim" ? 'selected' : (!empty($odonto) && $odonto == 1 ? 'selected' : '') }}>Sim</option>
-                                    <option value="nao" {{old('odonto_search') == "nao" ? 'selected' : (!empty($odonto) && $odonto == 0 ? 'selected' : '') }}>Não</option>
+                                    <option value="sim" {{isset($odonto) && $odonto == 1 ? 'selected' : '' }}>Sim</option>
+                                    <option value="nao" {{isset($odonto) && $odonto == 0 ? 'selected' : '' }}>Não</option>
                                 </select>
                                 @if($errors->has('odonto_search'))
                                     <p class="alert alert-danger">{{$errors->first('odonto_search')}}</p>
@@ -92,57 +93,50 @@
                     </div>                                     
                 </form>
    </div>
-    @if(isset($header) && !empty($header) && isset($tabelas) && !empty($tabelas))
-    <div class="card">
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                @foreach($header as $k => $v)              
-                    <th colspan="5" style="text-align:center;">{{$v->COPARTICIPACAO_TEXTO}}</th>
-                    <tr>
-                        <th colspan="5" style="text-align:center;">{{$v->ODONTO_TEXTO}}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="5" style="text-align:center;">{{$v->administradora}}</th>
-                    </tr>
-                @endforeach
-            </tr>    
-        </thead>
-        <tbody>
-            <tr>
-                <th>Faixa Etaria</th>
-                <th>Apartamento</th>
-                <th>Enfermaria</th>
-                <th>Ambulatorial</th>
-            </tr>
-            @foreach($tabelas as $k => $v)
-                <tr>
-                    <th>{{$v->etaria}}</th>
-                    <td>
-                        @if($v->apartamento >= 1)
-                            <button style="border:none;background-color:#FFF;" data-toggle="modal" data-target="#alterarModal" data-id="{{$v->apartamento_id}}" data-valor="{{number_format($v->apartamento,2,',','.')}}">{{number_format($v->apartamento,2,",",".")}}</button>
-                        @else
-                            {{number_format($v->apartamento,2,",",".")}}
-                        @endif
-                    </td>
-                    <td>
-                        @if($v->enfermaria >= 1)
-                            <button style="border:none;background-color:#FFF;" data-toggle="modal" data-target="#alterarModal" data-id="{{$v->enfermaria_id}}" data-valor="{{number_format($v->enfermaria,2,',','.')}}">{{number_format($v->enfermaria,2,",",".")}}</button>
-                        @else
-                            {{number_format($v->enfermaria,2,",",".")}}
-                        @endif
-                    </td>
-                    <td>
-                        @if($v->ambulatorial >= 1)
-                            <button style="border:none;background-color:#FFF;" data-toggle="modal" data-target="#alterarModal" data-id="{{$v->ambulatorial_id}}" data-valor="{{number_format($v->ambulatorial,2,',','.')}}">{{number_format($v->ambulatorial,2,",",".")}}</button>
-                        @else
-                            {{number_format($v->ambulatorial,2,",",".")}}
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    @if(isset($tabelas) && count($tabelas) >= 1)
+        <div class="card">
+            
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr class="border-bottom border-top">
+                            <td colspan="4" align="center"><b>{{$administradora_texto}}</b></td>
+                        </tr>
+                        <tr class="border-bottom">
+                            <td colspan="4" align="center"><b>{{$coparticipacao_texto}} - {{$odonto_texto}}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Faixa</th>
+                            <th>Apartamento</th>
+                            <th>Enfermaria</th>
+                            <th>Ambulatorial</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($tabelas as $t)
+                        <tr>
+                            <td>{{$t->faixas}}</td>
+                            <td><button style="border:none;background-color:#FFF;" data-toggle="modal" data-target="#alterarModal" data-id="{{$t->id_apartamento}}" data-valor="{{number_format($t->apartamento,2,',','.')}}">{{number_format($t->apartamento,2,",",".")}}</button></td>
+                            <td><button style="border:none;background-color:#FFF;" data-toggle="modal" data-target="#alterarModal" data-id="{{$t->id_enfermaria}}" data-valor="{{number_format($t->enfermaria,2,',','.')}}">{{number_format($t->enfermaria,2,",",".")}}</button></td>
+                            <td><button style="border:none;background-color:#FFF;" data-toggle="modal" data-target="#alterarModal" data-id="{{$t->id_ambulatorial}}" data-valor="{{number_format($t->ambulatorial,2,',','.')}}">{{number_format($t->ambulatorial,2,",",".")}}</button></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+        
+    @endif
+
+    @if(isset($tabelas) && count($tabelas) == 0) 
+    <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
+        
+
+    @endif
+
+
+   
 
     <div class="modal fade" id="alterarModal" tabindex="-1" aria-labelledby="alterarModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -154,7 +148,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{route('orcamento.edit.valor')}}" method="POST" name="alterar_valor" id="alterar_valor">
+        <form action="{{route('tabela.edit.valor')}}" method="POST" name="alterar_valor" id="alterar_valor">
             @csrf    
             <input type="hidden" name="id" id="id">
             
@@ -172,10 +166,8 @@
   </div>
 </div>    
 </div>
-    @endif
-    @if(isset($header) && empty($header) && isset($tabelas) && empty($tabelas))
-        <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
-    @endif
+    
+  
 @stop
 @section('js')
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>
@@ -210,8 +202,10 @@
             });
 
             function verificar_administradora(valor,city,plans){
+                
                 let selectedCity = (city != null && city != '' ? city : '');
                 let selectedPlan = (plans != null && plans != '' ? plans : '');
+                
                 if(valor != "") {
                     
                     $.ajax({

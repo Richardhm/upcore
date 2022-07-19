@@ -45,42 +45,75 @@
 
 <div class="row">
     
-    <div class="col-md-4 col-sm-6 col-12">
+    <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box bg-navy">
             <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">41,410</span>
+                <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
                 <span class="info-box-text">Comissões a Receber</span>
-                
+                <div class="progress">
+                    <div class="progress-bar" style="width: 100%"></div>
+                    
+                </div>
+                <span class="progress-description">
+                    Referente ao mês {{date('M')}}
+                </span>
                 
             </div>
         </div>
     </div>
 
-    <div class="col-md-4 col-sm-6 col-12">
+    <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box bg-lightblue">
             <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">41,410</span>
+                <span class="info-box-number">R$ {{number_format($totalPremiacao,2,",",".")}}</span>
                 <span class="info-box-text">Premiações a Receber</span>
-                
+                <div class="progress">
+                    <div class="progress-bar" style="width: 100%"></div>
+                    
+                </div>
+                <span class="progress-description">
+                    Referente ao mês {{date('M')}}
+                </span>
                
             </div>
         </div>
     </div>
 
-    <div class="col-md-4 col-sm-6 col-12">
+    <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box bg-olive">
             <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">41,410</span>
+                <span class="info-box-number">{{number_format($totalMes,2,",",".")}}</span>
                 <span class="info-box-text">Total a Receber</span>
-                
-                
+                <div class="progress">
+                    <div class="progress-bar" style="width: 100%"></div>
+                    
+                </div>
+                <span class="progress-description">
+                    Referente ao mês {{date('M')}}
+                </span>    
             </div>
         </div>
     </div>
 
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box bg-gray-dark">
+            <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-number">{{$totalVidas}}</span>
+                <span class="info-box-text">Total Vidas</span>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 100%"></div>
+                    
+                </div>
+                <span class="progress-description">
+                    Referente ao mês {{date('M')}}
+                </span>    
+            </div>
+        </div>
+    </div>
     
 
 </div>

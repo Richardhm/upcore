@@ -46,6 +46,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
     Route::get("/cotacao/contrato/comissao/{id_cliente}","App\Http\Controllers\Admin\CotacaoController@detalhesDoContratoComissoes")->name("cotacao.comissao.detalhes");
 
+    Route::get("/criar/pdf/{id_orcamento}/{id_cidade}/{plano_id}/{coparticipacao}/{odonto}/{operadora_id}/{administradora_id}","App\Http\Controllers\Admin\CotacaoController@criarPDF")->name("cotacao.pdf");
+    
 
     Route::get("/corretores","App\Http\Controllers\Admin\CorretoresController@index")->name("corretores.index");
     Route::get("/corretores/create","App\Http\Controllers\Admin\CorretoresController@create")->name("corretores.create");
@@ -88,64 +90,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/tabela/search","App\Http\Controllers\Admin\TabelaController@search")->name("tabela.search");
 
     Route::post("/tabelas/pegar/cidades/administradoras","App\Http\Controllers\Admin\TabelaController@pegarCidadeAdministradora")->name("cidades.administradoras.pegar");
-    
-    /**************************************************** Orcamentos *************************************************************/
-
-
-        /****************************************************  Menu Cadastro  *******************************************************/
-        
-        /** Tela de Cadastrar Orcamento - Tela de Cadastro - view => admin.pages.orcamento.index */
-        //Route::get("/orcamento/create","App\Http\Controllers\Admin\OrcamentoController@index")->name("orcamento.index");//tela de cadastro do orcamento
-
-        // Route::get("/orcamento","App\Http\Controllers\Admin\OrcamentoController@index")->name("orcamento.index");
-
-
-
-
-        /** Cadastrar Orcamento Montar Plano Via Ajax */
-        // Route::post("/orcamentos/planos","App\Http\Controllers\Admin\OrcamentoController@montarPlano")->name("orcamento.planos");
-        /****************************************************  Menu Cadastro  *******************************************************/
-
-        /****************************************************  Menu Meus Orçamentos *************************************************/
-
-        /** Listar Orcamentos do Administrador Logado - view => admin.pages.orcamento.administrador.listar-orcamento-administrador */
-        // Route::get("/orcamentos/administrador/{id_admin}","App\Http\Controllers\Admin\OrcamentoController@listarAdministrador")->name("orcamento.admin.show");
-
-        /** Administrador && Corretor Visualizar os orcamentos de um cliente Especifico - URL - admin/orcamentos/cliente/5 - View => admin.pages.orcamento.administrador.listar-orcamento-por-cliente  */
-        // Route::get("/orcamentos/cliente/{id_cliente}","App\Http\Controllers\Admin\OrcamentoController@listarOrcamentoPorCliente")->name("orcamento.detalhes");
-
-        /** Administrador && Corretor Ver Detalhe do orcamento de um Cliente URL - orcamentos/ver/orcamento/5 View => admin.pages.orcamento.administrador.listar-orcamento-por-id-orcamento */
-        // Route::get("/orcamentos/ver/orcamento/{id_orcamento}","App\Http\Controllers\Admin\OrcamentoController@showOrcamentoUnico")->name("orcamentos.show.detalhe"); 
-
-        /** Corretor ve listagem de seus orcamentos listagem de cliente - URL => orcamentos/corretor/3  */
-        //Route::get("/orcamentos/corretor/{id_corretor}","App\Http\Controllers\Admin\OrcamentoController@listarCorretor")->name("orcamento.corretor.show"); 
-
-        /****************************************************  Fim Menu Meus Orçamentos *************************************************/
-
-        /********************************************** Menu Orçamentos Corretores *****************************************************/
-            
-        /** Administrador visualizar orcamentos dos corretores da corretora - URL - orcamentos/1/corretor/1 VIEW => admin.pages.orcamento.administrador.listar-corretores-por-corretora  */
-        // Route::get("/orcamentos/{id_corretora}/corretor/{id_administrador}","App\Http\Controllers\Admin\OrcamentoController@orcamentosCorretoresDaCorretora")->name("orcamentos.por.corretores");
-
-        /** Administrador ver orçamento de um determinado corretor - URL - orcamentos/2/visualizar - View => admin.pages.orcamento.administrador.listar-orcamento-corretor-especifico */
-        // Route::get("/orcamentos/{id_corretor}/visualizar","App\Http\Controllers\Admin\OrcamentoController@listarOrcamentoPorCorretor")->name("orcamento.por.corretor");
-    
-        /** Administrador ver orçamento especifico do corretor - URL - orcamentos/1/detalhe - View => admin.pages.orcamento.administrador.listar-orcamento-detalhe-corretor  */
-        // Route::get("/orcamentos/{id_orcamento}/detalhe","App\Http\Controllers\Admin\OrcamentoController@listarOrcamentoDetalhe")->name("orcamento.detalhe.corretor");
-
-        /********************************************** Fim Menu Orçamentos Corretores *****************************************************/
-
-
-        /** Editar valor abrir modal da pagina via AJAX em admin/tabela/search */
-        // Route::post("/orcamento/alterar","App\Http\Controllers\Admin\OrcamentoController@edit")->name("orcamento.edit.valor");
-
-        /** Mudar Status da Tag Via AJAX */
-        // Route::post("/orcamentos/mudar/status","App\Http\Controllers\Admin\OrcamentoController@mudarStatusEtiqueta")->name("orcamentos.mudar.etiqueta");
-
-        /** Criar PDF */
-        //Route::get("/criar/pdf/{id_orcamento}/{id_cidade}/{plano_id}/{coparticipacao}/{odonto}/{operadora_id}/{administradora_id}","App\Http\Controllers\Admin\OrcamentoController@criarPDF")->name("orcamento.pdf");
-
-    /**************************************************** Fim Orcamentos *********************************************************/
+    Route::post("/tabela/orcamento/alterar","App\Http\Controllers\Admin\TabelaController@edit")->name("tabela.edit.valor");
+  
     
 
     /** Etiquetas */
@@ -168,7 +114,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/cidades/{cidade}/vincular","App\Http\Controllers\Admin\CidadeController@vincularAdministradora")->name("cidade.vincular.administradora");
     Route::post("/cidades/store","App\Http\Controllers\Admin\CidadeController@store")->name('cidades.store');
     Route::delete("/cidades/destroy/{id}","App\Http\Controllers\Admin\CidadeController@destroy")->name("cidades.destroy");
-    Route::any("/cidades/pesquisar","App\Http\Controllers\Admin\CidadeController@search")->name('cidades.pesquisar');
+    
 
 
 
@@ -187,13 +133,6 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
     Route::get("/profile/{id}","App\Http\Controllers\Admin\UserController@getUser")->name("profile.getUser");
     Route::put("/profile/{id}","App\Http\Controllers\Admin\UserController@setUser")->name("profile.setUser");
-
-    //Route::get("/contratos","App\Http\Controllers\Admin\ContratoController@index")->name("contratos.index");
-    //Route::post("/contratos/pessoa_fisica","App\Http\Controllers\Admin\ContratoController@cadastrarPF")->name("contrato.cadastrarPF");
-    //Route::post("/contratos/sem_orcamento/pessoa_fisica","App\Http\Controllers\Admin\ContratoController@montarContratoSemOrcamento")->name("contrato.montarContratoSemOrcamento");
-    //Route::post("/contratos/store/pf","App\Http\Controllers\Admin\ContratoController@cadastrarContratoSemOrcamento")->name("contrato.cadastrarPFSemOrcamento");
-    
-
 
     /** Fim Profile */
 
@@ -243,6 +182,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("comissoes","App\Http\Controllers\Admin\ComissoesController@index")->name("comissoes.index");
     Route::get("comissoes/{id}/detalhes","App\Http\Controllers\Admin\ComissoesController@detalhes")->name("comissoes.detalhes");
     Route::post("comissoes/mudarStatus","App\Http\Controllers\Admin\ComissoesController@mudarStatus")->name("comissoes.mudarStatus");
+    Route::post("comissoes/mudarStatus/premiacao","App\Http\Controllers\Admin\ComissoesController@mudarStatusPremiacao")->name("comissoes.mudarStatusPremiacao");
     
 
 

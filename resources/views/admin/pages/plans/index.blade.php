@@ -10,13 +10,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <form action="" method="post" class="form-inline">
-                @csrf
-                <input type="text" name="search" id="search" class="form-control" placeholder="">
-                <button type="submit" class="btn btn-dark"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
+        
         <div class="card-body">
             @if(count($planos) >= 1)
                 <table class="table">

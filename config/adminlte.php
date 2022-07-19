@@ -266,7 +266,8 @@ return [
             "text" => "Comissões",
             "url" => "admin/comissoes",
             "icon" => "fas fa-money-check-alt",
-            "can" => "comissoes"
+            "can" => "comissoes",
+            'active' => ['comissoes',"http://localhost:8000/admin/comissoes/*"]
 
         ],
         [

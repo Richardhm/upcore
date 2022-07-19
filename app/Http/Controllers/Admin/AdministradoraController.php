@@ -53,12 +53,13 @@ class AdministradoraController extends Controller
     {
         
         $roles = [
-            "nome" => "required",
+            "nome" => "required|unique:administradoras",
             "logo" => "required",
             "premiacao_corretora" => "required"
         ];
         $messages = [
             "nome.required" => "O campo nome e campo obrigatorio",
+            "nome.unique" => "Esta Administradora já esta cadastrada",
             "logo.required" => "O campo logo e campo obrigatorio",
             "premiacao_corretora.required" => "O campo Premiacao Corretora e campo obrigatorio"
         ];

@@ -120,7 +120,7 @@
                                         <div style="display:flex;flex-basis:100%;justify-content:center;align-items:center;padding:2px 0;">
                                             <a style="color:black;margin-right:10px;" href="https://api.whatsapp.com/send?phone=55{{$telefone}}"><i class="fab fa-whatsapp fa-2x"></i></a>
                                             <a style="color:black;margin-right:10px;"><i class="fas fa-envelope fa-2x"></i></a>
-                                            <a style="color:black;margin-right:10px;" href="{{route('cotacao.orcamento',$cliente)}}"><i class="fas fa-file-pdf fa-2x"></i></a>
+                                            <a style="color:black;margin-right:10px;" data-orcamento="" data-cidade="" data-plano="" data-coparticipacao="" data-odonto="" data-operadora="" data-administradora="" href="#"><i class="fas fa-file-pdf fa-2x"></i></a>
                                             <a style="color:black;margin-right:10px;" href="{{route('cotacao.contrato',$cliente)}}"><i class="fas fa-file-contract fa-2x"></i></a>
                                         </div>                 
                                         

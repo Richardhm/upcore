@@ -30,6 +30,15 @@ class CreateClientesTable extends Migration
             $table->string("cnpj")->nullable();
             $table->string("nome_empresa")->nullable();
             
+            $table->string("responsavel_financeiro")->nullable();
+            $table->string("cpf_financeiro")->nullable();
+            $table->string("endereco_financeiro")->nullable();
+
+            $table->date("data_vigente")->nullable();   
+            $table->decimal("valor_adesao",10,2)->nullable();   
+            $table->date("data_boleto")->nullable();
+
+
             $table->boolean('pessoa_fisica');
             $table->boolean('pessoa_juridica');
             

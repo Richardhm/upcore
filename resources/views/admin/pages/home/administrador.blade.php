@@ -15,8 +15,8 @@
                 <div class="small-box bg-info">
                     <div class="inner">
                         
-                        <h3>{{$orcamentosAll}}</h3>
-                        <p class="d-flex"><span class="mr-auto">Orçamentos Realizados</span> <span style="font-size:0.8em;font-weight:bold;">Hoje: {{$orcamentosHoje}}</span></p>
+                        <h3>---</h3>
+                        <p class="d-flex"><span class="mr-auto">Orçamentos Realizados</span> <span style="font-size:0.8em;font-weight:bold;">Hoje: 0</span></p>
                         
                        
                     </div>
@@ -30,8 +30,8 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{$contratosAll}}</h3>
-                        <p class="d-flex"><span class="mr-auto">Contratos Realizados</span> <span style="font-size:0.8em;font-weight:bold;">Hoje: {{$contratosHoje}}</span></p>
+                        <h3>---</h3>
+                        <p class="d-flex"><span class="mr-auto">Contratos Realizados</span> <span style="font-size:0.8em;font-weight:bold;">Hoje: 0</span></p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>

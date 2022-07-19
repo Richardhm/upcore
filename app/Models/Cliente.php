@@ -38,5 +38,10 @@ class Cliente extends Model
         return $this->belongsTo(Cidade::class);
     }
 
+    public function comissoes()
+    {
+        return $this->hasOne(Comissao::class);
+    }
+
 
 }

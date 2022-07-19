@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{
     Comissao,
-    ComissoesVendedor,
+    ComissoesCorretoraLancadas,
     ComissoesCorretorLancados,
-    PremiacaoCorretoresLancados
+    PremiacaoCorretoresLancados,
+    PremiacaoCorretoraLancadas
 };
 use Illuminate\Support\Facades\DB;
 
@@ -35,11 +36,15 @@ class ComissoesController extends Controller
     {
         $comissoes = ComissoesCorretorLancados::where('comissao_id',$id)->get();
         $premiação = PremiacaoCorretoresLancados::where('comissao_id',$id)->first();
-        
+        $comissoesCorretora = ComissoesCorretoraLancadas::where('comissao_id',$id)->get();
+        $premiacoesCorretora = PremiacaoCorretoraLancadas::where('comissao_id',$id)->first();
+
         
         return view('admin.pages.comissoes.detalhes',[
             'comissoes' => $comissoes,
-            "premiacao" => $premiação
+            "premiacao" => $premiação,
+            "comissoesCorretora" => $comissoesCorretora,
+            "premiacoesCorretora" => $premiacoesCorretora
         ]);
     }
 
@@ -51,6 +56,20 @@ class ComissoesController extends Controller
             return false;
         }
         $comissao->status = $comissao->status ? false : true;
+        $comissao->save();
+
+        return $comissao->status;
+    }
+
+    public function mudarStatusPremiacao(Request $request)
+    {
+        $id = $request->id;
+        $comissao = PremiacaoCorretoresLancados::where("id",$id)->first();
+        if(!$comissao) {
+            return false;
+        }
+        $comissao->status = $comissao->status ? false : true;
+        $comissao->data = date("Y-m-d");
         $comissao->save();
 
         return $comissao->status;

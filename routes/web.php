@@ -25,7 +25,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/orcamentos/corretores/administrador","App\Http\Controllers\Admin\HomeController@outherorcamentos")->name("admin.outherorcamentos");
     Route::get("/orcamentos/corretor/especifico/ver","App\Http\Controllers\Admin\HomeController@corretorOrcamentoEspecifico")->name("corretor.especifico.orcamento.table");
     Route::get("/comissoes/apagar","App\Http\Controllers\Admin\HomeController@comissoesAPagar")->name("comissoes.apagar");
-    Route::get("/comissoes/areceber","App\Http\Controllers\Admin\HomeController@areceber")->name("comissoes.areceber");
+    Route::get("/home/comissoes","App\Http\Controllers\Admin\HomeController@comissoes")->name("home.comissoes");
+    Route::get("/home/premiacao","App\Http\Controllers\Admin\HomeController@premiacoes")->name("home.premiacoes");
     Route::get("/listartarefas","App\Http\Controllers\Admin\HomeController@listarTarefasHome")->name("home.listarTarefasHome");
     Route::get("/listarclientes","App\Http\Controllers\Admin\HomeController@listarClientesHome")->name("home.listarClientesHome");
     
@@ -163,18 +164,35 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/clientes/corretores","App\Http\Controllers\Admin\ClienteController@clientesCorretores")->name("clientes.corretores");
     Route::get("/clientes/dos/corretores","App\Http\Controllers\Admin\ClienteController@pegarClientesCorretores")->name("clientes.pegarClientesCorretores");
     Route::post("/clientes/contrato/sem/orcamento","App\Http\Controllers\Admin\ClienteController@contratoSemOrcamento")->name("clientes.contratoSemOrcamento");
-    Route::get("/clientes/{id}/tarefa","App\Http\Controllers\Admin\ClienteController@agendaTarefa")->name("clientes.agendarTarefa");
-    Route::post("/clientes/tarefas/store","App\Http\Controllers\Admin\ClienteController@cadastrarTarefa")->name("clientes.cadastrarTarefa");
-    Route::post("/clientes/fullcalendar/especifico","App\Http\Controllers\Admin\ClienteController@clienteTarefaEspecifica")->name("cliente.tarefaEspecifica");
-    Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\ClienteController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
-    Route::post("/clientes/deletar","App\Http\Controllers\Admin\ClienteController@deletarCliente")->name("cliente.deletarCliente");
-    Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\ClienteController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
+    
+    
+    
+    
+    
+    
+
+    
+    
     Route::post("/cliente/listarPorEtiqueta","App\Http\Controllers\Admin\ClienteController@listarPorEtiqueta")->name("cliente.listarPorEtiqueta");
     Route::post("/cliente/listarPorEtiquetaAll","App\Http\Controllers\Admin\ClienteController@listarPorEtiquetaAll")->name("cliente.listarPorEtiquetaAll");
     Route::get("/contratos","App\Http\Controllers\Admin\ClienteController@listarContratos")->name("contratos.index");
     
 
     /** Fim Cliente */
+
+
+    /** Tarefa */
+    Route::get("/clientes/{id}/tarefa","App\Http\Controllers\Admin\TarefaController@agendaTarefa")->name("clientes.agendarTarefa");
+    Route::post("/clientes/tarefas/store","App\Http\Controllers\Admin\TarefaController@cadastrarTarefa")->name("clientes.cadastrarTarefa");
+    Route::post("/clientes/fullcalendar/especifico","App\Http\Controllers\Admin\TarefaController@clienteTarefaEspecifica")->name("cliente.tarefaEspecifica");
+    Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\TarefaController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
+    Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\TarefaController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
+    Route::post("/clientes/deletar","App\Http\Controllers\Admin\TarefaController@deletarCliente")->name("cliente.deletarCliente");
+    Route::get("/cliente/proximas","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefas.proximas");
+
+    /** Fim Tarefa */
+
+
 
 
     /** Comissoes */

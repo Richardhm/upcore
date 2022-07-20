@@ -17,15 +17,8 @@
 @section('content')
    
     <div class="card">
-
         <div class="card-body">
-            <div class="row">
-                
-                    
-                
-                
-            
-            
+            <div class="row">        
                 <div class="col-3">
                     @if(count($cliente->tarefas) >= 1)
                         <h5 class="text-center cabecalho">Tarefas de {{$cliente->nome}}</h5>
@@ -35,9 +28,6 @@
                             @endforeach
                         </ul>
                     @endif            
-
-
-
                     <h5 class="text-center cabecalho my-3">Agendar Tarefa</h5>
                     <form action="{{route('clientes.cadastrarTarefa')}}" method="post">
                         @csrf
@@ -133,9 +123,6 @@
             else
                 return numero; 
         }
-
-
-
         $(function(){
             
             $.ajaxSetup({
@@ -252,12 +239,7 @@
         margin:0 3px 3px 0;
         border:1px solid black;
         text-align: center;
-        /* padding:5px 0;
-        border:1px solid black;
-        text-align: center;
-        flex-basis: 50%;
-        display: flex;
-        flex-wrap: wrap; */
+        
     }
     
     ul.tarefas li .data {

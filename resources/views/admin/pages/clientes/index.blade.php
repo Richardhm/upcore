@@ -8,8 +8,31 @@
                 @endcan     
     <div class="row">
         <h1>Clientes <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning"><i class="fas fa-plus"></i></a></h1>    
-        <div class="btn-group-vertical ml-auto dropleft">
-                <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar</button>
+        
+        
+        <div class="ml-auto">
+
+            <!-- Filtrar Tarefas -->
+            <div class="btn-group-vertical dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar Tarefas</button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Dessa Semana</a></li>
+                    <li><a class="dropdown-item" href="#">Mês que vem</a></li>
+                    <li><a class="dropdown-item" href="#">Cliente(s) Sem Tarefa(s)</a></li>
+                    <li><a class="dropdown-item" href="#">Atrasada(s)</a></li>
+                    <li><a class="dropdown-item" href="#">Realizada(s)</a></li>
+                    <div class="dropdown-divider"></div>
+                    <li class="text-center">
+                        <a class="dropdown-item listar-todos" href="#" style="color:black;">Listar Todas</a>
+                    </li>
+                </ul>    
+            </div>
+            <!-- Fim Filtrar Tarefas -->
+
+
+            <!-- Filtrar Cliente -->
+            <div class="btn-group-vertical dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar Clientes</button>
                 <ul class="dropdown-menu">
                     @if(count($etiquetas) >= 1)
                         @foreach($etiquetas as $et)
@@ -30,7 +53,20 @@
                     </li>
                 </ul>    
             </div>
+            <!-- Fim Filtrar Cliente -->
+
+
+
+
+
+        </div>
        
+
+
+
+
+
+
     </div>
     
 @stop

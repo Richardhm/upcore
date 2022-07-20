@@ -8,7 +8,6 @@ use App\Models\{
     Cidade,
     Cliente,
     Etiquetas,
-    Tarefa,
     User,
     Administradora,
     Operadora,
@@ -63,11 +62,6 @@ class ClienteController extends Controller
                 'etiquetas' => $etiquetas
             ]);
         }
-
-
-
-
-        
     }
 
     public function create()
@@ -80,11 +74,9 @@ class ClienteController extends Controller
 
     public function store(Request $request) 
     {
-        
         if(empty($request->modelo)) {
             return "errormodelo";
         }
-
 
         if(empty($request->nome)) {
             return "errornome";
@@ -112,8 +104,6 @@ class ClienteController extends Controller
         $dados['pessoa_juridica'] = $request->modelo == "pj" ? 1 : 0;
         $dados['etiqueta_id'] = 1;
         $dados['ultimo_contato'] = date("Y-m-d");
-
-        
         
         $cliente = User::find(auth()->user()->id)->cliente()->create($dados);
         return $cliente;
@@ -174,99 +164,6 @@ class ClienteController extends Controller
             "planos" => $planos        
         ]);
     }
-
-
-
-    public function agendaTarefa($id)
-    {
-        
-        $cliente = Cliente::where("id",$id)
-            ->with('tarefas')
-            ->first();
-            
-        
-        if(!$cliente) {
-            return redirect()->back();
-        }
-
-        return view('admin.pages.clientes.tarefas',[
-            "cliente" => $cliente
-        ]);
-
-    }
-
-    public function cadastrarTarefa(Request $request)
-    {
-        
-        $rules = [
-            "title" => "required",
-            "data" => "required",
-            "descricao" => "required"
-        ];
-
-        $message = [
-            "title.required" => "O campo titulo e campo obrigatório",
-            "data.required" => "O campo data e campo obrigatório",
-            "descricao.required" => "Descrição e campo obrigatório"
-        ];
-
-        $request->validate($rules,$message);
-
-        $cliente = Cliente::where("id",$request->cliente_id)->first();
-        $cliente->ultimo_contato = date("Y-m-d");
-        $cliente->save();
-
-        Tarefa::create($request->all());
-        return redirect()->route('clientes.agendarTarefa',[$request->cliente_id]);
-        
-    }
-
-    public function clienteTarefaEspecifica(Request $request)
-    {
-        $tarefas = DB::table("tarefas")
-            ->selectRaw("title")
-            ->selectRaw("id")
-            ->selectRaw("descricao")
-            ->selectRaw("DATE_FORMAT(DATA, '%Y-%m-%d') as start")
-            ->whereRaw("tarefas.cliente_id = ".$request->id)
-            ->get();
-           
-        return response()->json($tarefas);
-    }
-
-    public function alterarClienteTarefaEspecifica(Request $request)
-    {
-        $id = $request->tarefa_id;
-        $title = $request->title;
-        $data = $request->data;
-        $descricao = $request->descricao;
-        $tarefa = Tarefa::where("id",$id)->first();
-        $tarefa->update(["title"=>$title,"data"=>$data,"descricao"=>$descricao]);
-        $tarefa->save();
-        return redirect()->route('clientes.agendarTarefa',[$request->cliente_id]);
-    }
-
-    public function tarefaEventDropEdit(Request $request)
-    {
-        $id = $request->id;
-        $start = $request->start;
-        $tarefa = Tarefa::where("id",$id)->first();
-        $tarefa->data = $start;
-        $tarefa->save();
-        
-
-    }
-
-    public function deletarCliente(Request $request)
-    {
-        $id = $request->id;
-        $cliente = $request->cliente;
-        $tarefa = Tarefa::where("id",$id)->first();
-        $tarefa->delete();
-        return redirect()->route('clientes.agendarTarefa',[$cliente]);
-    }
-
-
 
     public function definirStatus(Request $request)
     {
@@ -378,7 +275,7 @@ class ClienteController extends Controller
     public function listarPorEtiquetaAll()
     {
        $id = auth()->user()->id;
-       $clientes = $this->repository->where("user_id",$id)
+       $clientes = $this->repository->where("user_id",$id)->where("etiqueta_id","!=",3)
         ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
         ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
         ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")

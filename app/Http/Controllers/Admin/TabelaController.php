@@ -212,6 +212,8 @@ class TabelaController extends Controller
                     (SELECT id FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Ambulatorial' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_ambulatorial 
                     from tabelas AS fora 
                     where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." GROUP BY faixa_etaria ORDER BY id) AS full_tabela");
+
+
         $operadoras = Operadora::all();
         $administradoras = Administradora::all();
         $tipos = Planos::all();    
@@ -255,6 +257,9 @@ class TabelaController extends Controller
             return "error";
         }
     }
+
+
+    
 
 
 

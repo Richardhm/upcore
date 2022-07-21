@@ -4,6 +4,15 @@
 @section('content_header')
     <h1>Dashboard</h1>
 @stop
+@section('content_top_nav_right')
+
+    <li class="nav-item"><a href="{{route('home.relatorio')}}" class="nav-link"><i class="fas fa-file-excel"></i>  </a></li> <!--Relatorio-->
+    <li class="nav-item"><a href="{{route('admin.home.search')}}" class="nav-link"><i class="fas fa-search"></i></a></li> <!--Consulta Rapida-->
+
+@stop
+
+
+
 @section('content')
 <section class="content">
 
@@ -19,7 +28,7 @@
     @if(count($tarefasAtrasadas) >= 1)
         <p class="alert bg-danger disabled text-center">
         Você tem {{count($tarefasAtrasadas)}} tarefa(s) Atrasada
-         <a href="" class="ml-4"><i class="fas fa-asterisk"></i>Clique Aqui</a>
+         <a href="{{route('tarefa.clienteTarefasAtrasadasHome')}}" class="ml-4"><i class="fas fa-asterisk"></i>Clique Aqui</a>
         </p>
     @endif
 

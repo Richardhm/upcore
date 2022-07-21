@@ -31,7 +31,7 @@
                 <tbody>
                     @foreach($tarefas as $t)
                     <tr>
-                        <td>{{$t->cliente}}</td>
+                        <td>{{$t->cliente->nome}}</td>
                         <td>{{date("d/m/Y",strtotime($t->data))}}</td>
                         <td>{{$t->title}}</td>
                         <td>{{$t->descricao}}</td>

@@ -26,6 +26,7 @@ class ClienteController extends Controller
 
     public function index()
     {
+        
         $id = auth()->user()->id;
         
         if(auth()->user()->admin) {
@@ -46,6 +47,7 @@ class ClienteController extends Controller
                 'etiquetas' => $etiquetas
             ]);
         } else {
+            
             $clientes = Cliente::where("user_id",$id)->where("etiqueta_id","!=",3)
                 ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
                 ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
@@ -54,7 +56,7 @@ class ClienteController extends Controller
                 ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
                 ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
                 
-                ->get();
+                ->paginate(10);
                     
             $etiquetas = Etiquetas::all();
             return view('admin.pages.clientes.index',[
@@ -71,6 +73,8 @@ class ClienteController extends Controller
             "cidades" => $cidades
         ]);
     }
+
+
 
     public function store(Request $request) 
     {
@@ -147,9 +151,6 @@ class ClienteController extends Controller
         if(!$cliente) {
             return redirect()->back();
         }
-
-
-        
         
         $cidades = Cidade::all();
         $administradoras = Administradora::all();
@@ -231,13 +232,6 @@ class ClienteController extends Controller
         
     }
 
-
-
-
-    
-
-
-
     public function mudarStatus(Request $request)
     {
         $cliente = $request->cliente;
@@ -289,6 +283,28 @@ class ClienteController extends Controller
         ]);    
         } else {
             return "Sem Clientes Para Listar Com esse status";
+        }
+    }
+
+    public function searchclienteAjax(Request $request)
+    {
+        $id = $request->id;
+        $cliente = Cliente::where("id",$id)->where("user_id",auth()->user()->id)->first();
+        if($cliente) {
+            $clientes = Cliente::where("user_id",auth()->user()->id)->where("id",$id)
+            ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+            ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+            ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+            ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+            ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+            ->first();
+            return view('admin.pages.clientes.ajax.cliente-ajax',[
+                'c' => $clientes
+            ]);    
+
+        } else {
+            return "nada";
         }
     }
     

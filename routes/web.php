@@ -21,8 +21,9 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     /** Dashboard */
 
     Route::get("/","App\Http\Controllers\Admin\HomeController@index")->name("admin.home");
-    Route::get("/orcamentos/administrador","App\Http\Controllers\Admin\HomeController@orcamentosAdministrador")->name("admin.orcamentos");
-    Route::get("/orcamentos/corretores/administrador","App\Http\Controllers\Admin\HomeController@outherorcamentos")->name("admin.outherorcamentos");
+    
+    // Route::get("/orcamentos/administrador","App\Http\Controllers\Admin\HomeController@orcamentosAdministrador")->name("admin.orcamentos");
+    // Route::get("/orcamentos/corretores/administrador","App\Http\Controllers\Admin\HomeController@outherorcamentos")->name("admin.outherorcamentos");
     Route::get("/orcamentos/corretor/especifico/ver","App\Http\Controllers\Admin\HomeController@corretorOrcamentoEspecifico")->name("corretor.especifico.orcamento.table");
     Route::get("/comissoes/apagar","App\Http\Controllers\Admin\HomeController@comissoesAPagar")->name("comissoes.apagar");
     Route::get("/home/comissoes","App\Http\Controllers\Admin\HomeController@comissoes")->name("home.comissoes");
@@ -30,6 +31,10 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/listartarefas","App\Http\Controllers\Admin\HomeController@listarTarefasHome")->name("home.listarTarefasHome");
     Route::get("/listarclientes","App\Http\Controllers\Admin\HomeController@listarClientesHome")->name("home.listarClientesHome");
     
+    Route::get("/home/pesquisa","App\Http\Controllers\Admin\HomeController@searchHome")->name("admin.home.search");
+    Route::post("/home/pesquisa","App\Http\Controllers\Admin\HomeController@storeSearch")->name("admin.home.search.post");
+
+    Route::get("/home/relatorio","App\Http\Controllers\Admin\HomeController@relatorio")->name("home.relatorio");
     
 
 
@@ -75,13 +80,13 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::resource("administradora","App\Http\Controllers\Admin\AdministradoraController");
 
     /** VENDAS  */
-    Route::get("/vendas/operadora","App\Http\Controllers\Admin\VendasController@operadora")->name("vendas.operadora");
-    Route::post("/vendas/operadora/store","App\Http\Controllers\Admin\VendasController@storeoperadora")->name("vendas.operadora.store");
-    Route::get("/vendas/administradora","App\Http\Controllers\Admin\VendasController@administradora")->name("vendas.administradora");
-    Route::get("/vendas/{id}/edit","App\Http\Controllers\Admin\VendasController@editar")->name("vendas.editar");
+    // Route::get("/vendas/operadora","App\Http\Controllers\Admin\VendasController@operadora")->name("vendas.operadora");
+    // Route::post("/vendas/operadora/store","App\Http\Controllers\Admin\VendasController@storeoperadora")->name("vendas.operadora.store");
+    // Route::get("/vendas/administradora","App\Http\Controllers\Admin\VendasController@administradora")->name("vendas.administradora");
+    // Route::get("/vendas/{id}/edit","App\Http\Controllers\Admin\VendasController@editar")->name("vendas.editar");
     
 
-    Route::any("/relatorios/index","App\Http\Controllers\Admin\RelatorioController@index")->name("relatorio.index");    
+    // Route::any("/relatorios/index","App\Http\Controllers\Admin\RelatorioController@index")->name("relatorio.index");    
 
 
     /** Tabela */
@@ -92,6 +97,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
     Route::post("/tabelas/pegar/cidades/administradoras","App\Http\Controllers\Admin\TabelaController@pegarCidadeAdministradora")->name("cidades.administradoras.pegar");
     Route::post("/tabela/orcamento/alterar","App\Http\Controllers\Admin\TabelaController@edit")->name("tabela.edit.valor");
+
+    
   
     
 
@@ -165,6 +172,10 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/clientes/dos/corretores","App\Http\Controllers\Admin\ClienteController@pegarClientesCorretores")->name("clientes.pegarClientesCorretores");
     Route::post("/clientes/contrato/sem/orcamento","App\Http\Controllers\Admin\ClienteController@contratoSemOrcamento")->name("clientes.contratoSemOrcamento");
     
+    Route::post("/cliente/searchclienteAjax","App\Http\Controllers\Admin\ClienteController@searchclienteAjax")->name("cliente.searchclienteAjax");
+
+    
+    
     
     
     
@@ -188,7 +199,12 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\TarefaController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
     Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\TarefaController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
     Route::post("/clientes/deletar","App\Http\Controllers\Admin\TarefaController@deletarCliente")->name("cliente.deletarCliente");
-    Route::get("/cliente/proximas","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefas.proximas");
+    Route::get("/tarefas/proximas","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefas.proximas");
+    Route::get("/tarefas/atrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasHome")->name("tarefa.clienteTarefasAtrasadasHome");
+    Route::post("/cliente/clientesemtarefa","App\Http\Controllers\Admin\TarefaController@clienteSemTarefaAjax")->name("cliente.semtarefasajax");
+    Route::post("/cliente/clientestarefaatrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasAjax")->name("cliente.tarefasatrasadasajax");
+    Route::post("/cliente/tarefaMudarStatusAjax","App\Http\Controllers\Admin\TarefaController@mudarStatusTarefaAjax")->name("cliente.mudarStatusTarefaAjax");
+    Route::post("/cliente/tarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@tarefasRealizadasAjax")->name("tarefa.tarefasRealizadas");
 
     /** Fim Tarefa */
 

@@ -10,17 +10,29 @@
         <h1>Clientes <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning"><i class="fas fa-plus"></i></a></h1>    
         
         
+       
+        
         <div class="ml-auto">
+            
+            <div class="ml-auto">
+                <select id="search" name="search" class="form-control select2-single">
+                    <option value="">Escolha um cliente</option>
+                    @foreach($clientes as $c)
+                    <option value="{{$c->id}}">{{$c->nome}}</option>
+                    @endforeach
+                </select>    
+            </div>
+        
 
             <!-- Filtrar Tarefas -->
             <div class="btn-group-vertical dropleft">
+            
                 <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar Tarefas</button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Dessa Semana</a></li>
-                    <li><a class="dropdown-item" href="#">Mês que vem</a></li>
-                    <li><a class="dropdown-item" href="#">Cliente(s) Sem Tarefa(s)</a></li>
-                    <li><a class="dropdown-item" href="#">Atrasada(s)</a></li>
-                    <li><a class="dropdown-item" href="#">Realizada(s)</a></li>
+                    
+                    <li><a class="dropdown-item cliente_semtarefa" href="#">Cliente(s) Sem Tarefa(s)</a></li>
+                    <li><a class="dropdown-item cliente_atrasado" href="#">Tarefas Atrasada(s)</a></li>
+                    <li><a class="dropdown-item tarefas_realizadas" href="#">Tarefas Realizada(s)</a></li>
                     <div class="dropdown-divider"></div>
                     <li class="text-center">
                         <a class="dropdown-item listar-todos" href="#" style="color:black;">Listar Todas</a>
@@ -126,7 +138,7 @@
                     </div>
                     <hr />
                 @endforeach
-                <div>
+                <!-- <div>
                     Status:<br />
                     <div style="display:flex;">
                         @if(count($etiquetas) >= 1)
@@ -135,11 +147,26 @@
                             @endforeach
                         @endif
                     </div>
-                </div>
+                </div> -->
             @else
                 <h4 class="text-center">Sem Clientes há serem listados</h4>
             @endif
         </div>
+
+        <nav aria-label="">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="{{$clientes->previousPageUrl()}}"><<</a></li>
+                @for($i=1;$i<=$clientes->lastPage();$i++)
+                    <li class="page-item {{$i == $clientes->currentPage() ? 'active' : ''}}">
+                        <a class="page-link" href="{{isset($filtro) && count($filtro) >= 1 ? $clientes->appends($filtro)->url($i) : $clientes->url($i)}}">{{$i}}</a>
+                    </li>
+                @endfor
+                <li class="page-item"><a class="page-link" href="{{$clientes->nextPageUrl()}}">>></a></li>
+            </ul>
+        </nav>    
+
+
+
     
     </div>
     
@@ -178,13 +205,25 @@
         </div>    
     
 @stop
+
+@section('css')
+<link rel="stylesheet" href="{{asset('vendor/select2/css/select2.min.css')}}" />    
+<link rel="stylesheet" href="{{asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.css')}}" />
+@endsection
+
+
+
 @section('js')
+<script src="{{asset('vendor/select2/js/select2.min.js')}}"></script>
     <script>
         $(function(){
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });
+            $('#search').select2({
+                theme: 'bootstrap4',
             });
             $('#alterarModal').on('show.bs.modal', function (event) {
                 var alvo = $('input[name="id"]').val();
@@ -260,6 +299,78 @@
             });
 
 
+            $('.cliente_semtarefa').on('click',function(){
+                $.ajax({
+                    url:"{{route('cliente.semtarefasajax')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            });
+
+            $('.cliente_atrasado').on('click',function(){
+                $.ajax({
+                    url:"{{route('cliente.tarefasatrasadasajax')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            });
+
+            $("body").on('change','input[name="mudarStatus"]',function(){
+                if($(this).is(":checked")) {
+                    let id = $(this).attr('data-id');
+                    $(this).closest("tr").fadeOut('slow');
+                    $.ajax({
+                        method:"POST",
+                        url:"{{route('cliente.mudarStatusTarefaAjax')}}",
+                        data:"id="+id,
+                        success:function(res) {
+                            if(res) {
+                                $('.card-body').slideUp('fast',function(){
+                                    $(this).html(res).slideDown('slow');
+                                }); 
+                            }
+                        }
+                    })
+                } 
+            });
+
+            $("body").on('click','.tarefas_realizadas',function(){
+               $.ajax({
+                    url:"{{route('tarefa.tarefasRealizadas')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+               });
+               return false;  
+            });
+
+            $("#search").on('change',function(){
+                $.ajax({
+                    url:"{{route('cliente.searchclienteAjax')}}",
+                    method:"POST",
+                    data:"id="+$(this).val(),
+                    success:function(res) {
+                        
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+               });
+               return false;  
+            });
 
 
 

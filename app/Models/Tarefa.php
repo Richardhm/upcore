@@ -17,6 +17,11 @@ class Tarefa extends Model
         return $this->belongsTo(Cliente::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
 
 }

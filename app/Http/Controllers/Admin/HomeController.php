@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{
+    Acomodacao,
+    Administradora,
     User,
     Cidade,
     Cliente,
@@ -14,12 +16,15 @@ use App\Models\{
     ComissoesVendedor,
     Cotacao,
     Etiquetas,
+    Operadora,
+    Planos,
     PremiacaoCorretoraLancadas,
     PremiacaoCorretoresLancados,
     Tarefa
 };
 
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Constraint\Operator;
 
 class HomeController extends Controller
 {
@@ -156,6 +161,170 @@ class HomeController extends Controller
             return redirect()->route("admin.home");
         }
     }
+
+
+    public function searchHome()
+    {
+        // $rules = [
+        //     "operadora_search" => "required",
+        //     "administradora_search" => "required",
+        //     "planos_search" => "required",
+        //     "coparticipacao_search" => "required",
+        //     "odonto_search" => "required",
+        //     "cidade_search" => "required"
+        // ];
+
+        // $message = [
+        //     "operadora_search.required" => "O campo operadora e campo obrigatorio",
+        //     "administradora_search.required" => "O campo administradora e campo obrigatorio",
+        //     "planos_search.required" => "O campo plano e campo obrigatorio",
+        //     "coparticipacao_search.required" => "O campo coparticipacao e campo obrigatorio",
+        //     "odonto_search.required" => "O campo odonto e campo obrigatorio",
+        //     "cidade_search.required" => "O campo cidade e campo obrigatorio"
+        // ];
+
+        // $request->validate($rules,$message);
+
+        // $operadora = $request->operadora_search;
+        // $administradora = $request->administradora_search;
+        // $planos = $request->planos_search;
+        // $coparticipacao = ($request->coparticipacao_search == "sim" ? 1 : 0);
+        // $odonto = ($request->odonto_search == "sim" ? 1 : 0);
+        // $cidade = $request->cidade_search;
+       
+
+        // $tabelas = DB::select("SELECT faixas,apartamento,id_apartamento,enfermaria,id_enfermaria,ambulatorial,id_ambulatorial FROM (
+        //         select 
+        //             (SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = fora.faixa_etaria) AS faixas,
+        //             (SELECT valor FROM tabelas AS dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Apartamento' AND dentro.faixa_etaria = fora.faixa_etaria) AS apartamento, 
+        //             (SELECT id FROM tabelas AS dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Apartamento' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_apartamento,
+        //             (SELECT valor FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Enfermaria' AND dentro.faixa_etaria = fora.faixa_etaria) AS enfermaria,
+        //             (SELECT id FROM tabelas AS dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Enfermaria' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_enfermaria,
+        //             (SELECT valor FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Ambulatorial' AND dentro.faixa_etaria = fora.faixa_etaria) AS ambulatorial, 
+        //             (SELECT id FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Ambulatorial' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_ambulatorial 
+        //             from tabelas AS fora 
+        //             where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." GROUP BY faixa_etaria ORDER BY id) AS full_tabela");
+
+
+        $operadoras = Operadora::all();
+        $administradoras = Administradora::all();
+        $tipos = Planos::all();    
+        $modelos = Acomodacao::all();
+            
+
+        // return view("admin.pages.home.search",[
+        //         "header" => "",
+        //         "tabelas" => $tabelas,
+        //         "operadoras" => $operadoras,
+        //         "administradoras" => $administradoras,
+        //         "tipos" => $tipos,
+        //         "modelos" => $modelos,
+        //         "operadora_id" => $operadora ?? "",
+        //         "administradora_id" => $administradora ?? "",
+        //         "plano_id" => !empty($planos) ? $planos : "",
+        //         "cidade_id" => !empty($cidade) ? $cidade : "",    
+        //         "coparticipacao" => ($request->coparticipacao_search == "sim" ? 1 : 0),
+        //         "odonto" => ($request->odonto_search == "sim" ? 1 : 0),
+        //         "coparticipacao_texto" => ($request->coparticipacao_search == "sim" ? "Com Coparticipacao" : "Sem Coparticipacao"),
+        //         "odonto_texto" => ($request->odonto_search == "sim" ? "Com Odonto" : "Sem Odonto"),
+        //         "administradora_texto" => Administradora::where("id",$request->administradora_search)->selectRaw("nome")->first()->nome
+        //     ]);    
+        
+        
+
+            return view("admin.pages.home.search",[
+                "operadoras" => $operadoras,
+                "administradoras" => $administradoras,
+                "tipos" => $tipos,
+                "modelos" => $modelos
+            ]);  
+
+
+        
+    }
+
+
+    public function storeSearch(Request $request)
+    {
+        $rules = [
+            "operadora_search" => "required",
+            "administradora_search" => "required",
+            "planos_search" => "required",
+            "coparticipacao_search" => "required",
+            "odonto_search" => "required",
+            "cidade_search" => "required"
+        ];
+
+        $message = [
+            "operadora_search.required" => "O campo operadora e campo obrigatorio",
+            "administradora_search.required" => "O campo administradora e campo obrigatorio",
+            "planos_search.required" => "O campo plano e campo obrigatorio",
+            "coparticipacao_search.required" => "O campo coparticipacao e campo obrigatorio",
+            "odonto_search.required" => "O campo odonto e campo obrigatorio",
+            "cidade_search.required" => "O campo cidade e campo obrigatorio"
+        ];
+
+        $request->validate($rules,$message);
+
+        $operadora = $request->operadora_search;
+        $administradora = $request->administradora_search;
+        $planos = $request->planos_search;
+        $coparticipacao = ($request->coparticipacao_search == "sim" ? 1 : 0);
+        $odonto = ($request->odonto_search == "sim" ? 1 : 0);
+        $cidade = $request->cidade_search;
+       
+
+        $tabelas = DB::select("SELECT faixas,apartamento,id_apartamento,enfermaria,id_enfermaria,ambulatorial,id_ambulatorial FROM (
+                select 
+                    (SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = fora.faixa_etaria) AS faixas,
+                    (SELECT valor FROM tabelas AS dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Apartamento' AND dentro.faixa_etaria = fora.faixa_etaria) AS apartamento, 
+                    (SELECT id FROM tabelas AS dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Apartamento' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_apartamento,
+                    (SELECT valor FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Enfermaria' AND dentro.faixa_etaria = fora.faixa_etaria) AS enfermaria,
+                    (SELECT id FROM tabelas AS dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Enfermaria' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_enfermaria,
+                    (SELECT valor FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Ambulatorial' AND dentro.faixa_etaria = fora.faixa_etaria) AS ambulatorial, 
+                    (SELECT id FROM tabelas as dentro where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." AND modelo = 'Ambulatorial' AND dentro.faixa_etaria = fora.faixa_etaria) AS id_ambulatorial 
+                    from tabelas AS fora 
+                    where administradora_id = ".$administradora." AND plano_id = ".$planos." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND cidade_id = ".$cidade." GROUP BY faixa_etaria ORDER BY id) AS full_tabela");
+
+
+        $operadoras = Operadora::all();
+        $administradoras = Administradora::all();
+        $tipos = Planos::all();    
+        $modelos = Acomodacao::all();
+
+
+        return view("admin.pages.home.search",[
+                "header" => "",
+                "tabelas" => $tabelas,
+                "operadoras" => $operadoras,
+                "administradoras" => $administradoras,
+                "tipos" => $tipos,
+                "modelos" => $modelos,
+                "operadora_id" => $operadora ?? "",
+                "administradora_id" => $administradora ?? "",
+                "plano_id" => !empty($planos) ? $planos : "",
+                "cidade_id" => !empty($cidade) ? $cidade : "",    
+                "coparticipacao" => ($request->coparticipacao_search == "sim" ? 1 : 0),
+                "odonto" => ($request->odonto_search == "sim" ? 1 : 0),
+                "coparticipacao_texto" => ($request->coparticipacao_search == "sim" ? "Com Coparticipacao" : "Sem Coparticipacao"),
+                "odonto_texto" => ($request->odonto_search == "sim" ? "Com Odonto" : "Sem Odonto"),
+                "administradora_texto" => Administradora::where("id",$request->administradora_search)->selectRaw("nome")->first()->nome
+            ]);    
+    }
+
+
+    public function relatorio()
+    {
+        $administradoras = Administradora::all();
+        $planos = Planos::all();
+
+        return view("admin.pages.home.relatorio",[
+            "administradoras" => $administradoras,
+            "planos" => $planos
+        ]);
+    }
+
+
 
 
 

@@ -245,8 +245,9 @@ class CotacaoController extends Controller
     {
        
         $comissoes = ComissoesCorretorLancados::where("comissao_id",$id)->get();
-        $premiacao = PremiacaoCorretoresLancados::where("comissao_id",$id)->first();
         
+        $premiacao = PremiacaoCorretoresLancados::where("comissao_id",$id)->first();
+       
         return view('admin.pages.contrato.detalhes',[
             "comissoes" => $comissoes,
             "premiacao" => $premiacao
@@ -466,6 +467,7 @@ class CotacaoController extends Controller
                 
                 $comissaoVendedor = new ComissoesCorretorLancados();
                 $comissaoVendedor->comissao_id = $comissao->id;
+                $comissaoVendedor->user_id = auth()->user()->id;
                 $comissaoVendedor->parcela = $c->parcela;
                 if($comissao_corretor_contagem == 0) {
                     $comissaoVendedor->data = date('Y-m-d',strtotime($request->data_boleto));
@@ -502,7 +504,7 @@ class CotacaoController extends Controller
                 $comissaoCorretoraLancadas = new ComissoesCorretoraLancadas();
                 $comissaoCorretoraLancadas->comissao_id = $comissao->id;            
                 $comissaoCorretoraLancadas->parcela = $cc->parcela;
-                $comissaoCorretoraLancadas->user_id = auth()->user()->id;
+                
                 if($comissoes_corretora_contagem == 0) {
                     $comissaoCorretoraLancadas->data = date('Y-m-d',strtotime($request->data_boleto));
                 } else {

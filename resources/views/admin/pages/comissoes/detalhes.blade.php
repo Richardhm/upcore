@@ -69,7 +69,7 @@
                         <td>{{number_format($premiacao->total,2,",",".")}}</td>
                         <td>
                         <i 
-                                class="far fa-thumbs-{{$c->status ? 'up' : 'down'}} fa-2x status-premiacao" 
+                                class="far fa-thumbs-{{$premiacao->status ? 'up' : 'down'}} fa-2x status-premiacao" 
                                 
                                 data-toggleclass="far fa-thumbs-{{$premiacao->status ? 'down' : 'up'}} fa-2x status-premiacao"  
                                 data-id="{{$premiacao->id}}"

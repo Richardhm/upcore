@@ -35,14 +35,16 @@ class ComissoesController extends Controller
     public function detalhes($id)
     {
         $comissoes = ComissoesCorretorLancados::where('comissao_id',$id)->get();
-        $premiação = PremiacaoCorretoresLancados::where('comissao_id',$id)->first();
+        $premiacao = PremiacaoCorretoresLancados::where('comissao_id',$id)->first();
         $comissoesCorretora = ComissoesCorretoraLancadas::where('comissao_id',$id)->get();
         $premiacoesCorretora = PremiacaoCorretoraLancadas::where('comissao_id',$id)->first();
 
         
+
+
         return view('admin.pages.comissoes.detalhes',[
             'comissoes' => $comissoes,
-            "premiacao" => $premiação,
+            "premiacao" => $premiacao,
             "comissoesCorretora" => $comissoesCorretora,
             "premiacoesCorretora" => $premiacoesCorretora
         ]);

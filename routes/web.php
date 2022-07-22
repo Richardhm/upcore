@@ -35,6 +35,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/home/pesquisa","App\Http\Controllers\Admin\HomeController@storeSearch")->name("admin.home.search.post");
 
     Route::get("/home/relatorio","App\Http\Controllers\Admin\HomeController@relatorio")->name("home.relatorio");
+    Route::post("/home/relatorio","App\Http\Controllers\Admin\HomeController@criarRelatorio")->name("home.relatorio.post");
     
 
 

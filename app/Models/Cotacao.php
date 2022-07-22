@@ -9,7 +9,7 @@ class Cotacao extends Model
 {
     use HasFactory;
     protected $table = "cotacoes";
-    protected $fillable = ["cliente_id","cidade_id","operadora_id","administradora_id","acomodacao_id","user_id","corretora_id","codigo_externo","valor"];
+    protected $fillable = ["cliente_id","cidade_id","operadora_id","administradora_id","acomodacao_id","plano_id","user_id","corretora_id","codigo_externo","valor"];
 
     public function clientes()
     {
@@ -26,6 +26,9 @@ class Cotacao extends Model
         return $this->belongsTo(Acomodacao::class);
     }
 
-
+    public function plano()
+    {
+        return $this->belongsTo(Planos::class);
+    }
 
 }

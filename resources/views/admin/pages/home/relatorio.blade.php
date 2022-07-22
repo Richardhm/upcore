@@ -3,11 +3,15 @@
 @section('title', 'Relarorios')
 
 @section('content_header')
+@stop
+
+@section('content')
+
     <div class="card">
         <div class="card-header"><h1>Relatorios</h1></div>
         <div class="card-body">
-            
-            <form action="">
+            <form action="{{route('home.relatorio.post')}}" method="POST">
+                @csrf
                 <div class="form-row">
                     <div class="col-6">
                         <label for="">Data Inicial:</label>
@@ -27,61 +31,39 @@
                             </div>
                         </div>
                         <div class="card-body" style="display: none;">
-                            
                             <div class="form-row">
                             <div class="col-6">
-                                <label for="administradora_search">Administradora:</label>
-                                <select name="administradora_search" id="administradora_search" class="form-control">
+                                <label for="administradora">Administradora:</label>
+                                <select name="administradora" id="administradora" class="form-control">
                                     <option value="">--Escolher a Administradora--</option>
                                     @foreach($administradoras as $aa)
                                         <option value="{{$aa->id}}">{{$aa->nome}}</option>
                                     @endforeach
-                                </select>
-                               
+                                </select>                               
                             </div>
-
                             <div class="col-6">
-                                <label for="planos_search">Planos:</label>
-                                <select name="planos_search" id="planos_search" class="form-control">
+                                <label for="plano">Planos:</label>
+                                <select name="plano" id="plano" class="form-control">
                                     <option value="">--Escolher o Planos--</option>
                                     @foreach($planos as $pp)
                                         <option value="{{$pp->id}}">{{$pp->nome}}</option>
                                     @endforeach
-                                </select>
-                               
+                                </select>                              
                             </div>
-
-
-
-
-                            </div>    
-
-                            
-
-
-
+                           </div>    
                         </div>
 
                     </div>
                 </div>
-
                 <input type="submit" class="btn btn-info btn-block" value="Relatorio">
-
-
             </form>
-
         </div>
     </div>
 
+   @if(session('error'))
+    <p class="alert alert-danger">{{session('error')}}</p>
 
-
-@stop
-
-@section('content')
-    
-    
-
-
+   @endif
 @stop
 @section('js')
 @stop

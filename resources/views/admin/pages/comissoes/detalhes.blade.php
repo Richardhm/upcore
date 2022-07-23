@@ -6,6 +6,9 @@
 @section('content')
 
     <h4 class="text-center bg-navy py-4"><u>Corretor</u></h4>
+
+    @if(count($comissoes) >= 1)
+
     <div class="card">
 
         <div class="card-body">
@@ -50,6 +53,17 @@
 
     </div>
 
+    @else
+        <div class="card bg-warning">
+            <div class="card-body">
+                <h5 class="text-center text-white"><u>Este Corretor Não Possui Comissões Cadastradas</u></h5>
+                
+            </div>
+        </div>
+    @endif
+
+    @if(!empty($premiacao) && $premiacao != "")
+
     <div class="card">
         <div class="card-header">
             <h3>Premiação</h3>
@@ -81,6 +95,15 @@
             </table>
         </div>
     </div>
+
+    @else
+        <div class="card bg-warning">
+            <div class="card-body">
+                <h5 class="text-center text-white"><u>Este Corretor Não Possui Premiações Cadastradas</u></h5>
+            </div>
+        </div>
+    @endif
+
     <hr>
     <h4 class="text-center bg-navy py-4"><u>Corretora</u></h4>
     <hr>
@@ -111,7 +134,7 @@
                             <i 
                                 class="far fa-thumbs-{{$cc->status ? 'up' : 'down'}} fa-2x status-corretora" 
                                 
-                                data-toggleclass="far fa-thumbs-{{$c->status ? 'down' : 'up'}} fa-2x status-corretora"  
+                                data-toggleclass="far fa-thumbs-{{$cc->status ? 'down' : 'up'}} fa-2x status-corretora"  
                                 data-id="{{$cc->id}}"
                                 >
                             </i>
@@ -149,7 +172,7 @@
                         <td>{{number_format($premiacoesCorretora->total,2,",",".")}}</td>
                         <td>
                         <i 
-                                class="far fa-thumbs-{{$c->status ? 'up' : 'down'}} fa-2x status-premiacao-corretora" 
+                                class="far fa-thumbs-{{$premiacoesCorretora->status ? 'up' : 'down'}} fa-2x status-premiacao-corretora" 
                                 
                                 data-toggleclass="far fa-thumbs-{{$premiacoesCorretora->status ? 'down' : 'up'}} fa-2x status-premiacao-corretora"  
                                 data-id="{{$premiacoesCorretora->id}}"
@@ -203,7 +226,43 @@
                     url:"{{route('comissoes.mudarStatusPremiacao')}}"
                     
                 })
+           });
+           
+           $('.status-corretora').on('click',function(){
+                let classeAtual = $(this).attr('class')
+                let toggle = $(this).attr('data-toggleclass');
+                $(this).attr('class',toggle);
+                $(this).attr('data-toggleclass', classeAtual);
+                let id = $(this).attr('data-id');
+                $.ajax({
+                    method:"POST",
+                    data:"id="+id,
+                    url:"{{route('comissoes.mudarStatusCorretora')}}"
+                    
+                })
            });  
+           
+           $('.status-premiacao-corretora').on('click',function(){
+                
+                let classeAtual = $(this).attr('class')
+                let toggle = $(this).attr('data-toggleclass');
+                
+                $(this).attr('class',toggle);
+                $(this).attr('data-toggleclass', classeAtual);
+                let id = $(this).attr('data-id');
+                
+                $.ajax({
+                    method:"POST",
+                    data:"id="+id,
+                    url:"{{route('comissoes.mudarStatusCorretoraPremiacao')}}"
+                    
+                })
+           });
+
+
+
+
+
         });
    </script>
 @stop

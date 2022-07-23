@@ -37,6 +37,10 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/home/relatorio","App\Http\Controllers\Admin\HomeController@relatorio")->name("home.relatorio");
     Route::post("/home/relatorio","App\Http\Controllers\Admin\HomeController@criarRelatorio")->name("home.relatorio.post");
     
+    Route::get("/colaborador/{id}/detalhes","App\Http\Controllers\Admin\HomeController@detalhesColaborador")->name("home.administrador.colaborador");
+
+
+
 
 
     Route::resource("corretora","App\Http\Controllers\Admin\CorretoraController");
@@ -219,7 +223,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("comissoes/mudarStatus","App\Http\Controllers\Admin\ComissoesController@mudarStatus")->name("comissoes.mudarStatus");
     Route::post("comissoes/mudarStatus/premiacao","App\Http\Controllers\Admin\ComissoesController@mudarStatusPremiacao")->name("comissoes.mudarStatusPremiacao");
     
-
+    Route::post("comissoes/mudarStatusCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretora")->name("comissoes.mudarStatusCorretora");
+    Route::post("comissoes/mudarStatus/premiacaoCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretoraPremiacao")->name("comissoes.mudarStatusCorretoraPremiacao");
 
 
     /** Fim Comissoes */

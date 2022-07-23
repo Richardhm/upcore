@@ -53,36 +53,31 @@
     </div>
 </div>  
 
+
 <div class="card">
+    @if(!empty($premiacao))
     <div class="card-header">
         <h3>Premiação</h3>
     </div>
     <div class="card-body">
         <table class="table">
-        <thead>
-            <tr>
-                
-                <th>Valor</th>
-               
-                <th>Status</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{number_format($premiacao->total,2,",",".")}}</td>
-                <td><i 
-                                class="far fa-thumbs-{{$premiacao->status ? 'up' : 'down'}} fa-2x status" 
-                                data-toggleclass="far fa-thumbs-{{$premiacao->status ? 'down' : 'up'}} fa-2x status"  
-                                data-id="{{$c->id}}"
-                                >
-                            </i></td>
-            </tr>
-        </tbody>
-        </table>
-        
-    </div>    
-
+            <thead>
+                <tr>
+                    <th>Valor</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{number_format($premiacao->total,2,",",".")}}</td>
+                    <td><i class="far fa-thumbs-{{$premiacao->status ? 'up' : 'down'}} fa-2x status" data-toggleclass="far fa-thumbs-{{$premiacao->status ? 'down' : 'up'}} fa-2x status"  data-id="{{$c->id}}"></i></td>
+                </tr>
+            </tbody>
+        </table> 
+    </div>
+    @else
+        <h4 class="text-center">Não Premiações cadastradas para esse Corretor</h4>    
+    @endif
 </div>
 
 

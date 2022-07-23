@@ -10,6 +10,7 @@ use App\Models\{
     Etiquetas,
     User,
     Administradora,
+    ComissoesCorretoresConfiguracoes,
     Operadora,
     Planos
 };
@@ -39,12 +40,22 @@ class ClienteController extends Controller
                 ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
                 ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
                 
-                ->get();
+                ->paginate(10);
+            $clientesAll = Cliente::where("etiqueta_id","!=",3)
+                ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+                ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+                ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+                ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+                ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+                ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+                
+                ->get();    
                     
             $etiquetas = Etiquetas::all();
             return view('admin.pages.clientes.index',[
                 'clientes' => $clientes,
-                'etiquetas' => $etiquetas
+                'etiquetas' => $etiquetas,
+                'clientesAll' => $clientesAll
             ]);
         } else {
             
@@ -57,11 +68,22 @@ class ClienteController extends Controller
                 ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
                 
                 ->paginate(10);
+            
+                $clientesAll = Cliente::where("user_id",$id)->where("etiqueta_id","!=",3)
+                ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
+                ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
+                ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.cliente_id = clientes.id) AS tarefas_quantidade")
+                ->selectRaw("(SELECT if(SUM(quantidade) >= 1,SUM(quantidade),0) FROM cotacao_faixa_etarias WHERE cotacao_id = (SELECT id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id)) AS quantidade")
+                ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
+                ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
+                
+                ->get();
                     
             $etiquetas = Etiquetas::all();
             return view('admin.pages.clientes.index',[
                 'clientes' => $clientes,
-                'etiquetas' => $etiquetas
+                'etiquetas' => $etiquetas,
+                'clientesAll' => $clientesAll
             ]);
         }
     }
@@ -178,9 +200,11 @@ class ClienteController extends Controller
     {
         $id = auth()->user()->id;
         $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)->with(['comissoes','cotacao','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
+        $comissoes_corretores_configuracoes = ComissoesCorretoresConfiguracoes::where("user_id",$id)->count();
         
         return view("admin.pages.contrato.index",[
-            "contratos" => $contratos
+            "contratos" => $contratos,
+            "comissoes_corretores_configuracoes" => $comissoes_corretores_configuracoes
         ]);    
     }
 

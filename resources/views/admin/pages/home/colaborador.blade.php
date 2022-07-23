@@ -2,7 +2,7 @@
 @section('title', 'Dashboard')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Dashboard - Corretor</h1>
 @stop
 @section('content_top_nav_right')
 
@@ -10,36 +10,18 @@
     <li class="nav-item"><a href="{{route('admin.home.search')}}" class="nav-link"><i class="fas fa-search"></i></a></li> <!--Consulta Rapida-->
 
 @stop
-
-
-
 @section('content')
 <section class="content">
 
-    @if(count($tarefasProximas) >= 1)
-        <p class="alert bg-primary text-center">
-            Você tem {{count($tarefasProximas)}} tarefa(s) para os proximos 03 dias
-            <a href="{{route('cliente.tarefas.proximas')}}" class="ml-4"><i class="fas fa-asterisk"></i>Clique Aqui</a>
-        </p>
-    @endif
-
-    
-
-    @if(count($tarefasAtrasadas) >= 1)
-        <p class="alert bg-danger disabled text-center">
-        Você tem {{count($tarefasAtrasadas)}} tarefa(s) Atrasada
-         <a href="{{route('tarefa.clienteTarefasAtrasadasHome')}}" class="ml-4"><i class="fas fa-asterisk"></i>Clique Aqui</a>
-        </p>
-    @endif
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6 col-6">
+
+            <div class="col-md-3 col-3">
                 <div class="small-box bg-info">
                     <div class="inner">
                         <h3>{{$totalCliente}}</h3>
-                        <p>Total de Clientes</p>
-                        
+                        <p>Total de Clientes</p>                        
                     </div>
                     <div class="icon">
                         <i class="fas fa-cash-register"></i>
@@ -48,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6 col-6">
+            <div class="col-md-3 col-3">
                 <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{$clienteFechados}}</h3>
@@ -62,9 +44,36 @@
                 </div>
             </div>
 
-            
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-orange">
+                    <div class="inner">
+                        <h3 class="text-white">{{count($tarefasProximas)}}</h3>
+                        <p class="text-white">Tarefa(s) para os proximos 03 dias</p>
+                       
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <a href="{{route('cliente.tarefas.proximas')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
 
-            
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3 class="text-white">{{count($tarefasAtrasadas)}}</h3>
+                        <p class="text-white">Tarefa(s) Atrasada</p>
+                       
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-thumbs-down"></i>
+                    </div>
+                    <a href="{{route('tarefa.clienteTarefasAtrasadasHome')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
 </section> 
@@ -78,13 +87,11 @@
                 <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
                 <span class="info-box-text">Comissões a Receber</span>
                 <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>
-                    
+                    <div class="progress-bar" style="width: 100%"></div>                    
                 </div>
                 <span class="progress-description">
                     Referente ao mês {{date('M')}}
-                </span>
-                
+                </span>                
             </div>
         </div>
     </div>
@@ -97,7 +104,6 @@
                 <span class="info-box-text">Premiações a Receber</span>
                 <div class="progress">
                     <div class="progress-bar" style="width: 100%"></div>
-                    
                 </div>
                 <span class="progress-description">
                     Referente ao mês {{date('M')}}
@@ -114,8 +120,7 @@
                 <span class="info-box-number">{{number_format($totalMes,2,",",".")}}</span>
                 <span class="info-box-text">Total a Receber</span>
                 <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>
-                    
+                    <div class="progress-bar" style="width: 100%"></div>                    
                 </div>
                 <span class="progress-description">
                     Referente ao mês {{date('M')}}
@@ -126,13 +131,12 @@
 
     <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box bg-gray-dark">
-            <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+            <span class="info-box-icon"><i class="fas fa-user"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">{{$totalVidas}}</span>
+                <span class="info-box-number">{{$totalVidas ?? 0}}</span>
                 <span class="info-box-text">Total Vidas</span>
                 <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>
-                    
+                    <div class="progress-bar" style="width: 100%"></div>                    
                 </div>
                 <span class="progress-description">
                     Referente ao mês {{date('M')}}
@@ -141,21 +145,16 @@
         </div>
     </div>
     
-
 </div>
-
 
 <section class="row">
     @foreach($etiquetas as $et)
-        <div class="col-md-3 col-sm-6 col-12">
-            
+        <div class="col-md-3 col-sm-6 col-12">            
             <div class="info-box shadow">
                 <span class="info-box-icon border border-dark" style="background-color:{{$et->cor}}">
-                    
                 </span>
                 <div class="info-box-content">
-                    <span class="info-box-text"><i><u><a href="{{route('home.listarPorEtiquetaEspecifica',$et->id)}}" class="text-dark">{{$et->nome}}</a></u></i></span>
-                    
+                    <span class="info-box-text"><i><u><a href="{{route('home.listarPorEtiquetaEspecifica',$et->id)}}" class="text-dark">{{$et->nome}}</a></u></i></span>                    
                     <span class="info-box-number">Quantidade: {{$et->quantidade}}</span>
                 </div>
             </div>

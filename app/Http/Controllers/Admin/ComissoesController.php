@@ -77,6 +77,34 @@ class ComissoesController extends Controller
         return $comissao->status;
     }
 
+    public function mudarStatusCorretora(Request $request)
+    {
+        $id = $request->id;
+        
+        $comissao = ComissoesCorretoraLancadas::where("id",$id)->first();
+        if(!$comissao) {
+            return false;
+        }
+        $comissao->status = $comissao->status ? false : true;
+        $comissao->save();
+
+        return $comissao->status;
+    }
+
+    public function mudarStatusCorretoraPremiacao(Request $request)
+    {
+        $id = $request->id;
+        $comissao = PremiacaoCorretoraLancadas::where("id",$id)->first();
+        if(!$comissao) {
+            return false;
+        }
+        $comissao->status = $comissao->status ? false : true;
+        $comissao->data = date("Y-m-d");
+        $comissao->save();
+
+        return $comissao->status;
+    }
+
     
 
 

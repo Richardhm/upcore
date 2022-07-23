@@ -163,7 +163,7 @@
                         <div class="collapse multi-collapse" id="multiCollapseExample1">
                             <div class="card card-body">
                                 @foreach($permissions as $p)    
-                                    <p><input type="checkbox" name="permission[]" id="permission" value="{{$p->id}}">{{$p->name}}</p>
+                                    <p><input type="checkbox" name="permission[]" id="permission" value="{{$p->id}}">{{$p->description}}</p>
                                 @endforeach    
                             </div>
                         </div>

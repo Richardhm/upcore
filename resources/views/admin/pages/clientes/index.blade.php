@@ -17,7 +17,7 @@
             <div class="ml-auto">
                 <select id="search" name="search" class="form-control select2-single">
                     <option value="">Escolha um cliente</option>
-                    @foreach($clientes as $c)
+                    @foreach($clientesAll as $c)
                     <option value="{{$c->id}}">{{$c->nome}}</option>
                     @endforeach
                 </select>    

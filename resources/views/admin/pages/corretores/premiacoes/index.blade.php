@@ -1,6 +1,13 @@
 @extends('adminlte::page')
 @section('title', 'Listar Premiações')
 @section('content_header')
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{route('corretores.index')}}">Voltar</a></li>
+    
+</ol>
+
+
+
     <h1>Cadastrar Premiações: <a href="{{route('premiacao.corretores.cadastrar',$corretor->id)}}" class="btn btn-warning">
     <i class="fas fa-plus"></i>
     </a></h1>

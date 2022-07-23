@@ -25,7 +25,9 @@
                         <th>Acomodação</th>
                         <th>Cidade</th>
                         <th>Valor</th>
+                        @if($comissoes_corretores_configuracoes != 0)
                         <th>Detalhes</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +40,9 @@
                             <td>{{$c->cotacao->acomodacao->nome}}</td>
                             <td>{{$c->cidade->nome}}</td>
                             <td>{{number_format($c->cotacao->valor,2,",",".")}}</td>
+                            @if($comissoes_corretores_configuracoes != 0)
                             <td><a href="{{route('cotacao.comissao.detalhes',$c->comissoes->id)}}">Detalhes</a></td>
+                            @endif
                         </tr>
                         
                     @endforeach

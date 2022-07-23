@@ -14,51 +14,79 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
+        // $dados = [
+        //     [
+        //         "name" => "configurações"
+        //     ],
+        //     [
+        //         "name" => "configurações_corretora"
+        //     ],
+        //     [
+        //         "name" => "configurações_corretor"
+        //     ],
+        //     [
+        //         "name" => "configurações_operadora"
+        //     ],
+        //     [
+        //         "name" => "configurações_administradora"
+        //     ],
+        //     [
+        //         "name" => "configurações_cidades"
+        //     ],
+            
+        //     [
+        //         "name" => "configurações_planos"
+        //     ],
+        //     [
+        //         "name" => "configurações_tabela_de_preços"
+        //     ],
+        //     [
+        //         "name" => "configurações_etiquetas"
+        //     ],
+        //     [
+        //         "name" => "orçamento"
+        //     ],
+        //     [
+        //         "name" => "contratos"
+        //     ],
+        //     [
+        //         "name" => "clientes"
+        //     ],
+        //     [
+        //         "name" => "clientes_dos_corretores"
+        //     ],
+        //     [
+        //         "name" => "comissoes"
+        //     ]
+        // ];
+
         $dados = [
             [
-                "name" => "configurações"
+                "name" => "configuracoes",
+                "description" => "Configurações (Apenas Administrador)"
             ],
             [
-                "name" => "configurações_corretora"
+                "name" => "clientes",
+                "description" => "Clientes"
             ],
             [
-                "name" => "configurações_corretor"
+                "name" => "clientes_dos_corretores",
+                "description" => "Listar Todos os Clientes da Corretora (Apenas Administrador)"
             ],
             [
-                "name" => "configurações_operadora"
+                "name" => "comissoes",
+                "description" => "Comissões"
             ],
             [
-                "name" => "configurações_administradora"
-            ],
-            [
-                "name" => "configurações_cidades"
+                "name" => "contratos",
+                "description" => "Contratos"
             ],
             
-            [
-                "name" => "configurações_planos"
-            ],
-            [
-                "name" => "configurações_tabela_de_preços"
-            ],
-            [
-                "name" => "configurações_etiquetas"
-            ],
-            [
-                "name" => "orçamento"
-            ],
-            [
-                "name" => "contratos"
-            ],
-            [
-                "name" => "clientes"
-            ],
-            [
-                "name" => "clientes_dos_corretores"
-            ],
-            [
-                "name" => "comissoes"
-            ]
-        ];
+           
+        ];    
+
+
+
         Permission::insert($dados);
     }
 }

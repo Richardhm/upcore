@@ -93,6 +93,10 @@
                     </div>                                     
                 </form>
    </div>
+   @if(isset($mensagem) && !empty($mensagem)) 
+        <p class="alert alert-warning text-center text-white">{{$mensagem}}<br /> Clique 2x sobre o valor para modificar o mesmo!</p>
+        <p></p>
+    @endif
     @if(isset($tabelas) && count($tabelas) >= 1)
         <div class="card">
             
@@ -130,11 +134,10 @@
     @endif
 
     @if(isset($tabelas) && count($tabelas) == 0) 
-    <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
-        
-
+        <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
     @endif
 
+    
 
    
 

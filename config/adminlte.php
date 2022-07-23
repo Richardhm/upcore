@@ -273,40 +273,47 @@ return [
         [
             'text'    => 'Configurações',
             'icon'    => 'fas fa-cog',
-            'can'     => 'configurações',
+            'can'     => 'configuracoes',
             'submenu' => [
                 [
                     'text' => 'Corretora',
                     'url'  => 'admin/corretora',
                     'icon' => 'fas fa-hands-helping',
-                    "can" => "corretora",
+                    //"can" => "corretora",
+                    "can" => "configuracoes",
+                    
                     'active' => ['corretora',"http://localhost:8000/admin/corretora/*"]
                 ],
                 [
                     'text'    => 'Operadora',
                     'url'     => 'admin/operadora',
                     'icon'    => 'fab fa-centos',
-                    'can'     => 'operadora',
+                    // 'can'     => 'operadora',
+                    'can'     => 'configuracoes',
                     'active' => ['operadora',"http://localhost:8000/admin/operadora/*"]  
                 ],
                 [
                     'text' => 'Administradora',
                     'url'  => 'admin/administradora',
                     'icon' => 'fab fa-superpowers',
-                    'can'  => 'administradora',
+                    // 'can'  => 'administradora',
+                    'can'  => 'configuracoes',
                     'active' => ['administradora',"http://localhost:8000/admin/administradora/*"]
                 ],
+                
                 [
-                    'text' => 'Corretor',
+                    'text' => 'Colaborador',
                     'url'  => 'admin/corretores',
                     'icon' => 'fas fa-users',
-                    'can'  => 'corretor',
+                    // 'can'  => 'corretor',
+                    'can'  => 'configuracoes',
                     'active' => ['corretores',"http://localhost:8000/admin/corretores/*"]
                 ],
                 [
                     "text" => "Cidades",
                     "url" => "admin/cidades",
                     "icon" => "fas fa-city",
+                    'can'  => 'configuracoes',
                     "active" => ['cidades',"http://localhost:8000/admin/cidades/*"]
 
                 ],
@@ -314,6 +321,7 @@ return [
                     "text" => "Planos",
                     "url" => "admin/planos",
                     "icon" => "fas fa-clipboard-list",
+                    'can'  => 'configuracoes',
                     "active" => ['planos',"http://localhost:8000/admin/planos/*"]
 
                 ],
@@ -321,14 +329,16 @@ return [
                     'text' => 'Tabela de Preços',
                     'url'  => 'admin/tabela',
                     'icon' => 'fas fa-money-bill',
-                    'can'  => 'tabela',
+                    // 'can'  => 'tabela',
+                    'can'  => 'configuracoes',
                     'active' => ['tabela',"http://localhost:8000/admin/tabela/*"]
                 ],
                 [
                     'text' => 'Etiquetas',
                     'url'  => 'admin/etiquetas',
                     'icon' => 'fas fa-tag',
-                    'can'  => 'etiquetas',
+                    'can'  => 'configuracoes',
+                    // 'can'  => 'etiquetas',
                     'active' => ['etiquetas',"http://localhost:8000/admin/etiquetas/*"]
                 ],
                 
@@ -385,12 +395,14 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    //'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'location' => '/vendor/datatables/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    //'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'location' => '/vendor/datatables/dataTables.bootstrap4.min.js',
                 ],
                
                 
@@ -398,7 +410,8 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    //'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'location' => '/vendor/datatables/dataTables.bootstrap4.min.css',
                 ],
             ],
         ],
@@ -465,12 +478,14 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+                    //'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+                    'location' => '/vendor/select2/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    //'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    'location' => '/vendor/select2/select2.min.css',
                 ],
             ],
         ],
@@ -490,7 +505,8 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    //'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '/vendor/sweetalert2/sweetalert2.js',
                 ],
             ],
         ],

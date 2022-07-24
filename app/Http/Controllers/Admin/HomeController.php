@@ -10,6 +10,7 @@ use App\Models\{
     User,
     Cidade,
     Cliente,
+    ComissoesCorretoraLancadas,
     ComissoesCorretorLancados,
     
     Cotacao,
@@ -45,11 +46,36 @@ class HomeController extends Controller
             return redirect()->back();
         }  
         $corretores = User::where("id","!=",$user->id)->where("corretora_id",$user->corretora_id)->get();
-        $cidades = count(Cidade::all());
-                            
+        $clientesTotal = count(Cliente::all());
+        $clienteContratados = count(Cliente::where("etiqueta_id",3)->get());
+
+        $tarefasProximas = Tarefa::where("status",0)
+                ->whereDate('data','>',date('Y-m-d'))
+                ->whereDate('data',"<=",date("Y-m-d",strtotime(now()."+3day")))
+                ->count();
+        
+        $tarefasAtrasadas = Tarefa::where("status",0)
+                ->whereDate('data','<',date('Y-m-d'))
+                ->count();  
+                
+        $comissoesAReceber = ComissoesCorretoraLancadas::whereRaw("month(data) = month(now())")->where('status',1)->selectRaw('sum(valor) as totalComissaoAReceber')->first()->totalComissaoAReceber;
+        $premiacaoAReceber = PremiacaoCorretoraLancadas::whereRaw("month(data) = month(now())")->where('status',1)->selectRaw('sum(total) as totalPremiacaoAReceber')->first()->totalPremiacaoAReceber;
+        $totalComissao = ComissoesCorretorLancados::selectRaw("sum(valor) as total")->where("status",1)->whereRaw("MONTH(DATA) = MONTH(NOW())")->first()->total;
+        $totalPremiacao = PremiacaoCorretoresLancados::where("status",1)->whereRaw("MONTH(DATA) = MONTH(NOW())")->selectRaw('sum(total) as total')->first()->total;            
+        
+
+
         return view('admin.pages.home.administrador',[
             "corretores" => $corretores,
-            "cidades" => $cidades
+            "clientesTotal" => $clientesTotal,
+            "clienteContratados" => $clienteContratados,
+            "tarefasProximas" => $tarefasProximas,
+            "tarefasAtrasadas" => $tarefasAtrasadas,
+            "comissoesAReceber" => $comissoesAReceber,
+            "premiacaoAReceber" => $premiacaoAReceber,
+            "totalComissao" => $totalComissao,
+            "totalPremiacao" => $totalPremiacao
+            
         ]);
     }
 
@@ -100,6 +126,7 @@ class HomeController extends Controller
     {
         $user = User::find($id);
         $cargo = $user->hasPermission('comissoes') ? "Financeiro" : "Corretor";
+        
         return view("admin.pages.home.detalhes",[
             "user" => $user,
             "cargo" => $cargo

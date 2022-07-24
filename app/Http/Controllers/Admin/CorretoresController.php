@@ -21,7 +21,7 @@ class CorretoresController extends Controller
     public function __construct(User $user)
     {
         $this->repository = $user;
-        $this->middleware(['can:corretor']);
+        //$this->middleware(['can:corretor']);
     }
        
     public function index()

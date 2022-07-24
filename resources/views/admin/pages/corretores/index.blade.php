@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Listar Corretores')
 @section('content_header')
-    <h1>Cadastrar Corretores: <a href="{{route('corretores.create')}}" class="btn btn-warning">
+    <h1>Cadastrar Colaborador: <a href="{{route('corretores.create')}}" class="btn btn-warning">
     <i class="fas fa-plus"></i>
     </a></h1>
 @stop

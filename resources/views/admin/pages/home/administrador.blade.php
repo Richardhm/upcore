@@ -16,8 +16,8 @@
             <div class="col-md-3 col-3">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>0</h3>
-                        <p>Total de Clientes</p>                        
+                        <h3>{{$clientesTotal}}</h3>
+                        <p>Total de Clientes da Corretora</p>                        
                     </div>
                     <div class="icon">
                         <i class="fas fa-cash-register"></i>
@@ -29,7 +29,7 @@
             <div class="col-md-3 col-3">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{$clienteContratados}}</h3>
                         <p>Cliente Negociados</p>
                        
                     </div>
@@ -43,7 +43,7 @@
             <div class="col-md-3 col-3">
                 <div class="small-box bg-orange">
                     <div class="inner">
-                        <h3 class="text-white">0</h3>
+                        <h3 class="text-white">{{$tarefasProximas}}</h3>
                         <p class="text-white">Tarefa(s) para os proximos 03 dias</p>
                        
                     </div>
@@ -57,7 +57,7 @@
             <div class="col-md-3 col-3">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3 class="text-white">0</h3>
+                        <h3 class="text-white">{{$tarefasAtrasadas}}</h3>
                         <p class="text-white">Tarefa(s) Atrasada</p>
                        
                     </div>
@@ -80,7 +80,7 @@
         <div class="info-box bg-navy">
             <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">R$ 000</span>
+                <span class="info-box-number">{{number_format($comissoesAReceber,2,",",".")}}</span>
                 <span class="info-box-text">Comissões a Receber</span>
                 <div class="progress">
                     <div class="progress-bar" style="width: 100%"></div>                    
@@ -96,7 +96,7 @@
         <div class="info-box bg-lightblue">
             <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">R$ 00</span>
+                <span class="info-box-number">{{number_format($premiacaoAReceber,2,",",".")}}</span>
                 <span class="info-box-text">Premiações a Receber</span>
                 <div class="progress">
                     <div class="progress-bar" style="width: 100%"></div>
@@ -113,8 +113,8 @@
         <div class="info-box bg-olive">
             <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">00</span>
-                <span class="info-box-text">Total a Receber</span>
+                <span class="info-box-number">{{number_format($totalComissao,2,",",".")}}</span>
+                <span class="info-box-text">Comissões a Pagar</span>
                 <div class="progress">
                     <div class="progress-bar" style="width: 100%"></div>                    
                 </div>
@@ -129,8 +129,8 @@
         <div class="info-box bg-gray-dark">
             <span class="info-box-icon"><i class="fas fa-user"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">00</span>
-                <span class="info-box-text">Total Vidas</span>
+                <span class="info-box-number">{{number_format($totalPremiacao,2,",",".")}}</span>
+                <span class="info-box-text">Premiações a Pagar</span>
                 <div class="progress">
                     <div class="progress-bar" style="width: 100%"></div>                    
                 </div>
@@ -173,7 +173,7 @@
                         @endif    
 
 
-                        <a class="users-list-name" href="{{route('home.administrador.colaborador',$c->id)}}"  target="_blank">{{$c->name}}</a>
+                        <a class="users-list-name" href="{{route('home.administrador.colaborador',$c->id)}}">{{$c->name}}</a>
                         <span class="users-list-date">{{date('d/m/Y',strtotime($c->created_at))}}</span>
                     </li>
                     @endforeach

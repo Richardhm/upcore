@@ -66,22 +66,21 @@ class PermissionsTableSeeder extends Seeder
                 "description" => "Configurações (Apenas Administrador)"
             ],
             [
-                "name" => "clientes",
-                "description" => "Clientes"
-            ],
-            [
                 "name" => "clientes_dos_corretores",
                 "description" => "Listar Todos os Clientes da Corretora (Apenas Administrador)"
             ],
             [
-                "name" => "comissoes",
-                "description" => "Comissões"
+                "name" => "clientes",
+                "description" => "Clientes"
             ],
             [
                 "name" => "contratos",
                 "description" => "Contratos"
             ],
-            
+            [
+                "name" => "comissoes",
+                "description" => "Comissões"
+            ] 
            
         ];    
 

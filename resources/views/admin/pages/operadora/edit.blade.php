@@ -18,6 +18,11 @@
         </div>
     </div>
     <div class="card-body">
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                <p>{{$error}}</p>
+            @endforeach
+        @endif
         <form action="{{route('operadora.update',$operadora->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')

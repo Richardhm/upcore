@@ -19,7 +19,7 @@ class ColaboradoresController extends Controller
     public function __construct(User $user)
     {
         $this->repository = $user;
-        $this->middleware(['can:colaboradores']);
+        
     }
        
     public function index()
@@ -35,6 +35,7 @@ class ColaboradoresController extends Controller
 
     public function create()
     {
+        
         $permission = Permission::all();
 
         return view('admin.pages.colaboradores.create',[

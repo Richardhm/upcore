@@ -29,10 +29,6 @@ class ComissoesCorretoresConfiguracoesController extends Controller
             ->groupByRaw("plano_id,administradora_id")
             ->get();
 
-        
-        
-       
-
         return view('admin.pages.corretores.comissoes.index',[
             "comissoes" => $comissoes,
             "corretor" => $corretor

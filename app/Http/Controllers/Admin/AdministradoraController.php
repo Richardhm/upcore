@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUpdateAdministradora;
 use Illuminate\Http\Request;
 use App\Models\Administradora;
 //use App\Models\AdministradoraParcelas;
@@ -46,25 +47,12 @@ class AdministradoraController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\StoreUpdateAdministradora  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUpdateAdministradora $request)
     {
         
-        $roles = [
-            "nome" => "required|unique:administradoras",
-            "logo" => "required",
-            "premiacao_corretora" => "required"
-        ];
-        $messages = [
-            "nome.required" => "O campo nome e campo obrigatorio",
-            "nome.unique" => "Esta Administradora já esta cadastrada",
-            "logo.required" => "O campo logo e campo obrigatorio",
-            "premiacao_corretora.required" => "O campo Premiacao Corretora e campo obrigatorio"
-        ];
-
-        $request->validate($roles,$messages);
         $parcelas = array_values($request->parcelas);       
         $administradora = new Administradora();
         $administradora->nome = $request->nome;
@@ -72,11 +60,7 @@ class AdministradoraController extends Controller
             $administradora->logo = $request->file('logo')->store('administradoras','public');
         }
         $administradora->premiacao_corretora = $request->premiacao_corretora;
-        // $administradora->premiacao_corretor = $request->premiacao_corretor;
-        // $administradora->vitalicio = $request->vitalicio;
-        //$administradora->quantidade_parcelas = count($request->parcelas);
         $administradora->save();
-        
         foreach($parcelas as $k => $v) {
             $aa = new ComissoesCorretoraConfiguracoes();
             $aa->administradora_id = $administradora->id;
@@ -84,9 +68,7 @@ class AdministradoraController extends Controller
             $aa->valor = $v['parcelas'];
             $aa->parcela = $k+1;
             $aa->save();    
-            
         }
-
         return redirect()->route("administradora.index");
     }
 

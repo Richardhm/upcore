@@ -26,11 +26,21 @@ class CorretoresController extends Controller
        
     public function index()
     {
+        
         $id = auth()->user()->id;
-        $corretora = auth()->user()->corretora_id;
-        $corretores = DB::select("SELECT * FROM users WHERE corretora_id = ? AND id != ?",[$corretora,$id]);
+        
+        $corretores = $this->repository->where("id","!=",$id)->whereHas('permissions',function($query){
+            $query->where("permission_id","!=",5);
+        })->get();
+
+        $financeiro = $this->repository->where("id","!=",$id)->whereHas('permissions',function($query){
+            $query->where("permission_id",5);
+        })->get();
+        
+        
         return view('admin.pages.corretores.index',[
-            'corretores' => $corretores
+            'corretores' => $corretores,
+            'financeiro' => $financeiro
         ]);
     }
 
@@ -45,9 +55,46 @@ class CorretoresController extends Controller
         ]);
     }
 
+    public function validaCPF($cpf) {
+ 
+        // Extrai somente os números
+        $cpf = preg_replace( '/[^0-9]/is', '', $cpf );
+         
+        // Verifica se foi informado todos os digitos corretamente
+        if (strlen($cpf) != 11) {
+            return false;
+        }
+    
+        // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
+        if (preg_match('/(\d)\1{10}/', $cpf)) {
+            return false;
+        }
+    
+        // Faz o calculo para validar o CPF
+        for ($t = 9; $t < 11; $t++) {
+            for ($d = 0, $c = 0; $c < $t; $c++) {
+                $d += $cpf[$c] * (($t + 1) - $c);
+            }
+            $d = ((10 * $d) % 11) % 10;
+            if ($cpf[$c] != $d) {
+                return false;
+            }
+        }
+        return true;
+    
+    }
+
     public function store(StoreUpdateColaboradores $request)
     {
         $dados = $request->all();
+        
+        if(isset($request->cpf) && !empty($request->cpf)) {
+            if(!$this->validaCPF($request->cpf)) {
+                return redirect()->route('corretores.create')->with("errorcpf","CPF inválido")->withInput($request->input());
+            }
+        }
+
+        
         
         $dados['password'] = bcrypt($request->password);
         if(!empty($request->file('image'))) {

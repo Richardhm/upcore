@@ -22,9 +22,9 @@
             <div class="form-row">
                 <div class="col-md-6 mb-3">
                     <label for="name">Nome*</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nome" value="{{old('nome')}}">
-                    @if($errors->has('nome'))
-                        <p class="alert alert-danger">{{$errors->first('nome')}}</p>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Nome" value="{{old('name')}}">
+                    @if($errors->has('name'))
+                        <p class="alert alert-danger">{{$errors->first('name')}}</p>
                     @endif
                 </div>
 
@@ -33,6 +33,9 @@
                     <input type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF" value="{{old('cpf')}}">
                     @if($errors->has('cpf'))
                         <p class="alert alert-danger">{{$errors->first('cpf')}}</p>
+                    @endif
+                    @if(session('errorcpf'))
+                        <p class="alert alert-danger">{{ session('errorcpf') }}</p>
                     @endif
                 </div>
             </div>
@@ -105,7 +108,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="celular">Celular:</label>
-                    <input type="text" class="form-control" id="celular" name="celular" placeholder="(XXX) XXXXX-XXXX" value="{{old('celular')}}">
+                    <input type="text" class="form-control" id="celular" name="celular" placeholder="(XX) X XXXXX-XXXX" value="{{old('celular')}}">
                     @if($errors->has('celular'))
                         <p class="alert alert-danger">{{$errors->first('celular')}}</p>
                     @endif
@@ -127,43 +130,17 @@
                     @endif
                 </div>        
             </div>
-                    
-        
-            <div id="campos_comissao" class="ds-none">
-                <h1>Campos Ocultos</h1>
-                <div style="display:flex;flex-wrap: wrap;">
-                    <div data-repeater-list="parcelas">
-                        @foreach($administradoras as $a) 
-                            <p class="">{{$a->nome}}</p> 
-                    
-                    
-                            <div data-repeater-item>
-                                <div class="titulos">
-                                    <input type="text" id="parcelas_{{$a->nome}}" name="parcelas_{{$a->nome}}" placeholder="%" />
-                                    <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
-                                </div>
-                            </div>
-                        
-                        <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
-                    @endforeach
-                    </div>    
-                </div>
-            </div>     
-            
-
-
-
-
+           
             <div class="form-group">
-                <a class="btn btn-warning btn-sm mb-3" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
-                    <i class="fas fa-lock"></i>
+                <a class="btn btn-warning btn-sm mb-3" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">
+                    <i class="fas fa-lock"></i>(Permissões do Colaborador, pelo menos 1 é obrigatório)
                 </a>    
                 <div class="row">
                     <div class="col">
-                        <div class="collapse multi-collapse" id="multiCollapseExample1">
+                        <div class="collapse multi-collapse show" id="multiCollapseExample1">
                             <div class="card card-body">
-                                @foreach($permissions as $p)    
-                                    <p><input type="checkbox" name="permission[]" id="permission" value="{{$p->id}}">{{$p->description}}</p>
+                                @foreach($permissions as $k => $p)    
+                                    <p><input type="checkbox" name="permission[]" id="permission" value="{{$p->id}}" {{ ( is_array(old('permission')) && in_array($p->id, old('permission')) ) ? 'checked ' : ''}}>{{$p->description}}</p>
                                 @endforeach    
                             </div>
                         </div>
@@ -173,6 +150,7 @@
                 @if($errors->has('permission'))
                         <p class="alert alert-danger">{{$errors->first('permission')}}</p>
                 @endif
+               
             </div>    
             <button class="btn btn-primary btn-block" type="submit">Cadastrar Corretor</button>
            </form>
@@ -199,7 +177,7 @@
 <script>
         $(function(){
             $('#cpf').mask('000.000.000-00', {reverse: true});
-            $('#celular').mask('(000) 00000-0000');
+            $('#celular').mask('(00) 0 00000-0000');
             $('#estado').select2({
                 theme: 'bootstrap4',
             });

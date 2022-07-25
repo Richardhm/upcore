@@ -38,48 +38,29 @@
 
             <div class="form-group">
                 <label for="premiacao_corretora">Premiação Corretora: *</label>
-                <input type="text" class="form-control" id="premiacao_corretora" name="premiacao_corretora" placeholder="Premiação Corretora">
+                <input type="text" class="form-control" id="premiacao_corretora" value="{{old('premiacao_corretora')}}" name="premiacao_corretora" placeholder="Premiação Corretora">
                 @if($errors->has('premiacao_corretora'))
                     <p class="alert alert-danger">{{$errors->first('premiacao_corretora')}}</p>
                 @endif
             </div>
 
             <div class="form-group">
-                <label for="comissao">Comissão Corretora:<small>(%)</small></label>
+                <label for="comissao">Comissão Corretora:<small>(%) *</small></label>
                 
             </div>
-            
-            <div data-repeater-list="parcelas">
-                
+
+
+            @if($errors->has('parcelas.*.parcelas'))
+                <p class="alert alert-danger">{{$errors->first('parcelas.*.parcelas')}}</p>
+            @endif
+            <div data-repeater-list="parcelas">               
                 <div data-repeater-item>
-                    
                     <input type="text" id="parcelas" name="parcelas" placeholder="%" />
                     <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
-                </div>
-                
+                </div> 
             </div>
             <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
             
-
-            <!-- <div class="form-group">
-                <label for="vitalicio">Vitalicio:</label>
-                <input type="checkbox" id="vitalicio_status">
-                <div id="area_vitalicio">
-
-                </div>
-            </div> -->
-
-           
-
-            
-
-            <!-- <div class="form-row">
-                <div class="col-md-12 mb-3">
-                    <label for="operadora">Operadora:</label>
-                    <input type="checkbox" name="operadora" id="operadora">
-
-                </div>
-            </div> -->
    
             <button class="btn btn-primary btn-block mt-5" type="submit">Cadastrar Administradora</button>
            </form>

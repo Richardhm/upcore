@@ -1,9 +1,20 @@
 @extends('adminlte::page')
 @section('title', 'Listar Comissoes')
 @section('content_header')
+   
+
+
+
     <h1>Cadastrar Comissoes: <a href="{{route('comissao.corretores.cadastrar',$corretor->id)}}" class="btn btn-warning">
     <i class="fas fa-plus"></i>
     </a></h1>
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('corretores.index')}}">Voltar Listagem de Colaboradores</a></li>
+        <li class="breadcrumb-item">Listagem de Comissões</li>
+    </ol>    
+
+
 @stop
 @section('content')
     <div class="card">

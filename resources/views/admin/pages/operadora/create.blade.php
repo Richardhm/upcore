@@ -20,7 +20,7 @@
             @csrf
             
             <div class="form-group">
-                    <label for="nome">Nome*</label>
+                    <label for="nome">Nome: *</label>
                     <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" value="{{old('nome')}}">
                     @if($errors->has('nome'))
                         <p class="alert alert-danger">{{$errors->first('nome')}}</p>

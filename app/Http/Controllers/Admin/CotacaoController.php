@@ -9,13 +9,10 @@ use App\Models\{
     Cliente,
     Cidade,
     Tabela,
-    User,
-    
     Cotacao,
     CotacaoFaixaEtaria,
     Administradora,
     Comissao,
-    
     Operadora,
     Planos,
     ComissoesCorretoresConfiguracoes,
@@ -32,8 +29,6 @@ class CotacaoController extends Controller
 {
     public function orcamento($id)
     {
-         
-
         $cliente = Cliente::where("id",$id)->first();
         if(!$cliente) {
             return redirect()->back();
@@ -87,9 +82,7 @@ class CotacaoController extends Controller
         $faixas = CotacaoFaixaEtaria::where("orcamento_id","=",$id_orcamento)
                 ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = orcamento_faixa_etarias.faixa_etaria_id) AS faixa_nome")  
                 ->get();
-                   
-
-                
+               
         // @ts-ignore
         $pdf = PDF::loadView('admin.pages.orcamento.pdf',[
             'planos'=>$planos,
@@ -102,7 +95,6 @@ class CotacaoController extends Controller
     public function montarPlano(Request $request)
     {
           
-        // $this->middleware(['can'=>'cadastrar_orcamentos']);
         if(empty($request->nome) || empty($request->telefone) || empty($request->email) || empty($request->cidade)) {
             return "error";
         }

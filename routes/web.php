@@ -50,36 +50,32 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/cotacao/orcamento/{id}","App\Http\Controllers\Admin\CotacaoController@orcamento")->name("cotacao.orcamento");
     Route::post("/cotacao/orcamento","App\Http\Controllers\Admin\CotacaoController@montarPlano")->name("cotacao.montarPlanos");
     Route::get("/cotacao/contrato/{id}","App\Http\Controllers\Admin\CotacaoController@contrato")->name("cotacao.contrato");
-
-    // Route::post("/cotacao/montarValores","App\Http\Controllers\Admin\CotacaoController@montarValores")->name("contrato.montarValores");
     Route::post("/cotacao/cadastrarContrato","App\Http\Controllers\Admin\CotacaoController@storeContrato")->name("contrato.store");
     Route::post("/cotacao/montarValoresFormularioAcomodacao","App\Http\Controllers\Admin\CotacaoController@montarValoresFormularioAcomodacao")->name("contrato.montarValoresFormularioAcomodacao");
-
     Route::get("/cotacao/contrato/comissao/{id_cliente}","App\Http\Controllers\Admin\CotacaoController@detalhesDoContratoComissoes")->name("cotacao.comissao.detalhes");
-
     Route::get("/criar/pdf/{id_orcamento}/{id_cidade}/{plano_id}/{coparticipacao}/{odonto}/{operadora_id}/{administradora_id}","App\Http\Controllers\Admin\CotacaoController@criarPDF")->name("cotacao.pdf");
+    /** Fim Cotação */
     
-
+    /** Corretores */
     Route::get("/corretores","App\Http\Controllers\Admin\CorretoresController@index")->name("corretores.index");
     Route::get("/corretores/create","App\Http\Controllers\Admin\CorretoresController@create")->name("corretores.create");
     Route::post("/corretores/store","App\Http\Controllers\Admin\CorretoresController@store")->name("corretores.store");
     Route::get("/corretores/{id}/edit","App\Http\Controllers\Admin\CorretoresController@edit")->name("corretores.edit");
     Route::put("/corretores/{id}/update","App\Http\Controllers\Admin\CorretoresController@update")->name("corretores.update");
     Route::delete("/corretores/deletar/{id}","App\Http\Controllers\Admin\CorretoresController@destroy")->name("corretores.destroy");    
-
     Route::get("/corretores/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@index")->name('comissao.corretores.index');
     Route::get("/corretores/cadastrar/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@create")->name('comissao.corretores.cadastrar');
     Route::post("/corretores/comissao/store","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@store")->name('comissao.corretores.store');
     Route::get("/corretores/{id_corretor}/detalhes/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@detalhes")->name('comissao.corretores.detalhes');
-
+    Route::delete("/corretores/{id_corretor}/deletar/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@deletarComissaoIndividual")->name('comissao.corretores.deletar');
+    Route::delete("/corretores/deletar/parcela/{id_parcela}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@deletarParcelaIndividual")->name('comissao.corretores.deletar.parcela');
+    Route::post("/corretores/editar/parcela","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@editarParcelaIndividual")->name('comissao.corretores.editar.parcela');
     Route::get("/corretores/premiacao/{id}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@index")->name('premiacao.corretores.index');
     Route::get("/corretores/cadastrar/premiacao/{id}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@create")->name('premiacao.corretores.cadastrar');
     Route::post("/corretores/premiacao/store","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@store")->name('premiacao.corretores.store');
-    //Route::get("/corretores/{id_corretor}/detalhes/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@detalhes")->name('premiacao.corretores.detalhes');
-
-
-
-
+    Route::delete("/corretores/premiacao/deletar/{id}","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@deletarPremiacaoIndividual")->name('premiacao.corretores.deletar');
+    Route::post("/corretores/premiacao/editar/parcela","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@editarPremiacao")->name('premiacao.corretores.editar');
+    /** Fim Corretores */
     
     Route::resource("operadora","App\Http\Controllers\Admin\OperadoraController");
     Route::resource("administradora","App\Http\Controllers\Admin\AdministradoraController");

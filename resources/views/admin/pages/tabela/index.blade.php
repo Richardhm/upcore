@@ -11,6 +11,11 @@
     </div>    
 @stop
 @section('content')
+    @if (session('success'))
+        <div class="alert alert-success text-center">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="card">
         <div class="card-body">                
             <form action="{{route('tabela.store')}}" class="invoice-repeater" method="POST">
@@ -87,18 +92,7 @@
                             <p class="alert alert-danger">{{$errors->first('odonto')}}</p>
                         @endif
                     </div>
-                    <!-- <div class="col-md-4 mb-3">
-                        <label for="acomodacao">Acomodação:</label><br />
-                        <select name="modelo_id" id="modelo_id" class="form-control">
-                            <option value="">--Escolher a Acomodação--</option>
-                            <option value="Apartamento" {{old('modelo_id') == "Apartamento" ? 'selected' : ''}}>Apartamento</option>
-                            <option value="Enfermaria" {{old('modelo_id') == "Enfermaria" ? 'selected' : ''}}>Enfermaria</option>
-                            <option value="Ambulatorial" {{old('modelo_id') == "Ambulatorial" ? 'selected' : ''}}>Ambulatorial</option>
-                        </select>   
-                        @if($errors->has('modelo_id'))
-                            <p class="alert alert-danger">{{$errors->first('modelo_id')}}</p>
-                        @endif
-                    </div> -->
+                    
                 </div>
                 <h3 class="my-1">Faixas Etarias</h3>
                 <div class="form-row">
@@ -201,13 +195,6 @@
                 $('input[name="plans"]').val($(this).val());
             });
 
-
-            
-           
-
-
-
-
             function verificar_administradora(valor,city,plans){
                 let selectedCity = (city != null && city != '' ? city : '');
                 let selectedPlan = (plans != null && plans != '' ? plans : '');
@@ -250,10 +237,6 @@
             }
 
             verificar_administradora($("#administradora").val(),$('input[name="city"]').val(),$('input[name="plans"]').val());
-
-        
-
-
 
         });    
       

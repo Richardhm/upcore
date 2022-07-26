@@ -66,25 +66,11 @@
                 </ul>    
             </div>
             <!-- Fim Filtrar Cliente -->
-
-
-
-
-
         </div>
-       
-
-
-
-
-
-
-    </div>
-    
+    </div>    
 @stop
 
 @section('content')
-
     <div class="card">
         <div class="card-body">
             @if(count($clientes) >= 1)
@@ -93,7 +79,6 @@
                         <div style="flex-basis:3%;justify-content: flex-end;margin-left:5px;">
                             <div class="status" data-toggle="modal" data-target="#alterarModal" data-id="{{$c->etiqueta_id}}" data-cliente="{{$c->id}}" style="width:20px;height:20px;border-radius:50%;background-color:{{$c->cor}}"></div>
                         </div>
-                    
                         <div style="flex-basis:25%;">
                             <div><b>{{$c->nome}}</b> | {{isset($c->user) && !empty($c->user) ? $c->user : ""}}</div>
                             <div>{{$c->email}}</div>
@@ -138,21 +123,10 @@
                     </div>
                     <hr />
                 @endforeach
-                <!-- <div>
-                    Status:<br />
-                    <div style="display:flex;">
-                        @if(count($etiquetas) >= 1)
-                            @foreach($etiquetas as $et)
-                                <div style="display:flex;align-items: center;margin-left:5px;"><div style="width:20px;height:20px;border-radius:50%;background-color:{{$et->cor}}"></div> &nbsp;   <b>{{$et->nome}}</b></div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div> -->
             @else
                 <h4 class="text-center">Sem Clientes há serem listados</h4>
             @endif
         </div>
-
         <nav aria-label="">
             <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="{{$clientes->previousPageUrl()}}"><<</a></li>
@@ -163,16 +137,9 @@
                 @endfor
                 <li class="page-item"><a class="page-link" href="{{$clientes->nextPageUrl()}}">>></a></li>
             </ul>
-        </nav>    
-
-
-
-    
+        </nav>       
     </div>
     
-    
-   
-    </div>
     <div class="modal fade" id="alterarModal" tabindex="-1" aria-labelledby="alterarModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

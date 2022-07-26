@@ -18,7 +18,11 @@
         <div class="card-body">
            
            
-        
+        @if (session('errorpremiacaexiste'))
+            <div class="alert alert-danger text-center">
+                {{ session('errorpremiacaexiste') }}
+            </div>
+        @endif
         
             <form action="{{route('premiacao.corretores.store')}}" method="post" enctype="multipart/form-data" class="invoice-repeater">
             @csrf
@@ -53,10 +57,10 @@
                 </div>
             </div>
 
-            <h3>Premiação:</h3>
+            
             <div class="form-group">
                 <label for="">Valor:</label>    
-                <input type="text" name="valor" id="valor" class="form-control" placeholder="Valor da Premiação">
+                <input type="text" name="valor" id="valor" class="form-control" value="{{old('valor')}}" placeholder="Valor da Premiação">
                 @if($errors->has('valor'))
                     <p class="alert alert-danger">{{$errors->first('valor')}}</p>
                 @endif

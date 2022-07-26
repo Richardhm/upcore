@@ -94,7 +94,7 @@
                 </form>
    </div>
    @if(isset($mensagem) && !empty($mensagem)) 
-        <p class="alert alert-warning text-center text-white">{{$mensagem}}<br /> Clique 2x sobre o valor para modificar o mesmo!</p>
+        <p class="alert alert-warning text-center text-white">{{$mensagem}}<br /> Clique sobre o valor para modificar o mesmo!</p>
         <p></p>
     @endif
     @if(isset($tabelas) && count($tabelas) >= 1)
@@ -137,37 +137,34 @@
         <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
     @endif
 
-    
-
-   
-
     <div class="modal fade" id="alterarModal" tabindex="-1" aria-labelledby="alterarModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="alterarModalLabel">Editar</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{route('tabela.edit.valor')}}" method="POST" name="alterar_valor" id="alterar_valor">
-            @csrf    
-            <input type="hidden" name="id" id="id">
-            
-            <div class="form-group">
-                <label for="valor">Valor:</label>
-                <input type="text" name="valor" id="valor" class="form-control">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alterarModalLabel">Editar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('tabela.edit.valor')}}" method="POST" name="alterar_valor" id="alterar_valor">
+                    @csrf    
+                    <input type="hidden" name="id" id="id">
+                    
+                    <div class="form-group">
+                        <label for="valor">Valor:</label>
+                        <input type="text" name="valor" id="valor" class="form-control">
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Alterar Dados</button>
+            </div>
+            </form>
             </div>
         </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button type="submit" class="btn btn-primary">Alterar Dados</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>    
+    </div>   
+     
 </div>
     
   

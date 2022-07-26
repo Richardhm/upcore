@@ -5,18 +5,14 @@
 @section('plugins.Sweetalert2', true)
 
 @section('content_header')
-<div class="card-header">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('clientes.index')}}">Listar Clientes</a></li>
-                
-            </ol>
-        </nav>
-    </div>  
+    <h4>Cadastrar Cliente</h4>
 @stop
 
 @section('content')
-   
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('clientes.index')}}">Listar Clientes</a></li>
+        <li class="breadcrumb-item">Cadastrar Cliente</li>
+    </ol>   
     <div class="card">
 
         <div class="card-body">

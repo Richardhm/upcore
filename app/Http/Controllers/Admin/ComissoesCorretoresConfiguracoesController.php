@@ -38,27 +38,21 @@ class ComissoesCorretoresConfiguracoesController extends Controller
     public function create($id)
     {
         $corretor = User::where("id",$id)->first();
-        
         if(!$corretor) {
             return redirect()->back();
         }
-
         $administradoras = Administradora::all();
         $planos = Planos::all();
-
-       
-
         return view('admin.pages.corretores.comissoes.create',[
             "corretor" => $corretor,
             "administradoras" => $administradoras,
             "planos" => $planos
-
         ]);
     }
 
     public function store(Request $request)
     {
-        //dd($request->all());
+        
         $rules = [
             "administradora_id" => "required",
             "plano_id" => "required",
@@ -74,27 +68,42 @@ class ComissoesCorretoresConfiguracoesController extends Controller
         ];
 
         $request->validate($rules,$message);
-        $ii=1;
-        foreach($request->parcelas as $k => $v):
-            $cad = new ComissoesCorretoresConfiguracoes();
-            $cad->user_id = $request->user_id;
-            $cad->plano_id = $request->plano_id;
-            $cad->administradora_id = $request->administradora_id;
-            $cad->valor = $v['parcelas'];
-            $cad->parcela = $ii++;
-            $cad->save();
-        endforeach;
 
-        return redirect()->route('comissao.corretores.index',$request->user_id);
+        $verificar = ComissoesCorretoresConfiguracoes::where("user_id",$request->user_id)->where("plano_id",$request->plano_id)->where("administradora_id",$request->administradora_id)->get();
 
-
+        if(count($verificar)>=1) {
+            return redirect()->route('comissao.corretores.cadastrar',$request->user_id)->with("errorjatem","Esse usuario já tem comissões com o plano e administradora respectivamente")->withInput($request->all());
+        } else {
+            $ii=1;
+            foreach($request->parcelas as $k => $v):
+                $cad = new ComissoesCorretoresConfiguracoes();
+                $cad->user_id = $request->user_id;
+                $cad->plano_id = $request->plano_id;
+                $cad->administradora_id = $request->administradora_id;
+                $cad->valor = $v['parcelas'];
+                $cad->parcela = $ii++;
+                $cad->save();
+            endforeach;
+            return redirect()->route('comissao.corretores.index',$request->user_id);
+        }
     }
 
+    public function editarParcelaIndividual(Request $request) 
+    {
+        $id = $request->id;
+        $alt = ComissoesCorretoresConfiguracoes::where("id",$id)->first();
+        $alt->valor = $request->valor;
+        if($alt->save()) {
+            return "alterado";
+        } else {
+            return "error";
+        }
+    }
 
     public function detalhes($user,$plano,$administradora) 
     {
         $comissao = ComissoesCorretoresConfiguracoes::
-            selectRaw("parcela,valor")
+            selectRaw("parcela,valor,id")
             ->where("user_id",$user)
             ->where("plano_id",$plano)
             ->where("administradora_id",$administradora)
@@ -113,9 +122,29 @@ class ComissoesCorretoresConfiguracoesController extends Controller
             "user" => $user->name,
             "id" => $user->id
         ]);
-        
-        
     }
+
+    public function deletarComissaoIndividual($user,$plano,$administradora)
+    {
+        ComissoesCorretoresConfiguracoes::where("user_id",$user)
+            ->where("plano_id",$plano)
+            ->where("administradora_id",$administradora)
+            ->delete();
+        
+        return redirect()->route('comissao.corretores.detalhes',[$user,$plano,$administradora]);
+    }
+
+    public function deletarParcelaIndividual($id_parcela)
+    {
+        $parcela = ComissoesCorretoresConfiguracoes::where("id",$id_parcela)->first();
+        if(!$parcela) {
+            return redirect()->back();
+        }
+        $parcela->delete();
+        return redirect()->route('comissao.corretores.detalhes',[$parcela->user_id,$parcela->plano_id,$parcela->administradora_id]);
+    }
+
+
 
 
 

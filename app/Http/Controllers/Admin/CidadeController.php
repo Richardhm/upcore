@@ -60,14 +60,6 @@ class CidadeController extends Controller
         return redirect()->route('cidades.index');
     }
 
-
-
-
-   
-
-
-
-
     public function cadastrar()
     {
         $administradoras = Administradora::all();
@@ -79,11 +71,13 @@ class CidadeController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            "uf" => "required",
             "nome" => "required|unique:cidades|min:3|max:255"
             
         ]; 
 
         $message = [
+            "uf.required" => "O campo estado e campo obrigatorio",
             "nome.required" => "O campo nome e campo obrigatorio",
             "nome.unique" => "Está cidade já esta cadastrada",
             "nome.min" => "O campo nome deve ter no minimo 3 caracteres",
@@ -97,15 +91,7 @@ class CidadeController extends Controller
         $cidade->corretora_id = auth()->user()->id;
         $cidade->uf = $request->uf;
         $cidade->save();
-        //$ac = new AdministradoraCidade();
-        //$ac->cidade_id = $cidade->id;
-        //$ac->administradora_id = $request->administradora_id;
-        //$ac->save();
-        //$ac->administradora_id = $reque
-        // $ac->create([
-        //     "cidade_id" => $cidade->id,
-        //     "administradora_id" => $request->administradora_id
-        // ]);
+        
         return redirect()->route('cidades.index');
     }
 
@@ -117,10 +103,6 @@ class CidadeController extends Controller
             ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = administradora_cidade.cidade_id) AS nome_cidade")
             ->whereRaw("administradora_id = ".$administradora)
             ->get();
-
-       
-
-        
 
         //$cidades = DB::select(DB::raw("SELECT id,nome FROM cidades WHERE ID IN(SELECT cidade_id FROM administradora_cidade WHERE administradora_id = '".$administradora."')"))->toSql();
         $citys = [];

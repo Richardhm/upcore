@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 @section('title', 'Dashboard')
-@section('plugins.Datatables', true)
+
 @section('content_header')
     <h1>Dashboard - Corretor</h1>
 @stop
@@ -20,55 +20,43 @@
             <div class="col-md-3 col-3">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{$totalCliente}}</h3>
-                        <p>Total de Clientes</p>                        
+                        <h3>20</h3>
+                        <p>Tarefas Hoje</p>                        
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-cash-register"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{$clienteFechados}}</h3>
-                        <p>Cliente Negociados</p>
+                        <h3>8</h3>
+                        <p>Tarefas Atrasadas</p>
                        
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-file-signature"></i>
-                    </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-orange">
                     <div class="inner">
-                        <h3 class="text-white">{{count($tarefasProximas)}}</h3>
+                        <h3 class="text-white">6</h3>
                         <p class="text-white">Tarefa(s) para os proximos 03 dias</p>
                        
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <a href="{{route('cliente.tarefas.proximas')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3 class="text-white">{{count($tarefasAtrasadas)}}</h3>
-                        <p class="text-white">Tarefa(s) Atrasada</p>
+                        <h3 class="text-white">10</h3>
+                        <p class="text-white">Sem Tarefas</p>
                        
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-thumbs-down"></i>
-                    </div>
-                    <a href="{{route('tarefa.clienteTarefasAtrasadasHome')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
 
@@ -80,366 +68,215 @@
 
 <div class="row">
     
-    <div class="col-md-3 col-sm-6 col-12">
+    <div class="col-md-2 col-sm-6 col-12">
         <div class="info-box bg-navy">
-            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            
             <div class="info-box-content">
-                <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
-                <span class="info-box-text">Comissões a Receber</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>                    
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>                
+                <span class="info-box-number">000</span>
+                <span class="info-box-text">Leads</span>
+                
             </div>
         </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 col-12">
+    <div class="col-md-2 col-sm-6 col-12">
         <div class="info-box bg-lightblue">
-            <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+            
             <div class="info-box-content">
-                <span class="info-box-number">R$ {{number_format($totalPremiacao,2,",",".")}}</span>
-                <span class="info-box-text">Premiações a Receber</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>
+                <span class="info-box-number">000</span>
+                <span class="info-box-text">Atendimento Em Aberto</span>
+               
                
             </div>
         </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 col-12">
+    <div class="col-md-2 col-sm-6 col-12">
         <div class="info-box bg-olive">
-            <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+            
             <div class="info-box-content">
-                <span class="info-box-number">{{number_format($totalMes,2,",",".")}}</span>
-                <span class="info-box-text">Total a Receber</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>                    
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>    
+                <span class="info-box-number">000</span>
+                <span class="info-box-text">Interessado</span>
+                
             </div>
         </div>
     </div>
 
     <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box bg-gray-dark">
-            <span class="info-box-icon"><i class="fas fa-user"></i></span>
+            
             <div class="info-box-content">
-                <span class="info-box-number">{{$totalVidas ?? 0}}</span>
-                <span class="info-box-text">Total Vidas</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>                    
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>    
+                <span class="info-box-number">000</span>
+                <span class="info-box-text">Aguardando Pagamento</span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box bg-gray">
+            
+            <div class="info-box-content">
+                <span class="info-box-number">000</span>
+                <span class="info-box-text">Aguardando Pagamento Vigência</span>    
             </div>
         </div>
     </div>
     
 </div>
 
-<section class="row">
-    @foreach($etiquetas as $et)
-        <div class="col-md-3 col-sm-6 col-12">            
-            <div class="info-box shadow">
-                <span class="info-box-icon border border-dark" style="background-color:{{$et->cor}}">
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text"><i><u><a href="{{route('home.listarPorEtiquetaEspecifica',$et->id)}}" class="text-dark">{{$et->nome}}</a></u></i></span>                    
-                    <span class="info-box-number">Quantidade: {{$et->quantidade}}</span>
-                </div>
-            </div>
-        </div>
-    @endforeach
-</section>
+<div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center mb-3">
+    <h3 class="align-self-center">Clientes</h3>
+</div>
 
-<!---------------- Começo Seção CLiente Tarefa ------------------------>
-<section class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
-                <h3 class="card-title">
-                    <i class="ion ion-clipboard mr-1"></i>
-                    Lista de Tarefas
-                </h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+<div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-2 col-3">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>17</h3>
+                        <p>Total Clientes</p>                        
+                        <p>Vidas 25</p>                        
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <table class="table listartarefas">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Cliente</th>
-                            <th>Titulo</th>
-                            <th>Dias Faltando</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>                  
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
-                <h3 class="card-title">
-                    <i class="ion ion-clipboard mr-1"></i>
-                    Lista de Clientes
-                </h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+
+            <div class="col-md-2 col-3">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>8</h3>
+                        <p>Negociados</p>                        
+                        <p>Vidas 12</p>                        
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <table class="table listarclientes">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Nome</th>
-                            <th>Telefone</th>
-                            <th align="center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       
-                    </tbody>
-                </table>
+
+            <div class="col-md-2 col-3">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>9</h3>
+                        <p>Em Negociação</p>                        
+                        <p>Vidas 11</p>                        
+                    </div>
+                </div>
             </div>
-           
+            
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>9</h3>
+                        <p>Cadastrado no Mês</p>                        
+                        <p>Vidas 11</p>                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>5</h3>
+                        <p>Perdidos</p>                        
+                        <p>Vidas 11</p>                        
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
-</section>
-<!---------------- FIM Seção CLiente Tarefa ------------------------>
 
-<!---------------- Começo Comissao e  Premiação ------------------------>
-<section class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
-                <h3 class="card-title">
-                    <i class="ion ion-clipboard mr-1"></i>
-                    Comissão a Receber
-                </h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <table class="table listarcomisao">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Cliente</th>
-                            <th>Administradora</th>
-                            <th>Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>  
-                </table>
-            </div>
-        </div>
+
+    <div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center mb-3">
+        <h3 class="align-self-center">Referente ao mês de Julho/2022</h3>
     </div>
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
-                <h3 class="card-title">
-                    <i class="ion ion-clipboard mr-1"></i>
-                    Lista de Premiações referente ao mes de {{date('M')}}
-                </h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <table class="table listarpremiacao">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Cliente</th>
-                            <th>Administradora</th>
-                            <th>Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer clearfix">              
-            </div>
+
+    <section class="referente_mes">
+        <div class="bloco bg-dark rounded">
+            <h4>Total Vendido</h4>
+            <p>20 Vidas R$ 5.000,00</p>
+            <p>6 Individual R$ 1000,00</p>
+            <p>14 Coletivo Adesão R$ 4.000,00</p>
+            <p>0 Empresarial R$ 0,00</p>
         </div>
+        <div class="bloco bg-danger rounded">
+            <h4>Comissões a Receber</h4>
+            <p>R$ 800,00 Total</p>
+            <p>R$ 200,00 Individual</p>
+            <p>R$ 600,00 Coletivo</p>
+            <p>R$ 0,00 Empresarial</p>
+        </div>
+        <div class="bloco bg-success rounded">
+            <h4>Premiação a receber</h4>
+            <p>R$ 1.500,00 Total</p>
+            <p>R$ 0,00 Individual</p>
+            <p>R$ 1.500,00 Coletivo</p>
+            <p>R$ 0,00 Empresarial</p>
+        </div>
+        <div class="bloco bg-warning rounded">
+            <h4>Total a Receber</h4>
+            <p>R$ 2.300,00 Total</p>
+            <p>R$ 200,00 Individual</p>
+            <p>R$ 2.000,00 Coletivo</p>
+            <p>R$ 0,00 Empresarial</p>
+        </div>
+    </section>
+
+    <div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center my-3">
+        <h3 class="align-self-center">Restante A Receber</h3>
     </div>
-</section>
-<!---------------- Fim Comissao e  Premiação ------------------------>
 
-
-
-
-
-
-
+    <section class="referente_mes mb-3">
+        <div class="bloco bg-dark rounded">
+            <h4>Total Vendido</h4>
+            <p>20 Vidas R$ 5.000,00</p>
+            <p>6 Individual R$ 1000,00</p>
+            <p>14 Coletivo Adesão R$ 4.000,00</p>
+            <p>0 Empresarial R$ 0,00</p>
+        </div>
+        <div class="bloco bg-danger rounded">
+            <h4>Comissões a Receber</h4>
+            <p>R$ 800,00 Total</p>
+            <p>R$ 200,00 Individual</p>
+            <p>R$ 600,00 Coletivo</p>
+            <p>R$ 0,00 Empresarial</p>
+        </div>
+        <div class="bloco bg-success rounded">
+            <h4>Premiação a receber</h4>
+            <p>R$ 1.500,00 Total</p>
+            <p>R$ 0,00 Individual</p>
+            <p>R$ 1.500,00 Coletivo</p>
+            <p>R$ 0,00 Empresarial</p>
+        </div>
+        <div class="bloco bg-warning rounded">
+            <h4>Total a Receber</h4>
+            <p>R$ 2.300,00 Total</p>
+            <p>R$ 200,00 Individual</p>
+            <p>R$ 2.000,00 Coletivo</p>
+            <p>R$ 0,00 Empresarial</p>
+        </div>
+    </section>
 
 @stop
 
 @section('js')
     <script>
          $(document).ready(function(){
-            $(".listartarefas").DataTable({
-                "language": {
-                    "url": "{{asset('traducao/pt-BR.json')}}"
-                },
-                ajax: {
-                    "url":"{{ route('home.listarTarefasHome') }}",
-                    "dataSrc": ""
-                },
-                "lengthMenu": [5,10,15],
-                "ordering": true,
-                "paging": true,
-                "searching": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                order: [[3, "asc"]],
-                columns: [
-                    {data:"data",name:"data"},
-                    {data:"cliente",name:"cliente"},
-                    {data:"title",name:"title"},
-                    {data:"falta",name:"falta"},
-                ],
-                "columnDefs": [ {
-                    "targets": 3,
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                        if(cellData < 0) {
-                            $(td).html('<div class="badge badge-dark w-50" style="font-size:1.1em">'+cellData+'</div>')
-                        } else if(cellData <= 3) {
-                            $(td).html('<div class="badge badge-danger w-50" style="font-size:1.1em">'+cellData+'</div>')  
-                        } else if(cellData > 3 && cellData <= 10) {
-                            $(td).html('<div class="badge badge-warning w-50" style="font-size:1.1em">'+cellData+'</div>')
-                        } else {
-                            $(td).html('<div class="badge badge-info w-50" style="font-size:1.1em">'+cellData+'</div>')
-                        }
-                       
-                    
-                    }
-                }]
-            });
-
-            $(".listarclientes").DataTable({
-                "language": {
-                    "url": "{{asset('traducao/pt-BR.json')}}"
-                },
-                ajax: {
-                    "url":"{{ route('home.listarClientesHome') }}",
-                    "dataSrc": ""
-                },
-                "lengthMenu": [5,10,15],
-                "ordering": true,
-                "paging": true,
-                "searching": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                
-                columns: [
-                    {data:"data",name:"data"},
-                    {data:"nome",name:"nome"},
-                    {data:"telefone",name:"telefone"},
-                    {data:"status",name:"status"},
-                ],
-                "columnDefs": [ {
-                    "targets": 3,
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                        $(td).html("<div style='width:20px;height:20px;border-radius:50%;background-color:"+cellData+"'></div>")
-                       
-                    
-                    }
-                }]
-                
-            });
-
-            
-            $(".listarcomisao").DataTable({
-                "language": {
-                    "url": "{{asset('traducao/pt-BR.json')}}"
-                },
-                ajax: {
-                    "url":"{{ route('home.comissoes') }}",
-                    "dataSrc": ""
-                },
-                "lengthMenu": [5,10,15],
-                "ordering": true,
-                "paging": true,
-                "searching": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                
-                columns: [
-                    {data:"data",name:"data",render:function(data, type, row, meta) {
-                        return data.split("-").reverse().join("/")
-                    }},
-                    {data:"comissao.cliente.nome",name:"cliente"},
-                    {data:"comissao.cotacao.administradora.nome",name:"administradora"},
-                    {data:"valor",name:"valor",render:function(data,type,row,meta){
-                        return parseFloat(data).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-                    }},
-                ],
-                
-                
-            });
-
-            $('.listarpremiacao').DataTable({
-                "language": {
-                    "url": "{{asset('traducao/pt-BR.json')}}"
-                },
-                ajax: {
-                    "url":"{{ route('home.premiacoes') }}",
-                    "dataSrc": ""
-                },
-                "lengthMenu": [5,10,15],
-                "ordering": true,
-                "paging": true,
-                "searching": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                
-                columns: [
-                    {data:"data",name:"data",render:function(data, type, row, meta) {
-                        return data.split("-").reverse().join("/")
-                    }},
-                    {data:"comissao.cliente.nome",name:"cliente"},
-                    {data:"comissao.cotacao.administradora.nome",name:"administradora"},
-                    {data:"total",name:"total",render:function(data,type,row,meta){
-                        return parseFloat(data).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-                    }},
-                ],
-                
-                
-            });
-
+           
 
 
          });
     </script>
-@stop        
+@stop   
+
+@section('css')
+    <style>     
+        .referente_mes {
+            display:flex;
+        }     
+        .bloco {
+            flex-basis: 24%;
+            margin-right:10px;
+        }
+    </style>
+@stop

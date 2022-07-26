@@ -8,11 +8,9 @@ use App\Models\{
     Acomodacao,
     Administradora,
     User,
-    Cidade,
     Cliente,
     ComissoesCorretoraLancadas,
     ComissoesCorretorLancados,
-    
     Cotacao,
     Etiquetas,
     Operadora,
@@ -21,9 +19,9 @@ use App\Models\{
     PremiacaoCorretoresLancados,
     Tarefa
 };
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Framework\Constraint\Operator;
+
 
 class HomeController extends Controller
 {

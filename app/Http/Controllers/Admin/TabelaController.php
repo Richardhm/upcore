@@ -88,9 +88,10 @@ class TabelaController extends Controller
                 ->where("administradora_id",$request->administradora)
                 ->where("plano_id",$request->planos)
                 ->where("cidade_id",$request->cidades)
-                ->where("coparticipacao",$request->coparticipacao)
-                ->where("odonto",$request->odonto)
-                ->get();        
+                ->where("coparticipacao",($request->coparticipacao == 'sim' ? 1 : 0))
+                ->where("odonto",($request->odonto == 'sim' ? 1 : 0))
+                ->get();  
+                      
         if(count($verificar)>=1) {
             $tabelas = DB::select("SELECT faixas,apartamento,id_apartamento,enfermaria,id_enfermaria,ambulatorial,id_ambulatorial FROM (
                 select 
@@ -118,16 +119,16 @@ class TabelaController extends Controller
                     "administradoras" => $administradoras,
                     "tipos" => $tipos,
                     "modelos" => $modelos,
-                    "operadora_id" => $operadora ?? "",
-                    "administradora_id" => $administradora ?? "",
-                    "plano_id" => !empty($planos) ? $planos : "",
-                    "cidade_id" => !empty($cidade) ? $cidade : "",    
+                    "operadora_id" => $request->operadora ?? "",
+                    "administradora_id" => $request->administradora ?? "",
+                    "plano_id" => $request->planos,
+                    "cidade_id" => $request->cidades,    
                     "coparticipacao" => ($request->coparticipacao == "sim" ? 1 : 0),
                     "odonto" => ($request->odonto == "sim" ? 1 : 0),
                     "coparticipacao_texto" => ($request->coparticipacao == "sim" ? "Com Coparticipacao" : "Sem Coparticipacao"),
                     "odonto_texto" => ($request->odonto == "sim" ? "Com Odonto" : "Sem Odonto"),
                     "administradora_texto" => Administradora::where("id",$request->administradora)->selectRaw("nome")->first()->nome,
-                    "mensagem" => "Já temos esse registro cadastrado, caso queira modificar segue abaixo"
+                    "mensagem" => "Já temos esse registro cadastrado, caso queira modificar segue abaixo."
                 ]);    
 
 
@@ -205,7 +206,7 @@ class TabelaController extends Controller
                 $tabela->valor = str_replace([".",","],["","."],$request->valor_ambulatorial[$k]);
                 $tabela->save();
             }
-            return redirect()->route('tabela.index');
+            return redirect()->route('tabela.index')->with('success',"A tabela foi cadastrada com sucesso");
         }        
            
         
@@ -278,12 +279,6 @@ class TabelaController extends Controller
                 "odonto_texto" => ($request->odonto_search == "sim" ? "Com Odonto" : "Sem Odonto"),
                 "administradora_texto" => Administradora::where("id",$request->administradora_search)->selectRaw("nome")->first()->nome
             ]);    
-        
-        
-        
-            
-
-
     }
 
 
@@ -298,14 +293,4 @@ class TabelaController extends Controller
             return "error";
         }
     }
-
-
-    
-
-
-
-
-
-
-
 }

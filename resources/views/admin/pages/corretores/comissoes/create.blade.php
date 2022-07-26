@@ -17,7 +17,14 @@
         </div>
         <div class="card-body">
            
-           
+        @if (session('errorjatem'))
+            <div class="alert alert-danger text-center">
+                {{ session('errorjatem') }}. <a href="{{route('comissao.corretores.detalhes',[$corretor->id,old('plano_id'),old('administradora_id')])}}">Editar Aqui</a>
+            </div>
+        @endif
+
+        
+        
         
         
             <form action="{{route('comissao.corretores.store')}}" method="post" enctype="multipart/form-data" class="invoice-repeater">

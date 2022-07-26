@@ -310,14 +310,6 @@ return [
                     'active' => ['corretores',"http://localhost:8000/admin/corretores/*"]
                 ],
                 [
-                    "text" => "Cidades",
-                    "url" => "admin/cidades",
-                    "icon" => "fas fa-city",
-                    'can'  => 'configuracoes',
-                    "active" => ['cidades',"http://localhost:8000/admin/cidades/*"]
-
-                ],
-                [
                     "text" => "Planos",
                     "url" => "admin/planos",
                     "icon" => "fas fa-clipboard-list",
@@ -325,6 +317,15 @@ return [
                     "active" => ['planos',"http://localhost:8000/admin/planos/*"]
 
                 ],
+                [
+                    "text" => "Cidades",
+                    "url" => "admin/cidades",
+                    "icon" => "fas fa-city",
+                    'can'  => 'configuracoes',
+                    "active" => ['cidades',"http://localhost:8000/admin/cidades/*"]
+
+                ],
+                
                 [
                     'text' => 'Tabela de Preços',
                     'url'  => 'admin/tabela',

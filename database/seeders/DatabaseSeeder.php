@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             //ColetivosTableSeeder::class,
             FaixasEtariasTableSeeder::class,
             PlanosTableSeeder::class,
-            EtiquetasTableSeeder::class
+            EtiquetasTableSeeder::class,
+            FinanceirosTableSeeder::class
         ]);
     }
 }

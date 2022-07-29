@@ -79,15 +79,34 @@ class HomeController extends Controller
 
     public function corretor()
     {
-        $tarefasProximas = Tarefa::where("user_id",auth()->user()->id)
+            $tarefasHoje = Tarefa::where("user_id",auth()->user()->id)
+                ->where("status",0)
+                ->whereDate('data',date('Y-m-d'))
+                ->count();
+            
+            $tarefasAtrasadas = Tarefa::where("user_id",auth()->user()->id)
+                ->where("status",0)
+                ->whereDate('data','<',date('Y-m-d'))
+                ->count();           
+        
+            $tarefasProximas = Tarefa::where("user_id",auth()->user()->id)
                 ->where("status",0)
                 ->whereDate('data','>',date('Y-m-d'))
                 ->whereDate('data',"<=",date("Y-m-d",strtotime(now()."+3day")))
-                ->get();
-            $tarefasAtrasadas = Tarefa::where("user_id",auth()->user()->id)
-            ->where("status",0)
-            ->whereDate('data','<',date('Y-m-d'))
-            ->get();            
+                ->count();
+
+            $clientesSemTarefas = Cliente::where("user_id",auth()->user()->id)->whereNotIn('id',function($query){
+                $query->select('tarefas.cliente_id');
+                $query->from('tarefas');
+                $query->whereRaw("user_id=".auth()->user()->id);
+            })->count();
+
+            
+              
+            
+            
+
+
             $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
             $clienteFechados = Cotacao::where("user_id",auth()->user()->id)->whereHas('clientes',function($query){
                 $query->where('etiqueta_id','=',3);
@@ -110,8 +129,9 @@ class HomeController extends Controller
                 "totalMes" => $totalComissao + $totalPremiacao,
                 "totalVidas" => $totalVidas,
                 "tarefasProximas" => $tarefasProximas,
-                
-                "tarefasAtrasadas" => $tarefasAtrasadas
+                "tarefasHoje" => $tarefasHoje,
+                "tarefasAtrasadas" => $tarefasAtrasadas,
+                "clientesSemTarefas" => $clientesSemTarefas
             ]);
     }
 

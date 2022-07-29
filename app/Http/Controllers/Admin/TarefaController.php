@@ -105,21 +105,35 @@ class TarefaController extends Controller
         return redirect()->route('clientes.agendarTarefa',[$cliente]);
     }
 
-    public function tarefasProximo03Dias()
+    public function tarefasProximo03Dias(Request $request)
     {
-        $tarefasProximas = Tarefa::where("user_id",auth()->user()->id)
-                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) as cliente")
-                ->selectRaw("data,title,descricao")
+        if($request->ajax()) {
+            $tarefasProximas = Tarefa::where("user_id",auth()->user()->id)
                 ->where("status",0)
+                ->whereDate('data','>',date('Y-m-d'))
                 ->whereDate('data',"<=",date("Y-m-d",strtotime(now()."+3day")))
-                ->whereDate('data',">=",date("Y-m-d"))
-                
                 ->get();
-
-        return view('admin.pages.tarefas.proximas',[
-            "tarefas" => $tarefasProximas
-        ]);       
+           
+            return view('admin.pages.tarefas.proximas',[
+                "tarefas" => $tarefasProximas
+            ]);
+            
+        }
     }
+
+    public function tarefasParaHoje(Request $request)
+    {
+        if($request->ajax()) {
+            $tarefasHoje = Tarefa::where("user_id",auth()->user()->id)
+                ->whereDate('data',"=",date('Y-m-d'))
+                ->get();
+            return view('admin.pages.tarefas.ajax.hoje',[
+                "tarefas" => $tarefasHoje
+            ]);    
+
+        }
+    } 
+
 
     public function clienteTarefasAtrasadasHome()
     {
@@ -129,26 +143,37 @@ class TarefaController extends Controller
         ]);       
     }
 
-    public function clienteSemTarefaAjax()
+    public function clienteSemTarefaAjax(Request $request)
     {
-        
-        $dados = DB::table("clientes")
+        if($request->ajax()) {
+            $dados = Cliente::where("user_id",auth()->user()->id)->whereNotIn('id',function($query){
+                $query->select('tarefas.cliente_id');
+                $query->from('tarefas');
+                $query->whereRaw("user_id=".auth()->user()->id);
+            })
             ->selectRaw("nome,telefone,id")
-            //->selectRaw("(SELECT title FROM tarefas WHERE ) as tarefa")
             ->selectRaw("(SELECT cor from etiquetas WHERE etiquetas.id = clientes.etiqueta_id) as etiqueta")
-            ->whereRaw("id NOT IN (SELECT cliente_id FROM tarefas) AND user_id = ".auth()->user()->id)->get();
-        return view("admin.pages.tarefas.ajax.cliente-sem-tarefa",[
-            "clientes" => $dados
-        ]);
+            ->get();
+            return view("admin.pages.tarefas.ajax.cliente-sem-tarefa",[
+                "clientes" => $dados
+            ]);
+        }
+        
     }
 
-    public function clienteTarefasAtrasadasAjax()
+    public function clienteTarefasAtrasadasAjax(Request $request)
     {
-        $dados = Tarefa::where("status",0)->where("user_id",auth()->user()->id)->whereRaw("data < now()")->with('cliente')->get();
+        if($request->ajax()) {
+            
+            $tarefasAtrasadas = Tarefa::where("user_id",auth()->user()->id)
+                ->where("status",0)
+                ->whereDate('data','<',date('Y-m-d'))
+                ->get();           
         
-        return view("admin.pages.tarefas.ajax.cliente-tarefas-atrasadas",[
-            "clientes" => $dados
-        ]);
+            return view("admin.pages.tarefas.ajax.cliente-tarefas-atrasadas",[
+                "clientes" => $tarefasAtrasadas
+            ]);
+        }
     }
 
     public function mudarStatusTarefaAjax(Request $request)
@@ -170,13 +195,36 @@ class TarefaController extends Controller
 
     }
 
-    public function tarefasRealizadasAjax()
+    public function tarefasRealizadasAjax(Request $request)
     {
-        $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("status",1)->with('cliente')->get();
-        return view("admin.pages.tarefas.ajax.tarefas-realizadas",[
-            "tarefas" => $tarefas
-        ]);
+        if($request->ajax()) {
+            $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("status",1)->with('cliente')->get();
+            return view("admin.pages.tarefas.ajax.tarefas-realizadas",[
+                "tarefas" => $tarefas
+            ]);
+        }    
     }
+
+    public function listarTodasAsTarefasAjax(Request $request)
+    {
+        if($request->ajax()) {
+            $tarefas = Tarefa::where("user_id",auth()->user()->id)->with('cliente')->get();
+            return view('admin.pages.tarefas.ajax.todas-as-tarefas',[
+                "tarefas" => $tarefas
+            ]);
+        }
+    }
+
+    public function marcarTarefasRealizarAjax(Request $request)
+    {
+        if($request->ajax()) {
+            $tarefa = Tarefa::where("user_id",auth()->user()->id)->where("id",$request->id)->first();
+            $tarefa->status = $tarefa->status == 1 ? 0 : 1;
+            $tarefa->save();
+        }
+    }
+
+
 
 
 

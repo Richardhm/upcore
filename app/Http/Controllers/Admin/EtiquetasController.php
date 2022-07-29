@@ -99,16 +99,16 @@ class EtiquetasController extends Controller
         return redirect()->route("etiquetas.index");        
     }
 
-    public function listarPorEtiquetaEspefifica($id)
-    {
-        $nome = Etiquetas::where("id",$id)->first()->nome;
-        $clientes = Cliente::where("etiqueta_id",$id)->where("user_id",auth()->user()->id)->get();
-        return view("admin.pages.etiquetas.clientes",[
-            "clientes" => $clientes,
-            "nome" => $nome
-        ]);
+    // public function listarPorEtiquetaEspefifica($id)
+    // {
+    //     $nome = Etiquetas::where("id",$id)->first()->nome;
+    //     $clientes = Cliente::where("etiqueta_id",$id)->where("user_id",auth()->user()->id)->get();
+    //     return view("admin.pages.etiquetas.clientes",[
+    //         "clientes" => $clientes,
+    //         "nome" => $nome
+    //     ]);
 
-    }
+    // }
 
     public function deletar($id)
     {

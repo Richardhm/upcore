@@ -50,7 +50,7 @@
                     <div class="icon">
                         <i class="fas fa-check"></i>
                     </div>
-                    <a href="{{route('cliente.tarefas.proximas')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{route('cliente.tarefasProximas')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 

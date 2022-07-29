@@ -174,16 +174,6 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/clientes/contrato/sem/orcamento","App\Http\Controllers\Admin\ClienteController@contratoSemOrcamento")->name("clientes.contratoSemOrcamento");
     
     Route::post("/cliente/searchclienteAjax","App\Http\Controllers\Admin\ClienteController@searchclienteAjax")->name("cliente.searchclienteAjax");
-
-    
-    
-    
-    
-    
-    
-    
-
-    
     
     Route::post("/cliente/listarPorEtiqueta","App\Http\Controllers\Admin\ClienteController@listarPorEtiqueta")->name("cliente.listarPorEtiqueta");
     Route::post("/cliente/listarPorEtiquetaAll","App\Http\Controllers\Admin\ClienteController@listarPorEtiquetaAll")->name("cliente.listarPorEtiquetaAll");
@@ -200,12 +190,15 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\TarefaController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
     Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\TarefaController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
     Route::post("/clientes/deletar","App\Http\Controllers\Admin\TarefaController@deletarCliente")->name("cliente.deletarCliente");
-    Route::get("/tarefas/proximas","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefas.proximas");
+    Route::post("/tarefas/para/proximas03dias","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefasProximas");
+    Route::post("/tarefas/para/tarefasHoje","App\Http\Controllers\Admin\TarefaController@tarefasParaHoje")->name("cliente.tarefasParaHoje");
     Route::get("/tarefas/atrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasHome")->name("tarefa.clienteTarefasAtrasadasHome");
     Route::post("/cliente/clientesemtarefa","App\Http\Controllers\Admin\TarefaController@clienteSemTarefaAjax")->name("cliente.semtarefasajax");
     Route::post("/cliente/clientestarefaatrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasAjax")->name("cliente.tarefasatrasadasajax");
     Route::post("/cliente/tarefaMudarStatusAjax","App\Http\Controllers\Admin\TarefaController@mudarStatusTarefaAjax")->name("cliente.mudarStatusTarefaAjax");
     Route::post("/cliente/tarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@tarefasRealizadasAjax")->name("tarefa.tarefasRealizadas");
+    Route::post("/tarefas/listarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@listarTodasAsTarefasAjax")->name("tarefas.listarTodasAsTarefasAjax");
+    Route::post("/tarefas/marcarTarefasRealizarAjax","App\Http\Controllers\Admin\TarefaController@marcarTarefasRealizarAjax")->name("tarefas.marcarTarefasRealizarAjax");
 
     /** Fim Tarefa */
 

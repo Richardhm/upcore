@@ -26,16 +26,16 @@
 
             <!-- Filtrar Tarefas -->
             <div class="btn-group-vertical dropleft">
-            
                 <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar Tarefas</button>
                 <ul class="dropdown-menu">
-                    
-                    <li><a class="dropdown-item cliente_semtarefa" href="#">Cliente(s) Sem Tarefa(s)</a></li>
-                    <li><a class="dropdown-item cliente_atrasado" href="#">Tarefas Atrasada(s)</a></li>
-                    <li><a class="dropdown-item tarefas_realizadas" href="#">Tarefas Realizada(s)</a></li>
+                    <li><a class="dropdown-item cliente_semtarefa" href="#">Clientes Sem Tarefa</a></li>
+                    <li><a class="dropdown-item cliente_atrasado" href="#">Tarefas Atrasadas</a></li>
+                    <li><a class="dropdown-item tarefas_realizadas" href="#">Tarefas Realizadas</a></li>
+                    <li><a class="dropdown-item proximosdias" href="#">Tarefas Proximos 03 dias</a></li>
+                    <li><a class="dropdown-item tarefashoje" href="#">Tarefas Hoje</a></li>
                     <div class="dropdown-divider"></div>
                     <li class="text-center">
-                        <a class="dropdown-item listar-todos" href="#" style="color:black;">Listar Todas</a>
+                        <a class="dropdown-item listar_todos_tarefas" href="#" style="color:black;">Listar Todas Tarefas</a>
                     </li>
                 </ul>    
             </div>
@@ -126,8 +126,7 @@
             @else
                 <h4 class="text-center">Sem Clientes há serem listados</h4>
             @endif
-        </div>
-        <nav aria-label="">
+            <nav aria-label="">
             <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="{{$clientes->previousPageUrl()}}"><<</a></li>
                 @for($i=1;$i<=$clientes->lastPage();$i++)
@@ -138,6 +137,8 @@
                 <li class="page-item"><a class="page-link" href="{{$clientes->nextPageUrl()}}">>></a></li>
             </ul>
         </nav>       
+        </div>
+        
     </div>
     
     <div class="modal fade" id="alterarModal" tabindex="-1" aria-labelledby="alterarModalLabel" aria-hidden="true">
@@ -215,8 +216,7 @@
                     data:"cliente="+id_cliente+"&etiqueta="+id_etiqueta,
                     success(res) {
                         window.location.reload();
-                        //console.log(res);
-                        //$('td[id="coluna_'+id_cliente+'"]').html(res);                   
+                                     
                     }
                 });
             });
@@ -271,6 +271,21 @@
                     url:"{{route('cliente.semtarefasajax')}}",
                     method:"POST",
                     success:function(res) {
+                        //console.log(res);
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            });
+
+            $('.proximosdias').on('click',function(){
+                $.ajax({
+                    url:"{{route('cliente.tarefasProximas')}}",
+                    method:"POST",
+                    success:function(res) {
+                        //console.log(res);
                         $('.card-body').slideUp('fast',function(){
                             $(this).html(res).slideDown('slow');
                         });
@@ -291,6 +306,81 @@
                 });
                 return false;
             });
+
+            
+
+            window.$_GET = new URLSearchParams(location.search);
+            let value = $_GET.get('ac');
+            if(value && value == "atrasado") {
+                
+                    $.ajax({
+                        url:"{{route('cliente.tarefasatrasadasajax')}}",
+                        method:"POST",
+                        success:function(res) {
+                            $('.card-body').slideUp('fast',function(){
+                                $(this).html(res).slideDown('slow');
+                            });
+                        }
+                    });
+                    return false;
+                
+            }
+
+            if(value && value == "semtarefa") {
+                $.ajax({
+                    url:"{{route('cliente.semtarefasajax')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            }
+
+            if(value && value == "proximas") {
+                $.ajax({
+                    url:"{{route('cliente.tarefasProximas')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            }
+
+            if(value && value == "hoje") {
+                $.ajax({
+                    url:"{{route('cliente.tarefasParaHoje')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });             
+                    }
+                });
+            }
+
+            if(value && value == "etiquetas") {
+                let id = $_GET.get('id');
+                
+                $.ajax({
+                    url:"{{route('cliente.listarPorEtiqueta')}}",
+                    method:"POST",
+                    data:"id="+id,
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                    
+                });
+                return false;
+                
+            }
 
             $("body").on('change','input[name="mudarStatus"]',function(){
                 if($(this).is(":checked")) {
@@ -330,13 +420,47 @@
                     method:"POST",
                     data:"id="+$(this).val(),
                     success:function(res) {
-                        
                         $('.card-body').slideUp('fast',function(){
                             $(this).html(res).slideDown('slow');
                         });
                     }
                });
                return false;  
+            });
+
+            $('.listar_todos_tarefas').on('click',function(){
+                $.ajax({
+                    url:"{{route('tarefas.listarTodasAsTarefasAjax')}}",
+                    method:"POST",
+                    data:"id="+$(this).val(),
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
+            });
+
+            $("body").on('change','input[name="status_tarefas"]',function(){
+                let id = $(this).attr("data-id");
+                $.ajax({
+                    url:"{{route('tarefas.marcarTarefasRealizarAjax')}}",
+                    method:"POST",
+                    data:"id="+id
+                });
+            });
+
+            $('.tarefashoje').on('click',function(){
+                $.ajax({
+                    url:"{{route('cliente.tarefasParaHoje')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });             
+                    }
+                });
             });
 
 

@@ -7,21 +7,19 @@
 
 @section('content')
 
-<section class="content">
-    
-    <section class="financeiro_topo">
-        <div class="financeiro_mes_atual bg-dark">
-            <div>
-                <p>Periodo Total Vidas</p>
-                
-            </div>
+<h1>Dashboard</h1>  
 
-            <div>
-                <p>Julho/2022 220</p>
-                
-            </div>
+<section class="container-fluid">
+    
+    <section class="d-flex">
+        <div class="bg-dark d-flex rounded mr-auto flex-column w-25">
+            
+                <p class="d-flex mb-auto justify-content-between"><span>Periodo</span><span>Total Vidas</span></p>
+            
+                <p  class="d-flex justify-content-between"><span>Julho/2022</span><span>220</span></p>                
+            
         </div>
-        <div class="financeiro_search_mes bg-warning">
+        <div class="bg-warning d-flex flex-column align-self-start">
             <select name="" id="">
                 <option value="">---Escolha o Mês---</option>
                 <option value="">Julho</option>
@@ -31,88 +29,198 @@
                 <option value="">2022</option>
             </select>
         </div>
-        <div class="financeiro_resumo_mes bg-secondary">
-            <div>
-                <p>Individual 100 R$ 100,00</p>
-                
-            </div>
+        <div class="bg-secondary d-flex flex-column w-25 rounded px-2">
+            
+                <span class="d-flex justify-content-between"><span>Individual</span><span>100</span><span>R$ 100,00</span></span>
+                <span class="d-flex justify-content-between"><span>Coletivo</span><span>120</span><span>R$ 2000,00</span></span>
+                <span class="d-flex justify-content-around"><span>- Alter</span><span>80</span><span>R$ 1000,00</span></span>
+                <span class="d-flex justify-content-around"><span>- Allcare</span><span>20</span><span>R$ 500,00</span></span>
+                <span class="d-flex justify-content-around"><span>- Qualicorp</span><span>20</span><span>R$ 500,00</span></span>
+                <span class="d-flex justify-content-around"><span>- Empresarial</span><span>0</span><span>R$ 0,00</span></span>
+            
 
-            <div>
-                <p>Coletivo 120 R$ 2000,00</p>
-                
-            </div>
-            <div>
-                <p>- Alter 80 R$ 1000,00</p>
-                
-            </div>
-            <div>
-                <p>- Allcare 20 R$ 500,00</p>
-                
-            </div>
-            <div>
-                <p>- Qualicorp 20 R$ 500,00</p>
-               
-            </div>
-            <div>
-                <p>- Empresarial 0 R$ 0,00</p>
-                
-            </div>
+            
         </div>
     </section>
 
 </section>    
 
+<section class="container-fluid mt-3">
+    <div class="d-flex">            
+        
+            <div class="small-box bg-navy flex-fill mr-2">
+                <div class="d-flex justify-content-between border-bottom">
+                    <h3>8</h3>
+                    <p class="align-self-center">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center border-bottom">Aguardando Boleto Coletivo</h6>
+                <div class="d-flex justify-content-end">
+                    Vidas 9
+                </div>
+            </div>
+             
+            <div class="small-box bg-navy flex-fill mr-2">
+                <div class="d-flex justify-content-between border-bottom">
+                    <h3>8</h3>
+                    <p class="align-self-center">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center border-bottom">Aguardando Pag. Adesão Coletivo</h6>
+                <div class="d-flex justify-content-end">
+                    Vidas 9
+                </div>
+            </div>
 
-<section class="financeiro_aguardando_pagamento">
-    <div>
-        <p class="financeiro_aguardando_pagamento_total"><span>8</span> <span>R$ 1000,00</span></p>
-        <p>Aguardando Boleto Coletivo</p>
-        <p class="financeiro_aguardando_pagamento_vidas">Vidas 9</p>
+            <div class="small-box bg-navy flex-fill mr-2">
+                <div class="d-flex justify-content-between border-bottom">
+                    <h3>8</h3>
+                    <p class="align-self-center">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center border-bottom">Aguardando Pag. Plano individual</h6>
+                <div class="d-flex justify-content-end">
+                    Vidas 12
+                </div>
+            </div>    
+
+            <div class="small-box bg-navy flex-fill mr-2">
+                <div class="d-flex justify-content-between border-bottom">
+                    <h3>8</h3>
+                    <p class="align-self-center">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center border-bottom">Aguardando Pag. Vigencia</h6>
+                <div class="d-flex justify-content-end">
+                    Vidas 12
+                </div>
+            </div>    
+
+            <div class="small-box bg-navy flex-fill mr-2">
+                <div class="d-flex justify-content-between border-bottom">
+                    <h3>8</h3>
+                    <p class="align-self-center">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center border-bottom">Aguardando Pag. Empresarial</h6>
+                <div class="d-flex justify-content-end">
+                    Vidas 10
+                </div>
+            </div>    
+
+    </div>    
+</section>
+
+<section class="d-flex">
+
+    <div class="financeiro_container_financeiro_user flex-fill bg-olive mr-1 rounded">
+        <div class="d-flex justify-content-around  text-center mt-3">
+            <div class="financeiro_container_financeiro_user_image">
+                <img class="img-circle elevation-2" src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="50" height="50" alt="User Image">
+                <p>João</p>
+            </div>
+            <div class="financeiro_container_financeiro_user_vidas d-flex flex-column">
+                <span>Vidas</span>
+                <span>35</span> 
+                <span>R$ 2000,00</span>
+            </div>
+        </div>
+         
+        <div class="financeiro_container_financeiro_resumo">
+            <p class="d-flex justify-content-around"><span>Individual</span><span>10</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Coletivo</span><span>25</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Empresarial</span><span>0</span><span>R$ 1500,00</span></p>
+        </div>
     </div>
+
+
+    <div class="financeiro_container_financeiro_user flex-fill bg-olive mr-1 rounded">
+        <div class="d-flex justify-content-around  text-center mt-3">
+            <div class="financeiro_container_financeiro_user_image">
+                <img class="img-circle elevation-2" src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="50" height="50" alt="User Image">
+                <p>João</p>
+            </div>
+            <div class="financeiro_container_financeiro_user_vidas d-flex flex-column">
+                <span>Vidas</span>
+                <span>35</span> 
+                <span>R$ 2000,00</span>
+            </div>
+        </div>
+         
+        <div class="financeiro_container_financeiro_resumo">
+            <p class="d-flex justify-content-around"><span>Individual</span><span>10</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Coletivo</span><span>25</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Empresarial</span><span>0</span><span>R$ 1500,00</span></p>
+        </div>
+    </div>
+
+    <div class="financeiro_container_financeiro_user flex-fill bg-olive mr-1 rounded">
+        <div class="d-flex justify-content-around  text-center mt-3">
+            <div class="financeiro_container_financeiro_user_image">
+                <img class="img-circle elevation-2" src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="50" height="50" alt="User Image">
+                <p>João</p>
+            </div>
+            <div class="financeiro_container_financeiro_user_vidas d-flex flex-column">
+                <span>Vidas</span>
+                <span>35</span> 
+                <span>R$ 2000,00</span>
+            </div>
+        </div>
+         
+        <div class="financeiro_container_financeiro_resumo">
+            <p class="d-flex justify-content-around"><span>Individual</span><span>10</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Coletivo</span><span>25</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Empresarial</span><span>0</span><span>R$ 1500,00</span></p>
+        </div>
+    </div>
+
+
+    <div class="financeiro_container_financeiro_user flex-fill bg-olive mr-1 rounded">
+        <div class="d-flex justify-content-around  text-center mt-3">
+            <div class="financeiro_container_financeiro_user_image">
+                <img class="img-circle elevation-2" src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="50" height="50" alt="User Image">
+                <p>João</p>
+            </div>
+            <div class="financeiro_container_financeiro_user_vidas d-flex flex-column">
+                <span>Vidas</span>
+                <span>35</span> 
+                <span>R$ 2000,00</span>
+            </div>
+        </div>
+         
+        <div class="financeiro_container_financeiro_resumo">
+            <p class="d-flex justify-content-around"><span>Individual</span><span>10</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Coletivo</span><span>25</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Empresarial</span><span>0</span><span>R$ 1500,00</span></p>
+        </div>
+    </div>
+
+
+    <div class="financeiro_container_financeiro_user flex-fill bg-olive mr-1 rounded">
+        <div class="d-flex justify-content-around  text-center mt-3">
+            <div class="financeiro_container_financeiro_user_image">
+                <img class="img-circle elevation-2" src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="50" height="50" alt="User Image">
+                <p>João</p>
+            </div>
+            <div class="financeiro_container_financeiro_user_vidas d-flex flex-column">
+                <span>Vidas</span>
+                <span>35</span> 
+                <span>R$ 2000,00</span>
+            </div>
+        </div>
+         
+        <div class="financeiro_container_financeiro_resumo">
+            <p class="d-flex justify-content-around"><span>Individual</span><span>10</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Coletivo</span><span>25</span><span>R$ 1500,00</span></p>
+            <p class="d-flex justify-content-around"><span>Empresarial</span><span>0</span><span>R$ 1500,00</span></p>
+        </div>
+    </div>
+
+
     
-    <div>
-        <p class="financeiro_aguardando_pagamento_total"><span>9</span> <span>R$ 2000,00</span></p>
-        <p>Aguardando Pag. Adesão Coletivo</p>
-        <p class="financeiro_aguardando_pagamento_vidas">Vidas 22</p>
-    </div>
-
-    <div>
-        <p class="financeiro_aguardando_pagamento_total"><span>10</span> <span>R$ 800,00</span></p>
-        <p>Aguardando Pag. Plano Individual</p>
-        <p class="financeiro_aguardando_pagamento_vidas">Vidas 22</p>
-    </div>
-
-    <div>
-        <p class="financeiro_aguardando_pagamento_total"><span>10</span> <span>R$ 800,00</span></p>
-        <p>Aguardando Pagamento Vigencia</p>
-        <p class="financeiro_aguardando_pagamento_vidas">Vidas 22</p>
-    </div>
-
-    <div>
-        <p class="financeiro_aguardando_pagamento_total"><span>1</span> <span>R$ 300,00</span></p>
-        <p>Aguardando Pagamento</p>
-        <p class="financeiro_aguardando_pagamento_vidas">Vidas 10</p>
-    </div>
- 
 </section>
 
-<section class="financeiro_container_financeiro">
-    <div class="financeiro_container_financeiro_user">
-        <div class="financeiro_container_financeiro_user_image">
-            <img class="img-circle elevation-2" src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="50" height="50" alt="User Image">
-            <p>João</p>
-            
-        </div>
-        <div class="financeiro_container_financeiro_user_vidas">
-            <p><span>Vidas</span><span>35</span> <span>R$ 2000,00</span></p>
-        </div>
-    </div>
-    <div class="financeiro_container_financeiro_resumo">
-        <p>Individual 10 R$ 1500,00</p>
-        <p>Coletivo 25 R$ 1500,00</p>
-        <p>Empresarial 0 R$ 1500,00</p>
-    </div>
+<section class="mt-3">
+    <h3 class="text-center border-top border-bottom border-dark">Ranking Vendas</h3>
 </section>
+
+
+
 
 
 
@@ -125,67 +233,6 @@
 @stop        
 
 @section('css')
-    <style>
-        .financeiro_topo {
-            display:flex;
-            justify-content: space-between
-        }
-        .financeiro_mes_atual {
-            display: flex;
-            flex-direction: column;
-            flex-basis: 33%;
-        }
-        .financeiro_mes_atual div {
-            display:flex;
-            justify-content: space-between;
-        }
-        .financeiro_search_mes {
-            display: flex;
-            flex-direction: column;
-            flex-basis: 33%;
-        }
-        .financeiro_resumo_mes {
-            display:flex;
-            flex-direction: column;
-            flex-basis: 33%;
-        }
-        .financeiro_resumo_mes div {
-            display:flex;
-        }
-        .financeiro_aguardando_pagamento {
-            display:flex;
-            margin:10px 0;
-            
-        }
-        .financeiro_aguardando_pagamento div {
-            display:flex;
-            flex-basis: 20%;
-            margin-right:1px;
-            flex-direction: column;
-            background-color: #666;
-        }
-        .financeiro_aguardando_pagamento_total {
-            display: flex;
-            justify-content: space-between;
-        }
-        .financeiro_aguardando_pagamento_vidas {
-            display: flex;
-            justify-content: flex-end;
-        }
-        .financeiro_container_financeiro {
-            display: flex;
-            flex-direction: column;
-            flex-basis: 20%;
-            background-color: red;
-        }
-        .financeiro_container_financeiro_user_vidas p{
-            display: flex;
-            flex-direction: column;
-        }
-        .financeiro_container_financeiro_user {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
+    
 @stop
 

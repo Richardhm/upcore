@@ -47,7 +47,7 @@
                 </div>
                 <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.aguardandoboletocoletivo')}}" class="text-dark">Aguardando Boleto Coletivo</a></h6>
                 <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas}}</b>
+                    Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas ?? 0}}</b>
                 </div>
             </div>
              

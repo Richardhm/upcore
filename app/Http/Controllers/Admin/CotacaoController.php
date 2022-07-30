@@ -261,8 +261,6 @@ class CotacaoController extends Controller
         } else {
             $planos = Planos::where("nome","LIKE","%Super Simples%")->orWhere("nome","LIKE","PME Boletado")->get();
         }
-
-
         $cot = Cotacao::where("cliente_id",$id)->first();
         $faixas = [];
         $colunas = [];
@@ -273,10 +271,7 @@ class CotacaoController extends Controller
             ->selectRaw("(SELECT faixa_etaria_id FROM faixas_etarias WHERE faixas_etarias.id = cotacao_faixa_etarias.faixa_etaria_id) AS faixa_etaria_id")  
             ->get()->toArray();    
             $colunas =  array_column($faixas, 'faixa_etaria_id');   
-        }
-        
-        
-        
+        }    
         return view('admin.pages.cotacao.contrato',[
             "cliente" => $cliente,
             "cidades" => $cidades,
@@ -387,8 +382,6 @@ class CotacaoController extends Controller
             ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS operadora")
             ->whereRaw("tabelas.cidade_id = ".$request->cidade." AND tabelas.operadora_id = ".$request->operadora." AND tabelas.administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND tabelas.plano_id = ".$request->plano." AND cotacao_faixa_etarias.cotacao_id = ".$cot->id)
             ->get();
-
-
             
         }
         
@@ -410,6 +403,17 @@ class CotacaoController extends Controller
     public function storeContrato(Request $request)
     {
        
+       $rules = [
+         "valor_adesao" => "required"
+       ];
+
+       $message = [
+        "valor_adesao.required" => "E valor adesão e campo obrigatorio"
+       ];
+
+       $request->validate($rules,$message); 
+
+
         /** Vai Na Tabela CLiente E acaba de realizar o cadastro */       
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->etiqueta_id = 3;

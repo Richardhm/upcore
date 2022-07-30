@@ -251,16 +251,16 @@ class HomeController extends Controller
         ];
 
         $message = [
-            "operadora_search.required" => "O campo operadora e campo obrigatorio",
-            "administradora_search.required" => "O campo administradora e campo obrigatorio",
-            "planos_search.required" => "O campo plano e campo obrigatorio",
-            "coparticipacao_search.required" => "O campo coparticipacao e campo obrigatorio",
-            "odonto_search.required" => "O campo odonto e campo obrigatorio",
-            "cidade_search.required" => "O campo cidade e campo obrigatorio"
+            "operadora_search.required" => "Operadora e obrigatorio",
+            "administradora_search.required" => "Administradora e obrigatorio",
+            "planos_search.required" => "Plano e campo obrigatorio",
+            "coparticipacao_search.required" => "Coparticipacao e obrigatorio",
+            "odonto_search.required" => "Odonto e obrigatorio",
+            "cidade_search.required" => "Cidade e obrigatorio"
         ];
 
         $request->validate($rules,$message);
-
+        
         $operadora = $request->operadora_search;
         $administradora = $request->administradora_search;
         $planos = $request->planos_search;

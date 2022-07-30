@@ -4,9 +4,16 @@
     <h3>Detalhes</h3>
 @stop
 @section('content')
-
+<ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('contratos.index')}}">Listar Contratos</a></li>
+        <li class="breadcrumb-item">Detalhes</li>
+    </ol>
 
 <div class="card">
+        
+
+
+
     <div class="card-header">
         <h3>Comissões</h3>
     </div>

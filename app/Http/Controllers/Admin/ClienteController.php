@@ -199,7 +199,8 @@ class ClienteController extends Controller
     public function listarContratos()
     {
         $id = auth()->user()->id;
-        $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)->with(['comissoes','cotacao','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
+        $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
+        
         $comissoes_corretores_configuracoes = ComissoesCorretoresConfiguracoes::where("user_id",$id)->count();
         
         return view("admin.pages.contrato.index",[

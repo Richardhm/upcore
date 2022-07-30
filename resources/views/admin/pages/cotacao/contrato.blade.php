@@ -59,7 +59,7 @@
                     <div class="col col-md-3">
                         <div class="form-group">
                             <label for="cpf">CPF:</label>
-                            <input type="text" name="cpf" id="cpf" required class="form-control" placeholder="XXX.XXXX.XXX-XX">
+                            <input type="text" name="cpf" id="cpf" required class="form-control" value="{{old('cpf')}}" placeholder="XXX.XXXX.XXX-XX">
                             <div class="errorcpf"></div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                     <div class="col col-md-3">
                         <div class="form-group">
                             <label for="data_nascimento">Data Nascimento:</label>
-                            <input type="date" name="data_nascimento" required id="data_nascimento" class="form-control">
+                            <input type="date" name="data_nascimento" value="{{old('data_nascimento')}}" required id="data_nascimento" class="form-control">
                             <div class="errordatanascimento"></div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="responsavel_financeiro">Responsavel Financeiro:</label>
-                            <input type="text" name="responsavel_financeiro" required id="responsavel_financeiro" placeholder="Responsavel Financeiro" class="form-control" value="">
+                            <input type="text" name="responsavel_financeiro" id="responsavel_financeiro" placeholder="Responsavel Financeiro" class="form-control" value="">
                             <div class="errorresponsavelfinanceiro"></div>
                         </div>
                     </div>    
@@ -93,7 +93,7 @@
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="cpf_financeiro">CPF:</label>
-                            <input type="text" name="cpf_financeiro" required id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control" value="">
+                            <input type="text" name="cpf_financeiro" id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control" value="">
                             <div class="errorcpfresponsavelfinanceiro"></div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="endereco_financeiro">Endereço Completo:</label>
-                            <input type="text" name="endereco_financeiro" required id="endereco_financeiro" placeholder="Endereço Completo" class="form-control" value="">
+                            <input type="text" name="endereco_financeiro" required id="endereco_financeiro" value="{{old('endereco_financeiro')}}" placeholder="Endereço Completo" class="form-control" value="">
                             <div class="errorenderefinanceiro"></div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="data_vigente">Data Vigencia:</label>
-                            <input type="date" name="data_vigente" id="data_vigente" required class="form-control" value="">
+                            <input type="date" name="data_vigente" id="data_vigente" value="{{old('data_vigente')}}" required class="form-control" value="">
                             <div class="errordatavigente"></div>
                         </div>
                     </div>    
@@ -120,15 +120,18 @@
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="valor_adesao">Valor Adesão:</label>
-                            <input type="text" name="valor_adesao" id="valor_adesao" required placeholder="R$" class="form-control" value="">
+                            <input type="text" name="valor_adesao" id="valor_adesao" placeholder="R$" class="form-control" value="">
                             <div class="errorvaloradesao"></div>
+                            @if($errors->has('valor_adesao'))
+                                <p class="alert alert-danger">{{$errors->first('valor_adesao')}}</p>
+                            @endif
                         </div>
                     </div>
 
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="data_boleto">Data Boleto:</label>
-                            <input type="date" name="data_boleto" id="data_boleto" required placeholder="Data Boleto" class="form-control" value="">
+                            <input type="date" name="data_boleto" id="data_boleto" value="{{old('data_boleto')}}" required placeholder="Data Boleto" class="form-control" value="">
                             <div class="errordataboleto"></div>
                         </div>
                     </div>
@@ -158,7 +161,7 @@
                             <select name="operadora" required id="operadora" class="form-control">
                                 <option value="">--Escolher a Operadora--</option>
                                 @foreach($operadoras as $o)
-                                <option value="{{$o->id}}">{{$o->nome}}</option>
+                                <option value="{{$o->id}}" {{old('operadora') == $o->id ? 'selected' : ''}}>{{$o->nome}}</option>
                                 @endforeach
                             </select>
                             <div class="erroroperadora"></div>
@@ -170,7 +173,7 @@
                             <select name="administradora" required id="administradora" class="form-control">
                                 <option value="">--Escolher a Administradora--</option>
                                 @foreach($administradoras as $admin)
-                                    <option value="{{$admin->id}}">{{$admin->nome}}</option>
+                                    <option value="{{$admin->id}}" {{old('administradora') == $admin->id ? 'selected' : ''}}>{{$admin->nome}}</option>
                                 @endforeach
                             </select>    
                             <div class="erroradministradora"></div>
@@ -179,7 +182,7 @@
                     <div class="col col-md-3">
                         <div class="form-group">
                             <label for="codigo_externo">Codigo Externo:</label>
-                            <input type="text" name="codigo_externo" required id="codigo_externo" class="form-control" placeholder="COD.">
+                            <input type="text" name="codigo_externo" required id="codigo_externo" value="{{old('codigo_externo')}}" class="form-control" placeholder="COD.">
                             <div class="errorcodigo"></div>
                         </div>
                     </div>        
@@ -356,10 +359,10 @@
                             <label for="coparticipacao">Coparticipação:</label><br />
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_sim">
-                                    <input type="radio" name="coparticipacao" id="coparticipacao_radio_sim" value="sim"> Sim
+                                    <input type="radio" name="coparticipacao" id="coparticipacao_radio_sim" value="sim" {{old('coparticipacao') == "sim" ? 'checked' : ''}}> Sim
                                 </label>
                                 <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_nao">
-                                    <input type="radio" name="coparticipacao" id="coparticipacao_radio_nao" value="nao"> Não
+                                    <input type="radio" name="coparticipacao" id="coparticipacao_radio_nao" value="nao" {{old('coparticipacao') == "nao" ? 'checked' : ''}}> Não
                                 </label>
                                 
                             </div>
@@ -372,10 +375,10 @@
                             
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-secondary btn-lg" id="odonto_sim">
-                                    <input type="radio" name="odonto" id="odonto_radio_sim" value="sim"> Sim
+                                    <input type="radio" name="odonto" id="odonto_radio_sim" value="sim" {{old('odonto') == "sim" ? 'checked' : ''}}> Sim
                                 </label>
                                 <label class="btn btn-outline-secondary btn-lg" id="odonto_nao">
-                                    <input type="radio" name="odonto" id="odonto_radio_nao" value="nao"> Não
+                                    <input type="radio" name="odonto" id="odonto_radio_nao" value="nao" {{old('odonto') == "nao" ? 'checked' : ''}}> Não
                                 </label>
                                 
                             </div>
@@ -496,19 +499,11 @@
         </div>
     </div>
 </div>    
-
-
-
-
-
-
   
 </div>
 @stop   
 @section('js')
-    <script src="{{asset('js/jquery.mask.min.js')}}"></script>
- 
-    
+    <script src="{{asset('js/jquery.mask.min.js')}}"></script>   
     <script>
         $(function(){
             $('#cpf').mask('000.000.000-00');       
@@ -638,23 +633,23 @@
                     $(".erroremail").html("");
                 }
 
-                if($("#responsavel_financeiro").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    //$(this).val('');
-                    $('.errorresponsavelfinanceiro').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
-                    return false;
-                } else {
-                    $(".errorresponsavelfinanceiro").html("");
-                }
+                // if($("#responsavel_financeiro").val() == "") {
+                //     $("#change_plano").val($(this).val())
+                //     //$(this).val('');
+                //     $('.errorresponsavelfinanceiro').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
+                //     return false;
+                // } else {
+                //     $(".errorresponsavelfinanceiro").html("");
+                // }
 
-                if($("#cpf_financeiro").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    //$(this).val('');
-                    $('.errorcpfresponsavelfinanceiro').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
-                    return false;
-                } else {
-                    $(".errorcpfresponsavelfinanceiro").html("");
-                }
+                // if($("#cpf_financeiro").val() == "") {
+                //     $("#change_plano").val($(this).val())
+                //     //$(this).val('');
+                //     $('.errorcpfresponsavelfinanceiro').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
+                //     return false;
+                // } else {
+                //     $(".errorcpfresponsavelfinanceiro").html("");
+                // }
 
                 
                 if($("#endereco_financeiro").val() == "") {
@@ -674,13 +669,13 @@
                     $(".errordatavigente").html("");
                 }
 
-                if($("#valor_adesao").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    $('.errorvaloradesao').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
-                    return false;
-                } else {
-                    $(".errorvaloradesao").html("");
-                }
+                // if($("#valor_adesao").val() == "") {
+                //     $("#change_plano").val($(this).val())
+                //     $('.errorvaloradesao').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
+                //     return false;
+                // } else {
+                //     $(".errorvaloradesao").html("");
+                // }
 
                 if($("#data_boleto").val() == "") {
                     $("#change_plano").val($(this).val())

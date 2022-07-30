@@ -223,12 +223,13 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Menu-Configuration
     |
     */
-    
+    // home/pesquisa
     'menu' => [
         [
             'text'    => 'Dashboard',
             'icon'    => 'fas fa-home',
-            'url'    => 'admin'    
+            'url'    => 'admin', 
+            'active' => ['admin','/',"http://localhost:8000/admin/home/pesquisa"]
         ],
         // [
         //     'text'    => 'Orcamento',

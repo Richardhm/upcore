@@ -12,6 +12,7 @@ use App\Models\{
     ComissoesCorretoraLancadas,
     ComissoesCorretorLancados,
     Cotacao,
+    CotacaoFaixaEtaria,
     Etiquetas,
     Operadora,
     Planos,
@@ -60,8 +61,6 @@ class HomeController extends Controller
         $premiacaoAReceber = PremiacaoCorretoraLancadas::whereRaw("month(data) = month(now())")->where('status',1)->selectRaw('sum(total) as totalPremiacaoAReceber')->first()->totalPremiacaoAReceber;
         $totalComissao = ComissoesCorretorLancados::selectRaw("sum(valor) as total")->where("status",1)->whereRaw("MONTH(DATA) = MONTH(NOW())")->first()->total;
         $totalPremiacao = PremiacaoCorretoresLancados::where("status",1)->whereRaw("MONTH(DATA) = MONTH(NOW())")->selectRaw('sum(total) as total')->first()->total;            
-        
-
 
         return view('admin.pages.home.administrador',[
             "corretores" => $corretores,
@@ -101,11 +100,6 @@ class HomeController extends Controller
                 $query->whereRaw("user_id=".auth()->user()->id);
             })->count();
 
-            
-              
-            
-            
-
 
             $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
             $clienteFechados = Cotacao::where("user_id",auth()->user()->id)->whereHas('clientes',function($query){
@@ -137,7 +131,29 @@ class HomeController extends Controller
 
     public function financeiro()
     {
-        return view('admin.pages.home.financeiro');
+        $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->count();
+        $aguardando_boleto_coletivo_total = Cotacao::where("financeiro_id",1)->selectRaw("sum(valor) as total")->first()->total;
+        $aguardando_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            $query->where("financeiro_id",1);
+        })->selectRaw("sum(quantidade) as total")->first()->total;
+       
+
+        $aguardando_pagamento_adesao_coletivo = Cotacao::where("financeiro_id",2)->count();
+        $aguardando_pagamento_plano_individual = Cotacao::where("financeiro_id",3)->count();
+        $aguardando_pagamento_vigencia = Cotacao::where("financeiro_id",4)->count();
+        $aguardando_pagamento_empresarial = Cotacao::where("financeiro_id",5)->count();
+        
+        return view('admin.pages.home.financeiro',[
+            "quantidade_aguardando_boleto_coletivo" => $aguardando_boleto_coletivo,
+            "aguardando_boleto_coletivo_total" =>  $aguardando_boleto_coletivo_total,
+            "aguardando_boleto_coletivo_vidas" => $aguardando_boleto_coletivo_vidas,
+
+            "quantidade_aguardando_pagamento_adesao_coletivo" => $aguardando_pagamento_adesao_coletivo,
+            "quantidade_aguardando_pagamento_plano_individual" => $aguardando_pagamento_plano_individual,
+            
+            "quantidade_pagamento_vigencia" =>  $aguardando_pagamento_vigencia,
+            "quantidade_pagamento_empresarial" => $aguardando_pagamento_empresarial
+        ]);
     }
 
     public function detalhesColaborador($id)

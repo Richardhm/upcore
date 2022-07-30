@@ -15,7 +15,7 @@
                         <th>Corretor</th>
                         <th>Plano</th>
                         <th>Administradora</th>
-                        <th>Quantidade de Parcelas</th>
+                        
                         <th>Detalhes</th>
                     </tr>
                 </thead>
@@ -23,11 +23,10 @@
                     @foreach($comissoes as $c)
                     <tr>
                         <td>{{date('d/m/Y',strtotime($c->created_at))}}</td>
-                        <td>{{$c->cliente}}</td>
-                        <td>{{$c->corretor}}</td>
-                        <td>{{$c->plano}}</td>
-                        <td>{{$c->administradora}}</td>
-                        <td align="center" style="width:200px;">{{$c->quantidade_pagas}}/{{$c->quantidade_parcelas}}</td>
+                        <td>{{$c->cotacao->clientes->nome}}</td>
+                        <td>{{$c->user->name}}</td>
+                        <td>{{$c->cotacao->plano->nome}}</td>
+                        <td>{{$c->cotacao->administradora->nome}}</td>
                         <td align="center" style="width:100px;"><a href="{{route('comissoes.detalhes',$c->id)}}"><i class="fas fa-eye"></i></a></td>
                     </tr>
                     @endforeach

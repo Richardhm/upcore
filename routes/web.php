@@ -210,13 +210,28 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("comissoes","App\Http\Controllers\Admin\ComissoesController@index")->name("comissoes.index");
     Route::get("comissoes/{id}/detalhes","App\Http\Controllers\Admin\ComissoesController@detalhes")->name("comissoes.detalhes");
     Route::post("comissoes/mudarStatus","App\Http\Controllers\Admin\ComissoesController@mudarStatus")->name("comissoes.mudarStatus");
-    Route::post("comissoes/mudarStatus/premiacao","App\Http\Controllers\Admin\ComissoesController@mudarStatusPremiacao")->name("comissoes.mudarStatusPremiacao");
-    
+    Route::post("comissoes/mudarStatus/premiacao","App\Http\Controllers\Admin\ComissoesController@mudarStatusPremiacao")->name("comissoes.mudarStatusPremiacao");    
     Route::post("comissoes/mudarStatusCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretora")->name("comissoes.mudarStatusCorretora");
     Route::post("comissoes/mudarStatus/premiacaoCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretoraPremiacao")->name("comissoes.mudarStatusCorretoraPremiacao");
-
-
     /** Fim Comissoes */
+
+    /*** Financeiro */
+    Route::get("/financeiro/aguardandoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@getAguardandoBoletoColetivo")->name("financeiro.aguardandoboletocoletivo");
+    
+    Route::post("/financeiro/setaguardandoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@setAguardandoBoletoColetivo")->name("financeiro.setAguardandoboletocoletivo");
+    
+    Route::get("/financeiro/aguardandopagamentoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@getAguardandoPagamentoBoletoColetivo")->name("financeiro.aguardandoPagamentoboletocoletivo");
+    
+    Route::post("/financeiro/setaguardandoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@setAguardandoPagamentoBoletoColetivo")->name("financeiro.setAguardandoPagamentoboletocoletivo");
+
+    Route::get("/financeiro/aguardandopagamentovigencia","App\Http\Controllers\Admin\FinanceiroController@getAguardandoPagamentoVigencia")->name("financeiro.aguardandoPagamentoVigencia");
+    
+    Route::post("/financeiro/setaguardandopagamentovigencia","App\Http\Controllers\Admin\FinanceiroController@setAguardandoPagamentoVigencia")->name("financeiro.setAguardandoPagamentoVigencia");
+
+    /*** Fim Financeiro */
+
+
+
 
 
 

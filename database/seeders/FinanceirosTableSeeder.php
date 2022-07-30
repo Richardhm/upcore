@@ -29,6 +29,9 @@ class FinanceirosTableSeeder extends Seeder
             ],
             [
                 "nome" => "Aguardando Pagamento Empresarial"
+            ],
+            [
+                "nome" => "Comissões"
             ]
         ];
         Financeiro::insert($dados);

@@ -26,9 +26,6 @@
             
             <form action="{{route('contrato.store')}}" method="post" class="px-3" name="cadastrar_pessoa_fisca_formulario">
                 @csrf              
-                
-              
-
 
                 <input type="hidden" name="change_cidade" id="change_cidade" value="{{$cliente->cidade->nome ?? ''}}">
                 <input type="hidden" name="change_operadora" id="change_operadora" value="">
@@ -48,9 +45,6 @@
                 <input type="hidden" name="change_faixa_49_53" id="change_faixa_49_53" value="">
                 <input type="hidden" name="change_faixa_54_58" id="change_faixa_54_58" value="">
                 <input type="hidden" name="change_faixa_59" id="change_faixa_59" value="">
-
-
-
 
                <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente->id}}">
                 <div class="form-row mt-3">
@@ -764,8 +758,6 @@
                     $("#change_faixa_49_53").val($("#faixa-input-49-53").val())    
                     $("#change_faixa_54_58").val($("#faixa-input-54-58").val())    
                     $("#change_faixa_59").val($("#faixa-input-59").val())    
-
-
                     $('.errorfaixas').html("");
                 }
 
@@ -774,21 +766,15 @@
                     //$(this).val('');
                     $('.errorcoparticipacao').html("<p class='alert alert-danger'>Marque Sim/Não Coparticipaão</p>")
                     return false;
-                } else {
-                    
+                } else {                    
                     $('.errorcoparticipacao').html("");
                 }
 
-                
-                
-
                 if(!$('input:radio[name=odonto]').is(':checked')) {
                     $("#change_plano").val($(this).val())
-                    //$(this).val('');
                     $('.errorodonto').html("<p class='alert alert-danger'>Marque Sim/Não Odonto</p>");
                     return false;
                 } else {
-                    //$("#change_odonto").val($('input:radio[name=odonto]:checked').val());
                     $('.errorodonto').html("");
                 }
 
@@ -850,28 +836,20 @@
 
             /*********************************************************** */
             $('body').on('click','.change_valores_faixas',function(){
-                
                 let campo = $(this).closest(".content").find('input[type="tel"]').attr('data-change');
                 let valor = $(this).closest(".content").find('input[type="tel"]').val();
-
                 if(valor>0) {
                     $('input[name="'+campo+'"]').val(valor);
                 } else {
                     $('input[name="'+campo+'"]').val('');
                 }
-                
-
                 let data = {
                     cliente_id:$("#cliente_id").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
                     faixas: {'1': $("#change_faixa_0_18").val(), '2': $("#change_faixa_19_23").val(),'3': $("#change_faixa_24_28").val(),'4': $("#change_faixa_29_33").val(),'5': $("#change_faixa_34_38").val(),'6': $("#change_faixa_39_43").val(),'7': $("#change_faixa_44_48").val(),'8': $("#change_faixa_49_53").val(),'9': $("#change_faixa_54_58").val(),'10': $("#change_faixa_59").val()}
                 };
-                // //console.log(data);
                 montarValores(data);      
             });
-
-
-
 
             function montarValores(data) {
                 $.ajax({
@@ -879,6 +857,7 @@
                     method:"POST",
                     data: data,
                     success(res) {
+                        
                         $("#cidade").addClass('change_valores');
                         $("#operadora").addClass('change_valores');
                         $("#administradora").addClass('change_valores');
@@ -887,33 +866,16 @@
                         $("#change_plano").addClass('change_plano');
                         
                         $("form[name='cadastrar_pessoa_fisca_formulario']").find('button[type="button"]').addClass('change_valores_faixas');
-                        
                         $("#resultado").slideUp().html(res).delay(100).slideToggle(100,function(){
                             $('body,html').animate({
                                 scrollTop:"800px"
                             },2000);
-                        });
-                        
+                        });                        
                     }
                 });
                 return false;
             }
-
-            
-
-            
-
-            
-           
-
-
-
-
-
-
-
         });
-
     </script>
 @stop
 @section('css')

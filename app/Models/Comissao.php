@@ -25,4 +25,9 @@ class Comissao extends Model
     {
         return $this->belongsTo(Cotacao::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

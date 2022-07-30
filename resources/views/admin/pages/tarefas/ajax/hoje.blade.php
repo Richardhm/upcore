@@ -20,5 +20,5 @@
     </tbody>
 </table>
 @else
-    <h3 class="alert alert-warning text-center text-white">Nenhum Tarefa Realizada!!</h3>
+    <h3 class="alert alert-info text-center text-white">Nenhuma Tarefa Para Hoje =/</h3>
 @endif

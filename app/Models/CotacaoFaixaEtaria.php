@@ -10,4 +10,9 @@ class CotacaoFaixaEtaria extends Model
     use HasFactory;
     protected $table = "cotacao_faixa_etarias";
     protected $fillable = ["cotacao_id","faixa_etaria_id","quantidade"];
+
+    public function cotacao()
+    {
+        return $this->belongsTo(Cotacao::class);
+    }
 }

@@ -1,4 +1,5 @@
 @extends('adminlte::page')
+@section('title', 'Dashboard')
 @section('plugins.Datatables', true)
 @section('title', 'Clientes')
 
@@ -25,7 +26,7 @@
         
 
             <!-- Filtrar Tarefas -->
-            <div class="btn-group-vertical dropleft">
+            <div class="btn-group-vertical dropleft menu-tarefas">
                 <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar Tarefas</button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item cliente_semtarefa" href="#">Clientes Sem Tarefa</a></li>
@@ -43,7 +44,7 @@
 
 
             <!-- Filtrar Cliente -->
-            <div class="btn-group-vertical dropleft">
+            <div class="btn-group-vertical dropleft menu-clientes">
                 <button type="button" class="btn btn-default dropdown-toggle ml-auto" data-toggle="dropdown" aria-expanded="false">Filtrar Clientes</button>
                 <ul class="dropdown-menu">
                     @if(count($etiquetas) >= 1)
@@ -190,6 +191,19 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            $(".menu-tarefas a").on('click',function(){
+                $(".menu-tarefas > .dropdown-menu").dropdown('hide')
+            });
+
+            $(".menu-clientes a.etiquetas").on('click',function(){
+                //$(this).closest('.dropdown-menu').dropdown('hide');
+                $(".menu-clientes > .dropdown-menu").dropdown('hide')
+            });
+
+            
+
+
             $('#search').select2({
                 theme: 'bootstrap4',
             });
@@ -235,7 +249,7 @@
                 return false;
             });
 
-            $('body').on('click','.etiquetas',function(){
+            $('.etiquetas').on('click',function(){
                 
                 let etiqueta = $(this).attr("data-etiqueta");
                 $.ajax({
@@ -252,7 +266,7 @@
                 return false;
             });
 
-            $('body').on('click','.listar-todos',function(){
+            $('.listar-todos').on('click',function(){
                 $.ajax({
                     url:"{{route('cliente.listarPorEtiquetaAll')}}",
                     method:"POST",
@@ -260,6 +274,7 @@
                         $('.card-body').slideUp('fast',function(){
                             $(this).html(res).slideDown('slow');
                         });
+                        $(".menu-clientes > .dropdown-menu").dropdown('hide')
                     }
                 });
                 return false;
@@ -293,21 +308,6 @@
                 });
                 return false;
             });
-
-            $('.cliente_atrasado').on('click',function(){
-                $.ajax({
-                    url:"{{route('cliente.tarefasatrasadasajax')}}",
-                    method:"POST",
-                    success:function(res) {
-                        $('.card-body').slideUp('fast',function(){
-                            $(this).html(res).slideDown('slow');
-                        });
-                    }
-                });
-                return false;
-            });
-
-            
 
             window.$_GET = new URLSearchParams(location.search);
             let value = $_GET.get('ac');
@@ -401,19 +401,6 @@
                 } 
             });
 
-            $("body").on('click','.tarefas_realizadas',function(){
-               $.ajax({
-                    url:"{{route('tarefa.tarefasRealizadas')}}",
-                    method:"POST",
-                    success:function(res) {
-                        $('.card-body').slideUp('fast',function(){
-                            $(this).html(res).slideDown('slow');
-                        });
-                    }
-               });
-               return false;  
-            });
-
             $("#search").on('change',function(){
                 $.ajax({
                     url:"{{route('cliente.searchclienteAjax')}}",
@@ -426,6 +413,19 @@
                     }
                });
                return false;  
+            });
+
+            $('.cliente_atrasado').on('click',function(){
+                $.ajax({
+                    url:"{{route('cliente.tarefasatrasadasajax')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
             });
 
             $('.listar_todos_tarefas').on('click',function(){
@@ -442,13 +442,17 @@
                 return false;
             });
 
-            $("body").on('change','input[name="status_tarefas"]',function(){
-                let id = $(this).attr("data-id");
-                $.ajax({
-                    url:"{{route('tarefas.marcarTarefasRealizarAjax')}}",
+            $(".tarefas_realizadas").on('click',function(){
+               $.ajax({
+                    url:"{{route('tarefa.tarefasRealizadas')}}",
                     method:"POST",
-                    data:"id="+id
-                });
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+               });
+               return false;  
             });
 
             $('.tarefashoje').on('click',function(){
@@ -464,6 +468,20 @@
             });
 
 
+            $("body").on('change','input[name="status_tarefas"]',function(){
+                let id = $(this).attr("data-id");
+                $.ajax({
+                    url:"{{route('tarefas.marcarTarefasRealizarAjax')}}",
+                    method:"POST",
+                    data:"id="+id
+                });
+            });
+
+            
+
+            
+
+           
 
         });
     </script>  

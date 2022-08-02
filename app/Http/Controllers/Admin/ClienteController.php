@@ -40,7 +40,7 @@ class ClienteController extends Controller
                 ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
                 ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
                 
-                ->paginate(10);
+                ->paginate(5);
             $clientesAll = Cliente::where("etiqueta_id","!=",3)
                 ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
                 ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = clientes.cidade_id) AS cidade")
@@ -67,7 +67,7 @@ class ClienteController extends Controller
                 ->selectRaw("(SELECT cor FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS cor")
                 ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
                 
-                ->paginate(10);
+                ->paginate(5);
             
                 $clientesAll = Cliente::where("user_id",$id)->where("etiqueta_id","!=",3)
                 ->selectRaw("nome,etiqueta_id,email,created_at,ultimo_contato,telefone,pessoa_fisica,pessoa_juridica,id")
@@ -96,10 +96,34 @@ class ClienteController extends Controller
         ]);
     }
 
+    public function verificartelefone(Request $request)
+    {
+        if($request->ajax()) {
+            $telefone = $request->telefone;
+            $cliente = Cliente::where("telefone",$telefone)
+                ->selectRaw('id,nome,email,pessoa_fisica,pessoa_juridica,telefone,cidade_id,etiqueta_id')
+                ->with(['cidade','etiqueta'])
+                ->selectRaw("DATE_FORMAT(created_at,'%d/%m/%Y') as data_criacao")
+                ->first();
+            if($cliente && $cliente->etiqueta_id != 3) {
+                $cliente->user_id = auth()->user()->id;
+                $cliente->save();
+                return $cliente;
+            } else if($cliente && $cliente->etiqueta_id == 3) {
+                return "indisponivel";
+            } else {
+                return "nada";
+            }
+        }
+    }
+
 
 
     public function store(Request $request) 
     {
+        
+
+
         if(empty($request->modelo)) {
             return "errormodelo";
         }
@@ -116,9 +140,19 @@ class ClienteController extends Controller
             return "erroremail";
         }
 
+        $clienteEmail = Cliente::where("email",$request->email)->first();
+        if($clienteEmail) {
+            return "erroremailjacadastrado";
+        }
+
         if(empty($request->telefone)) {
             return "errortelefone";
         }    
+
+        $clienteTelefone = Cliente::where("telefone",$request->telefone)->first();
+        if($clienteTelefone) {
+            return "errortelefonejacadastrado";
+        }
 
         $clientes = Cliente::where("nome",$request->nome)->where("email",$request->email)->where("telefone",$request->telefone)->first();
         if($clientes) {

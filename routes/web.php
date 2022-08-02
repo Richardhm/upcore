@@ -166,6 +166,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/cliente/contrato/{id}","App\Http\Controllers\Admin\ClienteController@clienteContrato")->name("cliente.contrato");
     Route::post("/clientes/store","App\Http\Controllers\Admin\ClienteController@store")->name("clientes.store");
     Route::post("/cliente/existe","App\Http\Controllers\Admin\ClienteController@clienteExisteAjax")->name("cliente.existe");
+    Route::post("/cliente/verificartelefone","App\Http\Controllers\Admin\ClienteController@verificartelefone")->name("cliente.verificartelefone");
 
     Route::post("/clientes/definirStatus","App\Http\Controllers\Admin\ClienteController@definirStatus")->name("clientes.definirStatus");
     Route::post("/clientes/mudarStatus","App\Http\Controllers\Admin\ClienteController@mudarStatus")->name("clientes.mudarStatus");
@@ -193,8 +194,11 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/tarefas/para/proximas03dias","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefasProximas");
     Route::post("/tarefas/para/tarefasHoje","App\Http\Controllers\Admin\TarefaController@tarefasParaHoje")->name("cliente.tarefasParaHoje");
     Route::get("/tarefas/atrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasHome")->name("tarefa.clienteTarefasAtrasadasHome");
-    Route::post("/cliente/clientesemtarefa","App\Http\Controllers\Admin\TarefaController@clienteSemTarefaAjax")->name("cliente.semtarefasajax");
-    Route::post("/cliente/clientestarefaatrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasAjax")->name("cliente.tarefasatrasadasajax");
+
+    Route::any("/cliente/clientesemtarefa","App\Http\Controllers\Admin\TarefaController@clienteSemTarefaAjax")->name("cliente.semtarefasajax");
+    Route::get("/cliente/getclientesemtarefa","App\Http\Controllers\Admin\TarefaController@getClienteSemTarefaAjax")->name("cliente.getClienteSemTarefaAjax");
+    
+    Route::any("/cliente/clientestarefaatrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasAjax")->name("cliente.tarefasatrasadasajax");
     Route::post("/cliente/tarefaMudarStatusAjax","App\Http\Controllers\Admin\TarefaController@mudarStatusTarefaAjax")->name("cliente.mudarStatusTarefaAjax");
     Route::post("/cliente/tarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@tarefasRealizadasAjax")->name("tarefa.tarefasRealizadas");
     Route::post("/tarefas/listarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@listarTodasAsTarefasAjax")->name("tarefas.listarTodasAsTarefasAjax");
@@ -222,7 +226,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     
     Route::get("/financeiro/aguardandopagamentoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@getAguardandoPagamentoBoletoColetivo")->name("financeiro.aguardandoPagamentoboletocoletivo");
     
-    Route::post("/financeiro/setaguardandoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@setAguardandoPagamentoBoletoColetivo")->name("financeiro.setAguardandoPagamentoboletocoletivo");
+    Route::post("/financeiro/setAguardandoPagamentoBoletoColetivo","App\Http\Controllers\Admin\FinanceiroController@setAguardandoPagamentoBoletoColetivo")->name("financeiro.setAguardandoPagamentoboletocoletivo");
 
     Route::get("/financeiro/aguardandopagamentovigencia","App\Http\Controllers\Admin\FinanceiroController@getAguardandoPagamentoVigencia")->name("financeiro.aguardandoPagamentoVigencia");
     

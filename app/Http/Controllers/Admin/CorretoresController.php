@@ -22,6 +22,7 @@ class CorretoresController extends Controller
     {
         $this->repository = $user;
         //$this->middleware(['can:corretor']);
+        $this->middleware(['can:configuracoes']);
     }
        
     public function index()

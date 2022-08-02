@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Validator;
 
 class TabelaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:configuracoes']);
+    }
+
+
     public function search()
     {
         $operadoras = Operadora::all();

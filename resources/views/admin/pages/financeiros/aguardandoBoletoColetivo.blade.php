@@ -6,7 +6,10 @@
 @stop
 
 @section('content')
-    
+<ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.home')}}">Dashboard</a></li>
+        <li class="breadcrumb-item">Boleto Coletivos</li>
+    </ol>    
         @if(count($dados) >= 1)
         <div class="card">
             <div class="card-body">
@@ -48,7 +51,7 @@
         @else
             <h3 class="alert alert-secondary border text-center">Sem Dados a serem listados!</h3>
         @endif
-    
+        <div id="resultado"></div>
 
 
 @stop
@@ -70,7 +73,15 @@
                 $.ajax({
                     method:"POST",
                     data:"id="+id,
-                    url:"{{route('financeiro.setAguardandoboletocoletivo')}}"
+                    url:"{{route('financeiro.setAguardandoboletocoletivo')}}",
+                    success:function(res) {
+                        if(res == 0) {
+                            $('.card').fadeOut('slow',function(){
+                                $("#resultado").html('<h3 class="alert alert-secondary border text-center">Sem Dados a serem listados!</h3>')
+                            });
+                            
+                        }
+                    }
                 });
 
                 $(this).closest('tr').fadeOut('slow');

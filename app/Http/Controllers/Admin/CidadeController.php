@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\DB;
 
 class CidadeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:configuracoes']);
+    }
+
+
     public function index()
     {
         $cidades = Cidade::paginate();

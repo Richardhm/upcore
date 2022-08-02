@@ -18,7 +18,7 @@ class AdministradoraController extends Controller
     public function __construct(Administradora $administradora)
     {
         $this->repository = $administradora;
-        $this->middleware(['can:administradora']);
+        $this->middleware(['can:configuracoes']);
     }
 
     public function index()
@@ -52,7 +52,6 @@ class AdministradoraController extends Controller
      */
     public function store(StoreUpdateAdministradora $request)
     {
-        
         $parcelas = array_values($request->parcelas);       
         $administradora = new Administradora();
         $administradora->nome = $request->nome;

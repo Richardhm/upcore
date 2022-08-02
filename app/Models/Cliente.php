@@ -38,6 +38,11 @@ class Cliente extends Model
         return $this->belongsTo(Cidade::class);
     }
 
+    public function etiqueta()
+    {
+        return $this->belongsTo(Etiquetas::class);
+    }
+
     public function comissoes()
     {
         return $this->hasOne(Comissao::class);

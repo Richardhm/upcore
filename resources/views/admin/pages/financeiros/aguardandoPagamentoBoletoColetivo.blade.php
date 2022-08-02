@@ -4,18 +4,21 @@
     <h1>Aguardando Boleto Pagamento Coletivo</h1>
 @stop
 @section('content')
-    
+<ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.home')}}">Dashboard</a></li>
+        <li class="breadcrumb-item">Boleto Coletivos</li>
+    </ol>  
         @if(count($dados) >= 1)
         <div class="card">
             <div class="card-body">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Nome</th>
-                            <th>Endereço</th>
-                            <th>CPF</th>
+                            <th>Cliente</th>
+                            <th>Corretor</th>
+                            
                             <th>Administradora</th>
-                            <th>Plano</th>
+                            
                             <th>Valor</th>
                             <th>Data</th>
                             <th>Status</th>
@@ -25,10 +28,10 @@
                         @foreach($dados as $d)
                             <tr>
                                 <td>{{$d->clientes->nome}}</td>
-                                <td>{{$d->clientes->endereco_financeiro}}</td>
-                                <td>{{$d->clientes->cpf}}</td>
+                                <td>{{$d->user->name}}</td>
+                                
                                 <td>{{$d->administradora->nome}}</td>
-                                <td>{{$d->plano->nome}}</td>
+                                
                                 <td>{{number_format($d->valor,2,",",".")}}</td>
                                 <td>{{date('d/m/Y',strtotime($d->clientes->data_boleto))}}</td>
                                 <td>

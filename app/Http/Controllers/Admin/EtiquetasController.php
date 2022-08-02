@@ -10,6 +10,12 @@ use App\Models\Etiquetas;
 
 class EtiquetasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:configuracoes']);
+    }
+
+
     public function index()
     {
         $etiquetas = Etiquetas::all();

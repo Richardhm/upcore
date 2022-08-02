@@ -61,6 +61,9 @@
                             <label for="cpf">CPF:</label>
                             <input type="text" name="cpf" id="cpf" required class="form-control" value="{{old('cpf')}}" placeholder="XXX.XXXX.XXX-XX">
                             <div class="errorcpf"></div>
+                            @if($errors->has('cpf'))
+                                <p class="alert alert-danger">{{$errors->first('cpf')}}</p>
+                            @endif
                         </div>
                     </div>
 
@@ -95,6 +98,7 @@
                             <label for="cpf_financeiro">CPF:</label>
                             <input type="text" name="cpf_financeiro" id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control" value="">
                             <div class="errorcpfresponsavelfinanceiro"></div>
+                           
                         </div>
                     </div>
 
@@ -120,7 +124,7 @@
                     <div class="col col-md-4">
                         <div class="form-group">
                             <label for="valor_adesao">Valor Adesão:</label>
-                            <input type="text" name="valor_adesao" id="valor_adesao" placeholder="R$" class="form-control" value="">
+                            <input type="text" name="valor_adesao" id="valor_adesao" placeholder="R$" class="form-control" value="{{old('valor_adesao')}}">
                             <div class="errorvaloradesao"></div>
                             @if($errors->has('valor_adesao'))
                                 <p class="alert alert-danger">{{$errors->first('valor_adesao')}}</p>
@@ -602,7 +606,9 @@
                     return false;
                 } else {
                     $('.errorcpf').html("");
-                }   
+                }  
+                
+                
 
                 // if(!TestaCPF($("#cpf").val())) {
                 //     $("#change_plano").val($(this).val())
@@ -784,6 +790,7 @@
 
             $("body").on('change','#acomodacao',function(){
                 let valor = $(this).attr('data-valor');
+                $("#valor_adesao").val(valor.replace(".",",").toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}));
                 $("#valor").val(valor);
                 $('body,html').animate({
                     scrollTop:"900px"

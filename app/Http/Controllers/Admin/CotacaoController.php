@@ -404,11 +404,13 @@ class CotacaoController extends Controller
     {
        
        $rules = [
-         "valor_adesao" => "required"
+         "valor_adesao" => "required",
+         "cpf" => "unique:clientes,cpf"
        ];
 
        $message = [
-        "valor_adesao.required" => "E valor adesão e campo obrigatorio"
+        "valor_adesao.required" => "E valor adesão e campo obrigatorio",
+        "cpf.unique" => "CPF já está cadastrado"
        ];
 
        $request->validate($rules,$message); 

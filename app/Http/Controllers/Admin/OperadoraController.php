@@ -17,7 +17,7 @@ class OperadoraController extends Controller
     public function __construct(Operadora $operadora)
     {
         $this->repository = $operadora;
-        $this->middleware(['can:operadora']);
+        $this->middleware(['can:configuracoes']);
     }
 
     public function index()

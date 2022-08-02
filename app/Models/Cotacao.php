@@ -36,4 +36,9 @@ class Cotacao extends Model
         return $this->hasMany(CotacaoFaixaEtaria::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

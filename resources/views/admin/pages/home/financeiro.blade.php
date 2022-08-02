@@ -54,11 +54,11 @@
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
                 <div class="d-flex justify-content-between">
                     <h3 class="ml-2">{{$quantidade_aguardando_pagamento_adesao_coletivo}}</h3>
-                    <p class="align-self-center mr-2">R$ 1000,00</p>                        
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_boleto_coletivo_total,2,",",".")}}</p>                        
                 </div>
                 <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.aguardandoPagamentoboletocoletivo')}}" class="text-dark">Aguardando Pag. Adesão Coletivo</a></h6>
                 <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>9</b>
+                    Vidas: &nbsp; <b>{{$aguardando_pagamento_boleto_coletivo_vidas ?? 0}}</b>
                 </div>
             </div>
 
@@ -76,11 +76,11 @@
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
                 <div class="d-flex justify-content-between border-bottom">
                     <h3>{{$quantidade_pagamento_vigencia}}</h3>
-                    <p class="align-self-center mr-2">R$ 1000,00</p>                        
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_vigencia_total,2,",",".")}}</p>                        
                 </div>
                 <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.aguardandoPagamentoVigencia')}}" class="text-dark">Aguardando Pag. Vigencia</a></h6>
                 <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>12</b>
+                    Vidas: &nbsp; <b>{{$aguardando_pagamento_vigencia_vidas}}</b>
                 </div>
             </div>    
 

@@ -48,6 +48,9 @@
                                 <label for="telefone">Celular:</label>
                                 <input type="text" name="telefone" id="telefone" class="form-control" placeholder="Telefone">  
                                 <div class="errortelefone"></div>  
+                                @if($errors->has('celular'))
+                                    <p class="alert alert-danger">{{$errors->first('celular')}}</p>
+                                @endif
                             </div>
                         </div>
 
@@ -79,6 +82,61 @@
                headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                }
+           });
+
+           $("#telefone").on('change',function(){
+                let telefone = $(this).val();
+                $.ajax({
+                    method:"POST",
+                    data:"telefone="+telefone,
+                    url:"{{route('cliente.verificartelefone')}}",
+                    success:function(res) {
+                        if(res != "nada" && res != "indisponivel") {
+                            
+                            $("input[type='submit']").attr('disabled',true);
+                            $('#email').val(res.email);
+                            $('#nome').val(res.nome);
+                            $("#cidade_id").val(res.cidade_id);
+                            if(res.pessoa_fisica) {
+                                $("#modelo").find("option[value='pf']").attr("selected", true);
+                            } else {
+                                $("#modelo").find("option[value='pj']").attr("selected", true);
+                            }
+
+
+                            Swal.fire({
+                                title: '<h4>Cliente '+res.nome+' já esta cadastrado!</h4>',
+                                icon: 'info',
+                                type: 'info',
+                                showCloseButton: true,
+                                html:
+                                    '<hr />'+
+                                    '<p>Cliente Cadastrado em '+res.data_criacao+'</p><p>Seu status atual é <b>'+res.etiqueta.nome+'</b></p><p>Cidade: <b>'+res.cidade.nome+'</b></p>'+
+                                    '<p>O que deseja fazer?</p><hr />'+
+                                    "<a class='btn btn-primary btn-sm mr-5' href='/admin/cotacao/orcamento/"+res.id+"'>Orçamento</a> <a class='btn btn-info btn-sm mr-5' href='/admin/cotacao/contrato/"+res.id+"'>Contrato</a><a class='btn btn-secondary btn-sm mr-5' href='{{route('clientes.index')}}'>Listar Clientes</a></div>",
+                                showCancelButton: false,
+                                showConfirmButton: false                            
+                            });
+                        }
+
+                        if(res == "indisponivel") {
+                            Swal.fire({
+                                icon: 'error',
+                                type:'error',
+                                title: 'Oops...',
+                                
+                                showCloseButton: true,
+                                html:
+                                    '<hr />'+
+                                    '<h3>Cliente Indisponível</h3>'
+                            })
+                        }
+                        
+
+
+                    }
+
+                })
            });
             
             
@@ -116,8 +174,8 @@
                             return false;    
                         } else {
                             $(".errormodelo").html('');
-
                         }
+                        
                         if(res == "errornome") {
                             $('.errornome').html('<p class="alert alert-danger">Nome campo e obrigatório</p>')
                             return false;
@@ -131,8 +189,16 @@
                         } else {
                             $(".errorcidade").html('');
                         }
+
                         if(res == "erroremail") {
                             $('.erroremail').html('<p class="alert alert-danger">Email campo e obrigatório</p>')     
+                            return false;
+                        } else {
+                            $('.erroremail').html('');
+                        }
+
+                        if(res == "erroremailjacadastrado") {
+                            $('.erroremail').html('<p class="alert alert-danger">Este Email já está cadastrado</p>')     
                             return false;
                         } else {
                             $('.erroremail').html('');
@@ -144,6 +210,15 @@
                         } else {
                             $('.errortelefone').html('');  
                         }
+
+                        if(res == "errortelefonejacadastrado") {
+                            $('.errortelefone').html('<p class="alert alert-danger">Este celular já está cadastrado</p>')   
+                            return false;  
+                        } else {
+                            $('.errortelefone').html('');  
+                        }
+
+                        
 
                         if(res == "clienteexiste") {
                             $.ajax({

@@ -17,7 +17,7 @@ class CorretoraController extends Controller
     public function __construct(Corretora $corretora)
     {
         $this->repository = $corretora;   
-        $this->middleware(['can:corretora']); 
+        $this->middleware(['can:configuracoes']);
     }
 
     /**

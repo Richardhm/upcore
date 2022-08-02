@@ -143,20 +143,28 @@ class TarefaController extends Controller
         ]);       
     }
 
-    public function clienteSemTarefaAjax(Request $request)
+    public function clienteSemTarefaAjax()
     {
+        return view("admin.pages.tarefas.ajax.cliente-sem-tarefa");
+    }
+
+    public function getClienteSemTarefaAjax(Request $request) 
+    {
+        
         if($request->ajax()) {
             $dados = Cliente::where("user_id",auth()->user()->id)->whereNotIn('id',function($query){
                 $query->select('tarefas.cliente_id');
                 $query->from('tarefas');
                 $query->whereRaw("user_id=".auth()->user()->id);
             })
-            ->selectRaw("nome,telefone,id")
+            ->selectRaw("nome,telefone")
             ->selectRaw("(SELECT cor from etiquetas WHERE etiquetas.id = clientes.etiqueta_id) as etiqueta")
+            ->selectRaw("id")
             ->get();
-            return view("admin.pages.tarefas.ajax.cliente-sem-tarefa",[
-                "clientes" => $dados
-            ]);
+    
+            
+    
+            return $dados;
         }
         
     }

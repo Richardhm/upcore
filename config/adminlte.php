@@ -229,7 +229,7 @@ return [
             'text'    => 'Dashboard',
             'icon'    => 'fas fa-home',
             'url'    => 'admin', 
-            'active' => ['admin','/',"http://localhost:8000/admin/home/pesquisa"]
+            'active' => ['admin','/',"/admin/home/pesquisa","admin/financeiro/aguardandoboletocoletivo"]
         ],
         // [
         //     'text'    => 'Orcamento',
@@ -261,7 +261,8 @@ return [
             "text" => "Clientes",
             "url" => "admin/clientes",
             "icon" => "fas fa-user-cog",
-            "can" => "clientes"
+            "can" => "clientes",
+            "active" => ['clientes','admin/clientes/cadastrar']
         ],
         [
             "text" => "Comissões",

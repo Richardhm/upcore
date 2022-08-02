@@ -12,6 +12,12 @@ use App\Models\PremiacaoCorretoresLancados;
 
 class PremiacaoCorretoresConfiguracoesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['can:configuracoes']);
+    }
+
+
     public function index($id)
     {
         $corretor = User::where("id",$id)->first();

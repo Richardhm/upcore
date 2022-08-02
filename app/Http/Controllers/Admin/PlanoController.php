@@ -16,6 +16,7 @@ class PlanoController extends Controller
     public function __construct(Planos $planos)
     {
         $this->repository = $planos;
+        $this->middleware(['can:configuracoes']);
     }
 
 

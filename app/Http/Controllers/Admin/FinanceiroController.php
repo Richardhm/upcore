@@ -8,6 +8,9 @@ use App\Models\Cotacao;
 
 class FinanceiroController extends Controller
 {
+    
+
+
     public function getAguardandoBoletoColetivo()
     {
         $dados = Cotacao::where("financeiro_id",1)->with(['administradora','plano','clientes'])->get();
@@ -22,12 +25,13 @@ class FinanceiroController extends Controller
             $cotacao = Cotacao::where("id",$request->id)->first();
             $cotacao->financeiro_id = 2;
             $cotacao->save();
+            return Cotacao::where("financeiro_id",1)->count();
         }  
     }
 
     public function getAguardandoPagamentoBoletoColetivo()
     {
-        $dados = Cotacao::where("financeiro_id",2)->with(['administradora','plano','clientes'])->get();
+        $dados = Cotacao::where("financeiro_id",2)->with(['administradora','plano','clientes','user'])->get();
         return view('admin.pages.financeiros.aguardandoPagamentoBoletoColetivo',[
             "dados" => $dados
         ]);

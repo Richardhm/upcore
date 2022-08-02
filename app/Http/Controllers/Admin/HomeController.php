@@ -139,8 +139,21 @@ class HomeController extends Controller
        
 
         $aguardando_pagamento_adesao_coletivo = Cotacao::where("financeiro_id",2)->count();
-        $aguardando_pagamento_plano_individual = Cotacao::where("financeiro_id",3)->count();
+        $aguardando_pagamento_boleto_coletivo_total = Cotacao::where("financeiro_id",2)->selectRaw("sum(valor) as total")->first()->total;
+        $aguardando_pagamento_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            $query->where("financeiro_id",2);
+        })->selectRaw("sum(quantidade) as total")->first()->total;
+
         $aguardando_pagamento_vigencia = Cotacao::where("financeiro_id",4)->count();
+        $aguardando_pagamento_vigencia_total = Cotacao::where("financeiro_id",4)->selectRaw("sum(valor) as total")->first()->total;
+        $aguardando_pagamento_vigencia_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            $query->where("financeiro_id",4);
+        })->selectRaw("sum(quantidade) as total")->first()->total;
+
+
+
+        $aguardando_pagamento_plano_individual = Cotacao::where("financeiro_id",3)->count();
+       
         $aguardando_pagamento_empresarial = Cotacao::where("financeiro_id",5)->count();
         
         return view('admin.pages.home.financeiro',[
@@ -149,9 +162,16 @@ class HomeController extends Controller
             "aguardando_boleto_coletivo_vidas" => $aguardando_boleto_coletivo_vidas,
 
             "quantidade_aguardando_pagamento_adesao_coletivo" => $aguardando_pagamento_adesao_coletivo,
+            "aguardando_pagamento_boleto_coletivo_total" => $aguardando_pagamento_boleto_coletivo_total,
+            "aguardando_pagamento_boleto_coletivo_vidas" => $aguardando_pagamento_boleto_coletivo_vidas,
+
             "quantidade_aguardando_pagamento_plano_individual" => $aguardando_pagamento_plano_individual,
             
             "quantidade_pagamento_vigencia" =>  $aguardando_pagamento_vigencia,
+            "aguardando_pagamento_vigencia_total" =>  $aguardando_pagamento_vigencia_total,
+            "aguardando_pagamento_vigencia_vidas" =>  $aguardando_pagamento_vigencia_vidas,
+            
+
             "quantidade_pagamento_empresarial" => $aguardando_pagamento_empresarial
         ]);
     }

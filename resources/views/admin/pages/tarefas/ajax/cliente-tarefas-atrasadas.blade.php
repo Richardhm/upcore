@@ -1,30 +1,54 @@
-@if(count($clientes) >= 1)
-<h4>Tarefa(s) Atrasadas</h4>
-<hr>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tarefa</th>
-            <th>Cliente</th>
-            <th>Data</th>
-            <th>Realizada/Não Realizada</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($clientes as $c)
-        <tr>
-            <td>{{$c->title}}</td>
-            <td>{{$c->cliente->nome}}</td>
-            <td>{{date('d/m/Y',strtotime($c->data))}}</td>
-            <td width="200px;" align="center">
-                <input type="checkbox" name="mudarStatus" id="mudarStatus" data-id="{{$c->id}}">
-            </td>
-            
-        </tr>
-        @endforeach
-
-    </tbody>
-</table>
-@else
-    <h3 class="alert alert-info text-center">Você não tem tarefas atrasadas!!</h3>
-@endif
+<!DOCTYPE html>
+<html lang="pt-br">
+<head></head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+    <h4>Tarefa(s) Atrasadas</h4>
+    <div class="wrapper">
+        <table class="table tarefasatrasadascliente">
+            <thead>
+                <tr>
+                    <th>Tarefa</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Marcar Realizada</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>    
+<script>
+    $(function(){
+        $(".tarefasatrasadascliente").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('cliente.getTarefasAtrasadasAjax') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [8,15,30],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                //order: [[3, "asc"]],
+                columns: [
+                    {data:"title",name:"tarefa"},
+                    {data:"cliente",name:"cliente"},
+                    {data:"criacao",name:"data"},
+                    {data:"id",name:"status"}
+                ],
+                "columnDefs": [ {
+                        "targets": 3,
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).html("<input type='checkbox' name='mudarStatus' id='mudarStatus' data-id="+cellData+">")
+                        }
+                    }
+                ]
+                
+            });
+    });    
+</script>

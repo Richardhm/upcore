@@ -1,28 +1,47 @@
-@if(count($tarefas) >= 1)
-<h4>Tarefa(s) Realizadas</h4>
-<hr>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tarefa</th>
-            <th>Cliente</th>
-            <th>Data</th>
-            <th>Tarefa Realizada</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($tarefas as $c)
-        <tr>
-            <td>{{$c->title}}</td>
-            <td>{{$c->cliente->nome}}</td>
-            <td>{{date('d/m/Y',strtotime($c->data))}}</td>
-            <td>{{date('d/m/Y',strtotime($c->updated_at))}}</td>
-            
-        </tr>
-        @endforeach
-
-    </tbody>
-</table>
-@else
-    <h3 class="alert alert-warning text-center text-white">Nenhum Tarefa Realizada!!</h3>
-@endif
+<!DOCTYPE html>
+<html lang="pt-br">
+<head></head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+    <h4>Tarefa(s) Realizadas</h4>
+    <div class="wrapper">
+        <table class="table tarefasrealizadas">
+            <thead>
+                <tr>
+                    <th>Tarefa</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Tarefa Realizada</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>    
+<script>
+    $(function(){
+        $(".tarefasrealizadas").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('tarefa.getTarefasRealizadasAjax') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [8,15,30],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                //order: [[3, "asc"]],
+                columns: [
+                    {data:"title",name:"tarefa"},
+                    {data:"cliente",name:"cliente"},
+                    {data:"data",name:"data"},
+                    {data:"realizada",name:"realizada"},
+                ]
+                
+            });
+    });    
+</script>

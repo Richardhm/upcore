@@ -191,17 +191,34 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\TarefaController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
     Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\TarefaController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
     Route::post("/clientes/deletar","App\Http\Controllers\Admin\TarefaController@deletarCliente")->name("cliente.deletarCliente");
-    Route::post("/tarefas/para/proximas03dias","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefasProximas");
-    Route::post("/tarefas/para/tarefasHoje","App\Http\Controllers\Admin\TarefaController@tarefasParaHoje")->name("cliente.tarefasParaHoje");
+    
+    
     Route::get("/tarefas/atrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasHome")->name("tarefa.clienteTarefasAtrasadasHome");
 
     Route::any("/cliente/clientesemtarefa","App\Http\Controllers\Admin\TarefaController@clienteSemTarefaAjax")->name("cliente.semtarefasajax");
     Route::get("/cliente/getclientesemtarefa","App\Http\Controllers\Admin\TarefaController@getClienteSemTarefaAjax")->name("cliente.getClienteSemTarefaAjax");
-    
+
+    Route::any("/cliente/tarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@tarefasRealizadasAjax")->name("tarefa.tarefasRealizadas");
+    Route::get("/cliente/gettarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@getTarefasRealizadasAjax")->name('tarefa.getTarefasRealizadasAjax');
+
+    Route::any("/tarefas/para/tarefasHoje","App\Http\Controllers\Admin\TarefaController@tarefasParaHoje")->name("cliente.tarefasParaHoje");
+    Route::get("/tarefas/para/gettarefasHoje","App\Http\Controllers\Admin\TarefaController@getTarefasParaHoje")->name("cliente.getTarefasParaHoje");
+
+    Route::any("/tarefas/listarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@listarTodasAsTarefasAjax")->name("tarefas.listarTodasAsTarefasAjax");
+    Route::get("/tarefas/getListarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@getListarTodasAsTarefasAjax")->name('tarefas.getListarTodasAsTarefasAjax');    
+
+
+
     Route::any("/cliente/clientestarefaatrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasAjax")->name("cliente.tarefasatrasadasajax");
+    Route::get("/cliente/getClientesTarefasAtrasadas","App\Http\Controllers\Admin\TarefaController@getClienteTarefasAtrasadasAjax")->name("cliente.getTarefasAtrasadasAjax");
+
+    Route::any("/tarefas/para/proximas03dias","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefasProximas");
+    Route::get("/tarefas/para/getProximos03dias","App\Http\Controllers\Admin\TarefaController@getTarefasProximo03Dias")->name("cliente.getTarefasProximo03Dias");
+
+
     Route::post("/cliente/tarefaMudarStatusAjax","App\Http\Controllers\Admin\TarefaController@mudarStatusTarefaAjax")->name("cliente.mudarStatusTarefaAjax");
-    Route::post("/cliente/tarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@tarefasRealizadasAjax")->name("tarefa.tarefasRealizadas");
-    Route::post("/tarefas/listarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@listarTodasAsTarefasAjax")->name("tarefas.listarTodasAsTarefasAjax");
+    
+    
     Route::post("/tarefas/marcarTarefasRealizarAjax","App\Http\Controllers\Admin\TarefaController@marcarTarefasRealizarAjax")->name("tarefas.marcarTarefasRealizarAjax");
 
     /** Fim Tarefa */

@@ -385,6 +385,7 @@
             $("body").on('change','input[name="mudarStatus"]',function(){
                 if($(this).is(":checked")) {
                     let id = $(this).attr('data-id');
+                    
                     $(this).closest("tr").fadeOut('slow');
                     $.ajax({
                         method:"POST",

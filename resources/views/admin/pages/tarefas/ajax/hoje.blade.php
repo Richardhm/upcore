@@ -1,24 +1,47 @@
-@if(count($tarefas) >= 1)
-<h4>Tarefa(s) Realizadas</h4>
-<hr>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tarefa</th>
-            <th>Cliente</th>
-            <th>Data Criação da Tarefa</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($tarefas as $c)
-        <tr>
-            <td>{{$c->title}}</td>
-            <td>{{$c->cliente->nome}}</td>
-            <td>{{date('d/m/Y',strtotime($c->created_at))}}</td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-@else
-    <h3 class="alert alert-info text-center text-white">Nenhuma Tarefa Para Hoje =/</h3>
-@endif
+<!DOCTYPE html>
+<html lang="pt-br">
+<head></head>
+<body class="hold-transition sidebar-mini">
+    <!-- Site wrapper -->
+    <h4>Tarefa(s) Hoje</h4>
+    <div class="wrapper">
+        <table class="table tarefashojemesmo">
+            <thead>
+                <tr>
+                    <th>Tarefa</th>
+                    <th>Cliente</th>
+                    <th>Data Criação da Tarefa</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>    
+<script>
+    $(function(){
+        $(".tarefashojemesmo").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('cliente.getTarefasParaHoje') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [8,15,30],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                //order: [[3, "asc"]],
+                columns: [
+                    {data:"title",name:"title"},
+                    {data:"cliente",name:"cliente"},
+                    {data:"criacao",name:"data"},
+                    
+                ]
+                
+            });
+    });    
+</script>    

@@ -167,20 +167,13 @@
 
     </div>    
 </section>
-
-
-
-
-
     <div class="container-fluid">
         <div class="d-flex">
-
-            
                 <div class="small-box bg-warning flex-fill mr-1">
                     <div class="inner">
-                        <h3>{{$totalCliente}}</h3>
+                        <h3>{{$totalCliente ?? 0}}</h3>
                         <p>Total de Clientes</p>                        
-                        <p>Vidas 25</p>                        
+                        <p>Vidas: {{$totalVidasQuantidade ?? 0}}</p>                        
                     </div>
                     <div class="icon">
                         <i class="fas fa-cash-register"></i>
@@ -192,9 +185,9 @@
             
                 <div class="small-box bg-success flex-fill mr-1">
                     <div class="inner">
-                        <h3>{{$clienteFechados}}</h3>
+                        <h3>{{$totalClientesNegociados ?? 0}}</h3>
                         <p>Cliente Negociados</p>
-                        <p>Vidas 12</p>
+                        <p>Vidas: {{$totalVidasClientesNegociados ?? 0}}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
@@ -206,9 +199,9 @@
             
                 <div class="small-box bg-info flex-fill mr-1">
                     <div class="inner">
-                        <h3>{{$clienteFechados}}</h3>
+                        <h3>{{$totalClientesNegociacao ?? 0}}</h3>
                         <p>Em Negociação</p>
-                        <p>Vidas 12</p>
+                        <p>Vidas: {{$vidasTotalClientesNegociacao ?? 0}}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
@@ -220,7 +213,7 @@
             
                 <div class="small-box bg-orange flex-fill mr-1">
                     <div class="inner">
-                        <h3>{{$clienteFechados}}</h3>
+                        <h3>{{$clientesCadastradosEsseMes}}</h3>
                         <p>Cadastrado no mês</p>
                         <p>Vidas 11</p>
                     </div>
@@ -234,7 +227,7 @@
             
                 <div class="small-box bg-danger flex-fill">
                     <div class="inner">
-                        <h3>{{$clienteFechados}}</h3>
+                        <h3>000</h3>
                         <p>Perdidos</p>
                         <p>Vidas 8</p>
                     </div>

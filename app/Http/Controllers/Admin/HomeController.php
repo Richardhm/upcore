@@ -102,9 +102,28 @@ class HomeController extends Controller
 
 
             $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
-            $clienteFechados = Cotacao::where("user_id",auth()->user()->id)->whereHas('clientes',function($query){
+            $totalVidasQuantidade = CotacaoFaixaEtaria::whereIn("cotacao_id",function($query){
+                $query->select('cotacoes.id');
+                $query->from('cotacoes');
+                $query->whereRaw("cotacoes.user_id=".auth()->user()->id);
+            })->selectRaw("sum(quantidade) as quantidade_total_vidas")->first()->quantidade_total_vidas;
+
+            $totalClientesNegociados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('clientes',function($query){
                 $query->where('etiqueta_id','=',3);
             })->count();
+
+            $totalVidasClientesNegociados = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+                $query->where("user_id",auth()->user()->id);
+                $query->where("financeiro_id",6);    
+            })->selectRaw("SUM(quantidade) AS total_quantidade")->first()->total_quantidade;
+
+            $totalClientesNegociacao = Cliente::where("user_id",auth()->user()->id)->where("etiqueta_id","=",3)->count();
+
+            $vidasTotalClientesNegociacao = DB::select(DB::raw("SELECT SUM(quantidade) AS total_quantidade FROM cotacao_faixa_etarias WHERE cotacao_id IN(SELECT id FROM cotacoes WHERE cliente_id IN(SELECT id FROM clientes WHERE user_id = ".auth()->user()->id." AND etiqueta_id = 3))"));
+    
+            $clientesCadastradosEsseMes = DB::table('clientes')->whereRaw("user_id = ? AND MONTH(NOW()) = MONTH(created_at)",[auth()->user()->id])->count();
+            
+            
             $etiquetas = Etiquetas::selectRaw('id,nome,cor')->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id AND user_id = '.auth()->user()->id.') AS quantidade')->paginate(5);
             $totalComissao = ComissoesCorretorLancados::selectRaw("sum(valor) as total")->where("user_id",auth()->user()->id)->where("status",1)->whereRaw("MONTH(DATA) = MONTH(NOW())")->first()->total;
             $totalPremiacao = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)->where("status",1)->whereRaw("MONTH(DATA) = MONTH(NOW())")->selectRaw('sum(total) as total')->first()->total;
@@ -116,7 +135,12 @@ class HomeController extends Controller
             
             return view('admin.pages.home.colaborador',[
                 "totalCliente" => $totalCliente,
-                "clienteFechados" => $clienteFechados,
+                "totalVidasQuantidade" => $totalVidasQuantidade,
+                "totalClientesNegociados" => $totalClientesNegociados,                
+                "totalVidasClientesNegociados" => $totalVidasClientesNegociados,
+                "totalClientesNegociacao" => $totalClientesNegociacao,
+                "vidasTotalClientesNegociacao" => $vidasTotalClientesNegociacao[0]->total_quantidade,
+                "clientesCadastradosEsseMes" => $clientesCadastradosEsseMes,
                 "etiquetas" => $etiquetas,
                 "totalComissao" => $totalComissao,
                 "totalPremiacao" => $totalPremiacao,

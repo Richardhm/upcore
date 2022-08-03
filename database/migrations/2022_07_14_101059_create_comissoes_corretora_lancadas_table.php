@@ -21,7 +21,7 @@ class CreateComissoesCorretoraLancadasTable extends Migration
             $table->date("data");
             $table->decimal("valor",10,2);
             $table->boolean("status")->default(0);
-            $table->foreign('comissao_id')->references('id')->on('comissoes');
+            $table->foreign('comissao_id')->references('id')->on('comissoes')->onDelete("cascade");
            
             $table->timestamps();
         });

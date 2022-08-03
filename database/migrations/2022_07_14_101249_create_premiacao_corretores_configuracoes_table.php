@@ -21,9 +21,9 @@ class CreatePremiacaoCorretoresConfiguracoesTable extends Migration
             
             $table->string('valor');
             
-            $table->foreign('plano_id')->references('id')->on('planos');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('administradora_id')->references('id')->on('administradoras');
+            $table->foreign('plano_id')->references('id')->on('planos')->onDelete("cascade");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
+            $table->foreign('administradora_id')->references('id')->on('administradoras')->onDelete("cascade");
 
             $table->timestamps();
         });

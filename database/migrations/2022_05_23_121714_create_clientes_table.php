@@ -42,6 +42,7 @@ class CreateClientesTable extends Migration
             $table->boolean('pessoa_fisica');
             $table->boolean('pessoa_juridica');
             
+            $table->text('anotacoes')->nullable();
             
             $table->date("ultimo_contato")->nullable();
             $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete("cascade");

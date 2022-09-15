@@ -15,8 +15,9 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Comissões</th>
-                            <th>Premiações</th>
+                            <th>Comissões/Premiações</th>
+                            
+
                             <th>Editar/Deletar</th>
                         </tr>
                     </thead>
@@ -29,7 +30,7 @@
                             <tr>
                                 <td>{{$c->name}}</td>
                                 <td align="center" width="100px;"><a href="{{route('comissao.corretores.index',$c->id)}}" style="color:black;"><i class="fas fa-money-check-alt fa-lg"></i></a></td>
-                                <td align="center" width="100px;"><a href="{{route('premiacao.corretores.index',$c->id)}}" style="color:black;"><i class="fas fa-award fa-lg"></i></a></td>
+                                <!-- <td align="center" width="100px;"><a href="{{route('premiacao.corretores.index',$c->id)}}" style="color:black;"><i class="fas fa-award fa-lg"></i></a></td> -->
                                 <td>
                                     <a href="{{route('corretores.edit',$c->id)}}" class="btn btn-info btn-sm">
                                         <i class="fas fa-edit"></i>

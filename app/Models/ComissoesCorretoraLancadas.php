@@ -9,4 +9,12 @@ class ComissoesCorretoraLancadas extends Model
 {
     use HasFactory;
     protected $table = "comissoes_corretora_lancadas";
+
+    public function comissao()
+    {
+        return $this->belongsTo(Comissao::class);
+    }
+
+
+
 }

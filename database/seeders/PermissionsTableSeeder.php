@@ -78,8 +78,12 @@ class PermissionsTableSeeder extends Seeder
                 "description" => "Contratos"
             ],
             [
+                "name" => "tarefas",
+                "description" => "Tarefas"
+            ],
+            [
                 "name" => "comissoes",
-                "description" => "Comissões"
+                "description" => "Financeiro"
             ] 
            
         ];    

@@ -21,9 +21,11 @@ use App\Models\{
     ComissoesCorretorLancados,
     PremiacaoCorretoresConfiguracoes,
     PremiacaoCorretoresLancados,
-    PremiacaoCorretoraLancadas
+    PremiacaoCorretoraLancadas,
+    User
 };
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CotacaoController extends Controller
 {
@@ -33,7 +35,6 @@ class CotacaoController extends Controller
         if(!$cliente) {
             return redirect()->back();
         }
-        
         $cot = Cotacao::where("cliente_id",$id)->first();
         $faixas = [];
         $colunas = [];
@@ -45,7 +46,6 @@ class CotacaoController extends Controller
             ->get()->toArray();    
             $colunas =  array_column($faixas, 'faixa_etaria_id');   
         }
-            
         return view('admin.pages.cotacao.orcamento',[
             "cliente" => $cliente,
             "faixas" => $faixas,
@@ -54,90 +54,122 @@ class CotacaoController extends Controller
         ]);
     }
 
-    public function criarPDF($id_orcamento,$id_cidade,$plano_id,$coparticipacao,$odonto,$operadora_id,$administradora_id)
+    public function criarPDF($cotacao,$administradora,$plano,$odonto,$cliente)
     {
-        $planos = DB::table('tabelas')
-            ->join("orcamento_faixa_etarias",'tabelas.faixa_etaria', '=', 'orcamento_faixa_etarias.faixa_etaria_id')
-            ->selectRaw("tabelas.id")
-            ->selectRaw("tabelas.plano_id")
-            ->selectRaw("tabelas.modelo")
-            ->selectRaw("tabelas.valor")
-            ->selectRaw("tabelas.cidade_id")
-            ->selectRaw("tabelas.coparticipacao")
-            ->selectRaw("tabelas.odonto")
-            ->selectRaw("tabelas.operadora_id")
-            ->selectRaw("tabelas.administradora_id")
-            ->selectRaw("orcamento_faixa_etarias.quantidade")
-            ->selectRaw("(tabelas.valor * orcamento_faixa_etarias.quantidade) AS Total")
-            ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = tabelas.faixa_etaria) AS faixas")
-            ->selectRaw("tabelas.faixa_etaria")
-            ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = tabelas.administradora_id) admin_nome")
-            ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) admin_logo")
-            ->selectRaw("if(coparticipacao,'Com Copartipacao','Sem Coparticipacao') AS copartipicao_texto")
-            ->selectRaw("if(odonto,'Com Odonto','Sem Odonto') AS odonto_texto")
-            ->selectRaw("(SELECT nome FROM planos WHERE tabelas.plano_id = planos.id) plano")
-            ->whereRaw("orcamento_faixa_etarias.orcamento_id = ".$id_orcamento." AND cidade_id = ".$id_cidade." AND coparticipacao = ".$coparticipacao." AND odonto = ".$odonto." AND operadora_id = ".$operadora_id." AND plano_id = ".$plano_id." AND administradora_id = ".$administradora_id)    
-            ->get();
-      
-        $faixas = CotacaoFaixaEtaria::where("orcamento_id","=",$id_orcamento)
-                ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = orcamento_faixa_etarias.faixa_etaria_id) AS faixa_nome")  
-                ->get();
-               
-        // @ts-ignore
-        $pdf = PDF::loadView('admin.pages.orcamento.pdf',[
+        $planos = DB::table('cotacao_faixa_etarias as cfe')
+        ->selectRaw("CONCAT('card_',ta.odonto,'_',ta.coparticipacao,'_',ta.administradora_id) AS card,cfe.cotacao_id,fe.id,cfe.quantidade,fe.nome,fe.id,ta.odonto,ta.coparticipacao,ta.administradora_id,ta.faixa_etaria,ta.plano_id")
+        ->selectRaw("(SELECT nome FROM planos WHERE ta.plano_id = planos.id) AS plano")
+        ->selectRaw("(CONCAT('tabela_',ta.odonto,'_',ta.coparticipacao,'_',(SELECT nome FROM administradoras WHERE administradoras.id = ta.administradora_id))) AS mesma_tabela")
+        ->selectRaw("(CONCAT(if(odonto,'Com Odonto','Sem Odonto'))) AS titulos")
+        ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = ta.administradora_id) AS admin_id")
+        ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = ta.administradora_id) AS admin_nome")
+        ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = ta.administradora_id) AS admin_logo")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cotacao.") FROM tabelas as tad WHERE (tad.modelo = 'Apartamento' OR ta.modelo = 'Apartamento') AND tad.coparticipacao = 1 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS apartamento_coparticipacao")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cotacao.") FROM tabelas as tad WHERE (tad.modelo = 'Enfermaria' OR ta.modelo = 'Enfermaria') AND tad.coparticipacao = 1 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS enfermaria_coparticipacao")  
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cotacao.") FROM tabelas as tad WHERE (tad.modelo = 'Apartamento' OR ta.modelo = 'Apartamento') AND tad.coparticipacao = 0 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS apartamento_sem_coparticipacao")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cotacao.") FROM tabelas as tad WHERE (tad.modelo = 'Enfermaria'  OR ta.modelo = 'Enfermaria') AND tad.coparticipacao = 0 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS enfermaria_sem_coparticipacao")
+        ->join("faixas_etarias as fe",'cfe.faixa_etaria_id', '=', 'fe.id')  
+        ->join("tabelas as ta","ta.faixa_etaria","=","cfe.faixa_etaria_id")
+        ->whereRaw("cotacao_id = ".$cotacao." AND ta.cidade_id = 2 AND odonto = ".$odonto." AND plano_id = ".$plano." AND administradora_id = ".$administradora)
+        ->groupByRaw("ta.administradora_id,ta.faixa_etaria,ta.odonto")
+        ->orderByRaw("ta.administradora_id,card,fe.nome")    
+        ->get();
+
+        
+
+        
+        
+        $user = User::find(auth()->user()->id);
+        
+        if(!empty($user->image)) {
+            $type = mime_content_type(public_path("storage/".$user->image));        
+            $data = base64_encode(file_get_contents(public_path("storage/".$user->image)));
+            $image_user = 'data:image/' . $type . ';base64,' . $data;     
+        } else {
+            // $type = mime_content_type(public_path("storage/avatar-default.jpg"));        
+            // $data = base64_encode(file_get_contents(public_path("storage/avatar-default.jpg")));
+            // $image_user = 'data:image/' . $type . ';base64,' . $data;
+            $image_user = null;
+        }
+        
+        
+        $icone_site_oficial = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/01.png")));
+        $icone_boleto = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/02.png")));
+        $icone_marcar_consulta = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/03.png")));
+        $icone_rede_atendimento = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/04.png")));
+        $icone_clinica = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/05.png")));
+        $icone_hospital = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/06.png")));
+        $icone_lupa = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/07.png")));
+        $icone_endereco = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/08.png")));
+        $icone_zap_footer = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/telefone-consultar.png")));
+        $logo = 'data:image/png;base64,'.base64_encode(file_get_contents(public_path("storage/logo.png")));
+
+        // // @ts-ignore
+        $pdf = PDF::loadView('admin.pages.orcamento.bootstrap',[
             'planos'=>$planos,
-            'faixas'=>$faixas,
-            'orcamento' => 2
+            "nome" => $user->name,
+            "telefone" => $user->celular,
+            "image"=>$image_user,
+            "plano" => $planos[0]->plano,
+            "icone_site_oficial"=>$icone_site_oficial,
+            "icone_boleto"=>$icone_boleto,
+            "icone_marcar_consulta" => $icone_marcar_consulta,
+            "icone_rede_atendimento" => $icone_rede_atendimento,
+            "icone_clinica" => $icone_clinica,
+            "icone_hospital" => $icone_hospital,
+            "icone_lupa" => $icone_lupa,
+            "icone_endereco" => $icone_endereco,
+            "icone_zap_footer" => $icone_zap_footer,
+            "logo" => $logo
         ]);
-        return $pdf->download('lista-de-tarefa.pdf');
+
+        
+        $nome_pdf = Str::slug(Cliente::where("id",$cliente)->first()->nome, '-')."-".date('d')."-".date('m')."-".date('Y')."-".substr(time(),0,5).".pdf";
+        
+        // $pdf->setPaper('A4', 'portrait');
+        //$customPaper = array(0,0,446,632);
+        //$pdf->setPaper($customPaper);
+        //$pdf->set('isRemoteEnabled', TRUE);
+        //$pdf->set_base_path("caminho/pasta-com-bootstrap");
+            //$pdf = PDF::load_html('admin.pages.orcamento.modelo');
+        return $pdf->download($nome_pdf);
     }
 
     public function montarPlano(Request $request)
     {
-          
         if(empty($request->nome) || empty($request->telefone) || empty($request->email) || empty($request->cidade)) {
             return "error";
         }
-
         if(!preg_match('/^\([1-9]{2}\) [0-9]{1} [0-9]{4}-[0-9]{4}$/',$request->telefone)) {
             return "error";
         }
-
         if(!filter_var($request->email,FILTER_VALIDATE_EMAIL)) {
             return "error";
         }
-
         if(empty($request->faixas[0][1]) && empty($request->faixas[0][2]) && empty($request->faixas[0][3]) && empty($request->faixas[0][4]) && empty($request->faixas[0][5]) && empty($request->faixas[0][6]) && empty($request->faixas[0][7]) && empty($request->faixas[0][8]) && empty($request->faixas[0][9]) && empty($request->faixas[0][10])) {
             return "error";
         }     
-
         if($request->modelo == "pf") {
             $where_planos_pegar = ' AND (plano_id = (SELECT id FROM planos WHERE NOME LIKE "%Coletivo Por Adesão%") OR plano_id = (SELECT id FROM planos WHERE NOME LIKE "%Individual%"))';
         } else {
             $where_planos_pegar = ' AND (plano_id = (SELECT id FROM planos WHERE nome LIKE "%PME Boletado%") OR plano_id = (SELECT id FROM planos WHERE NOME LIKE "%Super Simples%"))';
         }
-        
         $verificarPlano = Tabela::where(function($query) use($request){
-            $query->where("cidade_id",$request->cidade);
-           
+            $query->where("cidade_id",$request->cidade);   
         })->get();        
         if(count($verificarPlano) >= 1) {           
             $cliente = Cliente::find($request->cliente_id);
             $cliente->etiqueta_id = 2;
             $cliente->ultimo_contato = date("Y-m-d");
-            $cliente->save();
-
-            
+            $cliente->save();          
             $cot = Cotacao::where('cliente_id',$request->cliente_id)->first();
             /** Cliente Ja Possui Cotacao??? */    
-           
             if(!$cot) {
                 $cotacao = new Cotacao();
                 $cotacao->cliente_id = $request->cliente_id;
                 $cotacao->cidade_id = $request->cidade;
                 $cotacao->user_id = auth()->user()->id;
                 $cotacao->corretora_id = auth()->user()->corretora_id;
-               
                 $cotacao->save();
                 $faixas = $request->faixas[0];
                 foreach($faixas as $k => $v) {
@@ -151,7 +183,6 @@ class CotacaoController extends Controller
                 }
                 $cot = $cotacao;
             } else {
-                
                 $cot->update($request->all());
                 CotacaoFaixaEtaria::where("cotacao_id",$cot->id)->delete();
                 $faixas = $request->faixas[0];
@@ -164,65 +195,44 @@ class CotacaoController extends Controller
                         $orcamentoFaixaEtaria->save();
                     } 
                 }
-                
             }
-            
-            $planos = DB::table('tabelas')
-                ->join("cotacao_faixa_etarias",'tabelas.faixa_etaria', '=', 'cotacao_faixa_etarias.faixa_etaria_id')
-                ->selectRaw("tabelas.id")
-                ->selectRaw("tabelas.modelo")
-                ->selectRaw("tabelas.plano_id")
-                ->selectRaw("tabelas.valor")
-                ->selectRaw("tabelas.operadora_id")
-                ->selectRaw("tabelas.administradora_id")
-                ->selectRaw("tabelas.cidade_id")
-                ->selectRaw("tabelas.coparticipacao")
-                ->selectRaw("tabelas.odonto")
-                ->selectRaw("cotacao_faixa_etarias.quantidade")
-                ->selectRaw("(tabelas.valor * cotacao_faixa_etarias.quantidade) AS Total")
-                ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = tabelas.faixa_etaria) AS faixas")
-                ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS admin_nome")
-                ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS admin_logo")
-                ->selectRaw("if(coparticipacao,'Com Copartipacao','Sem Coparticipacao') AS copartipicao_texto")
-                ->selectRaw("(SELECT nome FROM planos WHERE tabelas.plano_id = planos.id) plano")
-                ->selectRaw("if(odonto,'Com Odonto','Sem Odonto') AS odonto_texto")
-                ->selectRaw("case 
-                    when coparticipacao = 1 AND odonto = 1 AND plano_id = (SELECT id FROM planos WHERE planos.id = tabelas.plano_id) AND administradora_id = (SELECT id FROM administradoras WHERE administradoras.id = tabelas.administradora_id)
-                        then CONCAT('Card_Coparticipaca_Odonto_',(SELECT nome FROM planos WHERE planos.id = tabelas.plano_id),'_',(SELECT nome FROM administradoras WHERE administradoras.id = tabelas.administradora_id))
-                    
-                    when coparticipacao = 1 AND odonto = 0 AND plano_id = (SELECT id FROM planos WHERE planos.id = tabelas.plano_id) AND administradora_id = (SELECT id FROM administradoras WHERE administradoras.id = tabelas.administradora_id)
-                    then CONCAT('Card_Coparticipaca_Sem_Odonto_',(SELECT nome FROM planos WHERE planos.id = tabelas.plano_id),'_',(SELECT nome FROM administradoras WHERE administradoras.id = tabelas.administradora_id))
-                    		
-                
-                    when coparticipacao = 0 AND odonto = 0 AND plano_id = (SELECT id FROM planos WHERE planos.id = tabelas.plano_id) AND administradora_id = (SELECT id FROM administradoras WHERE administradoras.id = tabelas.administradora_id)
-                        then CONCAT('Card_Sem_Coparticipaca_Sem_Odonto_',(SELECT nome FROM planos WHERE planos.id = tabelas.plano_id),'_',(SELECT nome FROM administradoras WHERE administradoras.id = tabelas.administradora_id))
-                    	
-                    
-                    when coparticipacao = 0 AND odonto = 1 AND plano_id = (SELECT id FROM planos WHERE planos.id = tabelas.plano_id) AND administradora_id = (SELECT id FROM administradoras WHERE administradoras.id = tabelas.administradora_id)
-                    then CONCAT('Card_Sem_Coparticipaca_Com_Odonto_',(SELECT nome FROM planos WHERE planos.id = tabelas.plano_id),'_',(SELECT nome FROM administradoras WHERE administradoras.id = tabelas.administradora_id))
-                                       	
-                END AS card")
-                ->whereRaw("cidade_id = ".$request->cidade." AND cotacao_faixa_etarias.cotacao_id = ".$cot->id.$where_planos_pegar)
-                ->orderBy("tabelas.id")
-                ->get();
-          
-                       
-            $faixas = CotacaoFaixaEtaria::where("cotacao_id","=",$cot->id)
-                ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = cotacao_faixa_etarias.faixa_etaria_id) AS faixa_nome")  
-                ->get();
+           
+    $planos = DB::table('cotacao_faixa_etarias as cfe')
+        ->selectRaw("CONCAT('card_',ta.odonto,'_',ta.coparticipacao,'_',ta.administradora_id) AS card,cfe.cotacao_id,fe.id,cfe.quantidade,fe.nome,fe.id,ta.odonto,ta.coparticipacao,ta.administradora_id,ta.faixa_etaria,ta.plano_id")
+        ->selectRaw("(SELECT nome FROM planos WHERE ta.plano_id = planos.id) AS plano")
+        ->selectRaw("(CONCAT('tabela_',ta.odonto,'_',ta.coparticipacao,'_',(SELECT nome FROM administradoras WHERE administradoras.id = ta.administradora_id))) AS mesma_tabela")
+        ->selectRaw("(CONCAT(if(odonto,'Com Odonto','Sem Odonto'))) AS titulos")
+        ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = ta.administradora_id) AS admin_id")
+        ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = ta.administradora_id) AS admin_nome")
+        ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = ta.administradora_id) AS admin_logo")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cot->id.") FROM tabelas as tad WHERE (tad.modelo = 'Apartamento' OR ta.modelo = 'Apartamento') AND tad.coparticipacao = 1 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS apartamento_coparticipacao")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cot->id.") FROM tabelas as tad WHERE (tad.modelo = 'Enfermaria' OR ta.modelo = 'Enfermaria') AND tad.coparticipacao = 1 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS enfermaria_coparticipacao")  
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cot->id.") FROM tabelas as tad WHERE (tad.modelo = 'Ambulatorial' OR ta.modelo = 'Ambulatorial') AND tad.coparticipacao = 1 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS ambulatorial_coparticipacao")            
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cot->id.") FROM tabelas as tad WHERE (tad.modelo = 'Apartamento' OR ta.modelo = 'Apartamento') AND tad.coparticipacao = 0 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS apartamento_sem_coparticipacao")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cot->id.") FROM tabelas as tad WHERE (tad.modelo = 'Enfermaria'  OR ta.modelo = 'Enfermaria') AND tad.coparticipacao = 0 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.cidade_id AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS enfermaria_sem_coparticipacao")
+        ->selectRaw("(SELECT valor * (SELECT quantidade FROM cotacao_faixa_etarias as cfed WHERE cfed.faixa_etaria_id = tad.faixa_etaria AND cfed.cotacao_id = ".$cot->id.") FROM tabelas as tad WHERE (tad.modelo = 'Ambulatorial' OR ta.modelo = 'Ambulatorial') AND tad.coparticipacao = 0 AND tad.odonto = ta.odonto AND tad.faixa_etaria = ta.faixa_etaria AND tad.cidade_id = ta.faixa_etaria AND tad.administradora_id = ta.administradora_id GROUP BY ta.faixa_etaria) AS ambulatorial_sem_coparticipacao")
+        ->join("faixas_etarias as fe",'cfe.faixa_etaria_id', '=', 'fe.id')  
+        ->join("tabelas as ta","ta.faixa_etaria","=","cfe.faixa_etaria_id")
+        ->whereRaw("cotacao_id = ".$cot->id." AND ta.cidade_id = ".$cot->cidade_id)
+        ->groupByRaw("ta.administradora_id,ta.faixa_etaria,ta.odonto")
+        ->orderByRaw("ta.administradora_id,card,fe.nome")    
+        ->get();        
                
-                              
-            return view('admin.pages.cotacao.mostarPlano',[
-                'planos' => $planos,
-                'orcamento' => $cot->id,
-                'faixas' => $faixas->toArray(),
-                'fisica' => $request->modelo == "pf" ? 1 : 0,
-                'juridica' => $request->modelo == "pj" ? 1 : 0,
-                'telefone' =>  str_replace(["-","(",")"," "],"",  $request->telefone),
-                'cidade' => $request->cidade,
-                'cliente' => $cliente->id
-                    
-            ]); 
+        $faixas = CotacaoFaixaEtaria::where("cotacao_id","=",$cot->id)
+            ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = cotacao_faixa_etarias.faixa_etaria_id) AS faixa_nome")  
+            ->get();   
+        return view('admin.pages.cotacao.mostarPlano',[
+            'planos' => $planos,
+            'orcamento' => $cot->id,
+            'faixas' => $faixas->toArray(),
+            'fisica' => $request->modelo == "pf" ? 1 : 0,
+            'juridica' => $request->modelo == "pj" ? 1 : 0,
+            'telefone' =>  str_replace(["-","(",")"," "],"",  $request->telefone),
+            'cidade' => $request->cidade,
+            'cliente' => $cliente->id,
+            
+            'card_inicial' => $planos[0]->card      
+        ]); 
 
         } else {
             $planos = [];
@@ -237,9 +247,7 @@ class CotacaoController extends Controller
     {
        
         $comissoes = ComissoesCorretorLancados::where("comissao_id",$id)->get();
-        
         $premiacao = PremiacaoCorretoresLancados::where("comissao_id",$id)->first();
-       
         return view('admin.pages.contrato.detalhes',[
             "comissoes" => $comissoes,
             "premiacao" => $premiacao
@@ -286,7 +294,6 @@ class CotacaoController extends Controller
 
     public function montarValoresFormularioAcomodacao(Request $request)
     {
-        
         $cot = Cotacao::where('cliente_id',$request->cliente_id)->first();
         /** Cliente Ja Possui Cotacao??? */    
         if(!$cot) {
@@ -294,8 +301,7 @@ class CotacaoController extends Controller
             $cotacao->cliente_id = $request->cliente_id;
             $cotacao->cidade_id = $request->cidade;
             $cotacao->user_id = auth()->user()->id;
-            $cotacao->corretora_id = auth()->user()->corretora_id;
-           
+            $cotacao->corretora_id = auth()->user()->corretora_id;   
             $cotacao->save();
             $faixas = $request->faixas;
             foreach($faixas as $k => $v) {
@@ -307,21 +313,7 @@ class CotacaoController extends Controller
                     $orcamentoFaixaEtaria->save();
                 } 
             }
-            
             $cot = $cotacao;
-            
-            // $valores = DB::table("tabelas")
-            // ->selectRaw("SUM((valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria LIMIT 1))) AS total")
-            // ->selectRaw("(SELECT id FROM acomodacao WHERE tabelas.modelo LIKE acomodacao.nome) AS id_acomodacao")
-            // ->selectRaw("modelo")
-            // ->selectRaw("(SELECT nome FROM planos WHERE tabelas.plano_id = planos.id) AS plano")
-            // ->selectRaw("if(coparticipacao = 0,'Sem Coparticipacao','Com Coparticipacao') AS coparticipacao")
-            // ->selectRaw("if(odonto = 0,'Sem Odonto','Com Odonto') AS odonto")
-            // ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS operadora")
-            // ->whereRaw("cidade_id = ".$request->cidade." AND operadora_id = ".$request->operadora." AND administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND plano_id = ".$request->plano." AND faixa_etaria IN(".implode(",",$chaves).")")
-            // ->groupBy("modelo")
-            // ->toSql();
-
             $valores = DB::table("cotacao_faixa_etarias")
             ->join("tabelas","tabelas.faixa_etaria","=","cotacao_faixa_etarias.faixa_etaria_id")
             ->selectRaw("sum(valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_id = ".$cot->id." AND cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria)) AS total")
@@ -334,16 +326,7 @@ class CotacaoController extends Controller
             ->whereRaw("tabelas.cidade_id = ".$request->cidade." AND tabelas.operadora_id = ".$request->operadora." AND tabelas.administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND tabelas.plano_id = ".$request->plano." AND cotacao_faixa_etarias.cotacao_id = ".$cot->id)
             ->groupBy('modelo')
             ->get();
-            
-
-
-
-
-
-            
-            
         } else {
-            
             $cot->update($request->all());
             CotacaoFaixaEtaria::where("cotacao_id",$cot->id)->delete();
             $faixas = $request->faixas;
@@ -357,23 +340,9 @@ class CotacaoController extends Controller
                     $chaves[] = $k;
                 } 
             }
-            
-            // $valores = DB::table("tabelas")
-            // ->selectRaw("SUM((valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria LIMIT 1))) AS total")
-            // ->selectRaw("(SELECT id FROM acomodacao WHERE tabelas.modelo LIKE acomodacao.nome) AS id_acomodacao")
-            // ->selectRaw("modelo")
-            // ->selectRaw("(SELECT nome FROM planos WHERE tabelas.plano_id = planos.id) AS plano")
-            // ->selectRaw("if(coparticipacao = 0,'Sem Coparticipacao','Com Coparticipacao') AS coparticipacao")
-            // ->selectRaw("if(odonto = 0,'Sem Odonto','Com Odonto') AS odonto")
-            // ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS operadora")
-            // ->whereRaw("cidade_id = ".$request->cidade." AND operadora_id = ".$request->operadora." AND administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND plano_id = ".$request->plano." AND faixa_etaria IN(".implode(",",$chaves).")")
-            
-            // ->groupBy("modelo")
-            // ->get();
-
             $valores = DB::table("cotacao_faixa_etarias")
             ->join("tabelas","tabelas.faixa_etaria","=","cotacao_faixa_etarias.faixa_etaria_id")
-            ->selectRaw("sum(valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_id = 2 AND cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria)) AS total")
+            ->selectRaw("sum(valor * (SELECT quantidade FROM cotacao_faixa_etarias WHERE cotacao_id = ".$cot->id." AND cotacao_faixa_etarias.faixa_etaria_id = tabelas.faixa_etaria)) AS total")
             ->selectRaw("(SELECT id FROM acomodacao WHERE tabelas.modelo LIKE acomodacao.nome) AS id_acomodacao")
             ->selectRaw("modelo")
             ->selectRaw("(SELECT nome FROM planos WHERE tabelas.plano_id = planos.id) AS plano")
@@ -381,22 +350,32 @@ class CotacaoController extends Controller
             ->selectRaw("if(odonto = 0,'Sem Odonto','Com Odonto') AS odonto")
             ->selectRaw("(SELECT logo FROM administradoras WHERE administradoras.id = tabelas.administradora_id) AS operadora")
             ->whereRaw("tabelas.cidade_id = ".$request->cidade." AND tabelas.operadora_id = ".$request->operadora." AND tabelas.administradora_id = ".$request->administradora." AND odonto = ".($request->odonto == "sim" ? 1 : 0)." AND coparticipacao = ".($request->coparticipacao == "sim" ? 1 : 0)." AND tabelas.plano_id = ".$request->plano." AND cotacao_faixa_etarias.cotacao_id = ".$cot->id)
+            ->groupBy('modelo')
             ->get();
-            
+          
         }
+        $faixas_etarias = DB::table("cotacao_faixa_etarias")
+            ->join("tabelas","tabelas.faixa_etaria","=","cotacao_faixa_etarias.faixa_etaria_id")
+            ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = cotacao_faixa_etarias.faixa_etaria_id) AS faixas")
+            ->selectRaw("quantidade,valor,modelo")
+            ->selectRaw("(cotacao_faixa_etarias.quantidade * tabelas.valor) AS total")
+            ->whereRaw("cotacao_id = ? AND administradora_id = ? AND cidade_id = ? AND odonto = ? AND coparticipacao = ? AND plano_id = ?",[$cot->id,$request->administradora,$request->cidade,($request->odonto == "sim" ? 1 : 0),($request->coparticipacao == "sim" ? 1 : 0),$request->plano])
+            ->get();
         
-        $orcamentoFaixaEtaria = CotacaoFaixaEtaria::where("cotacao_id",$cot->id)->delete();
-        $cot->delete();
-           
-            
-           
+        //$orcamentoFaixaEtaria = CotacaoFaixaEtaria::where("cotacao_id",$cot->id)->delete();
+        //$cot->delete();
         return view("admin.pages.cotacao.acomodacao",[
-            "valores" => $valores
+            "valores" => $valores,
+            "data_boleto" => $request->data_boleto,
+            "data_vigencia" => $request->data_vigencia,
+            "faixas" => $faixas_etarias
         ]);
-
     }
 
-
+    public function detalhesDoContratoComissoesAdministrador($id_comissao)
+    {
+        // $comissao = Comissao::where()->get();
+    }
     
 
 
@@ -489,7 +468,11 @@ class CotacaoController extends Controller
 
 
         /** Comissao Corretor */
-        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes::where("plano_id",$request->plano)->where("administradora_id",$request->administradora)->where("user_id",auth()->user()->id)->get();
+        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes::where("plano_id",$request->plano)
+            ->where("administradora_id",$request->administradora)
+            ->where("user_id",auth()->user()->id)
+            ->where("cidade_id",$request->cidade)
+            ->get();
         $comissao_corretor_contagem = 0;
         if(count($comissoes_configuradas_corretor) >= 1) {
             foreach($comissoes_configuradas_corretor as $c) {

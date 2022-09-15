@@ -12,6 +12,14 @@
     <li class="breadcrumb-item">Cadastrar</li>
 </ol>
 <div class="card">
+        @if($errors->any())
+            <div class="ocultos"> 
+                @foreach(old('parcelas') as $k => $v)
+                    <input type="hidden" id="parcelas" name="parcelas" class="parcelas" placeholder="%" value="{{$v}}" />
+                @endforeach
+            </div>
+        @endif 
+
         <div class="card-header">
             <strong>*</strong> <small>Campo Obrigatorio</small>             
         </div>
@@ -37,7 +45,7 @@
             </div>
 
             <div class="form-group">
-                <label for="premiacao_corretora">Premiação Corretora: *</label>
+                <label for="premiacao_corretora">Premiação Corretora:</label>
                 <input type="text" class="form-control" id="premiacao_corretora" value="{{old('premiacao_corretora')}}" name="premiacao_corretora" placeholder="Premiação Corretora">
                 @if($errors->has('premiacao_corretora'))
                     <p class="alert alert-danger">{{$errors->first('premiacao_corretora')}}</p>
@@ -45,23 +53,20 @@
             </div>
 
             <div class="form-group">
-                <label for="comissao">Comissão Corretora:<small>(%) *</small></label>
-                
+                <label for="comissao">Comissão Corretora:<small>(%) *</small></label> 
             </div>
-
-
-            @if($errors->has('parcelas.*.parcelas'))
-                <p class="alert alert-danger">{{$errors->first('parcelas.*.parcelas')}}</p>
+           
+            <div class="campos">
+                <div class="campo_repetir">
+                    <label>Parcela 1:</label> 
+                    <input type="text" id="parcelas" name="parcelas[]" placeholder="%" />
+                    <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            @if($errors->has('parcelas.*'))
+                <p class="alert alert-danger">{{$errors->first('parcelas.*')}}</p>
             @endif
-            <div data-repeater-list="parcelas">               
-                <div data-repeater-item>
-                    <input type="text" id="parcelas" name="parcelas" placeholder="%" />
-                    <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
-                </div> 
-            </div>
-            <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
-            
-   
+            <button type="button" class="btn btn-primary btn-sm acrescentar"><i class="fas fa-plus"></i></button>
             <button class="btn btn-primary btn-block mt-5" type="submit">Cadastrar Administradora</button>
            </form>
 
@@ -69,8 +74,7 @@
 
 @section('js')
     <script src="{{ asset('js/jquery.mask.min.js') }}"></script>
-    <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
-    <script src="{{ asset('js/form-repeater-create.js') }}"></script>
+    
     <script>
         $(function(){
             $('#premiacao_corretora').mask("#.##0,00", {reverse: true});
@@ -82,6 +86,34 @@
                     $('#area_vitalicio').html('');
                 }
             });
+            var add = 1;
+            $('.acrescentar').on('click',function(){
+                add++;
+                $(".campos").append('<div class="campo_repetir"><label>Parcela '+add+': </label> <input type="text" id="parcelas" name="parcelas[]" placeholder="%" /> <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo"><i class="fas fa-minus"></i></button></div>')   
+            });
+            $("body").on('click','.deletar_campo',function(){
+                add--;
+                let removido = $($(this).closest('.campo_repetir').find('label')).text().replace("Parcela ","").replace(":","");
+                $(this).closest('.campo_repetir').remove();
+                $.each($('.campo_repetir').find('label'),function(i,e){
+                    if($(e).text().replace("Parcela ","").replace(":","") > removido) {
+                        let calculado = $(e).text().replace("Parcela ","").replace(":","") - 1;
+                        $(e).html("Parcela "+calculado+": ");
+                        
+                    }
+                });
+            });
+
+            if($(".ocultos").length > 0) {
+                $('.campos').html("");
+                $.each($($(".ocultos").find(".parcelas")),function(k,v){
+                    let dados = $(v).val();
+                    add = `${k+1}`;
+                    $(".campos").append('<div class="campo_repetir"><label>Parcela '+`${add}`+': </label> <input type="text" id="parcelas" name="parcelas[]" placeholder="%" value='+dados+'> <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo"><i class="fas fa-minus"></i></button></div>')   
+                });
+            }
+
+
         });    
         
     

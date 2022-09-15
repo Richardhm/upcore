@@ -46,7 +46,7 @@ return [
     */
 
     'logo' => 'Accert',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => 'vendor/adminlte/dist/img/connectlife.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -127,8 +127,8 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
+    'classes_sidebar' => 'sidebar-dark-orange elevation-4',
+    'classes_sidebar_nav' => 'sidebar-dark-primary',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
@@ -273,6 +273,14 @@ return [
 
         ],
         [
+            "text" => "Tarefas",
+            "url" => "admin/tarefas",
+            "icon" => "fas fa-tasks",
+            "can" => "tarefas",
+            'active' => ['comissoes',"http://localhost:8000/admin/tarefas/*"]
+
+        ],
+        [
             'text'    => 'Configurações',
             'icon'    => 'fas fa-cog',
             'can'     => 'configuracoes',
@@ -302,7 +310,14 @@ return [
                     'can'  => 'configuracoes',
                     'active' => ['administradora',"http://localhost:8000/admin/administradora/*"]
                 ],
-                
+                [
+                    "text" => "Cidades",
+                    "url" => "admin/cidades",
+                    "icon" => "fas fa-city",
+                    'can'  => 'configuracoes',
+                    "active" => ['cidades',"http://localhost:8000/admin/cidades/*"]
+
+                ],
                 [
                     'text' => 'Colaborador',
                     'url'  => 'admin/corretores',
@@ -319,15 +334,6 @@ return [
                     "active" => ['planos',"http://localhost:8000/admin/planos/*"]
 
                 ],
-                [
-                    "text" => "Cidades",
-                    "url" => "admin/cidades",
-                    "icon" => "fas fa-city",
-                    'can'  => 'configuracoes',
-                    "active" => ['cidades',"http://localhost:8000/admin/cidades/*"]
-
-                ],
-                
                 [
                     'text' => 'Tabela de Preços',
                     'url'  => 'admin/tabela',

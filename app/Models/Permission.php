@@ -1,20 +1,19 @@
 <?php
+    namespace App\Models;
 
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Permission extends Model
-{
-    use HasFactory;
-
-    protected $table = "permissions";
-    protected $fillable = ["name","description"];
-
-    public function permissions()
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
+    
+    class Permission extends Model
     {
-        return $this->hasMany(PermissionUser::class);
+        use HasFactory;
+    
+        protected $table = "permissions";
+        protected $fillable = ["name","description"];
+    
+        public function permissions()
+        {
+            return $this->hasMany(PermissionUser::class);
+        }
+    
     }
-
-}

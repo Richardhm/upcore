@@ -1,5 +1,6 @@
 @extends('adminlte::page')
 @section('title', 'Contrato')
+@section('plugins.Datatables', true)
 @section('content_header')
     <h3>Contrato</h3>
 @stop
@@ -14,53 +15,119 @@
     @endif    
     <div class="card-body">
 
-        @if(count($contratos) >= 1)
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Cod. Externo</th>
-                        <th>Cliente</th>
-                        <th>Administradora</th>
-                        <th>Acomodação</th>
-                        <th>Cidade</th>
-                        <th>Valor</th>
-                        @if($comissoes_corretores_configuracoes != 0)
-                        <th>Detalhes</th>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($contratos as $c)
+        @can('configuracoes')
+            <table class="table listarcontratosadministrador">
+                    <thead>
                         <tr>
-                            <td>{{date('d/m/Y',strtotime($c->created_at))}}</td>
-                            <td>{{$c->cotacao->codigo_externo}}</td>
-                            <td>{{$c->nome}}</td>
-                            <td>{{$c->cotacao->administradora->nome}}</td>
-                            <td>{{$c->cotacao->acomodacao->nome}}</td>
-                            <td>{{$c->cidade->nome}}</td>
-                            <td>{{number_format($c->cotacao->valor,2,",",".")}}</td>
-                            @if($comissoes_corretores_configuracoes != 0)
-                            <td><a href="{{route('cotacao.comissao.detalhes',$c->comissoes->id)}}">Detalhes</a></td>
-                            @endif
+                            <th>Data</th>
+                            <th>Cod. Externo</th>
+                            <th>Cliente</th>
+                            <th>Administradora</th>
+                            <th>Acomodação</th>
+                            <th>Cidade</th>
+                            <th>Valor</th>
+                            <th>Detalhes</th>
                         </tr>
-                        
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody></tbody>
+                </table>
         @else
-            <h4 class="text-center">Sem Contratos a serem listados</h4>
-        @endif
-
-
-
-
+                <table class="table listarcontratos">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cod. Externo</th>
+                            <th>Cliente</th>
+                            <th>Administradora</th>
+                            <th>Acomodação</th>
+                            <th>Cidade</th>
+                            <th>Valor</th>            
+                            <th>Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>   
+        @endcan
     </div>
 </div>    
 
 @stop   
 @section('js')
+    <script>
 
+        $(".listarcontratos").DataTable({
+            "language": {
+                "url": "{{asset('traducao/pt-BR.json')}}"
+            },
+            ajax: {
+                "url":"{{ route('contratos.index.listagem') }}",
+                "dataSrc": ""
+            },
+            "lengthMenu": [15,30,45],
+            "ordering": true,
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            columns: [
+                {data:"created_at",name:"created_at",render:function(data, type, row, meta) {
+                    return data.split("T")[0].split("-").reverse().join("/");
+                }},
+                {data:"cotacao.codigo_externo",name:"codigo"},
+                {data:"nome",name:"cliente"},
+                {data:"cotacao.administradora.nome",name:"administradora"},
+                {data:"cotacao.acomodacao.nome",name:"acomodacao"},
+                {data:"cidade.nome",name:"acomodacao"},
+                {data:"cotacao.valor",name:"valor"},
+                {data:"comissoes.id",name:"id"},
+            ],
+            "columnDefs": [{
+                    "targets": 7,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).html("<a href='/admin/cotacao/contrato/comissao/"+cellData+"'><i class='fas fa-eye'></i></a>")
+                    }
+                },
+            ]
+        });
+
+        $(".listarcontratosadministrador").DataTable({
+            "language": {
+                "url": "{{asset('traducao/pt-BR.json')}}"
+            },
+            ajax: {
+                "url":"{{ route('contratos.index.listagem') }}",
+                "dataSrc": ""
+            },
+            "lengthMenu": [15,30,45],
+            "ordering": true,
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            columns: [
+                {data:"created_at",name:"created_at",render:function(data, type, row, meta) {
+                    return data.split("T")[0].split("-").reverse().join("/");
+                }},
+                {data:"cotacao.codigo_externo",name:"codigo"},
+                {data:"nome",name:"cliente"},
+                {data:"cotacao.administradora.nome",name:"administradora"},
+                {data:"cotacao.acomodacao.nome",name:"acomodacao"},
+                {data:"cidade.nome",name:"acomodacao"},
+                {data:"cotacao.valor",name:"valor"},
+                {data:"comissoes.id",name:"id"},
+            ],
+            "columnDefs": [{
+                    "targets": 7,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).html("<a href='/admin/cotacao/contrato/comissao/administrador/"+cellData+"'><i class='fas fa-eye'></i></a>")
+                    }
+                },
+            ]
+                
+        });
+    </script>
     
 @stop
 

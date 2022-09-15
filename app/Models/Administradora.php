@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Administradora extends Model
 {
     use HasFactory;
+    protected $table = "administradoras";
     protected $fillable = ["nome","logo","vitalicio","premiacao_corretora"];
 
     public function parcelas()

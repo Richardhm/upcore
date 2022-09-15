@@ -220,7 +220,6 @@
                                     $('#cidade_search').       
                                     append("<option value='"+value.id+"' "+(value.id == selectedCity ? 'selected' : '')+" >"+value.nome+"</option>")     
                                 });
-                               
                             } else {
                                 $("#cidade_search").html("");
                                 $("#cidade_search").append('<option value="">--Esta administradora não possui cidades cadastradas--</option>');

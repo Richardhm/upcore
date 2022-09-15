@@ -5,6 +5,20 @@
 <!-- Site wrapper -->
     <h4>Tarefa(s) Atrasadas</h4>
     <div class="wrapper">
+    @can('configuracoes')
+        <table class="table tarefasatrasadasclienteadministrador">
+            <thead>
+                <tr>
+                    <th>Corretor</th>
+                    <th>Tarefa</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    @else
         <table class="table tarefasatrasadascliente">
             <thead>
                 <tr>
@@ -16,6 +30,8 @@
             </thead>
             <tbody></tbody>
         </table>
+    @endcan
+        
     </div>    
 <script>
     $(function(){
@@ -27,7 +43,7 @@
                     "url":"{{ route('cliente.getTarefasAtrasadasAjax') }}",
                     "dataSrc": ""
                 },
-                "lengthMenu": [8,15,30],
+                "lengthMenu": [15,30,45,90],
                 "ordering": true,
                 "paging": true,
                 "searching": true,
@@ -36,6 +52,7 @@
                 "responsive": true,
                 //order: [[3, "asc"]],
                 columns: [
+                   
                     {data:"title",name:"tarefa"},
                     {data:"cliente",name:"cliente"},
                     {data:"criacao",name:"data"},
@@ -50,5 +67,39 @@
                 ]
                 
             });
+
+            $(".tarefasatrasadasclienteadministrador").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('cliente.getTarefasAtrasadasAjax') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [15,30,45,90],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                //order: [[3, "asc"]],
+                columns: [
+                    {data:"corretor",name:"corretor"},
+                    {data:"title",name:"tarefa"},
+                    {data:"cliente",name:"cliente"},
+                    {data:"criacao",name:"data"},
+                    
+                ]
+                
+            });
+
+
+
+
+
+
+
+
     });    
 </script>

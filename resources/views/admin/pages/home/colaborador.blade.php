@@ -106,67 +106,67 @@
 </div>
 
 
-<section class="container-fluid mb-3">
+<section class="container-fluid mt-3">
     <div class="d-flex">            
         
-        
-            <div class="small-box bg-info flex-fill mr-2">
-                <div class="d-flex justify-content-between border-bottom">
-                    <h3>8</h3>
-                    <p class="align-self-center">R$ 1000,00</p>                        
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3 class="ml-2">{{$aguardando_boleto_coletivo}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_boleto_coletivo_total,2,",",".")}}</p>                        
                 </div>
-                <h6 class="text-center border-bottom">Aguardando Boleto Coletivo</h6>
-                <div class="d-flex justify-content-end">
-                    Vidas 9
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoBoletoColetivo',auth()->user()->id)}}" class="text-dark">Aguardando Boleto Coletivo</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas ?? 0}}</b>
                 </div>
             </div>
              
-            <div class="small-box bg-info flex-fill mr-2">
-                <div class="d-flex justify-content-between border-bottom">
-                    <h3>8</h3>
-                    <p class="align-self-center">R$ 1000,00</p>                        
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3 class="ml-2">{{$aguardando_pagamento_adesao_coletivo}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_boleto_coletivo_total,2,",",".")}}</p>                        
                 </div>
-                <h6 class="text-center border-bottom">Aguardando Pag. Adesão Coletivo</h6>
-                <div class="d-flex justify-content-end">
-                    Vidas 9
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoPagAdesaoColetivo',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Adesão Coletivo</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_pagamento_boleto_coletivo_vidas ?? 0}}</b>
                 </div>
             </div>
 
-            <div class="small-box bg-info flex-fill mr-2">
-                <div class="d-flex justify-content-between border-bottom">
-                    <h3>8</h3>
-                    <p class="align-self-center">R$ 1000,00</p>                        
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3>{{$aguardando_individual_qtd}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_individual_total,2,",",".")}}</p>                        
                 </div>
-                <h6 class="text-center border-bottom">Aguardando Pag. Plano individual</h6>
-                <div class="d-flex justify-content-end">
-                    Vidas 12
-                </div>
-            </div>    
-
-            <div class="small-box bg-info flex-fill mr-2">
-                <div class="d-flex justify-content-between border-bottom">
-                    <h3>8</h3>
-                    <p class="align-self-center">R$ 1000,00</p>                        
-                </div>
-                <h6 class="text-center border-bottom">Aguardando Pag. Vigencia</h6>
-                <div class="d-flex justify-content-end">
-                    Vidas 12
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.colaboradorPlanoindividual',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Plano individual</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_individual_vidas ?? 0}}</b>
                 </div>
             </div>    
 
-            <div class="small-box bg-info flex-fill mr-2">
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
                 <div class="d-flex justify-content-between border-bottom">
-                    <h3>8</h3>
-                    <p class="align-self-center">R$ 1000,00</p>                        
+                    <h3>{{$aguardando_pagamento_vigencia}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_vigencia_total,2,",",".")}}</p>                        
+                </div>  
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoPagVigencia',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Vigencia</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_pagamento_vigencia_vidas ?? 0}}</b>
                 </div>
-                <h6 class="text-center border-bottom">Aguardando Pag. Empresarial</h6>
-                <div class="d-flex justify-content-end">
-                    Vidas 10
+            </div>    
+
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3>000</h3>
+                    <p class="align-self-center mr-2">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Empresarial</h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>10</b>
                 </div>
             </div>    
 
     </div>    
 </section>
+
     <div class="container-fluid">
         <div class="d-flex">
                 <div class="small-box bg-warning flex-fill mr-1">
@@ -181,8 +181,6 @@
                     <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             
-
-            
                 <div class="small-box bg-success flex-fill mr-1">
                     <div class="inner">
                         <h3>{{$totalClientesNegociados ?? 0}}</h3>
@@ -194,9 +192,7 @@
                     </div>
                     <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            
-
-            
+                        
                 <div class="small-box bg-info flex-fill mr-1">
                     <div class="inner">
                         <h3>{{$totalClientesNegociacao ?? 0}}</h3>
@@ -208,22 +204,18 @@
                     </div>
                     <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            
-
-            
+                        
                 <div class="small-box bg-orange flex-fill mr-1">
                     <div class="inner">
                         <h3>{{$clientesCadastradosEsseMes}}</h3>
                         <p>Cadastrado no mês</p>
-                        <p>Vidas 11</p>
+                        <p>Vidas: {{$clientesCadastradosEsseMesVidas}}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
                     <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            
-
             
                 <div class="small-box bg-danger flex-fill">
                     <div class="inner">
@@ -236,16 +228,12 @@
                     </div>
                     <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            
-            
-
-
 
         </div>
     </div>
 
     <div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center mb-3">
-        <h3 class="align-self-center">Referente ao mês de Julho/2022</h3>
+        <h3 class="align-self-center">Referente ao mês de Agosto/2022</h3>
     </div>
  
 
@@ -261,24 +249,24 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">20</span>
+                        <span class="info-box-number">{{$totalVidasVendidas}}</span>
                         <span class="">Vidas</span>
-                        <span>R$ 5.000,00</span>
+                        <span>R$ {{number_format($totalVendido,2,",",".") ?? 0}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">6</span>
+                        <span class="info-box-number">{{$totalVidasVendidasIndividual}}</span>
                         <span>Individual</span>
-                        <span>R$ 1000,00</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoIndividual,2,",",".") ?? 0}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">14</span>
+                        <span class="info-box-number">{{$totalVidasVendidasColetivo}}</span>
                         <span>Coletivo</span>
-                        <span>R$ 4000,00</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoColetivo,2,",",".") ?? 0}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">14</span>
+                        <span class="info-box-number">0</span>
                         <span>Empresarial</span>
-                        <span>R$ 4000,00</span>
+                        <span>R$ 0,00</span>
                     </div>
                 </div>
            </div>
@@ -297,19 +285,19 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".") ?? 0,00}}</span>
                         <span>Total</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoIndividual,2,",",".")}}</span>
                         <span>Individual</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoColetivo,2,",",".")}}</span>
                         <span>Coletivo</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ 0,00</span>
                         <span>Empresarial</span>
                     </div>
                 </div>
@@ -326,19 +314,19 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalPremiacao,2,",",".")}}</span>
                         <span>Total</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoIndividual,2,",",".")}}</span>
                         <span>Individual</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoColetivo,2,",",".")}}</span>
                         <span>Coletivo</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ 0,00</span>
                         <span>Empresarial</span>
                     </div>
                 </div>
@@ -356,19 +344,19 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalMes,2,",",".")}}</span>
                         <span>Total</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{ number_format($valorTotalValorMesIndividualTotal,2,",",".") }}</span>
                         <span>Individual</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($valorTotalColetivoQuantidade,2,",",".")}}</span>
                         <span>Coletivo</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ 0,00</span>
                         <span>Empresarial</span>
                     </div>
                 </div>
@@ -393,24 +381,24 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">20</span>
+                        <span class="info-box-number">{{$totalVidasVendidasRestante}}</span>
                         <span class="">Vidas</span>
-                        <span>R$ 5.000,00</span>
+                        <span>R$ {{number_format($totalVendidoRestante,2,",",".") ?? 0}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">6</span>
+                        <span class="info-box-number">{{$totalVidasVendidasIndividualRestante}}</span>
                         <span>Individual</span>
-                        <span>R$ 1000,00</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoIndividualRestante,2,",",".") ?? 0}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">14</span>
+                        <span class="info-box-number">{{$totalVidasVendidasColetivoRestante}}</span>
                         <span>Coletivo</span>
-                        <span>R$ 4000,00</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoColetivoRestante,2,",",".") ?? 0}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">14</span>
+                        <span class="info-box-number">0</span>
                         <span>Empresarial</span>
-                        <span>R$ 4000,00</span>
+                        <span>R$ 0,00</span>
                     </div>
                 </div>
            </div>
@@ -429,19 +417,19 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoRestante,2,",",".") ?? 0}}</span>
                         <span>Total</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoIndividualRestante,2,",",".") ?? 0}}</span>
                         <span>Individual</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoColetivoRestante,2,",",".") ?? 0}}</span>
                         <span>Coletivo</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">0,00</span>
                         <span>Empresarial</span>
                     </div>
                 </div>
@@ -458,19 +446,19 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoRestante,2,",",".")}}</span>
                         <span>Total</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoIndividualRestante,2,",",".")}}</span>
                         <span>Individual</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoColetivoRestante,2,",",".")}}</span>
                         <span>Coletivo</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ 0,00</span>
                         <span>Empresarial</span>
                     </div>
                 </div>
@@ -488,19 +476,19 @@
                         <div class="progress-bar" style="width: 100%"></div>                    
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoRestante,2,",",".") ?? 0}}</span>
                         <span>Total</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalComissaoIndividualRestante,2,",",".") ?? 0}}</span>
                         <span>Individual</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ {{number_format($totalVendidoCotacaoIndividualRestante,2,",",".") ?? 0}}</span>
                         <span>Coletivo</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".")}}</span>
+                        <span class="info-box-number">R$ 0,00</span>
                         <span>Empresarial</span>
                     </div>
                 </div>

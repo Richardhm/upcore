@@ -5,8 +5,6 @@
     <h3>Contratos</h3>
 @stop
 @section('content')
-
-
 <div class="card card-primary card-tabs">
     <div class="card-header p-0 pt-1">
         <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
@@ -87,7 +85,7 @@
                 <div class="form-row mt-3">
                     <div class="col col-md-4">
                         <div class="form-group">
-                            <label for="responsavel_financeiro">Responsavel Financeiro:</label>
+                            <label for="responsavel_financeiro">Responsavel Financeiro:<small style='font-size:0.7em;color:#666;'>(Preencher apenas se o cliente for de menor)</small></label>
                             <input type="text" name="responsavel_financeiro" id="responsavel_financeiro" placeholder="Responsavel Financeiro" class="form-control" value="">
                             <div class="errorresponsavelfinanceiro"></div>
                         </div>
@@ -95,7 +93,7 @@
 
                     <div class="col col-md-4">
                         <div class="form-group">
-                            <label for="cpf_financeiro">CPF:</label>
+                            <label for="cpf_financeiro">CPF Financeiro:<small style='font-size:0.7em;color:#666;'>(Preencher apenas se o cliente for de menor)</small></label>
                             <input type="text" name="cpf_financeiro" id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control" value="">
                             <div class="errorcpfresponsavelfinanceiro"></div>
                            
@@ -111,38 +109,7 @@
                     </div>
 
                 </div>
-                
-                <div class="form-row mt-3">
-                    <div class="col col-md-4">
-                        <div class="form-group">
-                            <label for="data_vigente">Data Vigencia:</label>
-                            <input type="date" name="data_vigente" id="data_vigente" value="{{old('data_vigente')}}" required class="form-control" value="">
-                            <div class="errordatavigente"></div>
-                        </div>
-                    </div>    
-
-                    <div class="col col-md-4">
-                        <div class="form-group">
-                            <label for="valor_adesao">Valor Adesão:</label>
-                            <input type="text" name="valor_adesao" id="valor_adesao" placeholder="R$" class="form-control" value="{{old('valor_adesao')}}">
-                            <div class="errorvaloradesao"></div>
-                            @if($errors->has('valor_adesao'))
-                                <p class="alert alert-danger">{{$errors->first('valor_adesao')}}</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="col col-md-4">
-                        <div class="form-group">
-                            <label for="data_boleto">Data Boleto:</label>
-                            <input type="date" name="data_boleto" id="data_boleto" value="{{old('data_boleto')}}" required placeholder="Data Boleto" class="form-control" value="">
-                            <div class="errordataboleto"></div>
-                        </div>
-                    </div>
-
-                </div>
-                
-                
+                                
                 
                 <div class="form-row mt-3">
                     
@@ -191,10 +158,7 @@
                         </div>
                     </div>        
                 </div>
-                
-                
-
-                <section>
+               <section>
                     <h4 class="">Faixas Etarias</h4>
                     <div class="errorfaixas"></div>
                     <div class="form-row mb-4">
@@ -355,8 +319,9 @@
                             </div>  
                         </div>   
                     </div>   
-            </section>      
-                <div class="form-row mt-3">
+            </section> 
+
+             <div class="form-row mt-3">
                     
                     <div class="col-3 col-md-3">
                         <div class="form-group">
@@ -512,14 +477,13 @@
         $(function(){
             $('#cpf').mask('000.000.000-00');       
             $('#cpf_financeiro').mask('000.000.000-00');       
-            $('#valor_adesao').mask("#.##0,00", {reverse: true});
+            //$('#valor_adesao').mask("#.##0,00", {reverse: true});
             
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
 
             function TestaCPF(cpf) {
                 cpf = cpf.replace(/[^\d]+/g,'');	
@@ -588,7 +552,22 @@
 
             $('body').on('click','#odonto_nao > #odonto_radio_nao',function(){
                 $("#change_odonto").val($(this).val()).trigger('change');
-            });               
+            });    
+            
+            // $("#data_nascimento").on('focusout',function(){
+            //     let dados = parseInt($(this).val());
+            //     const dataAtual = new Date();
+            //     const anoAtual = dataAtual.getFullYear();
+            //     if(dados >= anoAtual) {
+            //         console.log("Maior");
+            //     } else {
+            //         console.log("Menor");
+            //     }
+                
+            // });  
+
+
+
             
            $("body").on("click","input[name='plano']",function(){
                 
@@ -606,9 +585,7 @@
                     return false;
                 } else {
                     $('.errorcpf').html("");
-                }  
-                
-                
+                }                 
 
                 // if(!TestaCPF($("#cpf").val())) {
                 //     $("#change_plano").val($(this).val())
@@ -617,9 +594,6 @@
                 // } else {
                 //     $('.errorcpf').html("");            
                 // }
-
-
-
 
                 if($("#data_nascimento").val() == "") {
                     $("#change_plano").val($(this).val())
@@ -666,30 +640,7 @@
                 } else {
                     $(".errorenderefinanceiro").html("");
                 }
-
-                if($("#data_vigente").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    $('.errordatavigente').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
-                    return false;
-                } else {
-                    $(".errordatavigente").html("");
-                }
-
-                // if($("#valor_adesao").val() == "") {
-                //     $("#change_plano").val($(this).val())
-                //     $('.errorvaloradesao').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
-                //     return false;
-                // } else {
-                //     $(".errorvaloradesao").html("");
-                // }
-
-                if($("#data_boleto").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    $('.errordataboleto').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
-                    return false;
-                } else {
-                    $(".errordataboleto").html("");
-                }
+                
 
 
                 if($("#cidade").val() == "") {
@@ -748,7 +699,6 @@
                     $('.errorfaixas').html("<p class='alert alert-danger'>Pelo Menos 1 faixa etária deve ser preenchida</p>")
                     return false;
                 } else {
-                   
                     $("#change_faixa_0_18").val($("#faixa-input-0-18").val())    
                     $("#change_faixa_19_23").val($("#faixa-input-19-23").val())    
                     $("#change_faixa_24_28").val($("#faixa-input-24-28").val())    
@@ -781,6 +731,8 @@
 
                 let data = {
                     cliente_id:$("#cliente_id").val(),
+                    data_boleto:$("#data_boleto").val(),
+                    data_vigencia:$("#data_vigente").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input:radio[name=coparticipacao]:checked").val(),odonto: $('input:radio[name=odonto]:checked').val(), plano:$(this).val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
@@ -789,20 +741,70 @@
 
 
             $("body").on('change','#acomodacao',function(){
+                
                 let valor = $(this).attr('data-valor');
-                $("#valor_adesao").val(valor.replace(".",",").toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}));
+                let atual = $(this);
+                
+                
+                
+                if(atual.closest('.valores-acomodacao').find('#vigente').val() == "") {
+                    $("#change_plano").val($(this).val())
+                    atual.closest('.valores-acomodacao').find('.errordatavigente').html("<p class='alert alert-danger' style='font-size:0.79em;'>Este e campo obrigatório</p>");
+                    atual.prop('checked', false);
+                    return false;
+                } else {
+                    atual.closest('.valores-acomodacao').find(".errordatavigente").html("");
+                }
+
+                if(atual.closest('.valores-acomodacao').find('#boleto').val() == "") {
+                    $("#change_plano").val($(this).val())
+                    atual.closest('.valores-acomodacao').find('.errordataboleto').html("<p class='alert alert-danger' style='font-size:0.79em;'>Este e campo obrigatório</p>");
+                    atual.prop('checked', false);
+                    return false;
+                } else {
+                    atual.closest('.valores-acomodacao').find('.errordataboleto').html("");
+                }
+
+                if(atual.closest('.valores-acomodacao').find("#adesao").val() == "") {
+                    $("#change_plano").val($(this).val())
+                    atual.closest('.valores-acomodacao').find('.errorvaloradesao').html("<p class='alert alert-danger'>Este e campo obrigatório</p>");
+                    atual.prop('checked', false);
+                    return false;
+                } else {
+                    atual.closest('.valores-acomodacao').find(".errorvaloradesao").html("");
+                }
+
+
                 $("#valor").val(valor);
                 $('body,html').animate({
                     scrollTop:"900px"
-                },3000);
+                },1000);
                 $('.valores-acomodacao').css({"box-shadow":"none"});
                 $(this).closest('.valores-acomodacao').css({"box-shadow": "10px 5px 5px black"})
                 $("#btn_submit").html("<button type='submit' class='btn btn-block btn-outline-secondary my-4 salvar_contrato'>Salvar Contrato</button>")
             });  
 
+            $("body").on('change','#vigente',function(){
+                let data_vigencia = $(this).val();
+                $("#data_vigencia").val(data_vigencia);
+            });
+
+            $("body").on('change','#boleto',function(){
+                let data_boleto = $(this).val();
+                $("#data_boleto").val(data_boleto);
+            });
+
+            $("body").on('change','#adesao',function(){
+                let valor_adesao = $(this).val();
+                $("#valor_adesao").val(valor_adesao);
+            });
+
+
             $('body').on('change','.change_valores',function(){
                 let data = {
                     cliente_id:$("#cliente_id").val(),
+                    data_boleto:$("#data_boleto").val(),
+                    data_vigencia:$("#data_vigente").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
@@ -812,6 +814,8 @@
             $('body').on('change','.change_plano',function(){
                 let data = {
                     cliente_id:$("#cliente_id").val(),
+                    data_boleto:$("#data_boleto").val(),
+                    data_vigencia:$("#data_vigente").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
@@ -821,6 +825,8 @@
             $('body').on('change','.mudar_coparticipacao',function(){
                 let data = {
                     cliente_id:$("#cliente_id").val(),
+                    data_boleto:$("#data_boleto").val(),
+                    data_vigencia:$("#data_vigente").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
@@ -830,6 +836,8 @@
             $('body').on('change','.mudar_odonto',function(){
                 let data = {
                     cliente_id:$("#cliente_id").val(),
+                    data_boleto:$("#data_boleto").val(),
+                    data_vigencia:$("#data_vigente").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
@@ -847,6 +855,8 @@
                 }
                 let data = {
                     cliente_id:$("#cliente_id").val(),
+                    data_boleto:$("#data_boleto").val(),
+                    data_vigencia:$("#data_vigente").val(),
                     cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
                     faixas: {'1': $("#change_faixa_0_18").val(), '2': $("#change_faixa_19_23").val(),'3': $("#change_faixa_24_28").val(),'4': $("#change_faixa_29_33").val(),'5': $("#change_faixa_34_38").val(),'6': $("#change_faixa_39_43").val(),'7': $("#change_faixa_44_48").val(),'8': $("#change_faixa_49_53").val(),'9': $("#change_faixa_54_58").val(),'10': $("#change_faixa_59").val()}
                 };
@@ -859,19 +869,17 @@
                     method:"POST",
                     data: data,
                     success(res) {
-                        
                         $("#cidade").addClass('change_valores');
                         $("#operadora").addClass('change_valores');
                         $("#administradora").addClass('change_valores');
                         $("#change_coparticipacao").addClass('mudar_coparticipacao');
                         $("#change_odonto").addClass('mudar_odonto');
                         $("#change_plano").addClass('change_plano');
-                        
                         $("form[name='cadastrar_pessoa_fisca_formulario']").find('button[type="button"]').addClass('change_valores_faixas');
                         $("#resultado").slideUp().html(res).delay(100).slideToggle(100,function(){
                             $('body,html').animate({
-                                scrollTop:"800px"
-                            },2000);
+                                scrollTop:$(window).scrollTop() + $(window).height(),
+                            },1500);
                         });                        
                     }
                 });

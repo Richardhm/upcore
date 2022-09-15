@@ -5,194 +5,630 @@
     <h1>Dashboard - Administrador</h1>
 @stop
 
-@section('content')
+@section('content_top_nav_right')
 
+    <li class="nav-item"><a href="{{route('home.relatorio')}}" class="nav-link"><i class="fas fa-file-excel"></i>  </a></li> <!--Relatorio-->
+    <li class="nav-item"><a href="{{route('admin.home.search')}}" class="nav-link">Tabela de Preços</a></li> <!--Consulta Rapida-->
+
+@stop
+@section('content')
 <section class="content">
 
-
-    <div class="container-fluid">
-        <div class="row">
+<div class="container-fluid">
+    <div class="row">
 
             <div class="col-md-3 col-3">
-                <div class="small-box bg-info">
+                <div class="small-box bg-info shadow-lg">
+                    <a href="{{url('/admin/clientes?ac=hoje')}}">
+                        <div>
+                            <h3 class="ml-2" style="margin:0px;">{{$tarefasHoje}}</h3>
+                            <p class="ml-2">Tarefas Hoje</p>
+                            <div class="icon text-white">
+                                <i class="fas fa-calendar-day fa-xs" style="font-size:50px;top:10px;"></i>
+                            </div>                        
+                        </div>
+                    </a>    
+                </div>
+            </div>
+
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-danger">
+                    <a href="{{url('/admin/clientes?ac=atrasado')}}">
+                        <div>
+                            <h3 class="ml-2" style="margin:0px;">{{$tarefasAtrasadas}}</h3>
+                            <p class="ml-2">Tarefas Atrasadas</p>
+                            <div class="icon text-white">
+                                <i class="fas fa-thumbs-down fa-xs text-white" style="font-size:50px;top:10px;"></i>
+                                
+                            </div>   
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-teal">
+                    <a href="{{url('/admin/clientes?ac=proximas')}}">
+                        <div>
+                            <h3 class="text-white ml-2" style="margin:0px;">{{$tarefasProximas}}</h3>
+                            <p class="text-white ml-2">Tarefas proximos 03 dias</p>
+                            <div class="icon text-white">
+                                <i class="fas fa-external-link-alt fa-xs text-white" style="font-size:50px;top:10px;"></i>
+                                
+                            </div>   
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-3">
+                <div class="small-box bg-orange">
+                    <a href="{{url('/admin/clientes?ac=semtarefa')}}">
+                        <div>
+                            <h3 class="text-white ml-2" style="margin:0px;">{{$clientesSemTarefas}}</h3>
+                            <p class="text-white ml-2">Sem Tarefas</p>
+                            <div class="icon text-white">
+                                <i class="far fa-frown fa-xs text-white" style="font-size:50px;top:10px;"></i>
+                            </div>   
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+
+
+    </div>
+</div>
+
+<section class="container-fluid mb-3">
+    <div class="d-flex">            
+        @foreach($etiquetas as $et)
+            <div class="flex-fill border mr-2 bg-navy rounded">
+                <div class="d-flex flex-column">
+                    <h3 class="text-white border-bottom text-center">{{$et->quantidade}}</h3>
+                    <span class="text-white border-bottom text-center"><i><u><a href='{{url("/admin/clientes?ac=etiquetas&id={$et->id}")}}' class="text-white">{{$et->nome}}</a></u></i></span>                    
+                </div>
+            </div>
+            @if($loop->last)
+            <div class="flex-fill border bg-navy rounded">
+                <div class="d-flex flex-column">
+                    <h3 class="text-white text-center border-bottom">18</h3>
+                    <span class="text-white border-bottom text-center"><i><u><a href="#" class="text-white">Leads</a></u></i></span>                    
+                </div>
+            </div>
+            @endif
+        @endforeach
+    </div>    
+</section>
+
+
+<div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center mb-3 container-fluid">
+    <h3 class="align-self-center">Clientes</h3>
+</div>
+
+
+<section class="container-fluid mt-3">
+    <div class="d-flex">            
+        
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3 class="ml-2">{{$aguardando_boleto_coletivo}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_boleto_coletivo_total,2,",",".")}}</p>                        
+                </div>
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoBoletoColetivo',auth()->user()->id)}}" class="text-dark">Aguardando Boleto Coletivo</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas ?? 0}}</b>
+                </div>
+            </div>
+             
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3 class="ml-2">{{$aguardando_pagamento_adesao_coletivo}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_boleto_coletivo_total,2,",",".")}}</p>                        
+                </div>
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoPagAdesaoColetivo',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Adesão Coletivo</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_pagamento_boleto_coletivo_vidas ?? 0}}</b>
+                </div>
+            </div>
+
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3>{{$aguardando_individual_qtd}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_individual_total,2,",",".")}}</p>                        
+                </div>
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.colaboradorPlanoindividual',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Plano individual</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_individual_vidas ?? 0}}</b>
+                </div>
+            </div>    
+
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between border-bottom">
+                    <h3>{{$aguardando_pagamento_vigencia}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_vigencia_total,2,",",".")}}</p>                        
+                </div>  
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoPagVigencia',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Vigencia</a></h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>{{$aguardando_pagamento_vigencia_vidas ?? 0}}</b>
+                </div>
+            </div>    
+
+            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+                <div class="d-flex justify-content-between">
+                    <h3>000</h3>
+                    <p class="align-self-center mr-2">R$ 1000,00</p>                        
+                </div>
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Empresarial</h6>
+                <div class="d-flex justify-content-end mr-2">
+                    Vidas: &nbsp; <b>10</b>
+                </div>
+            </div>    
+
+    </div>    
+</section>
+
+    <div class="container-fluid">
+        <div class="d-flex">
+                <div class="small-box bg-warning flex-fill mr-1">
                     <div class="inner">
-                        <h3>{{$clientesTotal}}</h3>
-                        <p>Total de Clientes da Corretora</p>                        
+                        <h3>{{$totalCliente ?? 0}}</h3>
+                        <p>Total de Clientes</p>                        
+                        <p>Vidas: {{$totalVidasQuantidade ?? 0}}</p>                        
                     </div>
                     <div class="icon">
                         <i class="fas fa-cash-register"></i>
                     </div>
                     <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-
-            <div class="col-md-3 col-3">
-                <div class="small-box bg-success">
+            
+                <div class="small-box bg-success flex-fill mr-1">
                     <div class="inner">
-                        <h3>{{$clienteContratados}}</h3>
+                        <h3>{{$totalClientesNegociados ?? 0}}</h3>
                         <p>Cliente Negociados</p>
-                       
+                        <p>Vidas: {{$totalVidasClientesNegociados ?? 0}}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
                     <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-
-            <div class="col-md-3 col-3">
-                <div class="small-box bg-orange">
+                        
+                <div class="small-box bg-info flex-fill mr-1">
                     <div class="inner">
-                        <h3 class="text-white">{{$tarefasProximas}}</h3>
-                        <p class="text-white">Tarefa(s) para os proximos 03 dias</p>
-                       
+                        <h3>{{$totalClientesNegociacao ?? 0}}</h3>
+                        <p>Em Negociação</p>
+                        <p>Vidas: {{$vidasTotalClientesNegociacao ?? 0}}</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-check"></i>
+                        <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('cliente.tarefasProximas')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-
-            <div class="col-md-3 col-3">
-                <div class="small-box bg-danger">
+                        
+                <div class="small-box bg-orange flex-fill mr-1">
                     <div class="inner">
-                        <h3 class="text-white">{{$tarefasAtrasadas}}</h3>
-                        <p class="text-white">Tarefa(s) Atrasada</p>
-                       
+                        <h3>{{$clientesCadastradosEsseMes}}</h3>
+                        <p>Cadastrado no mês</p>
+                        <p>Vidas: {{$clientesCadastradosEsseMesVidas}}</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-thumbs-down"></i>
+                        <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('tarefa.clienteTarefasAtrasadasHome')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-
-
+            
+                <div class="small-box bg-danger flex-fill">
+                    <div class="inner">
+                        <h3>000</h3>
+                        <p>Perdidos</p>
+                        <p>Vidas 8</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
 
         </div>
     </div>
-</section> 
 
-<section class="row">
+    <div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center mb-3">
+        <h3 class="align-self-center">Referente ao mês de Agosto/2022</h3>
+    </div>
+ 
+
+    <section class="d-flex">
+
     
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box bg-navy">
+        <div class="info-box bg-dark flex-fill mr-2">
             <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">{{number_format($comissoesAReceber,2,",",".")}}</span>
-                <span class="info-box-text">Comissões a Receber</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>                    
+                <div>
+                    <span class="info-box-text">Total Vendido</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">{{$totalVidasVendidas ?? 0}}</span>
+                        <span class="">Vidas</span>
+                        <span>R$ {{number_format($totalVendido,2,",",".") ?? 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">{{$totalVidasVendidasIndividual ?? 0}}</span>
+                        <span>Individual</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoIndividual,2,",",".") ?? 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">{{$totalVidasVendidasColetivo ?? 0}}</span>
+                        <span>Coletivo</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoColetivo,2,",",".") ?? 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">0</span>
+                        <span>Empresarial</span>
+                        <span>R$ 0,00</span>
+                    </div>
                 </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>                
-            </div>
+           </div>
         </div>
-    </div>
+   
 
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box bg-lightblue">
-            <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-number">{{number_format($premiacaoAReceber,2,",",".")}}</span>
-                <span class="info-box-text">Premiações a Receber</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>
-               
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box bg-olive">
-            <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-number">{{number_format($totalComissao,2,",",".")}}</span>
-                <span class="info-box-text">Comissões a Pagar</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>                    
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>    
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box bg-gray-dark">
-            <span class="info-box-icon"><i class="fas fa-user"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-number">{{number_format($totalPremiacao,2,",",".")}}</span>
-                <span class="info-box-text">Premiações a Pagar</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%"></div>                    
-                </div>
-                <span class="progress-description">
-                    Referente ao mês {{date('M')}}
-                </span>    
-            </div>
-        </div>
-    </div>
     
-</section>
+ 
+        <div class="info-box bg-navy flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Comissões a Receber</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissao,2,",",".") ?? 0,00}}</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoIndividual,2,",",".")}}</span>
+                        <span>Individual</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoColetivo,2,",",".")}}</span>
+                        <span>Coletivo</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ 0,00</span>
+                        <span>Empresarial</span>
+                    </div>
+                </div>
+           </div>
+        </div>
+  
 
-<section>
+        <div class="info-box bg-lightblue flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Premiação a Receber</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalPremiacao,2,",",".")}}</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoIndividual,2,",",".")}}</span>
+                        <span>Individual</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoColetivo,2,",",".")}}</span>
+                        <span>Coletivo</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ 0,00</span>
+                        <span>Empresarial</span>
+                    </div>
+                </div>
+           </div>
+        </div>
     
+    
+    
+        <div class="info-box bg-olive flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Total a Receber</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalMes,2,",",".")}}</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{ number_format($valorTotalValorMesIndividualTotal,2,",",".") }}</span>
+                        <span>Individual</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($valorTotalColetivoQuantidade,2,",",".")}}</span>
+                        <span>Coletivo</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ 0,00</span>
+                        <span>Empresarial</span>
+                    </div>
+                </div>
+           </div>
+        </div>
+    
+    </section>
+
+    <div class="bg-dark d-flex justify-content-center rounded py-1 align-item-center mb-3">
+        <h3 class="align-self-center">Restante a Receber</h3>
+    </div>
+
+    <section class="d-flex">
+
+    
+        <div class="info-box bg-dark flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Total Vendido</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">{{$totalVidasVendidasRestante ?? 0}}</span>
+                        <span class="">Vidas</span>
+                        <span>R$ {{number_format($totalVendidoRestante,2,",",".") ?? 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">{{$totalVidasVendidasIndividualRestante ?? 0}}</span>
+                        <span>Individual</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoIndividualRestante,2,",",".") ?? 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">{{$totalVidasVendidasColetivoRestante ?? 0}}</span>
+                        <span>Coletivo</span>
+                        <span>R$ {{number_format($totalVendidoCotacaoColetivoRestante,2,",",".") ?? 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">0</span>
+                        <span>Empresarial</span>
+                        <span>R$ 0,00</span>
+                    </div>
+                </div>
+           </div>
+        </div>
+   
+
+
+    
+ 
+        <div class="info-box bg-navy flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Comissões a Receber</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoRestante,2,",",".") ?? 0}}</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoIndividualRestante,2,",",".") ?? 0}}</span>
+                        <span>Individual</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoColetivoRestante,2,",",".") ?? 0}}</span>
+                        <span>Coletivo</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">0,00</span>
+                        <span>Empresarial</span>
+                    </div>
+                </div>
+           </div>
+        </div>
+  
+
+        <div class="info-box bg-lightblue flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Premiação a Receber</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoRestante,2,",",".") ?? 0}}</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoIndividualRestante,2,",",".") ?? 0}}</span>
+                        <span>Individual</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalPremiacaoColetivoRestante,2,",",".") ?? 0}}</span>
+                        <span>Coletivo</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ 0,00</span>
+                        <span>Empresarial</span>
+                    </div>
+                </div>
+           </div>
+        </div>
+    
+    
+    
+        <div class="info-box bg-olive flex-fill mr-2">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <div>
+                    <span class="info-box-text">Total a Receber</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>                    
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoRestante,2,",",".") ?? 0}}</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalComissaoIndividualRestante,2,",",".") ?? 0}}</span>
+                        <span>Individual</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ {{number_format($totalVendidoCotacaoIndividualRestante,2,",",".") ?? 0}}</span>
+                        <span>Coletivo</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="info-box-number">R$ 0,00</span>
+                        <span>Empresarial</span>
+                    </div>
+                </div>
+           </div>
+        </div>
+    
+    </section>
+
+
+
+<!---------------- Começo Seção CLiente Tarefa ------------------------>
+<section class="row">
     <div class="col-6">
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Funcionarios</h3>
+            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
+                <h3 class="card-title">
+                    <i class="ion ion-clipboard mr-1"></i>
+                    Lista de Tarefas
+                </h3>
                 <div class="card-tools">
-                    <span class="badge badge-danger">{{count($corretores)}} Membros</span>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <ul class="users-list clearfix">
-                    @php
-                        $t = new \App\Support\Thumb();
-                    @endphp
-                    @foreach($corretores as $c)
-                    <li>
-                        @if(!empty($c->image)) 
-                        <img src="{{\Illuminate\Support\Facades\Storage::url($t->makes($c->image,100,100))}}" alt="User Image">
-                        @else
-                        <img src="{{\Illuminate\Support\Facades\Storage::url('avatar-default.jpg')}}" width="100" height="100" alt="User Image">
-                        @endif    
-
-
-                        <a class="users-list-name" href="{{route('home.administrador.colaborador',$c->id)}}">{{$c->name}}</a>
-                        <span class="users-list-date">{{date('d/m/Y',strtotime($c->created_at))}}</span>
-                    </li>
-                    @endforeach
-                    
-                </ul>
-            </div>
-            <div class="card-footer text-center">
-                <a href="{{route('corretores.index')}}" target="_blank">Visualizar Todos</a>
+            <div class="card-body">
+                <table class="table listartarefas">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Corretor</th>
+                            <th>Titulo</th>
+                            <th>Dias Faltando</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>                  
+                </table>
             </div>
         </div>
     </div>
-    
-    
-    
-    <div class="col-4">
-
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
+                <h3 class="card-title">
+                    <i class="ion ion-clipboard mr-1"></i>
+                    Lista de Clientes
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table listarclientes">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Corretor</th>
+                            <th>Telefone</th>
+                            <th align="center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+           
+        </div>
     </div>
 </section>
+<!---------------- FIM Seção CLiente Tarefa ------------------------>
 
+<!---------------- Começo Comissao e  Premiação ------------------------>
+<section class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
+                <h3 class="card-title">
+                    <i class="ion ion-clipboard mr-1"></i>
+                    Comissão a Receber
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table listarcomisao">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Administradora</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>  
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header text-white bg-dark ui-sortable-handle" style="cursor: move;">
+                <h3 class="card-title">
+                    <i class="ion ion-clipboard mr-1"></i>
+                    Lista de Premiações referente ao mes de {{date('M')}}
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table listarpremiacao">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Administradora</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer clearfix">              
+            </div>
+        </div>
+    </div>
+</section>
+<!---------------- Fim Comissao e  Premiação ------------------------>
 
 
 
@@ -202,11 +638,148 @@
 
 
 @stop
+
 @section('js')
-    <script src="{{asset('vendor/jquery-ui/jquery-ui.min.js')}}"></script>   
     <script>
-        $(document).ready(function(){
-        });
+         $(document).ready(function(){
+            $(".listartarefas").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('home.listarTarefasHome') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [5,10,15],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                order: [[3, "asc"]],
+                columns: [
+                    {data:"data",name:"data"},
+                    {data:"cliente",name:"cliente"},
+                    {data:"corretor",name:"corretor"},
+                    {data:"title",name:"title"},
+                    {data:"falta",name:"falta"},
+                ],
+                "columnDefs": [ {
+                    "targets": 4,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        if(cellData < 0) {
+                            $(td).html('<div class="badge badge-dark w-50" style="font-size:1.1em">'+cellData+'</div>')
+                        } else if(cellData <= 3) {
+                            $(td).html('<div class="badge badge-danger w-50" style="font-size:1.1em">'+cellData+'</div>')  
+                        } else if(cellData > 3 && cellData <= 10) {
+                            $(td).html('<div class="badge badge-warning w-50" style="font-size:1.1em">'+cellData+'</div>')
+                        } else {
+                            $(td).html('<div class="badge badge-info w-50" style="font-size:1.1em">'+cellData+'</div>')
+                        }
+                       
+                    
+                    }
+                }]
+            });
+
+            $(".listarclientes").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('home.listarClientesHome') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [5,10,15],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                
+                columns: [
+                    {data:"data",name:"data"},
+                    {data:"nome",name:"nome"},
+                    {data:"corretor",name:"corretor"},
+                    {data:"telefone",name:"telefone"},
+                    {data:"status",name:"status"},
+                ],
+                "columnDefs": [ {
+                    "targets": 4,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).html("<div style='width:20px;height:20px;border-radius:50%;background-color:"+cellData+"'></div>")
+                       
+                    
+                    }
+                }]
+                
+            });
+
+            
+            $(".listarcomisao").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('home.comissoes') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [5,10,15],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                
+                columns: [
+                    {data:"data",name:"data",render:function(data, type, row, meta) {
+                        return data.split("-").reverse().join("/")
+                    }},
+                    {data:"comissao.cliente.nome",name:"cliente"},
+                    {data:"comissao.cotacao.administradora.nome",name:"administradora"},
+                    {data:"valor",name:"valor",render:function(data,type,row,meta){
+                        return parseFloat(data).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                    }},
+                ],
+                
+                
+            });
+
+            $('.listarpremiacao').DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('home.premiacoes') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [5,10,15],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                
+                columns: [
+                    {data:"data",name:"data",render:function(data, type, row, meta) {
+                        return data.split("-").reverse().join("/")
+                    }},
+                    {data:"comissao.cliente.nome",name:"cliente"},
+                    {data:"comissao.cotacao.administradora.nome",name:"administradora"},
+                    {data:"total",name:"total",render:function(data,type,row,meta){
+                        return parseFloat(data).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                    }},
+                ],
+                
+                
+            });
+
+
+
+         });
     </script>
-    <script src="{{asset('js/dashboard.js')}}"></script>  
-@stop
+@stop        

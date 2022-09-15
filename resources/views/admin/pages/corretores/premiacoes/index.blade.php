@@ -26,7 +26,6 @@
                             <th>Plano</th>
                             <th>Valor</th>
                             <th>Deletar</th>
-                            
                         </tr>
                     </thead>
                     <tbody>

@@ -29,16 +29,12 @@ class CorretoresController extends Controller
     {
         
         $id = auth()->user()->id;
-        
         $corretores = $this->repository->where("id","!=",$id)->whereHas('permissions',function($query){
-            $query->where("permission_id","!=",5);
+            $query->where("permission_id","!=",6);
         })->get();
-
         $financeiro = $this->repository->where("id","!=",$id)->whereHas('permissions',function($query){
-            $query->where("permission_id",5);
+            $query->where("permission_id",6);
         })->get();
-        
-        
         return view('admin.pages.corretores.index',[
             'corretores' => $corretores,
             'financeiro' => $financeiro
@@ -170,6 +166,9 @@ class CorretoresController extends Controller
         $corretor->delete();
         return redirect()->route('corretores.index');
     }
+
+
+    
 
 
 

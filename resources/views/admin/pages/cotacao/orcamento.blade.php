@@ -26,7 +26,7 @@
                 @endif
                 
                 <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente->id}}">
-
+               
 
                 <h4 style="color:brown;"> - Dados</h4>
                 <hr />    
@@ -46,7 +46,6 @@
                             <label for="nome">Nome:</label>
                             <input type="text" name="nome" id="nome" class="form-control" placeholder="Nome" value="{{$cliente->nome}}">
                             <div class="errornome"></div>
-                            
                         </div>
                     </div>
 
@@ -73,14 +72,11 @@
                     </div>    
                 </div>
                 
-                
-                
                 <div class="form-group empresa_dados"></div>
-                
-                
+                                
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="{{$cliente->email}}">
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" value="{{$cliente->email}}">
                     <div class="erroremail"></div>
                     <div class="erroremailinvalido"></div>
                 </div>    
@@ -266,6 +262,10 @@
     
 
   <div id="aquiPlano"></div>
+  
+
+                   
+
 
 
   
@@ -276,32 +276,50 @@
     
     <script>
         $(function(){
-            $('#celular').mask('(00) 0 0000-0000');       
-           
+
+            
+            
+            $("body").on('click','.cards',function(){
+                $('.cards').css({"box-shadow":"none"});
+                $(this).css({"box-shadow":"10px 5px 5px orange"});
+                
+                let administradora_id = $(this).find('input[name="administradora_id"]').val();
+                let odonto = $(this).find('input[name="odonto"]').val();
+                let plano_id = $(this).find('input[name="plano_id"]').val();
+                let cotacao = $("#cotacao_id").val();
+                let cliente = $("#cliente_id").val();
+                let telefone = $("#celular").val().replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","");
+                var alvo = $(document).height() - $(window).height() - $(window).scrollTop();
+                
+                // $('body,html').animate({
+                //     scrollTop:"3000px"
+                // },1500);
+                
+                $(".alvos").html("");
+                $(".alvos").remove();
+                // $("#aquiPlano").after('<div class="alvos" style="display:flex;flex-basis:100%;justify-content:center;align-items:center;padding:10px 0;background-color:red;"><a style="color:black;margin-right:10px;" href="https://api.whatsapp.com/send?phone=55"><i class="fab fa-whatsapp fa-2x"></i></a><a style="color:black;margin-right:10px;"><i class="fas fa-envelope fa-2x"></i></a><a style="color:black;margin-right:10px;" data-orcamento="" data-cidade="" data-plano="" data-coparticipacao="" data-odonto="" data-operadora="" data-administradora="" href="#"><i class="fas fa-file-pdf fa-2x"></i></a><a style="color:black;margin-right:10px;" href=""><i class="fas fa-file-contract fa-2x"></i></a></div>');
+                $("#aquiPlano").append('<div class="d-flex justify-content-center" style="padding:10px 0;"><a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'"><i class="fas fa-file-pdf fa-2x"></i></a></div>');    
+                $(".icones-link").html('<div class="d-flex justify-content-end" style="padding:10px 0;"><a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'"><i class="fas fa-file-pdf fa-2x"></i></a></div>');    
+            });
+            $('#celular').mask('(00) 0 0000-0000');                  
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
-
-
             let plus = $(".plus");
             let minus = $(".minus");
             $(plus).on('click',function(e){
                 let alvo = e.target;
                 let pai = alvo.closest('.content');
-                let input = $(pai).find('input');
-                
+                let input = $(pai).find('input'); 
                 if(input.val() == "") {
                     input.val(0);
                 }
-                
                 let newValue = parseInt(input.val()) + 1;
                 if(newValue >= 0) {
                     input.val(newValue);
                 }
-                
             });
 
             $(minus).on('click',function(e){
@@ -309,13 +327,11 @@
                 let pai = alvo.closest('.content');
                 let input = $(pai).find('input');
                 let newValue = parseInt(input.val()) - 1;
-                
                 if(newValue >= 0) {
                     input.val(newValue);
                 }
             });
 
-            
             if($('select[name="modelo"] option:selected').val() == "pj") {
                 $('.empresa_dados').html(
                         "<div class='form-row my-3'>"+
@@ -334,15 +350,11 @@
                     $('#nome_empresa').val($('input[name="nome_empresa_selecionado"]').val());
             } 
            
-
             $('body').on('click','input[name="verPlanos"]',function(e){
                 e.preventDefault();
-                
                 let cidade = $('select[name="cidades"]').val();
-           
                 let nome = $('input[name="nome"]').val();
                 let telefone = $('input[name="celular"]').val();
-                
                 let email = $('input[name="email"]').val();
                 let cliente = $('input[name="cliente_id"]').val();
                 let cnpj = $('input[name="cnpj"]').val();
@@ -350,7 +362,6 @@
                 let validar = /^\([1-9]{2}\) [0-9]{1} [0-9]{4}-[0-9]{4}$/;
                 let validarEmail = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})$/
                 let modelo = $('select[name="modelo"] option:selected').val();
-
                 $.ajax({
                     url:"{{route('cotacao.montarPlanos')}}",
                     method:"POST",
@@ -401,16 +412,12 @@
                             $(".erroremailinvalido").html("<p class='alert alert-danger'>Email Inválido</p>");
                             $('#collapseOne').collapse('show');
                         }
-                        
                         if($("#faixa-0-18").val() == "" && $('#faixa-19-23').val() == "" && $('#faixa-24-28').val() == "" &&  $('#faixa-29-33').val() == "" && $('#faixa-34-38').val() == "" && $('#faixa-39-43').val() == "" && $('#faixa-44-48').val() == "" && $('#faixa-49-53').val() == "" && $('#faixa-54-58').val() == "" && $('#faixa-59').val() == "") {
                             $(".errorfaixa").html("<p class='alert alert-danger'>Alguma faixa etaria deve ter preenchida</p>");
                             $('#collapseOne').collapse('show');
-                        }
-                        
-                        
+                        }                  
                     },
                     success(res) {
-                        
                         if(res == "error") {
                             $('#collapseOne').collapse('show');
                         } else {
@@ -435,18 +442,16 @@
                 $("#collapseTwo").collapse('show');
                 
             });
-
-
             $("#collapseOne").collapse({toggle: true});
-
-
-
         });
 
     </script>
 @stop
 @section('css')
 <style>
+        .cards {
+      cursor: pointer;
+    }
         div p {
             margin-bottom:0px !important;
         }

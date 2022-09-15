@@ -38,28 +38,23 @@
                 </div>
             </div>
 
-           
+           <input type="hidden" name="quantidade" id="quantidade" value="{{count($administradora->parcelas)}}">
             <label for="comissao">Comissão<small>(%)</small></label>
-            <div class="unique_parcela">
-                @foreach($administradora->parcelas as $k => $v)
-                        <div id="{{$v->id}}">
+            <div class="campos">
+            @foreach($administradora->parcelas as $k => $v)
+                        <div class="campo_repetir">
+                            <label for="{{$k+1}}">Parcela {{$k+1}}: </label>
                             <input type="text" value="{{$v->valor}}" name="parcelas_bd[]" id="parcelas_bd">
-                            <button type="button" data-id="{{$v->id}}" class="btn btn-danger btn-sm excluir">
+                            <button type="button" data-id="{{$v->id}}" class="btn btn-danger btn-sm deletar_campo">
                                 <i class="fas fa-minus"></i>
                             </button>
                         </div>
                 @endforeach
-                    <div>
-            <div data-repeater-list="parcelas">
-           
-                <div data-repeater-item>
-               
-                    <input type="text" id="parcelas_new" name="parcelas_new" placeholder="Parcela" />
-                    <button data-repeater-delete type="button" value="Delete" class="btn btn-danger btn-sm"><i class="fas fa-minus"></i></button>
-                </div>
+            </div>    
                 
-            </div>
-            <button data-repeater-create type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
+         
+            
+            <button type="button" class="btn btn-primary btn-sm acrescentar"><i class="fas fa-plus"></i></button>
 
 
                 
@@ -96,33 +91,50 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
-    <script src="{{ asset('js/form-repeater-edit.js') }}"></script>    
+    
     <script>
         $(function(){
-            $("#vitalicio_status").change(function(){
-                if($(this).prop('checked')) {
-                    $("#area_vitalicio").css('display','block');
-                    $('#area_vitalicio').html('');
-                    $("#area_vitalicio").append("<input placeholder='%' type='text' name='vitalicio' id='vitalicio' class='form-control' />");
-                } else {
-                    $('#area_vitalicio').html('');
-                }
+            // $("#vitalicio_status").change(function(){
+            //     if($(this).prop('checked')) {
+            //         $("#area_vitalicio").css('display','block');
+            //         $('#area_vitalicio').html('');
+            //         $("#area_vitalicio").append("<input placeholder='%' type='text' name='vitalicio' id='vitalicio' class='form-control' />");
+            //     } else {
+            //         $('#area_vitalicio').html('');
+            //     }
+            // });
+
+            // if($("#vitalicio_status").prop('checked')) {
+            //     $("#area_vitalicio").css('display','block');
+            // } else {
+            //     $("#area_vitalicio").css('display','none');
+            // }
+            // $("body").on('click','.excluir',function(){
+            //     let id = $(this).attr("data-id");
+            //     $(this).closest('.unique_parcela').find('div[id="'+id+'"]').slideUp('fast',function(){
+            //         $(this).remove();
+            //     });
+            //     //$(this).parent(".unique_parcela").slideUp('fast')
+            // });
+
+            let add = $("#quantidade").val();           
+            $('.acrescentar').on('click',function(){
+                add++;
+                $(".campos").append('<div class="campo_repetir"><label>Parcela '+add+': </label> <input type="text" id="parcelas_bd" name="parcelas_bd[]" placeholder="%" /> <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo"><i class="fas fa-minus"></i></button></div>')   
             });
 
-            if($("#vitalicio_status").prop('checked')) {
-                $("#area_vitalicio").css('display','block');
-            } else {
-                $("#area_vitalicio").css('display','none');
-            }
-            $("body").on('click','.excluir',function(){
-                let id = $(this).attr("data-id");
-                $(this).closest('.unique_parcela').find('div[id="'+id+'"]').slideUp('fast',function(){
-                    $(this).remove();
+            $("body").on('click','.deletar_campo',function(){
+                add--;
+                $(this).closest('.campo_repetir').remove();
+                let removido = parseInt($($(this).closest('.campo_repetir').find('label')).text().replace("Parcela","").replace(":",""));
+                $.each($('.campo_repetir').find('label'),function(i,e){
+                    let num = parseInt($(e).text().replace("Parcela","").replace(":",""));
+                    if(num > removido) {       
+                        let calculado = num - 1;
+                        $(e).html("Parcela "+calculado+": ");
+                    }
                 });
-                //$(this).parent(".unique_parcela").slideUp('fast')
             });
-
 
 
         });            

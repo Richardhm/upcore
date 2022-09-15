@@ -5,7 +5,21 @@
     <!-- Site wrapper -->
     <h4>Todas as Tarefas</h4>
     <div class="wrapper">
-        <table class="table todasastarefasrealizadas">
+    @can('configuracoes') 
+        <table class="table todasastarefasrealizadasadministrador">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Corretor</th>
+                    <th>Tarefa</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    @else
+    <table class="table todasastarefasrealizadas">
             <thead>
                 <tr>
                     <th>Tarefa</th>
@@ -16,6 +30,7 @@
             </thead>
             <tbody></tbody>
         </table>
+    @endif
     </div>    
 <script>
     $(function(){
@@ -27,7 +42,7 @@
                     "url":"{{ route('tarefas.getListarTodasAsTarefasAjax') }}",
                     "dataSrc": ""
                 },
-                "lengthMenu": [8,15,30],
+                "lengthMenu": [15,30,45,90],
                 "ordering": true,
                 "paging": true,
                 "searching": true,
@@ -54,5 +69,48 @@
                 ]
                 
             });
+
+            $(".todasastarefasrealizadasadministrador").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('tarefas.getListarTodasAsTarefasAjax') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [15,30,45,90],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                columns: [
+                    {data:"cliente",name:"cliente"},
+                    {data:"corretor",name:"corretor"},
+                    
+                    {data:"title",name:"title"},
+                    {data:"criacao",name:"criacao"},
+                    {data:"status",name:"realizada"},
+                    
+                ],
+                "columnDefs": [ {
+                        "targets": 4,
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            if(cellData) {
+                                $(td).html("<i class='fas fa-check text-success'></i>")
+                            } else {
+                                $(td).html("<i class='fas fa-times text-danger'></i>")
+                            }
+                            
+                        }
+                    }
+                ]
+                
+            });
+
+
+
+
     });    
 </script>

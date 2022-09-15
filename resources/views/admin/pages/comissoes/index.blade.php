@@ -15,7 +15,7 @@
                     <thead>
                         <tr>
                             <th>Data</th>
-                            <th>Cliente</th>
+                            <th>Cliente</th>    
                             <th>Corretor</th>
                             <th>Plano</th>
                             <th>Administradora</th>

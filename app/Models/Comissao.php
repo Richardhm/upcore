@@ -16,6 +16,16 @@ class Comissao extends Model
         return $this->hasMany(ComissoesCorretorLancados::class);
     }
 
+    public function premiacaoLancadas()
+    {
+        return $this->hasMany(PremiacaoCorretoraLancadas::class);
+    }
+
+    public function comissaoCorretoraLancadas()
+    {
+        return $this->hasMany(ComissoesCorretoraLancadas::class);
+    }
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);

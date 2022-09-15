@@ -1,18 +1,19 @@
 @extends('adminlte::page')
-@section('title', 'Dashboard')
+
 @section('plugins.Datatables', true)
 @section('title', 'Clientes')
 
 @section('content_header')
-@can('clientes_dos_corretores')
-                    <a href="{{route('clientes.corretores')}}" class="text-info"><i class="fas fa-users"></i></a>
-                @endcan     
+      
     <div class="row">
-        <h1>Clientes <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning"><i class="fas fa-plus"></i></a></h1>    
         
-        
-       
-        
+        <h1>
+            Clientes 
+            @unless(Auth::user()->can('configuracoes'))    
+                <a href="{{route('clientes.cadastrar')}}" class="btn btn-warning"><i class="fas fa-plus"></i></a>
+            @endunless
+        </h1>    
+               
         <div class="ml-auto">
             
             <div class="ml-auto">
@@ -33,7 +34,7 @@
                     <li><a class="dropdown-item cliente_atrasado" href="#">Tarefas Atrasadas</a></li>
                     <li><a class="dropdown-item tarefas_realizadas" href="#">Tarefas Realizadas</a></li>
                     <li><a class="dropdown-item proximosdias" href="#">Tarefas Proximos 03 dias</a></li>
-                    <li><a class="dropdown-item tarefashoje" href="#">Tarefas Hoje</a></li>
+                    <li><a class="dropdown-item tarefasnows" href="#">Tarefas Hoje</a></li>
                     <div class="dropdown-divider"></div>
                     <li class="text-center">
                         <a class="dropdown-item listar_todos_tarefas" href="#" style="color:black;">Listar Todas Tarefas</a>
@@ -71,73 +72,95 @@
     </div>    
 @stop
 
+@can('clientes_dos_corretores')        
+    @section('content_top_nav_right')
+        <li class="nav-item"><a href="{{route('clientes.corretores')}}" class="nav-link">Exportar clientes</a></li> <!--Relatorio-->
+    @stop
+@endcan   
+
 @section('content')
+
     <div class="card">
+
         <div class="card-body">
             @if(count($clientes) >= 1)
                 @foreach($clientes as $c)
-                    <div style="border:1px solid black;display:flex;margin-bottom:5px;justify-content:space-between;padding:5px 0;box-sizing: border-box;align-items: center;">
-                        <div style="flex-basis:3%;justify-content: flex-end;margin-left:5px;">
-                            <div class="status" data-toggle="modal" data-target="#alterarModal" data-id="{{$c->etiqueta_id}}" data-cliente="{{$c->id}}" style="width:20px;height:20px;border-radius:50%;background-color:{{$c->cor}}"></div>
-                        </div>
-                        <div style="flex-basis:25%;">
-                            <div><b>{{$c->nome}}</b> | {{isset($c->user) && !empty($c->user) ? $c->user : ""}}</div>
-                            <div>{{$c->email}}</div>
-                            <div style="display:flex;">
-                                <span>{{date('d/m/Y',strtotime($c->created_at))}}</span>
-                                <span style="margin-left:50px;">{{date('d/m/Y',strtotime($c->ultimo_contato))}}</span>
+                    <div class="full_card">
+
+                        <div style="border:1px solid black;display:flex;justify-content:space-between;padding:5px 0;box-sizing: border-box;align-items: center;">
+                            <div style="flex-basis:3%;justify-content: flex-end;margin-left:5px;">
+                                <div class="status" data-toggle="modal" data-target="#alterarModal" data-id="{{$c->etiqueta_id}}" data-cliente="{{$c->id}}" style="width:20px;height:20px;border-radius:50%;background-color:{{$c->cor}}"></div>
                             </div>
-                        </div>
-                        <div style="flex-basis:25%;margin-right:2px;">
-                            <div>{{$c->cidade}}</div>
-                            <div>{{$c->telefone}}</div>
-                            <div>
-                                @if($c->tarefas_quantidade >= 1) 
-                                    <span>Com Tarefa</span>
-                                @else
-                                    <span>Sem Tarefa</span>
-                                @endif
+                            <div style="flex-basis:25%;">
+                                <div><b class="nome">{{$c->nome}}</b> @can('configuracoes') | {{$c->user}} @endcan </div>
+                                <div class="email">{{$c->email}}</div>
+                                <div style="display:flex;">
+                                    <span>{{date('d/m/Y',strtotime($c->created_at))}}</span>
+                                    <span style="margin-left:50px;">{{date('d/m/Y',strtotime($c->ultimo_contato))}}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div style="flex-basis:15%;">
-                            <div>Vidas {{$c->quantidade}}</div>
-                            <div>{{$c->pessoa_fisica == 1 ? "Pessoa Física" : "Pessoa Jurídico"}}</div>
-                            <div>{{$c->nome_etiqueta}}</div>
-                        </div>
-                        <div style="flex-basis:20%;justify-content: space-between;display:flex;flex-direction: column;">
-                            <div style="display:flex;justify-content: space-between;">
-                                <a class="" href="{{route('cotacao.orcamento',$c->id)}}" style="background-color:green;color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(43,128,0);">Orçamento</a>
-                                <span style="padding:3px;" class="bg-info"><i class="fas fa-phone"></i></span>
+                            <div style="flex-basis:25%;margin-right:2px;">
+                                <div>{{$c->cidade}}</div>
+                                <div class="telefone">{{$c->telefone}}</div>
+                                <div>
+                                    @if($c->tarefas_quantidade >= 1) 
+                                        <span>Com Tarefa</span>
+                                    @else
+                                        <span>Sem Tarefa</span>
+                                    @endif
+                                </div>
                             </div>
-                            <div style="display:flex;justify-content: space-between;margin:2px 0">
-                                <a class="" href="{{route('cotacao.contrato',$c->id)}}" style="background-color:blue;color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(0,39,251);">Contrato</a>
-                                <span class="bg-success" style="padding:4px;"><i class="fab fa-whatsapp"></i></span>
+                            <div style="flex-basis:15%;">
+                                <div>Vidas {{$c->quantidade}}</div>
+                                <div>{{$c->pessoa_fisica == 1 ? "Pessoa Física" : "Pessoa Jurídico"}}</div>
+                                <div>{{$c->nome_etiqueta}}</div>
                             </div>
-                            <div style="display:flex;justify-content: space-between;">
-                                <a href="{{route('clientes.agendarTarefa',$c->id)}}" style="color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(249,3,110);">
-                                    Tarefa
-                                </a>  
-                                <span class="bg-danger" style="padding:3px;"><i class="fas fa-envelope"></i></span>  
-                            </div>
+                            @if(!auth()->user()->admin)
+                                <div style="flex-basis:20%;justify-content: space-between;display:flex;flex-direction: column;">
+                                    <div style="display:flex;justify-content: space-between;">
+                                        <a class="" href="{{route('cotacao.orcamento',$c->id)}}" style="background-color:green;color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(43,128,0);">Orçamento</a>
+                                        <span style="padding:3px;" class="bg-info"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    <div style="display:flex;justify-content: space-between;margin:2px 0">
+                                        <a class="" href="{{route('cotacao.contrato',$c->id)}}" style="background-color:blue;color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(0,39,251);">Contrato</a>
+                                        <span class="bg-success" style="padding:4px;"><i class="fab fa-whatsapp"></i></span>
+                                    </div>
+                                    <div style="display:flex;justify-content: space-between;">
+                                        <a href="{{route('cliente.especifico',$c->id)}}" style="color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(249,3,110);">
+                                            Tarefa
+                                        </a>  
+                                        <span class="bg-danger" style="padding:3px;"><i class="fas fa-envelope"></i></span>  
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                    
+                        <div class="abrir_modal seta" data-cliente="{{$c->id}}"><i class="fas fa-chevron-down"></i></div>
+
+                        <div id="resposta"></div>
+
+
+
+
                     </div>
-                    <hr />
                 @endforeach
             @else
                 <h4 class="text-center">Sem Clientes há serem listados</h4>
             @endif
+
+
             <nav aria-label="">
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="{{$clientes->previousPageUrl()}}"><<</a></li>
-                @for($i=1;$i<=$clientes->lastPage();$i++)
-                    <li class="page-item {{$i == $clientes->currentPage() ? 'active' : ''}}">
-                        <a class="page-link" href="{{isset($filtro) && count($filtro) >= 1 ? $clientes->appends($filtro)->url($i) : $clientes->url($i)}}">{{$i}}</a>
-                    </li>
-                @endfor
-                <li class="page-item"><a class="page-link" href="{{$clientes->nextPageUrl()}}">>></a></li>
-            </ul>
-        </nav>       
+                @if($clientes->lastPage()>1)    
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="{{$clientes->previousPageUrl()}}"><<</a></li>
+                        @for($i=1;$i<=$clientes->lastPage();$i++)
+                            <li class="page-item {{$i == $clientes->currentPage() ? 'active' : ''}}">
+                                <a class="page-link" href="{{isset($filtro) && count($filtro) >= 1 ? $clientes->appends($filtro)->url($i) : $clientes->url($i)}}">{{$i}}</a>
+                            </li>
+                        @endfor
+                        <li class="page-item"><a class="page-link" href="{{$clientes->nextPageUrl()}}">>></a></li>
+                    </ul>
+                @endif
+            </nav>       
         </div>
         
     </div>
@@ -178,6 +201,40 @@
 @section('css')
 <link rel="stylesheet" href="{{asset('vendor/select2/css/select2.min.css')}}" />    
 <link rel="stylesheet" href="{{asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.css')}}" />
+<style>
+    .full_card {
+        margin-bottom: 5px;
+    }
+
+    .abrir_modal {
+        background-color:#D3D3D3;
+        width:100%;
+        height:20px;
+        /* margin-bottom:5px; */
+        cursor:pointer;
+        border-right:1px solid black;
+        border-left:1px solid black;
+        border-bottom:1px solid black;
+        text-align:center;
+    }
+    .fechar_modal {
+        background-color:#D3D3D3;
+        width:100%;
+        height:20px;
+        /* margin-bottom:5px; */
+        cursor:pointer;
+        border-right:1px solid black;
+        border-left:1px solid black;
+        border-bottom:1px solid black;
+        text-align:center;
+    } 
+
+
+
+    .ds-none {
+        display:none;
+    }
+</style>
 @endsection
 
 
@@ -201,26 +258,23 @@
                 $(".menu-clientes > .dropdown-menu").dropdown('hide')
             });
 
-            
-
-
             $('#search').select2({
                 theme: 'bootstrap4',
             });
+
             $('#alterarModal').on('show.bs.modal', function (event) {
                 var alvo = $('input[name="id"]').val();
-                
-                
                 $('input[type="radio"]').attr('checked',false);
                 $('input[id="status_'+alvo+'"]').attr('checked',true);
-                console.log(alvo);
             });
+
             $('.status').click(function(){
                 let id = $(this).attr('data-id');
                 let cliente = $(this).attr('data-cliente');
                 $('input[name="id"]').val(id);
                 $('input[name="cliente"]').val(cliente);
             });
+
             $("select[name='definir_status']").on('change',function(){
                 let id_cliente = $(this).attr('data-id');
                 let id_etiqueta = $(this).val();
@@ -230,10 +284,10 @@
                     data:"cliente="+id_cliente+"&etiqueta="+id_etiqueta,
                     success(res) {
                         window.location.reload();
-                                     
                     }
                 });
             });
+
             $('form[name="alterar_valor"]').on('submit',function(e){
                 let action = $(this).attr('action');
                
@@ -280,7 +334,6 @@
                 return false;
             });
 
-
             $('.cliente_semtarefa').on('click',function(){
                 $.ajax({
                     url:"{{route('cliente.semtarefasajax')}}",
@@ -312,18 +365,16 @@
             window.$_GET = new URLSearchParams(location.search);
             let value = $_GET.get('ac');
             if(value && value == "atrasado") {
-                
-                    $.ajax({
-                        url:"{{route('cliente.tarefasatrasadasajax')}}",
-                        method:"POST",
-                        success:function(res) {
-                            $('.card-body').slideUp('fast',function(){
-                                $(this).html(res).slideDown('slow');
-                            });
-                        }
-                    });
-                    return false;
-                
+                $.ajax({
+                    url:"{{route('cliente.tarefasatrasadasajax')}}",
+                    method:"POST",
+                    success:function(res) {
+                        $('.card-body').slideUp('fast',function(){
+                            $(this).html(res).slideDown('slow');
+                        });
+                    }
+                });
+                return false;
             }
 
             if(value && value == "semtarefa") {
@@ -456,7 +507,7 @@
                return false;  
             });
 
-            $('.tarefashoje').on('click',function(){
+            $('.tarefasnows').on('click',function(){
                 $.ajax({
                     url:"{{route('cliente.tarefasParaHoje')}}",
                     method:"POST",
@@ -479,12 +530,67 @@
             });
 
             
-
+            $(".full_card").on('click','.abrir_modal',function(){
+                var id = $(this).attr("data-cliente");
+                var local = $(this);
+                $(".full_card").find("#resposta").slideUp("fast");
+                $(".full_card").find(".seta").removeClass('fechar_modal').addClass('abrir_modal').html("").append('<i class="fas fa-chevron-down"></i>');
+                $.ajax({
+                    url:"{{route('clientes.editarClientes')}}",
+                    data:"id="+id,
+                    method:"POST",
+                    success:function(res) {  
+                        local.closest('.full_card').find("#resposta").html(res).css("display","none").slideDown('slow',function(){
+                            local.html("").append("<i class='fas fa-angle-up fa-lg'></i>").removeClass('abrir_modal').addClass('fechar_modal')
+                        });
+                    }      
+                });    
+                return false;               
+            });
             
 
-           
+            $(".full_card").on('click','.fechar_modal',function(){
+                let alvo = $(this);
+                alvo.closest('.full_card').find("#resposta").slideUp('slow',function(){
+                    alvo.html("").append("<i class='fas fa-chevron-down'></i>").removeClass('fechar_modal').addClass('abrir_modal');
+                });
+                return false;
+            });
 
+            
+            $("body").on('submit','form[name="editar_cliente"]',function(){
+                let cliente_id = $(this).find('input[name="cliente_id"]').val();
+                let alvo = $(this);
+                
+                
+                $.ajax({
+                    url:"{{route('clientes.formEditarClientes')}}",
+                    method:"POST",
+                    data:"data="+$(this).serialize(),
+                    success:function(res) {
+                        alvo.closest('.full_card').find('.nome').text(res.nome);
+                        alvo.closest('.full_card').find('.email').text(res.email);
+                        alvo.closest('.full_card').find('.telefone').text(res.telefone);
+                        alvo.closest('.full_card').find("#resposta").slideUp('slow');
+                    },
+                    complete:function() {
+                        alvo.closest('.full_card').find(".seta").html("").append("<i class='fas fa-chevron-down'></i>").removeClass('fechar_modal').addClass('abrir_modal');
+                    }
+                });
+                return false;
+            });
+        
+        
+        
+        
+        
+        
+        
         });
+
+
+
+
     </script>  
 
 

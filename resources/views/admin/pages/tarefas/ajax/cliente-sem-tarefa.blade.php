@@ -6,17 +6,33 @@
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
-    <table class="table clientesemtarefas">
-        <thead>
-            <tr>
-                <th>nome</th>                          
-                <th>telefone</th>   
-                <th>status</th>   
-                <th></th>   
-            </tr>
-        </thead>
-        <tbody></tbody>                  
-    </table>
+    @can('configuracoes')
+        <table class="table clientesemtarefasadministrador">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Corretor</th>
+                                              
+                    <th>Telefone</th>   
+                    <th>Status</th>   
+                    
+                </tr>
+            </thead>
+            <tbody></tbody>                  
+        </table>    
+    @else
+        <table class="table clientesemtarefas">
+            <thead>
+                <tr>
+                    <th>nome</th>                          
+                    <th>telefone</th>   
+                    <th>status</th>   
+                    <th></th>   
+                </tr>
+            </thead>
+            <tbody></tbody>                  
+        </table>
+    @endcan
 </div>
 <script>
     $(function(){
@@ -28,7 +44,7 @@
                     "url":"{{ route('cliente.getClienteSemTarefaAjax') }}",
                     "dataSrc": ""
                 },
-                "lengthMenu": [8,15,30],
+                "lengthMenu": [15,30,45,90],
                 "ordering": true,
                 "paging": true,
                 "searching": true,
@@ -56,6 +72,33 @@
                     },
                 ]
             });
+
+            $(".clientesemtarefasadministrador").DataTable({
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('cliente.getClienteSemTarefaAjax') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [15,30,45,90],
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                //order: [[3, "asc"]],
+                columns: [
+                    {data:"nome",name:"nome"},
+                    {data:"corretor",name:"corretor"},
+                    
+                    {data:"telefone",name:"telefone"},
+                    {data:"etiqueta",name:"status"},
+                    
+                ]
+            });
+
     });
 </script>
 </body>

@@ -18,17 +18,13 @@ class AdministradoraController extends Controller
     public function __construct(Administradora $administradora)
     {
         $this->repository = $administradora;
-        $this->middleware(['can:configuracoes']);
+        //$this->middleware(['can:configuracoes']);
     }
 
     public function index()
     {
         $corretora = auth()->user()->corretora_id;
-        
-
         $administradoras = Administradora::all();    
-
-                
         return view('admin.pages.administradora.index',[
             "administradoras" => $administradoras
         ]);
@@ -50,7 +46,9 @@ class AdministradoraController extends Controller
      * @param  App\Http\Requests\StoreUpdateAdministradora  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function store(StoreUpdateAdministradora $request)
+    // public function store(Request $request)
     {
         $parcelas = array_values($request->parcelas);       
         $administradora = new Administradora();
@@ -64,8 +62,8 @@ class AdministradoraController extends Controller
             $aa = new ComissoesCorretoraConfiguracoes();
             $aa->administradora_id = $administradora->id;
             $aa->corretora_id = auth()->user()->corretora_id;
-            $aa->valor = $v['parcelas'];
-            $aa->parcela = $k+1;
+            $aa->valor = $v;
+            $aa->parcela = $k;
             $aa->save();    
         }
         return redirect()->route("administradora.index");
@@ -78,8 +76,7 @@ class AdministradoraController extends Controller
 
     public function edit($id)
     {
-        $administradora = $this->repository->where("id",$id)->with('parcelas')->first();
-        
+        $administradora = $this->repository->where("id",$id)->with('parcelas')->first();   
         if(!$administradora) {
             return redirect()->back();
         }

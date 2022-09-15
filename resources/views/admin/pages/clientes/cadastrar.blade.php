@@ -91,6 +91,7 @@
                     data:"telefone="+telefone,
                     url:"{{route('cliente.verificartelefone')}}",
                     success:function(res) {
+                        
                         if(res != "nada" && res != "indisponivel") {
                             
                             $("input[type='submit']").attr('disabled',true);
@@ -124,12 +125,15 @@
                                 icon: 'error',
                                 type:'error',
                                 title: 'Oops...',
-                                
                                 showCloseButton: true,
                                 html:
                                     '<hr />'+
                                     '<h3>Cliente Indisponível</h3>'
                             })
+                        }
+
+                        if(res == "nada") {
+                            $("input[type='submit']").attr('disabled',false);
                         }
                         
 

@@ -9,7 +9,8 @@ use App\Models\{
     ComissoesCorretoraLancadas,
     ComissoesCorretorLancados,
     PremiacaoCorretoresLancados,
-    PremiacaoCorretoraLancadas
+    PremiacaoCorretoraLancadas,
+    User
 };
 use Illuminate\Support\Facades\DB;
 
@@ -41,17 +42,23 @@ class ComissoesController extends Controller
     {
         $comissoes = ComissoesCorretorLancados::where('comissao_id',$id)->get();
         $premiacao = PremiacaoCorretoresLancados::where('comissao_id',$id)->first();
-        //$comissoesCorretora = ComissoesCorretoraLancadas::where('comissao_id',$id)->get();
-        //$premiacoesCorretora = PremiacaoCorretoraLancadas::where('comissao_id',$id)->first();
 
-        
+        $comissoesCorretora = "";
+        $premiacaoCorretora = "";
 
+
+
+        $user = User::where("id",auth()->user()->id)->first();
+        if($user->hasPermission('configuracoes') || $user->isAdmin()) {  
+            $comissoesCorretora = ComissoesCorretoraLancadas::where('comissao_id',$id)->get();
+            $premiacaoCorretora = PremiacaoCorretoraLancadas::where('comissao_id',$id)->first();
+        } 
 
         return view('admin.pages.comissoes.detalhes',[
             'comissoes' => $comissoes,
-            "premiacao" => $premiacao
-            //"comissoesCorretora" => $comissoesCorretora,
-            //"premiacoesCorretora" => $premiacoesCorretora
+            "premiacao" => $premiacao,
+            "comissoesCorretora" => $comissoesCorretora,
+            "premiacaoCorretora" => $premiacaoCorretora
         ]);
     }
 
@@ -64,7 +71,6 @@ class ComissoesController extends Controller
         }
         $comissao->status = $comissao->status ? false : true;
         $comissao->save();
-
         return $comissao->status;
     }
 
@@ -85,16 +91,15 @@ class ComissoesController extends Controller
     public function mudarStatusCorretora(Request $request)
     {
         $id = $request->id;
-        
         $comissao = ComissoesCorretoraLancadas::where("id",$id)->first();
         if(!$comissao) {
             return false;
         }
         $comissao->status = $comissao->status ? false : true;
         $comissao->save();
-
         return $comissao->status;
     }
+    
 
     public function mudarStatusCorretoraPremiacao(Request $request)
     {
@@ -105,13 +110,8 @@ class ComissoesController extends Controller
         }
         $comissao->status = $comissao->status ? false : true;
         $comissao->data = date("Y-m-d");
-        $comissao->save();
-
+        $comissao->save();        
         return $comissao->status;
     }
-
-    
-
-
 
 }

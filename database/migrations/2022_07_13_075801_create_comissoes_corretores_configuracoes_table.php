@@ -18,12 +18,14 @@ class CreateComissoesCorretoresConfiguracoesTable extends Migration
             $table->unsignedBigInteger('plano_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('administradora_id');
+            $table->unsignedBigInteger('cidade_id');
             
             $table->string('valor');
             $table->integer('parcela');
             $table->foreign('plano_id')->references('id')->on('planos')->onDelete("cascade");
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
             $table->foreign('administradora_id')->references('id')->on('administradoras')->onDelete("cascade");
+            $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete("cascade");
             $table->timestamps();
         });
     }

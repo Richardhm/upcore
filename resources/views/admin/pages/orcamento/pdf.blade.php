@@ -1,100 +1,123 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-<style type="text/css">
-		* {
-			margin:0;
-			padding:0;
-			box-sizing:border-box;
-		}
-	</style>	
+<style rel="stylesheet">
+	table, tr, td, th{
+		border:#000 solid 1px;
+		width:280px;
+		padding:0px;
+		font-size:20px;
+		border-collapse:collapse;
+    margin:auto auto;
+	}
+	td{
+		width:50px;
+		height:30px;
+	}
+	th{
+		font-weight: normal;
+		/* color:#FFF; */
+    width:90px;
+	}
+</style>
 </head>
     <body>
-    
-        <div class="envolver planos" style="margin-left:10px;">
-        @php $ii=0;$apartamento=0;$enfermaria=0;$ambulatorial=0;$totalApartamento=0;$totalEnfermaria=0;$totalAmbulatorial=0;   @endphp
-        @for($i=0;$i < count($planos); $i++)
-                @if($ii == 0)
-                            <div><img src="{{public_path('storage/'.$planos[$i]->admin_logo)}}" width="100" height="50" alt=""></div>
-                            <div style="display:block;">
-                                <p style="display:block;border:1px solid black;text-align:center;padding:10px;margin:10px 0;">{{$planos[$i]->copartipicao_texto}} {{$planos[$i]->odonto_texto}}</p>
-                            </div>
-                            <div style="float:left;width:20%;">
-                                <p style="background-color:rgb(49,134,155);box-sizing: border-box;padding:10px 0 9px 0;border-left:1px solid black;border-top:1px solid black;">
-                                    <span>Faixas Etarias</span>
-                                    <span>&nbsp;</span>
-                                </p>
-                                    
-                                    @foreach($faixas as $ff)
-                                        <p style="border-top:1px solid black;border-right:1px solid black;border-left:1px solid black;"><span>{{$ff['faixa_nome']}}</span></p>
-                                    @endforeach
-                                    
-                                <p style="background-color:rgb(49,134,155);border-right:1px solid black;border-top:1px solid black;"><span>Total Do Plano</span></p>
-                            </div>
+        @php
+          $total_apartamento_coparticipacao = 0;
+          $total_enfermaria_coparticipacao = 0;
+          $total_ambulatorial_coparticipacao =  0;
+          $total_apartamento_sem_coparticipacao = 0;
+          $total_enfermaria_sem_coparticipacao = 0;
+          $total_ambulatorial_sem_coparticipacao = 0;
+        @endphp
+        @foreach($planos as $p)           
+             @if($loop->first)
+             <section>
+             <table class="table table-striped">
+                  <thead>
+                      <tr>
+                        <td colspan="7" align="center"><b>{{$p->titulos}}</b></td>
+                      </tr>
+                      <tr>
+                        <td colspan="1">
+                          {{$p->admin_nome}}
+                        </td>
+                        <td colspan="6" style="text-align:center;vertical-align: middle;">
+                          <span style="margin:0 auto;width:auto;display:inline-block;vertical-align: middle;font-size:1.2em;">{{$p->plano}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                          <td></td>
+                          <td colspan="3" style="text-align:center;">Plano C/ Coparticipação</td>
+                          <td colspan="3" style="text-align:center;">Plano S/ Coparticipação</td>
+                      </tr>
+                      <tr>
+                          <th style="text-align:center;font-size:0.875em;">Faixa Etária</th>
+                          <th style="text-align:center;font-size:0.875em;">APART</th>
+                          <th style="text-align:center;font-size:0.875em;">ENFER</th>
+                          <th style="text-align:center;font-size:0.875em;">AMBUL</th>
+                          <th style="text-align:center;font-size:0.875em;">APART</th>
+                          <th style="text-align:center;font-size:0.875em;">ENFER</th>
+                          <th style="text-align:center;font-size:0.875em;">AMBUL</th>
+                      </tr>
+                  </thead>
+                  <tbody>
                 @endif
-
-
-                @if($planos[$i]->modelo == "Apartamento")
-                        @if($apartamento == 0)      
-                            <div class="apartamento" style="float:left;width:20%;">
-                                <p style="background-color:rgb(49,134,155);box-sizing: border-box;">
-                                    <span style="text-align:center;display:block;color:#000;">{{$planos[$i]->plano}}</span>
-                                    <span style="text-align:center;display:block;color:#000;">Apartamento</span>
-                                </p>
-                        @endif  
-                        @php $totalApartamento += $planos[$i]->Total @endphp
-                        <p><span>{{number_format($planos[$i]->Total,2,",",".")}}</span></p>
-                        @if($apartamento == count($faixas)-1) 
-                                <p style="background-color:rgb(49,134,155);border-right:1px solid black;color:#000;"><span>{{number_format($totalApartamento,2,",",".")}}</span></p>
-                            </div>
-                        @endif
-                        @php $apartamento++ @endphp
-                @endif
-
-                @if($planos[$i]->modelo == "Enfermaria")
-                    @if($enfermaria == 0) 
-                        <div class="enfermaria" style="float:left;width:20%;"> 
-                            <p style="background-color:rgb(49,134,155);box-sizing: border-box;">
-                            <span style="text-align:center;display:block;color:#000;">{{$planos[$i]->plano}}</span>
-                                <span style="text-align:center;display:block;color:#000;">Enfermaria</span>
-                            </p>
-                    @endif 
-                    @php $totalEnfermaria += $planos[$i]->Total @endphp 
-                    <p><span>{{number_format($planos[$i]->Total,2,",",".")}}</span></p>   
-                    @if($enfermaria == count($faixas)-1) 
-                            <p style="background-color:rgb(49,134,155);border-right:1px solid black;color:#000;"><span>{{number_format($totalEnfermaria,2,",",".")}}</span></p>
-                        </div> 
-                    @endif    
-                    @php $enfermaria++ @endphp
-                @endif
-
-                @if($planos[$i]->modelo == "Ambulatorial")
-                    @if($ambulatorial == 0) 
-                        <div class="ambulatorial" style="float:left;width:20%;"> 
-                            <p style="box-sizing: border-box;background-color:rgb(49,134,155);">
-                                <span style="text-align:center;display:block;color:#000;">{{$planos[$i]->plano}}</span>
-                                <span style="text-align:center;display:block;color:#000;">Ambulatorial</span>
-                            </p>
-                    @endif  
-                        @php $totalAmbulatorial += $planos[$i]->Total @endphp   
-                        <p><span>{{number_format($planos[$i]->Total,2,",",".")}}</span></p>    
-                    @if($ambulatorial == count($faixas)-1) <p style="background-color:rgb(49,134,155);border-right:1px solid black;"><span>{{number_format($totalAmbulatorial,2,",",".")}}</span></p></div> @endif    
-                    @php $ambulatorial++ @endphp
-                @endif
-							
-							
-                   
-                @php $ii++; @endphp
-                       
-        @endfor            
-               
-                    
-                        
-
-
-                        </div>                              
-                
-                       
-    
+                  <tr>
+                        <th style="text-align:center;">{{$p->nome}}</th>
+                        <th style="text-align:center;">
+                            {{number_format($p->apartamento_coparticipacao,2,",",".")}}
+                            @php
+                              $total_apartamento_coparticipacao += $p->apartamento_coparticipacao;
+                            @endphp
+                        </th>
+                          <th style="text-align:center;">
+                            {{number_format($p->enfermaria_coparticipacao,2,",",".")}}
+                            @php
+                              $total_enfermaria_coparticipacao += $p->enfermaria_coparticipacao;
+                            @endphp
+                          </th>
+                          <th style="text-align:center;">
+                            {{number_format($p->ambulatorial_coparticipacao,2,",",".")}}
+                            @php
+                              $total_ambulatorial_coparticipacao += $p->ambulatorial_coparticipacao;
+                            @endphp
+                          </th>
+                          <th style="text-align:center;">
+                            {{number_format($p->apartamento_sem_coparticipacao,2,",",".")}}
+                            @php
+                              $total_apartamento_sem_coparticipacao += $p->apartamento_sem_coparticipacao
+                            @endphp
+                          </th>
+                          <th style="text-align:center;">
+                            {{number_format($p->enfermaria_sem_coparticipacao,2,",",".")}}
+                            @php
+                              $total_enfermaria_sem_coparticipacao += $p->enfermaria_sem_coparticipacao
+                            @endphp
+                          </th>
+                          <th style="text-align:center;">
+                            {{number_format($p->ambulatorial_sem_coparticipacao,2,",",".")}}
+                            @php
+                              $total_ambulatorial_sem_coparticipacao += $p->ambulatorial_sem_coparticipacao
+                            @endphp
+                          </th>
+                  </tr> 
+                  @if($loop->last)
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td style="text-align:center;">Total</td>
+                      <td style="text-align:center;color:#060;">{{isset($total_apartamento_coparticipacao) ? number_format($total_apartamento_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:center;color:#060;">{{isset($total_enfermaria_coparticipacao) ? number_format($total_enfermaria_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:center;color:#060;">{{isset($total_ambulatorial_coparticipacao) ? number_format($total_ambulatorial_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:center;color:#060;">{{isset($total_apartamento_sem_coparticipacao) ? number_format($total_apartamento_sem_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:center;color:#060;">{{isset($total_enfermaria_sem_coparticipacao) ? number_format($total_enfermaria_sem_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:center;color:#060;">{{isset($total_ambulatorial_sem_coparticipacao) ? number_format($total_ambulatorial_sem_coparticipacao,2,",",".") : 0}}</td>
+                    </tr>
+                  </tfoot>
+                  </table>
+            </section>      
+            @endif        
+      @endforeach 
     </body>
 </html>

@@ -138,30 +138,22 @@
                 </table>
             </div>
         </div>
-        
     @endif       
-        
-        
-    
-
     @if(isset($tabelas) && count($tabelas) == 0) 
     <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
-        
-
     @endif
-
-
-   
-
-   
-</div>
-    
-  
+</div>  
 @stop
 @section('js')
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     <script>
         $(function(){
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
                 $('#operadora_search').on('change',function(){
                     $('input[name="old_operadora"]').val($(this).val());
@@ -169,6 +161,7 @@
 
                 $('#administradora_search').change(function(){
                     let valor = $(this).val();
+                    
                     verificar_administradora(valor)
 
                 });
@@ -184,21 +177,17 @@
 
 
                 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                
 
             function verificar_administradora(valor,city,plans){
-                
+
                 let selectedCity = (city != null && city != '' ? city : '');
                 let selectedPlan = (plans != null && plans != '' ? plans : '');
                 
                 if(valor != "") {
                     
                     $.ajax({
-                        url:"{{route('cidades.administradoras.pegar')}}",
+                        url:"{{route('home.pegar.cidades')}}",
                         method:"POST",
                         data:"administradora="+valor,
                         success:function(res) {
@@ -209,7 +198,6 @@
                                     $('#cidade_search').       
                                     append("<option value='"+value.id+"' "+(value.id == selectedCity ? 'selected' : '')+" >"+value.nome+"</option>")     
                                 });
-                            
                             } else {
                                 $("#cidade_search").html("");
                                 $("#cidade_search").append('<option value="">--Esta administradora não possui cidades cadastradas--</option>');

@@ -36,7 +36,7 @@ class TabelaController extends Controller
     }
 
     public function index(Request $request)
-    {        
+    {    
         $operadoras = Operadora::all();
         $administradoras = Administradora::all();
         $tipos = Planos::all();    
@@ -53,6 +53,7 @@ class TabelaController extends Controller
 
     public function pegarCidadeAdministradora(Request $request)
     {
+        
         $administradora = $request->administradora;
         /** Pegar Planos */
         $planos = DB::table('administradora_planos')
@@ -220,7 +221,6 @@ class TabelaController extends Controller
 
     public function pesquisar(Request $request)
     {
-        
         $rules = [
             "operadora_search" => "required",
             "administradora_search" => "required",
@@ -240,14 +240,12 @@ class TabelaController extends Controller
         ];
 
         $request->validate($rules,$message);
-
         $operadora = $request->operadora_search;
         $administradora = $request->administradora_search;
         $planos = $request->planos_search;
         $coparticipacao = ($request->coparticipacao_search == "sim" ? 1 : 0);
         $odonto = ($request->odonto_search == "sim" ? 1 : 0);
         $cidade = $request->cidade_search;
-       
 
         $tabelas = DB::select("SELECT faixas,apartamento,id_apartamento,enfermaria,id_enfermaria,ambulatorial,id_ambulatorial FROM (
                 select 

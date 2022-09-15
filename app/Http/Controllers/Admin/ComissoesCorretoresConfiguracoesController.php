@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\ComissoesCorretoresConfiguracoes;
 use App\Models\User;
 use App\Models\Administradora;
-
+use App\Models\Cidade;
 use App\Models\Planos;
+use App\Models\PremiacaoCorretoresConfiguracoes;
 
 class ComissoesCorretoresConfiguracoesController extends Controller
 {
@@ -20,8 +21,10 @@ class ComissoesCorretoresConfiguracoesController extends Controller
 
     public function index($id)
     {
-        $corretor = User::where("id",$id)->first();
-        
+        $administradoras = Administradora::all();
+        $planos = Planos::all();
+        $cidades = Cidade::all();
+        $corretor = User::where("id",$id)->first();        
         if(!$corretor) {
             return redirect()->back();
         }
@@ -32,13 +35,51 @@ class ComissoesCorretoresConfiguracoesController extends Controller
             ->selectRaw("(SELECT id FROM planos WHERE planos.id = comissoes_corretores_configuracoes.plano_id) as id_plano")
             ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = comissoes_corretores_configuracoes.administradora_id) as administradora")
             ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = comissoes_corretores_configuracoes.administradora_id) as id_administradora")
-            ->groupByRaw("plano_id,administradora_id")
+            ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = comissoes_corretores_configuracoes.cidade_id) as cidade")
+            ->selectRaw("(SELECT id FROM cidades WHERE cidades.id = comissoes_corretores_configuracoes.cidade_id) as id_cidade")
+            ->selectRaw("(SELECT GROUP_CONCAT(valor) FROM comissoes_corretores_configuracoes AS dentro WHERE dentro.plano_id = comissoes_corretores_configuracoes.plano_id AND dentro.administradora_id = comissoes_corretores_configuracoes.administradora_id AND dentro.cidade_id = comissoes_corretores_configuracoes.cidade_id) AS parcela")
+            ->groupByRaw("administradora_id,cidade_id,plano_id")
             ->get();
+        
+        // $premiacoes = PremiacaoCorretoresConfiguracoes::where("user_id",$id)
+        //     ->selectRaw("id")
+        //     ->selectRaw("valor")
+        //     ->selectRaw("(SELECT nome FROM planos WHERE planos.id = premiacao_corretores_configuracoes.plano_id) as plano")
+        //     ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = premiacao_corretores_configuracoes.administradora_id) as administradora")
+        //     ->get();         
+        
+        $premiacoes = PremiacaoCorretoresConfiguracoes::where("user_id",$id)
+            ->selectRaw("user_id")
+            ->selectRaw("(SELECT nome FROM planos WHERE planos.id = premiacao_corretores_configuracoes.plano_id) as plano")
+            ->selectRaw("(SELECT id FROM planos WHERE planos.id = premiacao_corretores_configuracoes.plano_id) as id_plano")
+            ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = premiacao_corretores_configuracoes.administradora_id) as administradora")
+            ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = premiacao_corretores_configuracoes.administradora_id) as id_administradora")
+            ->selectRaw("(SELECT GROUP_CONCAT(valor,'|') FROM premiacao_corretores_configuracoes AS dentro WHERE dentro.plano_id = premiacao_corretores_configuracoes.plano_id AND dentro.administradora_id = premiacao_corretores_configuracoes.administradora_id) AS parcela")
+            ->groupByRaw("administradora_id,plano_id")
+            ->get();
+        
+
 
         return view('admin.pages.corretores.comissoes.index',[
             "comissoes" => $comissoes,
-            "corretor" => $corretor
+            "corretor" => $corretor,
+            "administradoras" => $administradoras,
+            "planos" => $planos,
+            "cidades" => $cidades,
+            "premiacoes" => $premiacoes
         ]);
+    }
+
+    public function pegarParcelas(Request $request) 
+    {
+        $administradora = $request->administradora;
+        $plano = $request->plano;
+        $cidade = $request->cidade;
+        $user = $request->user;
+        $parcelas = ComissoesCorretoresConfiguracoes::where("administradora_id",$administradora)->where("cidade_id",$cidade)->where("plano_id",$plano)->where("user_id",$user)->get();
+        return view('admin.pages.corretores.comissoes.parcelas',[
+            "parcelas" => $parcelas
+        ]);        
     }
 
     public function create($id)
@@ -58,41 +99,53 @@ class ComissoesCorretoresConfiguracoesController extends Controller
 
     public function store(Request $request)
     {
-        
-        $rules = [
-            "administradora_id" => "required",
-            "plano_id" => "required",
-            "parcelas"    => "required|array|min:1",
-            "parcelas.*.parcelas" => "required|numeric"
-        ];
-
-        $message = [
-            "administradora_id.required" => "Escolha uma administradora",
-            "plano_id.required" => "Escolha um plano",
-            "parcelas.*.parcelas.required" => "Marque pelo menos 1 comissão",
-            "parcelas.*.parcelas.numeric" => "Marque pelo menos 1 comissão"
-        ];
-
-        $request->validate($rules,$message);
-
-        $verificar = ComissoesCorretoresConfiguracoes::where("user_id",$request->user_id)->where("plano_id",$request->plano_id)->where("administradora_id",$request->administradora_id)->get();
-
+        $verificar = ComissoesCorretoresConfiguracoes::where("user_id",$request->user_id)->where("plano_id",$request->plano_id)->where("cidade_id",$request->cidade_id)->where("administradora_id",$request->administradora_id)->get();
         if(count($verificar)>=1) {
-            return redirect()->route('comissao.corretores.cadastrar',$request->user_id)->with("errorjatem","Esse usuario já tem comissões com o plano e administradora respectivamente")->withInput($request->all());
+            return "error";
+            //return redirect()->route('comissao.corretores.cadastrar',$request->user_id)->with("errorjatem","Esse usuario já tem comissões com o plano e administradora respectivamente")->withInput($request->all());
         } else {
             $ii=1;
             foreach($request->parcelas as $k => $v):
                 $cad = new ComissoesCorretoresConfiguracoes();
                 $cad->user_id = $request->user_id;
                 $cad->plano_id = $request->plano_id;
+                $cad->cidade_id = $request->cidade_id;
                 $cad->administradora_id = $request->administradora_id;
-                $cad->valor = $v['parcelas'];
+                $cad->valor = $v;
                 $cad->parcela = $ii++;
                 $cad->save();
             endforeach;
-            return redirect()->route('comissao.corretores.index',$request->user_id);
+            return "sucesso";
         }
     }
+
+    public function editar(Request $request) 
+    {
+        $administradora = $request->administradora_id;
+        $cidade = $request->cidade_id;
+        $plano = $request->plano_id;
+        $user = $request->user_id;
+        ComissoesCorretoresConfiguracoes::where("user_id",$user)->where("plano_id",$plano)->where("cidade_id",$cidade)->where("administradora_id",$administradora)->delete();
+        // $del->delete();
+        $ii=1;
+        foreach($request->parcelas as $k => $v):
+            $cad = new ComissoesCorretoresConfiguracoes();
+            $cad->user_id = $user;
+            $cad->plano_id = $plano;
+            $cad->cidade_id = $cidade;
+            $cad->administradora_id = $administradora;
+            $cad->valor = $v;
+            $cad->parcela = $ii++;
+            $cad->save();
+        endforeach;
+        return "sucesso";
+
+
+    }
+
+
+
+
 
     public function editarParcelaIndividual(Request $request) 
     {

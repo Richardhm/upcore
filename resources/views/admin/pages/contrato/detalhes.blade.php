@@ -86,12 +86,8 @@
         <h4 class="text-center">Não Premiações cadastradas para esse Corretor</h4>    
     @endif
 </div>
-
-
-
 @stop   
 @section('js')
 
     
 @stop
-

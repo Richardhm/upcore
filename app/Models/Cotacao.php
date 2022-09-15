@@ -41,4 +41,9 @@ class Cotacao extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function comissao()
+    {
+        return $this->hasOne(Comissao::class);
+    }
+
 }

@@ -182,6 +182,7 @@
                 }
             });
             $('.valor').mask("#.##0,00", {reverse: true});
+            
             $('#administradora').change(function(){
                 let valor = $(this).val();
                 verificar_administradora(valor);  

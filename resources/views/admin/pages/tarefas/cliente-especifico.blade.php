@@ -67,8 +67,9 @@
   </style>
 </head>
 <body>
+    <input type="hidden" name="cliente_especifico" id="cliente_especifico" value="{{$cliente}}">
     <section class="d-flex c1">
-        <h4 style="color:#FFF;" class="ml-3">Gerenciamento de Tarefas</h4>
+        <h4 style="color:#FFF;" class="ml-3">Gerenciamento de Tarefas - NOME</h4>
         <a href="{{route('admin.home')}}" class="ml-auto align-self-center mr-4 bold">Dashboard</a>
     </section>
     <section class="d-flex">
@@ -235,16 +236,7 @@
                             <input type="text" name="title" id="title" class="form-control" placeholder="Digitar o título">
                             <div id="error_titulo"></div>
                         </div>
-                        <div class="form-group">
-                            <label for="title" style="color:#FFF;">Cliente:</label>
-                            <select name="cliente_id" id="cliente_id" class="form-control">
-                                <option value="">--Listar Clientes--</option>
-                                @foreach($clientes as $cc)
-                                <option value="{{$cc->id}}">{{$cc->nome}}</option>
-                                @endforeach
-                            </select>
-                            <div id="error_cliente_id"></div>
-                        </div>
+                        <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente}}">
                         <div class="form-group">
                             <label for="data" style="color:#FFF;">Data</label>
                             <input type="date" name="data" id="data" class="form-control">
@@ -291,6 +283,7 @@
                                     </div>
                                 </div>
                             @endforeach
+                            
                         </div>    
                         <div id="motivo_textarea">
                         </div>
@@ -348,12 +341,14 @@
             }
         });
         $("#lista_tarefas .tarefa").on('click',function(){
+            let cliente = $("#cliente_especifico").val();
             let alvo = $(this).attr('data-tarefa');
             $.ajax({
-                data:"alvo="+alvo,
-                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                data:"alvo="+alvo+"&cliente="+cliente,
+                url:"{{route('clientes.listarTarefasEspecificaCliente')}}",
                 method:"POST",
                 success:function(res) {
+                    
                     if(res && res.length >= 1) {
                         $(".c3").html(res);
                     } else {
@@ -406,8 +401,9 @@
         });
         $("body").on("submit","form[name='criar_tarefa']",function(){
             var form = $(this);
+
             $.ajax({
-                url:"{{route('tarefas.cadastrarTarefasAjax')}}",
+                url:"{{route('tarefas.cadastrarTarefasAjaxCliente')}}",
                 method:"POST",
                 data:$(this).serialize(),
                 beforeSend:function() {
@@ -417,11 +413,7 @@
                         $("#error_titulo").html("");
                     }
                      
-                    if(form.find("#cliente_id").val() == "") {
-                        $("#error_cliente_id").html("<p class='alert alert-danger'>Cliente e campo obrigatório</p>")
-                    } else {
-                        $("#error_cliente_id").html("");
-                    }
+                   
 
                     if(form.find("#data").val() == "") {
                         $("#error_data").html("<p class='alert alert-danger'>Data e campo obrigatório</p>")
@@ -443,7 +435,7 @@
                     }
                     $("#exampleModal").modal('hide');
                     form.find('#title').val('');
-                    form.find('#cliente_id').val('');
+                    
                     form.find('#data').val('');
                     form.find('#descricao').val('');
                     let id_tarefa = $("body").find("#tarefa_cadastrada_id").val();            

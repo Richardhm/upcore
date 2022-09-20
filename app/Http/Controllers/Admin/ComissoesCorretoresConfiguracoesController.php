@@ -37,10 +37,10 @@ class ComissoesCorretoresConfiguracoesController extends Controller
             ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = comissoes_corretores_configuracoes.administradora_id) as id_administradora")
             ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = comissoes_corretores_configuracoes.cidade_id) as cidade")
             ->selectRaw("(SELECT id FROM cidades WHERE cidades.id = comissoes_corretores_configuracoes.cidade_id) as id_cidade")
-            ->selectRaw("(SELECT GROUP_CONCAT(valor) FROM comissoes_corretores_configuracoes AS dentro WHERE dentro.plano_id = comissoes_corretores_configuracoes.plano_id AND dentro.administradora_id = comissoes_corretores_configuracoes.administradora_id AND dentro.cidade_id = comissoes_corretores_configuracoes.cidade_id) AS parcela")
+            ->selectRaw("(SELECT GROUP_CONCAT(valor) FROM comissoes_corretores_configuracoes AS dentro WHERE dentro.plano_id = comissoes_corretores_configuracoes.plano_id AND dentro.administradora_id = comissoes_corretores_configuracoes.administradora_id AND dentro.cidade_id = comissoes_corretores_configuracoes.cidade_id AND dentro.user_id = comissoes_corretores_configuracoes.user_id) AS parcela")
             ->groupByRaw("administradora_id,cidade_id,plano_id")
             ->get();
-        
+                
         // $premiacoes = PremiacaoCorretoresConfiguracoes::where("user_id",$id)
         //     ->selectRaw("id")
         //     ->selectRaw("valor")
@@ -54,12 +54,10 @@ class ComissoesCorretoresConfiguracoesController extends Controller
             ->selectRaw("(SELECT id FROM planos WHERE planos.id = premiacao_corretores_configuracoes.plano_id) as id_plano")
             ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = premiacao_corretores_configuracoes.administradora_id) as administradora")
             ->selectRaw("(SELECT id FROM administradoras WHERE administradoras.id = premiacao_corretores_configuracoes.administradora_id) as id_administradora")
-            ->selectRaw("(SELECT GROUP_CONCAT(valor,'|') FROM premiacao_corretores_configuracoes AS dentro WHERE dentro.plano_id = premiacao_corretores_configuracoes.plano_id AND dentro.administradora_id = premiacao_corretores_configuracoes.administradora_id) AS parcela")
+            ->selectRaw("(SELECT GROUP_CONCAT(valor,'|') FROM premiacao_corretores_configuracoes AS dentro WHERE dentro.plano_id = premiacao_corretores_configuracoes.plano_id AND dentro.administradora_id = premiacao_corretores_configuracoes.administradora_id AND dentro.user_id = premiacao_corretores_configuracoes.user_id) AS parcela")
             ->groupByRaw("administradora_id,plano_id")
             ->get();
         
-
-
         return view('admin.pages.corretores.comissoes.index',[
             "comissoes" => $comissoes,
             "corretor" => $corretor,

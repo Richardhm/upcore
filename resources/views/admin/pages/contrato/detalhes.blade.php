@@ -5,20 +5,14 @@
 @stop
 @section('content')
 <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{route('contratos.index')}}">Listar Contratos</a></li>
-        <li class="breadcrumb-item">Detalhes</li>
-    </ol>
-
+    <li class="breadcrumb-item"><a href="{{route('contratos.index')}}">Listar Contratos</a></li>
+    <li class="breadcrumb-item">Detalhes</li>
+</ol>
 <div class="card">
-        
-
-
-
-    <div class="card-header">
+    <div class="card-header bg-navy text-center">
         <h3>Comissões</h3>
     </div>
-    <div class="card-body">
-        
+    <div class="card-body">   
         @if(count($comissoes) >= 1)
             <table class="table">
                 <thead>
@@ -26,8 +20,7 @@
                         <th>Parcela</th>
                         <th>Valor</th>
                         <th>Data</th>
-                        <th>Status</th>
-                        
+                        <th>Status</th>                      
                     </tr>
                 </thead>
                 <tbody>
@@ -43,29 +36,22 @@
                                 data-id="{{$c->id}}"
                                 >
                             </i>
-                        </td>
-                            
-                        </tr>
-                        
+                        </td>                          
+                        </tr>                     
                     @endforeach
                 </tbody>
             </table>
         @else
             <h4 class="text-center">Sem Contratos a serem listados</h4>
         @endif
-
-
-
-
     </div>
 </div>  
-
-
 <div class="card">
-    @if(!empty($premiacao))
-    <div class="card-header">
+    <div class="card-header bg-navy text-center">
         <h3>Premiação</h3>
     </div>
+    @if(!empty($premiacao))
+    
     <div class="card-body">
         <table class="table">
             <thead>
@@ -83,7 +69,7 @@
         </table> 
     </div>
     @else
-        <h4 class="text-center">Não Premiações cadastradas para esse Corretor</h4>    
+        <h4 class="text-center py-3">Sem Premiações a serem listadas</h4>    
     @endif
 </div>
 @stop   

@@ -19,7 +19,7 @@
     @endswitch
 </h4>
 @foreach($tarefas as $tt)
-    <div data-id="{{$tt->id}}" class="alvo">
+    <div data-id="{{$tt->id}}" class="alvo" data-cliente="{{$tt->cliente->id}}">
         <p>{{$tt->title}} - {{$tt->cliente->nome}} - {{date("d/m/Y",strtotime($tt->data))}}</p>
     </div>
 @endforeach

@@ -20,7 +20,7 @@ class CreatePremiacaoCorretoresConfiguracoesTable extends Migration
             $table->unsignedBigInteger('administradora_id');
             
             $table->string('valor');
-            $table->int('parcela');
+            $table->integer('parcela');
             
             $table->foreign('plano_id')->references('id')->on('planos')->onDelete("cascade");
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");

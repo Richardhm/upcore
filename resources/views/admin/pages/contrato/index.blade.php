@@ -5,8 +5,6 @@
     <h3>Contrato</h3>
 @stop
 @section('content')
-
-
 <div class="card">
     @if (session('success'))
         <div class="alert alert-success">

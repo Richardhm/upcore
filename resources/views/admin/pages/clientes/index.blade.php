@@ -134,9 +134,12 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="abrir_modal seta" data-cliente="{{$c->id}}"><i class="fas fa-chevron-down"></i></div>
+                        
+                        @if($administrador == 'nao')                        
+                            <div class="abrir_modal seta" data-cliente="{{$c->id}}"><i class="fas fa-chevron-down"></i></div>
+                            <div id="resposta"></div>
+                        @endif
 
-                        <div id="resposta"></div>
 
 
 
@@ -529,7 +532,6 @@
                 });
             });
 
-            
             $(".full_card").on('click','.abrir_modal',function(){
                 var id = $(this).attr("data-cliente");
                 var local = $(this);
@@ -548,21 +550,16 @@
                 return false;               
             });
             
-
             $(".full_card").on('click','.fechar_modal',function(){
                 let alvo = $(this);
                 alvo.closest('.full_card').find("#resposta").slideUp('slow',function(){
                     alvo.html("").append("<i class='fas fa-chevron-down'></i>").removeClass('fechar_modal').addClass('abrir_modal');
                 });
                 return false;
-            });
-
-            
+            });            
             $("body").on('submit','form[name="editar_cliente"]',function(){
                 let cliente_id = $(this).find('input[name="cliente_id"]').val();
                 let alvo = $(this);
-                
-                
                 $.ajax({
                     url:"{{route('clientes.formEditarClientes')}}",
                     method:"POST",
@@ -579,20 +576,6 @@
                 });
                 return false;
             });
-        
-        
-        
-        
-        
-        
-        
         });
-
-
-
-
     </script>  
-
-
-
 @stop

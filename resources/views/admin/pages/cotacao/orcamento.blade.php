@@ -1,9 +1,17 @@
 @extends('adminlte::page')
 @section('title', 'Orçamento')
+@section('plugins.Toastr', true)
 @section('content_header')
     <h3>Realizar Orçamento</h3>
 @stop
 @section('content')
+
+@if(Session::has('message'))
+    <div class="alert alert-success text-center">
+        Email Enviado com sucesso
+    </div>
+@endif
+
 
 <div class="accordion" id="accordionExample">
   <div class="card">
@@ -263,21 +271,29 @@
 
   <div id="aquiPlano"></div>
   
+                
 
-                   
+
+
 
 
 
   
 </div>
+
+
+
+
+
+
+
+
 @stop   
 @section('js')
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     
     <script>
         $(function(){
-
-            
             
             $("body").on('click','.cards',function(){
                 $('.cards').css({"box-shadow":"none"});
@@ -290,7 +306,11 @@
                 let cliente = $("#cliente_id").val();
                 let telefone = $("#celular").val().replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","");
                 var alvo = $(document).height() - $(window).height() - $(window).scrollTop();
-                
+                let email = $('input[name="email"]').val();
+                let cidade = $('select[name="cidades"]').val();
+
+
+
                 // $('body,html').animate({
                 //     scrollTop:"3000px"
                 // },1500);
@@ -298,8 +318,8 @@
                 $(".alvos").html("");
                 $(".alvos").remove();
                 // $("#aquiPlano").after('<div class="alvos" style="display:flex;flex-basis:100%;justify-content:center;align-items:center;padding:10px 0;background-color:red;"><a style="color:black;margin-right:10px;" href="https://api.whatsapp.com/send?phone=55"><i class="fab fa-whatsapp fa-2x"></i></a><a style="color:black;margin-right:10px;"><i class="fas fa-envelope fa-2x"></i></a><a style="color:black;margin-right:10px;" data-orcamento="" data-cidade="" data-plano="" data-coparticipacao="" data-odonto="" data-operadora="" data-administradora="" href="#"><i class="fas fa-file-pdf fa-2x"></i></a><a style="color:black;margin-right:10px;" href=""><i class="fas fa-file-contract fa-2x"></i></a></div>');
-                $("#aquiPlano").append('<div class="d-flex justify-content-center" style="padding:10px 0;"><a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'"><i class="fas fa-file-pdf fa-2x"></i></a></div>');    
-                $(".icones-link").html('<div class="d-flex justify-content-end" style="padding:10px 0;"><a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'"><i class="fas fa-file-pdf fa-2x"></i></a></div>');    
+                $("#aquiPlano").append('<div class="d-flex justify-content-center" style="padding:10px 0;"><a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded" href="/admin/email/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-file-pdf fa-2x"></i></a></div>');    
+                $(".icones-link").html('<div class="d-flex justify-content-end" style="padding:10px 0;"><a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded" href="/admin/email/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-file-pdf fa-2x"></i></a></div>');    
             });
             $('#celular').mask('(00) 0 0000-0000');                  
             $.ajaxSetup({
@@ -598,3 +618,4 @@
 
     </style>        
 @stop
+

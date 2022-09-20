@@ -106,13 +106,6 @@
                             @endforeach
                         </div>
                     </div>      
-
-
-
-
-
-
-
                 @else 
                     <h5 class="py-3 text-center">Este Corretor Não possui premiações cadastradas!</h5>
                 @endif     

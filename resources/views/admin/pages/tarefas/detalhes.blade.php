@@ -196,7 +196,7 @@
                                         <td data-toggle="modal" data-target="#exampleModal" class="verdatalhe" data-id="{{$p->id}}">{{$p->nome}}</td>
                                         <td>{{$p->title}}</td>
                                         <td>
-                                            <select name="mudar_corretor" id="mudar_corretor" class="form-control" data-atual="{{$p->id}}">
+                                            <select name="mudar_corretor" class="form-control mudar_corretor" data-atual="{{$p->cliente_id}}">
                                                 @foreach($corretores as $c)
                                                     <option value="">--Escolher Corretor--</option>
                                                     <option value="{{$c->id}}">{{$c->name}}</option>
@@ -212,9 +212,7 @@
                     @endif
                 </div>    
             </div>    
-
         </div>
-
     </div>    
     
     <div class="card card-danger">
@@ -249,7 +247,7 @@
                                 <td class="text-center">{{date('d/m/Y',strtotime($p->created_at))}}</td>
                                
                                 <td width="220px">
-                                    <select name="mudar_corretor" id="mudar_corretor" class="form-control" data-atual="{{$p->id}}">
+                                    <select name="mudar_corretor" class="form-control mudar_corretor" data-atual="{{$p->id}}">
                                         @foreach($corretores as $c)
                                             <option value="">--Escolher Corretor--</option>
                                             <option value="{{$c->id}}">{{$c->name}}</option>
@@ -315,14 +313,17 @@
 
 
 
-            $("body").on('change','#mudar_corretor',function(){
+            $("body").on('change','.mudar_corretor',function(){
                 let cliente = $(this).attr('data-atual');
                 let user = $(this).val();
                 $(this).closest('tr').fadeOut('slow');
                 $.ajax({
                     url:"{{route('tarefas.mudarcorretor')}}",
                     method:"POST",
-                    data:"cliente="+cliente+"&user="+user
+                    data:"cliente="+cliente+"&user="+user,
+                    success:function(res) {
+                        console.log(res);
+                    }
                     
                 });
             });

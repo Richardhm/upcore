@@ -24,6 +24,9 @@ class CreateTarefasTable extends Migration
             
             $table->text('descricao_motivo')->nullable();
             $table->boolean('status');
+
+            $table->boolean('visivel')->default(1);
+
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete("cascade");
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
             $table->foreign('motivo_id')->references('id')->on('tarefa_motivo_perdas')->onDelete("cascade");

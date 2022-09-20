@@ -2,23 +2,9 @@
 <html lang="pt-br">
 <head>
 <style rel="stylesheet">
-	table, tr, td, th{
-		border:#000 solid 1px;
-		width:280px;
-		padding:0px;
-		font-size:20px;
-		border-collapse:collapse;
-    margin:auto auto;
-	}
-	td{
-		width:50px;
-		height:30px;
-	}
-	th{
-		font-weight: normal;
-		/* color:#FFF; */
-    width:90px;
-	}
+	table, tr, td, th{border:#000 solid 1px;width:280px;padding:0px;font-size:20px;border-collapse:collapse;margin:auto auto;}
+	td{width:50px;height:30px;}
+	th{font-weight: normal;width:90px;}
 </style>
 </head>
     <body>

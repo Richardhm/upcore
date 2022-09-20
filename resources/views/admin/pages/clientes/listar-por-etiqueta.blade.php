@@ -41,7 +41,7 @@
                 <span class="bg-success" style="padding:4px;"><i class="fab fa-whatsapp"></i></span>
             </div>
             <div style="display:flex;justify-content: space-between;">
-                <a href="{{route('clientes.agendarTarefa',$c->id)}}" style="color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(249,3,110);">
+                <a href="" style="color:white;width:80%;border-radius:10px;text-align: center;background-color:rgb(249,3,110);">
                     Tarefa
                 </a>  
                 <span class="bg-danger" style="padding:3px;"><i class="fas fa-envelope"></i></span>  

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\MensagemTesteMail;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,13 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::redirect('/', '/login');
+
+// Route::get("/mensagem-teste",function(){
+    // return new MensagemTesteMail("teste","rere");
+    
+    //Mail::to("richardjonhshm@gmail.com")->send(new MensagemTesteMail());
+    //return "Olaaaaaaaaaa";
+// });
 
 Route::middleware('auth')->prefix("admin")->group(function(){
     
@@ -44,7 +53,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/cotacao/montarValoresFormularioAcomodacao","App\Http\Controllers\Admin\CotacaoController@montarValoresFormularioAcomodacao")->name("contrato.montarValoresFormularioAcomodacao");
     Route::get("/cotacao/contrato/comissao/{id_comissao}","App\Http\Controllers\Admin\CotacaoController@detalhesDoContratoComissoes")->name("cotacao.comissao.detalhes");
     Route::get("/cotacao/contrato/comissao/administrador/{id_comissao}","App\Http\Controllers\Admin\CotacaoController@detalhesDoContratoComissoesAdministrador")->name("cotacao.comissao.detalhes.administrador");
-    Route::get("/criar/pdf/{cotacao_id}/{administradora_id}/{plano_id}/{odonto}/{cliente}","App\Http\Controllers\Admin\CotacaoController@criarPDF")->name("cotacao.pdf");
+    Route::get("/criar/pdf/{cotacao_id}/{administradora_id}/{plano_id}/{odonto}/{cliente}/{cidade}","App\Http\Controllers\Admin\CotacaoController@criarPDF")->name("cotacao.pdf");
+    Route::get("/email/{cotacao_id}/{administradora_id}/{plano_id}/{odonto}/{cliente}/{cidade}","App\Http\Controllers\Admin\CotacaoController@enviarEmail")->name("cotacao.email");
     /** Fim Cotação */
     
     /** Corretores */
@@ -173,6 +183,11 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
 
     Route::post("/clientes/tarefas/listagem","App\Http\Controllers\Admin\TarefaController@listarTarefaEspecificaCategoriaLink")->name("clientes.listarTarefasEspecifica");
+    Route::post("/clientes/tarefas/especifico/listagem","App\Http\Controllers\Admin\TarefaController@listarTarefaEspecificaCategoriaLinkCliente")->name("clientes.listarTarefasEspecificaCliente");
+
+
+
+
     Route::post("/clientes/tarefas/especifica","App\Http\Controllers\Admin\TarefaController@listarTarefaPeloId")->name("tarefa.listarTarefaPorId");
     Route::post("/clientes/tarefas/pesquisar","App\Http\Controllers\Admin\TarefaController@pegarHistoricoDoCliente")->name("tarefa.pegarHisticoDoCliente");
     Route::post('/clientes/tarefas/search',"App\Http\Controllers\Admin\TarefaController@searchTarefas")->name("tarefas.personalizadas");
@@ -180,6 +195,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
     Route::post("/clientes/tarefas/store","App\Http\Controllers\Admin\TarefaController@cadastrarTarefa")->name("clientes.cadastrarTarefa");
     Route::post("/clientes/tarefas/cadastrarAjax","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjax")->name("tarefas.cadastrarTarefasAjax");
+    Route::post("/clientes/tarefas/cadastrarAjaxCliente","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjaxCliente")->name("tarefas.cadastrarTarefasAjaxCliente");
 
 
 

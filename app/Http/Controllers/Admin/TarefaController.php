@@ -18,6 +18,7 @@ class TarefaController extends Controller
 {
     public function index()
     {
+        
          $user = User::find(auth()->user()->id);
          if($user->isAdmin()) {
             $users = DB::table('users')
@@ -60,8 +61,9 @@ class TarefaController extends Controller
         $fez_unimed = Tarefa::where("user_id",$id)->where("motivo_id",3)->selectRaw("(select nome from clientes where clientes.id = tarefas.cliente_id) as nome")->get();
         $sem_interesse = Tarefa::where("user_id",$id)
             ->where("motivo_id",4)
-            ->selectRaw("title,id")
-            ->selectRaw("(select nome from clientes where clientes.id = tarefas.cliente_id) as nome")->get();
+            ->selectRaw("title,id,cliente_id")
+            ->selectRaw("(select nome from clientes where clientes.id = tarefas.cliente_id) as nome")
+            ->get();
         $sem_tarefa = DB::table('clientes')
             ->whereRaw('user_id = ?',$id)
             ->whereRaw('id NOT IN(SELECT cliente_id FROM tarefas WHERE tarefas.user_id = ?)',$id)
@@ -99,15 +101,21 @@ class TarefaController extends Controller
     {
         $cliente = $request->cliente;
         $user = $request->user;
+        
         $alt = Cliente::find($cliente);
         $alt->user_id = $user;
+        $alt->save();
+
+        $tarefa = Tarefa::where("cliente_id",$cliente)->first();
+        $tarefa->user_id = $user;
+        $tarefa->save();
         
        
-        if($alt->save()) {
-            return "sucesso";
-        } else {
-            return "error";
-        }   
+        // if($alt->save()) {
+        //     return "sucesso";
+        // } else {
+        //     return "error";
+        // }   
         
         
 
@@ -121,12 +129,15 @@ class TarefaController extends Controller
     {
         
         $cad = Tarefa::find($request->motivo_perda_tarefa_id);
+        
         $cad->motivo_id = $request->motivo;
+        Tarefa::where("cliente_id",$cad->cliente_id)->update(["visivel"=>0]);
+        
         if($request->descricao_motivo) {
             $cad->descricao_motivo = $request->descricao_motivo;
         }
         if($cad->save()) {
-            return "sucesso";
+            return $cad->cliente_id;
         } else {
             return "error";
         }
@@ -149,17 +160,16 @@ class TarefaController extends Controller
         $tarefas = [];
         switch($request->alvo) {
             case "atraso":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("data < now()")->with('cliente')->get();
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("data < now()")->where('visivel',1)->with('cliente')->get();
             break;
             case "hoje":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereDate('data',"=",date('Y-m-d'))->with('cliente')->get();
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereDate('data',"=",date('Y-m-d'))->where('visivel',1)->with('cliente')->get();
             break;
             case "semana":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->with('cliente')->get();
-                
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->where('visivel',1)->with('cliente')->get();
             break;    
             case "mes":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("MONTH(data) = MONTH(NOW())")->get();
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("MONTH(data) = MONTH(NOW())")->where('visivel',1)->with('cliente')->get();
             break;
         }
 
@@ -172,6 +182,38 @@ class TarefaController extends Controller
             return $tarefas;
         }
     }
+
+    public function listarTarefaEspecificaCategoriaLinkCliente(Request $request)
+    {
+        
+        $tarefas = [];
+        switch($request->alvo) {
+            case "atraso":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("cliente_id",$request->cliente)->whereRaw("data < now()")->where('visivel',1)->with('cliente')->toSql();
+            break;
+            case "hoje":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("cliente_id",$request->cliente)->whereDate('data',"=",date('Y-m-d'))->where('visivel',1)->with('cliente')->get();
+            break;
+            case "semana":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("cliente_id",$request->cliente)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->where('visivel',1)->with('cliente')->get();
+            break;    
+            case "mes":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("cliente_id",$request->cliente)->whereRaw("MONTH(data) = MONTH(NOW())")->where('visivel',1)->with('cliente')->get();
+            break;
+        }
+
+        if(count($tarefas) >= 1) {
+            return view('admin.pages.tarefas.ajax.listar-por-categoria',[
+                "tarefas" => $tarefas,
+                "titulo" => $request->alvo
+            ]);
+        } else {
+            return $tarefas;
+        }
+    }
+
+
+
 
     public function listarTarefaPeloId(Request $request)
     {
@@ -277,6 +319,67 @@ class TarefaController extends Controller
             return $tarefas;
         }
     }
+
+    public function cadastrarTarefaAjaxCliente(Request $request)
+    {
+        $cliente = Cliente::where("id",$request->cliente_id)->first();
+        $cliente->ultimo_contato = date("Y-m-d");
+        $cliente->save();
+
+        $data = $request->all();
+        $data['user_id'] = auth()->user()->id;
+        $tarefa = Tarefa::create($data);
+        
+        $hoje = date("Y-m-d");
+        $data_form = $request->data;
+        $data_form_explode = explode("-",$data_form);
+        $numeroSemanaDataHoje=intval( date('z', mktime(0,0,0,date("m"),date('d'),date("Y")) ) / 7 ) + 1;
+        $numeroSemanaDataForm=intval( date('z', mktime(0,0,0,$data_form_explode[1],$data_form_explode[2],$data_form_explode[0]) ) / 7 ) + 1;
+        $titulo = "";
+        if($data_form < $hoje) {
+            $titulo = "atraso";
+        } elseif(date('m') == date("m",strtotime($data_form)) && date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje != $numeroSemanaDataForm) {
+            $titulo = "mes";
+        } elseif(date("d") ==  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
+            $titulo = "hoje";
+        } elseif(date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
+            $titulo = "semana";
+        } else {
+            $titulo = "personalizado";
+        }
+
+        switch($titulo) {
+            case "atraso":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("data < now()")->with('cliente')->get();
+            break;
+            case "hoje":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereDate('data',"=",date('Y-m-d'))->with('cliente')->get();
+            break;
+            case "semana":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->with('cliente')->get();
+            break;    
+            case "mes":
+                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("MONTH(data) = MONTH(NOW())")->get();
+            break;
+        }
+
+        if(count($tarefas) >= 1) {
+            return view('admin.pages.tarefas.ajax.listar-por-categoria',[
+                "tarefas" => $tarefas,
+                "titulo" => $titulo,
+                "tarefa" => $tarefa->id
+            ]);
+        } else {
+            return $tarefas;
+        }
+    }
+
+
+
+
+
+
+
 
     public function clienteTarefaEspecifica(Request $request)
     {

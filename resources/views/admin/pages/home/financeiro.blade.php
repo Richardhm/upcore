@@ -112,7 +112,7 @@
                     @if($atrasadoPlanoIndividual >= 1)
                         <span class="badge badge-danger ml-1">Atrasado: {{$atrasadoPlanoIndividual}}</span>
                     @endif
-                    <span class="ml-auto">Vidas: &nbsp; <b>{{$aguardando_individual_vidas}}</b></span>
+                    <span class="ml-auto">Vidas: &nbsp; <b>{{$aguardando_individual_vidas ?? 0}}</b></span>
                 </div>
             </div>    
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
@@ -122,7 +122,7 @@
                 </div>
                 <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.empresarial')}}" style="color:black;">Aguardando Pag. Empresarial</a></h6>
                 <div class="d-flex">
-                    <span class="ml-auto mr-1">Vidas: &nbsp; <b>{{$qtd_vidas_aguardando_pagamento_empresarial}}</b></span>
+                    <span class="ml-auto mr-1">Vidas: &nbsp; <b>{{$qtd_vidas_aguardando_pagamento_empresarial ?? 0}}</b></span>
                 </div>
             </div>    
         </div>    

@@ -18,7 +18,7 @@
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-info shadow-lg">
-                    <a href="{{url('/admin/clientes?ac=hoje')}}">
+                    <a href="{{url('/admin/tarefas?ac=hoje')}}">
                         <div>
                             <h3 class="ml-2" style="margin:0px;">{{$tarefasHoje}}</h3>
                             <p class="ml-2">Tarefas Hoje</p>
@@ -32,7 +32,7 @@
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-danger">
-                    <a href="{{url('/admin/clientes?ac=atrasado')}}">
+                    <a href="{{url('/admin/tarefas?ac=atraso')}}">
                         <div>
                             <h3 class="ml-2" style="margin:0px;">{{$tarefasAtrasadas}}</h3>
                             <p class="ml-2">Tarefas Atrasadas</p>
@@ -47,13 +47,12 @@
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-teal">
-                    <a href="{{url('/admin/clientes?ac=proximas')}}">
+                    <a href="{{url('/admin/tarefas?ac=mes')}}">
                         <div>
                             <h3 class="text-white ml-2" style="margin:0px;">{{$tarefasProximas}}</h3>
-                            <p class="text-white ml-2">Tarefas proximos 03 dias</p>
+                            <p class="text-white ml-2">Para esse Mês</p>
                             <div class="icon text-white">
                                 <i class="fas fa-external-link-alt fa-xs text-white" style="font-size:50px;top:10px;"></i>
-                                
                             </div>   
                         </div>
                     </a>
@@ -62,12 +61,12 @@
 
             <div class="col-md-3 col-3">
                 <div class="small-box bg-orange">
-                    <a href="{{url('/admin/clientes?ac=semtarefa')}}">
+                    <a href="{{url('/admin/tarefas?ac=semana')}}">
                         <div>
-                            <h3 class="text-white ml-2" style="margin:0px;">{{$clientesSemTarefas}}</h3>
-                            <p class="text-white ml-2">Sem Tarefas</p>
+                            <h3 class="text-white ml-2" style="margin:0px;">{{$tarefaSemana}}</h3>
+                            <p class="text-white ml-2">Para Essa Semana</p>
                             <div class="icon text-white">
-                                <i class="far fa-frown fa-xs text-white" style="font-size:50px;top:10px;"></i>
+                                <i class="far fa-hand-point-right" style="font-size:50px;top:10px;"></i>
                             </div>   
                         </div>
                     </a>
@@ -83,10 +82,12 @@
     <div class="d-flex">            
         @foreach($etiquetas as $et)
             <div class="flex-fill border mr-2 bg-navy rounded">
-                <div class="d-flex flex-column">
-                    <h3 class="text-white border-bottom text-center">{{$et->quantidade}}</h3>
-                    <span class="text-white border-bottom text-center"><i><u><a href='{{url("/admin/clientes?ac=etiquetas&id={$et->id}")}}' class="text-white">{{$et->nome}}</a></u></i></span>                    
-                </div>
+                <a href='{{url("/admin/clientes?ac=etiquetas&id={$et->id}")}}' class="text-white">
+                    <div class="d-flex flex-column">
+                        <h3 class="text-white border-bottom text-center">{{$et->quantidade}}</h3>
+                        <span class="text-white border-bottom text-center"><i><u>{{$et->nome}}</u></i></span>                    
+                    </div>
+                </a>    
             </div>
             @if($loop->last)
             <div class="flex-fill border bg-navy rounded">
@@ -110,58 +111,73 @@
     <div class="d-flex">            
         
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
-                <div class="d-flex justify-content-between">
-                    <h3 class="ml-2">{{$aguardando_boleto_coletivo}}</h3>
-                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_boleto_coletivo_total,2,",",".")}}</p>                        
-                </div>
-                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoBoletoColetivo',auth()->user()->id)}}" class="text-dark">Aguardando Boleto Coletivo</a></h6>
-                <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas ?? 0}}</b>
-                </div>
+                <a href="{{route('financeiro.homeColaboradorAguardandoBoletoColetivo',auth()->user()->id)}}" class="text-dark">
+                    <div class="d-flex justify-content-between">
+                        <h3 class="ml-2">{{$aguardando_boleto_coletivo}}</h3>
+                        <p class="align-self-center mr-2">R$ {{number_format($aguardando_boleto_coletivo_total,2,",",".")}}</p>                        
+                    </div>
+                    <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Boleto Coletivo</h6>
+                    <div class="d-flex justify-content-end mr-2">
+                        Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas ?? 0}}</b>
+                    </div>
+                </a>    
             </div>
              
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
-                <div class="d-flex justify-content-between">
-                    <h3 class="ml-2">{{$aguardando_pagamento_adesao_coletivo}}</h3>
-                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_boleto_coletivo_total,2,",",".")}}</p>                        
-                </div>
-                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoPagAdesaoColetivo',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Adesão Coletivo</a></h6>
-                <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>{{$aguardando_pagamento_boleto_coletivo_vidas ?? 0}}</b>
-                </div>
+                <a href="{{route('financeiro.homeColaboradorAguardandoPagAdesaoColetivo',auth()->user()->id)}}" class="text-dark">
+                    <div class="d-flex justify-content-between">
+                        <h3 class="ml-2">{{$aguardando_pagamento_adesao_coletivo}}</h3>
+                        <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_boleto_coletivo_total,2,",",".")}}</p>                        
+                    </div>
+                    <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Adesão Coletivo</h6>
+                    <div class="d-flex justify-content-end mr-2">
+                        Vidas: &nbsp; <b>{{$aguardando_pagamento_boleto_coletivo_vidas ?? 0}}</b>
+                    </div>
+                </a>    
             </div>
 
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
-                <div class="d-flex justify-content-between">
-                    <h3>{{$aguardando_individual_qtd}}</h3>
-                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_individual_total,2,",",".")}}</p>                        
-                </div>
-                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.colaboradorPlanoindividual',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Plano individual</a></h6>
-                <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>{{$aguardando_individual_vidas ?? 0}}</b>
-                </div>
-            </div>    
+                <a href="{{route('financeiro.homeColaboradorAguardandoPagVigencia',auth()->user()->id)}}" class="text-dark">
+                    <div class="d-flex justify-content-between border-bottom">
+                        <h3>{{$aguardando_pagamento_vigencia}}</h3>
+                        <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_vigencia_total,2,",",".")}}</p>                        
+                    </div>  
+                    <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Vigencia</h6>
+                    <div class="d-flex justify-content-end mr-2">
+                        Vidas: &nbsp; <b>{{$aguardando_pagamento_vigencia_vidas ?? 0}}</b>
+                    </div>
+                </a>    
+            </div>
+
 
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
-                <div class="d-flex justify-content-between border-bottom">
-                    <h3>{{$aguardando_pagamento_vigencia}}</h3>
-                    <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_vigencia_total,2,",",".")}}</p>                        
-                </div>  
-                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;"><a href="{{route('financeiro.homeColaboradorAguardandoPagVigencia',auth()->user()->id)}}" class="text-dark">Aguardando Pag. Vigencia</a></h6>
-                <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>{{$aguardando_pagamento_vigencia_vidas ?? 0}}</b>
-                </div>
+                <a href="{{route('financeiro.colaboradorPlanoindividual',auth()->user()->id)}}" class="text-dark">
+                    <div class="d-flex justify-content-between">
+                        <h3>{{$aguardando_individual_qtd}}</h3>
+                        <p class="align-self-center mr-2">R$ {{number_format($aguardando_individual_total,2,",",".")}}</p>                        
+                    </div>
+                    <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Plano individual</h6>
+                    <div class="d-flex justify-content-end mr-2">
+                        Vidas: &nbsp; <b>{{$aguardando_individual_vidas ?? 0}}</b>
+                    </div>
+                </a>    
             </div>    
 
+                
+
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
-                <div class="d-flex justify-content-between">
-                    <h3>000</h3>
-                    <p class="align-self-center mr-2">R$ 1000,00</p>                        
-                </div>
-                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Empresarial</h6>
-                <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>10</b>
-                </div>
+                <a href="{{route('financeiro.empresarialColaborador',auth()->user()->id)}}" class="text-dark">
+                    <div class="d-flex justify-content-between">
+                        <h3>{{$aguardando_pagamento_empresarial}}</h3>
+                        <p class="align-self-center mr-2">R$ {{number_format($valor_aguardando_pagamento_empresarial,2,",",".")}}</p>                        
+                    </div>
+                    <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">
+                        Aguardando Pag. Empresarial
+                    </h6>
+                    <div class="d-flex justify-content-end mr-2">
+                        Vidas: &nbsp; <b>{{$qtd_vidas_aguardando_pagamento_empresarial}}</b>
+                    </div>
+                </a>
             </div>    
 
     </div>    
@@ -178,7 +194,7 @@
                     <div class="icon">
                         <i class="fas fa-cash-register"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{route('clientes.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             
                 <div class="small-box bg-success flex-fill mr-1">
@@ -190,7 +206,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{url('admin/contratos?ac=negociados')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
                         
                 <div class="small-box bg-info flex-fill mr-1">
@@ -202,7 +218,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{url('admin/contratos?ac=negociacao')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
                         
                 <div class="small-box bg-orange flex-fill mr-1">
@@ -219,7 +235,7 @@
             
                 <div class="small-box bg-danger flex-fill">
                     <div class="inner">
-                        <h3>000</h3>
+                        <h3>0</h3>
                         <p>Perdidos</p>
                         <p>Vidas 8</p>
                     </div>

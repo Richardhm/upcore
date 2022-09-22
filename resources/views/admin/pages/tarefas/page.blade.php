@@ -14,7 +14,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
     
-    body, html {background:rgb(0,84,183);}
+    body, html {background:rgb(255 255 255 / 70%);}
     .c1 {height: 5vh;background-color:rgb(86,135,220);border-bottom:2px solid #FFF;}
     .c1 a {
         color:#FFF;
@@ -67,6 +67,7 @@
   </style>
 </head>
 <body>
+    <input type="hidden" name="parametro" id="parametro">
     <section class="d-flex c1">
         <h4 style="color:#FFF;" class="ml-3">Gerenciamento de Tarefas</h4>
         <a href="{{route('admin.home')}}" class="ml-auto align-self-center mr-4 bold">Dashboard</a>
@@ -77,19 +78,19 @@
                 <ul id="lista_tarefas">
                     <li>
                         <i class="fas fa-exclamation icone"></i>
-                        <a href="#" class="tarefa" data-tarefa="atraso">Atraso</a>
+                        <a href="#" class="tarefa" id="atraso" data-tarefa="atraso">Atraso</a>
                     </li>
                     <li>
                         <i class="fas fa-calendar-week icone"></i>
-                        <a href="#" class="tarefa" data-tarefa="hoje">Hoje</a>
+                        <a href="#" class="tarefa" id="hoje" data-tarefa="hoje">Hoje</a>
                     </li>
                     <li>
                         <i class="fas fa-calendar-alt icone"></i>
-                        <a href="#" class="tarefa" data-tarefa="semana">Semana</a>
+                        <a href="#" class="tarefa" id="semana" data-tarefa="semana">Semana</a>
                     </li>
                     <li>
                         <i class="fas fa-align-justify icone"></i>
-                        <a href="#" class="tarefa" data-tarefa="mes">Mês</a>
+                        <a href="#" class="tarefa" id="mes" data-tarefa="mes">Mês</a>
                     </li>
                     <li>
                         <i class="fas fa-search icone"></i>    
@@ -347,23 +348,104 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $("#lista_tarefas .tarefa").on('click',function(){
-            let alvo = $(this).attr('data-tarefa');
+
+        $("#lista_tarefas #atraso").on('click',function(){
+            var uri = window.location.href.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
+            
             $.ajax({
-                data:"alvo="+alvo,
+                data:"alvo=atraso",
                 url:"{{route('clientes.listarTarefasEspecifica')}}",
                 method:"POST",
                 success:function(res) {
                     if(res && res.length >= 1) {
                         $(".c3").html(res);
                     } else {
-                        console.log("Nada");
+                        $(".c3").html("Sem tarefa para atrasadas");
+                    }
+                }
+            }); 
+            return false;
+        });
+
+        $("#lista_tarefas #hoje").on('click',function(){
+            var uri = window.location.href.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
+
+
+
+            $.ajax({
+                data:"alvo=hoje",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("<h3 class='text-center text-white mt-3'>Sem tarefa para hoje</h3>");
                     }
                 }
             });
             return false;
         });
+
+        $("#lista_tarefas #mes").on('click',function(){
+            var uri = window.location.href.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
+
+
+            $.ajax({
+                data:"alvo=mes",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("<h3 class='text-center text-white mt-3'>Sem tarefa para hoje</h3>");
+                    }
+                }
+            });
+            return false;
+        });
+
+        $("#lista_tarefas #semana").on('click',function(){
+            var uri = window.location.href.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
+            $.ajax({
+                data:"alvo=semana",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("<h3 class='text-center text-white mt-3'>Sem tarefa para hoje</h3>");
+                    }
+                }
+            });
+            return false;
+        });
+
+
         $("#lista_tarefas .personalizadas").on('click',function(){
+            var uri = window.location.href.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
             $("#dataPersonalizadas").modal('show'); 
             return false;
         });
@@ -475,9 +557,7 @@
                             return false;
                         }
                     }
-
-                    return true;
-                    
+                    return true;                   
                 },
 
                 success:function(res) {
@@ -602,6 +682,90 @@
                 }
             });
         }
+
+
+
+
+        window.$_GET = new URLSearchParams(location.search);
+        let value = $_GET.get('ac');
+        if(value && value == "atraso") {
+            $.ajax({
+                data:"alvo=atraso",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("Sem tarefa para atrasadas");
+                    }
+                }
+            });
+            return false;
+        }     
+        
+        if(value && value == "hoje") {
+            $.ajax({
+                data:"alvo=hoje",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    console.log(res);
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("<h3 class='text-center text-white mt-3'>Sem tarefa para hoje</h3>");
+                    }
+                }
+            });
+            return false;
+        }
+
+        if(value && value == "semana") {
+            $.ajax({
+                data:"alvo=semana",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("Sem tarefa para essa semana");
+                    }
+                }
+            });
+            return false;
+        }
+
+        if(value && value == "mes") {
+            $.ajax({
+                data:"alvo=mes",
+                url:"{{route('clientes.listarTarefasEspecifica')}}",
+                method:"POST",
+                success:function(res) {
+                    
+                    if(res && res.length >= 1) {
+                        $(".c3").html(res);
+                    } else {
+                        $(".c3").html("Sem tarefa para esse mês");
+                    }
+                }
+            });
+            return false;
+        }
+
+        
+
+        
+        
+
+
+
+
+
+
+        
     });
 </script>
 </body>

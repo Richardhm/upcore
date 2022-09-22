@@ -2,7 +2,7 @@
 @section('title', 'Contrato')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h3>Contrato</h3>
+    <h3>Contrato Negociados</h3>
 @stop
 @section('content')
 <div class="card">
@@ -58,7 +58,7 @@
                 "url": "{{asset('traducao/pt-BR.json')}}"
             },
             ajax: {
-                "url":"{{ route('contratos.index.listagem') }}",
+                "url":"{{ route('contratos.index.negociacao') }}",
                 "dataSrc": ""
             },
             "lengthMenu": [15,30,45],
@@ -97,7 +97,7 @@
                 "url": "{{asset('traducao/pt-BR.json')}}"
             },
             ajax: {
-                "url":"{{ route('contratos.index.listagem') }}",
+                "url":"{{ route('contratos.index.negociacao') }}",
                 "dataSrc": ""
             },
             "lengthMenu": [15,30,45],

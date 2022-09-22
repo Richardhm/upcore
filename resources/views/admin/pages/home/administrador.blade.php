@@ -156,12 +156,16 @@
 
             <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
                 <div class="d-flex justify-content-between">
-                    <h3>000</h3>
-                    <p class="align-self-center mr-2">R$ 1000,00</p>                        
+                    <h3>{{$aguardando_pagamento_empresarial}}</h3>
+                    <p class="align-self-center mr-2">R$ {{number_format($valor_aguardando_pagamento_empresarial,2,",",".")}}</p>                        
                 </div>
-                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">Aguardando Pag. Empresarial</h6>
+                <h6 class="text-center" style="border-top:3px solid black;border-bottom:3px solid black;">
+                    <a href="{{route('financeiro.empresarialColaborador',auth()->user()->id)}}" class="text-dark">
+                        Aguardando Pag. Empresarial
+                    </a>
+                </h6>
                 <div class="d-flex justify-content-end mr-2">
-                    Vidas: &nbsp; <b>10</b>
+                    Vidas: &nbsp; <b>{{$qtd_vidas_aguardando_pagamento_empresarial}}</b>
                 </div>
             </div>    
 

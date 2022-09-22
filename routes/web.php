@@ -158,10 +158,15 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/clientes/dos/corretores","App\Http\Controllers\Admin\ClienteController@pegarClientesCorretores")->name("clientes.pegarClientesCorretores");
     Route::post("/clientes/contrato/sem/orcamento","App\Http\Controllers\Admin\ClienteController@contratoSemOrcamento")->name("clientes.contratoSemOrcamento");
     Route::post("/cliente/searchclienteAjax","App\Http\Controllers\Admin\ClienteController@searchclienteAjax")->name("cliente.searchclienteAjax");
+    
     Route::post("/cliente/listarPorEtiqueta","App\Http\Controllers\Admin\ClienteController@listarPorEtiqueta")->name("cliente.listarPorEtiqueta");
+
     Route::post("/cliente/listarPorEtiquetaAll","App\Http\Controllers\Admin\ClienteController@listarPorEtiquetaAll")->name("cliente.listarPorEtiquetaAll");
     Route::get("/contratos","App\Http\Controllers\Admin\ClienteController@listarContratos")->name("contratos.index");
+
     Route::get("/contratos/listagem","App\Http\Controllers\Admin\ClienteController@listarContratosAjax")->name("contratos.index.listagem");
+    Route::get("/contratos/negociados","App\Http\Controllers\Admin\ClienteController@listarContratosAjaxNegociados")->name("contratos.index.negociados");
+    Route::get("/contratos/negociacao","App\Http\Controllers\Admin\ClienteController@listarContratosAjaxNegociacao")->name("contratos.index.negociacao");
 
     Route::post("/clientes/editarClientes","App\Http\Controllers\Admin\ClienteController@editarClientes")->name("clientes.editarClientes");
     Route::post("/clientes/formeditar/clientes","App\Http\Controllers\Admin\ClienteController@formEditarClientes")->name('clientes.formEditarClientes');
@@ -261,6 +266,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/financeiro/juridica","App\Http\Controllers\Admin\FinanceiroController@storeJuridico")->name("financeiro.storeJuridico");
 
     Route::get("/financeiro/aguardandojuridico","App\Http\Controllers\Admin\FinanceiroController@aguardandojuridico")->name("financeiro.empresarial");
+    Route::get("/financeiro/{id_user}/aguardandojuridico","App\Http\Controllers\Admin\FinanceiroController@aguardandojuridicoColaborador")->name("financeiro.empresarialColaborador");
     /*** Fim Financeiro */
 
     

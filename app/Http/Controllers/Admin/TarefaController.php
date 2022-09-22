@@ -39,6 +39,7 @@ class TarefaController extends Controller
 
 
          } else {
+            
             $id_user = auth()->user()->id;
             $clientes = Cliente::where("user_id",$id_user)->get();
             $motivos = TarefaMotivoPerda::all();

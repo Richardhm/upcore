@@ -11,7 +11,7 @@
         <li class="breadcrumb-item"><a href="{{route('admin.home')}}">Dashboard</a></li>
         <li class="breadcrumb-item">Aguardando Pagamento Vigência</li>
     </ol>  
-    
+       
         @if(count($dados) >= 1)
         <div class="card">
             <div class="card-body">

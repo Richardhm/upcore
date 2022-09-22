@@ -32,6 +32,7 @@ class ClienteController extends Controller
 
     public function index()
     {
+       
         $id = auth()->user()->id;
         $user = User::where("id",$id)->first();
         $admin = ($user->admin == 1 ? 'sim' : 'nao');
@@ -284,10 +285,18 @@ class ClienteController extends Controller
         return true;
     }
 
-    public function listarContratos()
+    public function listarContratos(Request $request)
     {
-        
-        return view("admin.pages.contrato.index");           
+        if($request->ac == "negociados") {
+            // dd("Negociados");
+            return view("admin.pages.contrato.negociados");
+        } else if($request->ac == "negociacao") {
+            return view("admin.pages.contrato.negociacao");
+        } else {
+            // dd("Geral");
+            return view("admin.pages.contrato.index");
+        }
+                   
     }
 
     public function listarContratosAjax(Request $request) 
@@ -296,17 +305,68 @@ class ClienteController extends Controller
             $id = auth()->user()->id;
             $user = User::where("id",auth()->user()->id)->first();
             if($user->hasPermission('configuracoes') || $user->isAdmin()) {
-                $contratos = Cliente::where("etiqueta_id","=",3)->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
+                $contratos = Cliente::where("etiqueta_id","=",3)->where('pessoa_juridica',"!=",1)->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
                 return $contratos;
             } else {
-                $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
+                $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)->where('pessoa_juridica',"!=",1)->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])->get();
                 return $contratos;
             }
         }
-        
-        
     }
 
+    public function listarContratosAjaxNegociados(Request $request) 
+    {
+        if($request->ajax()) {
+            $id = auth()->user()->id;
+            $user = User::where("id",auth()->user()->id)->first();
+            if($user->hasPermission('configuracoes') || $user->isAdmin()) {
+                $contratos = Cliente::where("etiqueta_id","=",3)
+                ->whereHas('cotacao',function($query){
+                    $query->where('financeiro_id',6);
+                })
+                ->where('pessoa_juridica',"!=",1)
+                ->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])
+                ->get();
+                return $contratos;
+            } else {
+                $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)
+                    ->whereHas('cotacao',function($query){
+                        $query->where('financeiro_id',6);
+                    })
+                    ->where('pessoa_juridica',"!=",1)
+                    ->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])
+                    ->get();
+                return $contratos;
+            }
+        }
+    }
+
+    public function listarContratosAjaxNegociacao(Request $request) 
+    {
+        if($request->ajax()) {
+            $id = auth()->user()->id;
+            $user = User::where("id",auth()->user()->id)->first();
+            if($user->hasPermission('configuracoes') || $user->isAdmin()) {
+                $contratos = Cliente::where("etiqueta_id","=",3)
+                ->whereHas('cotacao',function($query){
+                    $query->where('financeiro_id',"!=",6);
+                })
+                ->where('pessoa_juridica',"!=",1)
+                ->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])
+                ->get();
+                return $contratos;
+            } else {
+                $contratos = Cliente::where("user_id",$id)->where("etiqueta_id","=",3)
+                    ->whereHas('cotacao',function($query){
+                        $query->where('financeiro_id',"!=",6);
+                    })
+                    ->where('pessoa_juridica',"!=",1)
+                    ->with(['comissoes','cotacao','cotacao.cotacaoFaixaEtaria','user','cotacao.administradora','cidade','cotacao.acomodacao'])
+                    ->get();
+                return $contratos;
+            }
+        }
+    }
 
 
 
@@ -386,7 +446,7 @@ class ClienteController extends Controller
                     ->selectRaw("(SELECT nome FROM etiquetas WHERE etiquetas.id = clientes.etiqueta_id) AS nome_etiqueta")
                 ->get();
                 if(count($clientes) >= 1) {
-                    return view('admin.pages.clientes.listar-por-etiqueta',[
+                    return view('admin.pages.clientes.listar-por-etiqueta-administrador',[
                         'clientes' => $clientes
                     ]);    
                 } else {

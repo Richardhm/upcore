@@ -55,7 +55,7 @@ class HomeController extends Controller
                 $query->select('tarefas.cliente_id');
                 $query->from('tarefas');                
             })->count();
-            $etiquetas = Etiquetas::selectRaw('nome')->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id) AS quantidade')->get();
+            $etiquetas = Etiquetas::selectRaw('nome,id')->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id) AS quantidade')->get();
             $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->count();
             $aguardando_boleto_coletivo_total = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->selectRaw("sum(valor) as total")->first()->total;
             $aguardando_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
@@ -253,6 +253,28 @@ class HomeController extends Controller
             ->selectRaw("sum(total) as total_coletivo")
             ->first()
             ->total_coletivo;
+
+            $aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+                ->whereRaw("status = 0")
+                ->count();
+            
+            $valor_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+                ->whereRaw("status = 0")
+                ->selectRaw("SUM(valor) as total")
+                ->first()
+                ->total;
+            
+            $qtd_vidas_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+                ->whereRaw("status = 0")
+                ->selectRaw("SUM(quantidade_vidas) as quantidade")
+                ->first()
+                ->quantidade;
+
+
+
+
+
+
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
             return view('admin.pages.home.administrador',[
                 "totalCliente" => $totalCliente,
@@ -306,8 +328,11 @@ class HomeController extends Controller
                 "clientesSemTarefas" => $clientesSemTarefas,
                 "aguardando_individual_qtd" => $aguardando_individual_qtd,
                 "aguardando_individual_total" => $aguardando_individual_total,
-                "aguardando_individual_vidas" => $aguardando_individual_vidas
-                
+                "aguardando_individual_vidas" => $aguardando_individual_vidas,
+                "aguardando_pagamento_empresarial" => $aguardando_pagamento_empresarial,
+                "valor_aguardando_pagamento_empresarial" => $valor_aguardando_pagamento_empresarial,
+                "qtd_vidas_aguardando_pagamento_empresarial" => $qtd_vidas_aguardando_pagamento_empresarial
+
             ]);
 
         /********************************************* */
@@ -328,17 +353,29 @@ class HomeController extends Controller
         
             $tarefasProximas = Tarefa::where("user_id",auth()->user()->id)
                 ->where("status",0)
-                ->whereDate('data','>',date('Y-m-d'))
-                ->whereDate('data',"<=",date("Y-m-d",strtotime(now()."+3day")))
+                ->whereMonth('data',date('m'))
                 ->count();
+            
+            // $tarefaSemana
 
-            $clientesSemTarefas = Cliente::where("user_id",auth()->user()->id)->whereNotIn('id',function($query){
-                $query->select('tarefas.cliente_id');
-                $query->from('tarefas');
-                $query->whereRaw("user_id=".auth()->user()->id);
-            })->count();
+            //clientesSemTarefas
 
-            $etiquetas = Etiquetas::selectRaw('nome')->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id AND user_id = '.auth()->user()->id.') AS quantidade')->get();
+            // $tarefaSemana = Cliente::where("user_id",auth()->user()->id)->whereNotIn('id',function($query){
+            //     $query->select('tarefas.cliente_id');
+            //     $query->from('tarefas');
+            //     $query->whereRaw("user_id=".auth()->user()->id);
+            // })->count();
+
+            $tarefaSemana = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->count();
+
+            
+
+
+
+            $etiquetas = Etiquetas::selectRaw('nome,id')
+                ->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id AND user_id = '.auth()->user()->id.') AS quantidade')
+                ->get();
+                
 
 
             $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->count();
@@ -590,6 +627,26 @@ class HomeController extends Controller
             ->total_coletivo;
 
             
+
+            $aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+                ->whereRaw("status = 0")
+                ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
+                ->count();
+            
+            $valor_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+                ->whereRaw("status = 0")
+                ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
+                ->selectRaw("SUM(valor) as total")
+                ->first()
+                ->total;
+            
+            $qtd_vidas_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+                ->whereRaw("status = 0")
+                ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
+                ->selectRaw("SUM(quantidade_vidas) as quantidade")
+                ->first()
+                ->quantidade;
+                        
             
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
             return view('admin.pages.home.colaborador',[
@@ -641,11 +698,14 @@ class HomeController extends Controller
                 "tarefasProximas" => $tarefasProximas,
                 "tarefasHoje" => $tarefasHoje,
                 "tarefasAtrasadas" => $tarefasAtrasadas,
-                "clientesSemTarefas" => $clientesSemTarefas,
+                "tarefaSemana" => $tarefaSemana,
                 "aguardando_individual_qtd" => $aguardando_individual_qtd,
                 "aguardando_individual_total" => $aguardando_individual_total,
-                "aguardando_individual_vidas" => $aguardando_individual_vidas
-                
+                "aguardando_individual_vidas" => $aguardando_individual_vidas,
+
+                "aguardando_pagamento_empresarial" => $aguardando_pagamento_empresarial,
+                "valor_aguardando_pagamento_empresarial" => $valor_aguardando_pagamento_empresarial,
+                "qtd_vidas_aguardando_pagamento_empresarial" => $qtd_vidas_aguardando_pagamento_empresarial
             ]);
     }
 
@@ -787,6 +847,7 @@ class HomeController extends Controller
             $atrasadoAguardandoPagVigenciaColetivo = Cotacao::where("financeiro_id",4)->whereMonth("updated_at",date('m'))->whereYear("updated_at",date('Y'))->whereHas('clientes',function($query){
                 $query->where("data_vigente","<",date('Y-m-d'));            
             })->count();
+            
 
             $atrasadoPlanoIndividual = Cotacao::where("plano_id",1)->where("financeiro_id",1)->whereHas('clientes',function($query){
                 $query->where("data_boleto","<",date('Y-m-d'));

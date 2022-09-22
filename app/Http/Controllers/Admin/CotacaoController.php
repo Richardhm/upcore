@@ -320,6 +320,7 @@ class CotacaoController extends Controller
 
     public function contrato($id)
     {
+        
         $cliente = Cliente::where("id",$id)->first();
         if(!$cliente) {
             return redirect()->back();
@@ -377,8 +378,8 @@ class CotacaoController extends Controller
         $cliente->responsavel_financeiro = $request->responsavel_financeiro;
         $cliente->cpf_financeiro = $request->cpf_financeiro;
         $cliente->endereco_financeiro = $request->endereco_financeiro;
-        $cliente->data_vigente = date('Y-m-d',strtotime($request->data_vigente));
-        $cliente->valor_adesao = $request->valor_adesao;
+        $cliente->data_vigente = date('Y-m-d',strtotime($request->data_vigencia));
+        $cliente->valor_adesao = str_replace([".",","],["","."],$request->valor_adesao);
         $cliente->data_boleto = date('Y-m-d',strtotime($request->data_boleto));
         $cliente->save();
 
@@ -389,7 +390,7 @@ class CotacaoController extends Controller
             $cotacao->administradora_id = $request->administradora;
             $cotacao->plano_id = $request->plano;
             $cotacao->acomodacao_id = $request->acomodacao;
-            $cotacao->financeiro_id = 1;
+            $cotacao->financeiro_id = ($request->plano == 1 ? 3 : 1);
             $cotacao->codigo_externo = $request->codigo_externo;
             $cotacao->valor = $request->valor;
             $cotacao->save();
@@ -401,7 +402,7 @@ class CotacaoController extends Controller
             $cotacao->administradora_id = $request->administradora;
             $cotacao->plano_id = $request->plano;
             $cotacao->acomodacao_id = $request->acomodacao;
-            $cotacao->financeiro_id = 1;
+            $cotacao->financeiro_id = ($request->plano == 1 ? 3 : 1);
             $cotacao->user_id = auth()->user()->id;
             $cotacao->corretora_id = auth()->user()->corretora_id;
             $cotacao->codigo_externo = $request->codigo_externo;

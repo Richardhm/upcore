@@ -24,13 +24,14 @@ class ComissoesController extends Controller
 
     public function index()
     {
+        
         /** COmissao so apos para a vigencia */
         $comissoes = Comissao::with(['cotacao','cotacao.plano','cotacao.administradora','user','cotacao.clientes'])
             ->whereHas('cotacao',function($query){
                 $query->where("financeiro_id",6);    
             })
             ->get();
-            
+        
         
         return view('admin.pages.comissoes.index',[
             'comissoes' => $comissoes

@@ -91,6 +91,7 @@ class FinanceiroController extends Controller
 
     public function storeJuridico(Request $request)
     {
+        
         $rules = [
             "administradora_id" => "required",
             "cnpj" => "required",
@@ -160,6 +161,30 @@ class FinanceiroController extends Controller
         ]);
     }
 
+    public function aguardandojuridicoColaborador($id)
+    {
+        $admin = "";
+        if(auth()->user()->admin) {
+            $dados = CotacaoJuridica::where("status",0)
+            ->with(['cliente','cliente.cidade','cliente.user'])
+            ->get();
+            $admin = "sim";
+        } else {
+            $dados = CotacaoJuridica::where("status",0)->whereHas('cliente',function($query){
+                $query->where("user_id",auth()->user()->id);
+            })
+            ->with(['cliente','cliente.cidade'])
+            ->get();
+        }
+                
+        
+        
+        return view("admin.pages.financeiros.aguardandoPagamentoJuridicoColaborador",[
+            "dados" => $dados,
+            "admin" => $admin
+        ]);
+    }
+
 
     public function setAguardandoPagamentoBoletoColetivo(Request $request)
     {
@@ -192,7 +217,12 @@ class FinanceiroController extends Controller
 
     public function colaboradorAguardandoBoletocoletivo()
     {
-        $dados = Cotacao::where("financeiro_id",1)->where("plano_id","!=",1)->where("user_id",auth()->user()->id)->with(['administradora','plano','clientes','user'])->get();
+        if(auth()->user()->admin) {
+            $dados = Cotacao::where("financeiro_id",1)->where("plano_id","!=",1)->with(['administradora','plano','clientes','user'])->get();
+        } else {
+            $dados = Cotacao::where("financeiro_id",1)->where("plano_id","!=",1)->where("user_id",auth()->user()->id)->with(['administradora','plano','clientes','user'])->get();
+        }
+        
         return view('admin.pages.financeiros.colaboradores.aguardandoBoletoColetivo',[
             "dados" => $dados
         ]);
@@ -200,7 +230,13 @@ class FinanceiroController extends Controller
 
     public function colaboradorAguardandoPagAdesaoColetivo()
     {
-        $dados = Cotacao::where("financeiro_id",2)->where("plano_id","!=",1)->where("user_id",auth()->user()->id)->with(['administradora','plano','clientes','user'])->get();
+        if(auth()->user()->admin) {
+            $dados = Cotacao::where("financeiro_id",2)->where("plano_id","!=",1)->with(['administradora','plano','clientes','user'])->get();
+        } else {
+            
+            $dados = Cotacao::where("financeiro_id",2)->where("plano_id","!=",1)->where("user_id",auth()->user()->id)->with(['administradora','plano','clientes','user'])->get();
+        }
+        
         return view('admin.pages.financeiros.colaboradores.aguardandoPagamentoBoletoColetivo',[
             "dados" => $dados
         ]);
@@ -208,9 +244,19 @@ class FinanceiroController extends Controller
 
     public function colaboradorAguardandoPagVigencia()
     {
-        $dados = Cotacao::where("financeiro_id",4)->where("plano_id","!=",1)->where("user_id",auth()->user()->id)->with(['administradora','plano','clientes','user'])->get();
+        
+        $admin = "";
+        if(auth()->user()->admin) {
+            $dados = Cotacao::where("financeiro_id",4)->where("plano_id","!=",1)->with(['administradora','plano','clientes','user'])->get();
+            $admin = "sim";
+        } else {
+            
+            $dados = Cotacao::where("financeiro_id",4)->where("plano_id","!=",1)->where("user_id",auth()->user()->id)->with(['administradora','plano','clientes','user'])->get();
+        }
+        
         return view('admin.pages.financeiros.colaboradores.aguardandoPagamentoVigencia',[
-            "dados" => $dados
+            "dados" => $dados,
+            "admin" => $admin
         ]);
     }
 
@@ -244,16 +290,7 @@ class FinanceiroController extends Controller
             $mes = $request->mes;
             $meses = ['01'=>"Janeiro",'02'=>"Fevereiro",'03'=>"Março",'04'=>"Abril",'05'=>"Maio",'06'=>"Junho",'07'=>"Julho",'08'=>"Agosto",'09'=>"Setembro",'10'=>"Outubro",'11'=>"Novembro",'12'=>"Dezembro"];
            
-            // $mes_extenso = date($mes);
-               
-            //$monthName =jdmonthname((\DateTime::createFromFormat('!m', $request->mes))->format('m'),0);
-            //$monthName = $dateObj->format('M');
-            
-// Use mktime() and date() function to
-// convert number to month name
            
-            //jdmonthname("07");
-
             $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->where("plano_id","!=",1)->whereMonth('updated_at', $request->mes)->whereYear("updated_at",$request->ano)->count();
         
             $aguardando_boleto_coletivo_total = Cotacao::where("financeiro_id",1)->where("plano_id","!=",1)->whereYear("updated_at",$request->ano)->whereMonth('updated_at', $request->mes)->selectRaw("sum(valor) as total")->first()->total;

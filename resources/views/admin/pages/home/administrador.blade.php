@@ -195,7 +195,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
                         
                 <div class="small-box bg-info flex-fill mr-1">
@@ -207,7 +207,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
                         
                 <div class="small-box bg-orange flex-fill mr-1">
@@ -219,7 +219,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             
                 <div class="small-box bg-danger flex-fill">
@@ -231,7 +231,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
 
         </div>

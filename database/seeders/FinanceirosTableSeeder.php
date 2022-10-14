@@ -32,6 +32,9 @@ class FinanceirosTableSeeder extends Seeder
             ],
             [
                 "nome" => "Comissões"
+            ],
+            [
+                "nome" => "Finalizado"
             ]
         ];
         Financeiro::insert($dados);

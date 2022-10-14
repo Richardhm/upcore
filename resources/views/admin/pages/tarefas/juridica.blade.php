@@ -68,12 +68,6 @@
                             <span class="mr-2" style="font-weight: bold;">{{$qtd_mes}}</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 todos">
-                            <span class="ml-2" style="font-weight: bold;">Todos</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$clientes_total}}</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
 
@@ -204,11 +198,11 @@
                             <span class="text-white">Descrição:</span>
                             <textarea name="descricao_tarefa" id="descricao_tarefa" name="descricao_tarefa" class="form-control"></textarea>
                         </div>
+                        
                     </div>
 
-
                     <div style="display:flex;margin:5px 0 0 0;" class="d-flex justify-content-center">
-                        <a href="#" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" style="pointer-events: none;background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;">Nova Tarefa</a>
+                        <a href="#" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Nova Tarefa</a>
                         <a href="#" data-orcamento style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Orçamento</a>
                         <a href="#" data-contrato style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Contrato</a>
                         <a href="#" data-perda data-toggle="modal" data-target="#motivoDaPerda" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Perda</a>
@@ -298,8 +292,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="" method="POST" name="motivo_perda_tarefa" id="motivo_perda_tarefa">
-                        <input type="hidden" name="motivo_cliente_id" id="motivo_cliente_id">
-                        <input type="hidden" name="tarefa_id_cadastrado_aqui" id="tarefa_id_cadastrado_aqui">
+                        <input type="hidden" name="motivo_perda_tarefa_id" id="motivo_perda_tarefa_id">
                         @csrf
                         <div id="motivo_perda_error"></div>
                         <div class="form-row">
@@ -329,6 +322,9 @@
 
 
 
+
+
+
 </section>
 
 <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
@@ -352,7 +348,7 @@
                 "url": "{{asset('traducao/pt-BR.json')}}"
             },
             ajax: {
-                "url":"{{ route('clientes.ajaxclienteslistapf') }}",
+                "url":"{{ route('clientes.ajaxclienteslistapj') }}",
                 "dataSrc": ""
             },
             "lengthMenu": [10,20,30,40,100],
@@ -388,11 +384,10 @@
             }
         });
         
-        var table = $("#tabela").DataTable();
-        // var table = $("body").find("#tabela").DataTable();
+        var table = $('#tabela').DataTable();
         $('table').on('click', 'tbody tr', function () {
             let data = table.row(this).data();
-            console.log(data);
+            
             let quantidade_vidas = 0;
             if(data.cotacao && !!data.cotacao) {
                 //quantidade_vidas = data.cotacao.somarCotacaoFaixaEtaria.soma;
@@ -403,15 +398,12 @@
             let ultimo_contato = data.ultimo_contato.split("-").reverse().join("/");
             let criacao = new Date(data.created_at.split("T")[0]);
             
-
-            
             const now = new Date(Date.now());
             const hoje = new Date(now.toISOString().split("T")[0]);
             const diferenca   = new Date(hoje) - new Date(criacao)
             const diferencaUltimo   = new Date(hoje) - new Date(data.ultimo_contato);
             const diferencaEmDias = diferenca / (1000 * 60 * 60 * 24);
             const ultimoEmDias = diferencaUltimo / (1000 * 60 * 60 * 24);
-
 
             $("input[name='nome']").val(data.nome);
             $("input[name='email']").val(data.email);
@@ -420,17 +412,15 @@
             $("input[name='data_cadastro']").val(data_criacao);
             $("input[name='ultimo_contato']").val(ultimo_contato);
             $("input[name='status']").val(data.etiqueta.nome);
+            //$("textarea[name='descricao']").val();
             $("input[name='dias_cadastro']").val(diferencaEmDias);
             $("input[name='quantidade_vidas']").val(quantidade_vidas);
+            //console.log(row[1]);   //EmployeeId
             $("textarea[name='descricao_tarefa']").val(data.tarefas[0].descricao);
-            $("#cliente_id_cadastrado_aqui").val(data.id);
-            $("#tarefa_id_cadastrado_aqui").val(data.tarefas[0].id);
-            $("#motivo_cliente_id").val(data.id);
-
-            //$(".total_tarefa").text(count(data.tarefas));
+            $("#cliente_id_cadastrado_aqui").val(data.id)
 
             $("#dias_contato").val(ultimoEmDias);
-            $("#origem_leads").val(data.origem.nome);
+            $("#origem_leads").val("-")
             
             $("a[data-orcamento]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/orcamento/"+data.id);
             $("a[data-contrato]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/contrato/"+data.id);
@@ -441,30 +431,25 @@
 
         });
 
-        $(".hoje").on('click',function(){
-            ta.ajax.url("{{ route('cliente.getTarefasParaHoje') }}").load();
+        $(".atrasada").on('click',function(){
+            ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjaxPJ') }}").load();
             return false;
         });
 
-        $(".atrasada").on('click',function(){
-            ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjax') }}").load();
+        $(".hoje").on('click',function(){
+            ta.ajax.url("{{ route('cliente.getTarefasParaHojePJ') }}").load();
             return false;
         });
 
         $(".semana").on('click',function(){
-            ta.ajax.url("{{ route('cliente.listarClientesSemanaAjax') }}").load();
+            ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxPJ') }}").load();
             return false;
         });
 
         $(".mes").on('click',function(){
-            ta.ajax.url("{{ route('cliente.listarClienteMesAjax') }}").load();
+            ta.ajax.url("{{ route('cliente.listarClienteMesAjaxPJ') }}").load();
             return false;
         });
-
-        $(".todos").on('click',function(){
-            ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
-            return false;
-        }); 
 
         $(".nova_tarefa").on('click',function(){
             let id = $().val();
@@ -508,14 +493,12 @@
                 },
 
                 success:function(res) {
-                    
                     if(res != "error") {
-                        $("#motivoDaPerda").modal('hide');
+                        $("#motivoDaParda").modal('hide');
                         $('input[name="motivo"]').prop('checked', false);
                         $("#descricao_motivo").val('');
                         $("#motivo_textarea").html("");
-                        
-                        ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
+                        $("body").find("div[data-cliente='"+res+"']").css("display","none");
                     } else {
 
                     }
@@ -523,15 +506,6 @@
             })
             return false; 
         });
-
-
-
-
-
-
-
-
-
 
         $("form[name='nova_atividade']").on('submit',function(e){
             var form = $(this);
@@ -585,6 +559,7 @@
                 data:"id="+id,
                 method:"POST",
                 success:function(res) {
+                   
                     $("#historico").html(res);
                 }
             })

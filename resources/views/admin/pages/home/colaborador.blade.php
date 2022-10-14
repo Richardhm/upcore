@@ -6,8 +6,8 @@
 @stop
 @section('content_top_nav_right')
 
-    <li class="nav-item"><a href="{{route('home.relatorio')}}" class="nav-link"><i class="fas fa-file-excel"></i>  </a></li> <!--Relatorio-->
-    <li class="nav-item"><a href="{{route('admin.home.search')}}" class="nav-link">Tabela de Preços</a></li> <!--Consulta Rapida-->
+    <li class="nav-item"><a href="{{route('home.relatorio')}}" class="nav-link text-white"><i class="fas fa-file-excel"></i>  </a></li> <!--Relatorio-->
+    <li class="nav-item"><a href="{{route('admin.home.search')}}" class="nav-link text-white">Tabela de Preços</a></li> <!--Consulta Rapida-->
 
 @stop
 @section('content')
@@ -81,19 +81,19 @@
 <section class="container-fluid mb-3">
     <div class="d-flex">            
         @foreach($etiquetas as $et)
-            <div class="flex-fill border mr-2 bg-navy rounded">
-                <a href='{{url("/admin/clientes?ac=etiquetas&id={$et->id}")}}' class="text-white">
+            <div class="flex-fill border mr-2 rounded" style="background-color:#FFF0F5;">
+                <a href='{{url("/admin/clientes?ac=etiquetas&id={$et->id}")}}'>
                     <div class="d-flex flex-column">
-                        <h3 class="text-white border-bottom text-center">{{$et->quantidade}}</h3>
-                        <span class="text-white border-bottom text-center"><i><u>{{$et->nome}}</u></i></span>                    
+                        <h3 class="border-bottom border-dark text-center text-dark">{{$et->quantidade}}</h3>
+                        <span class="border-bottom border-dark text-center  text-dark"><i><u>{{$et->nome}}</u></i></span>                    
                     </div>
                 </a>    
             </div>
             @if($loop->last)
-            <div class="flex-fill border bg-navy rounded">
+            <div class="flex-fill border rounded" style="background-color:#FFF0F5;">
                 <div class="d-flex flex-column">
-                    <h3 class="text-white text-center border-bottom">18</h3>
-                    <span class="text-white border-bottom text-center"><i><u><a href="#" class="text-white">Leads</a></u></i></span>                    
+                    <h3 class="border-bottom border-dark text-center text-dark">{{$qtd_leads}}</h3>
+                    <span class="border-bottom border-dark text-center text-dark"><i><u><a href="{{route('leads.prospeccao')}}" class="text-dark">Leads</a></u></i></span>                    
                 </div>
             </div>
             @endif
@@ -110,7 +110,7 @@
 <section class="container-fluid mt-3">
     <div class="d-flex">            
         
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <a href="{{route('financeiro.homeColaboradorAguardandoBoletoColetivo',auth()->user()->id)}}" class="text-dark">
                     <div class="d-flex justify-content-between">
                         <h3 class="ml-2">{{$aguardando_boleto_coletivo}}</h3>
@@ -123,7 +123,7 @@
                 </a>    
             </div>
              
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <a href="{{route('financeiro.homeColaboradorAguardandoPagAdesaoColetivo',auth()->user()->id)}}" class="text-dark">
                     <div class="d-flex justify-content-between">
                         <h3 class="ml-2">{{$aguardando_pagamento_adesao_coletivo}}</h3>
@@ -136,7 +136,7 @@
                 </a>    
             </div>
 
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <a href="{{route('financeiro.homeColaboradorAguardandoPagVigencia',auth()->user()->id)}}" class="text-dark">
                     <div class="d-flex justify-content-between border-bottom">
                         <h3>{{$aguardando_pagamento_vigencia}}</h3>
@@ -150,7 +150,7 @@
             </div>
 
 
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <a href="{{route('financeiro.colaboradorPlanoindividual',auth()->user()->id)}}" class="text-dark">
                     <div class="d-flex justify-content-between">
                         <h3>{{$aguardando_individual_qtd}}</h3>
@@ -165,7 +165,7 @@
 
                 
 
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <a href="{{route('financeiro.empresarialColaborador',auth()->user()->id)}}" class="text-dark">
                     <div class="d-flex justify-content-between">
                         <h3>{{$aguardando_pagamento_empresarial}}</h3>
@@ -230,7 +230,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             
                 <div class="small-box bg-danger flex-fill">
@@ -242,7 +242,7 @@
                     <div class="icon">
                         <i class="fas fa-file-signature"></i>
                     </div>
-                    <a href="{{route('contratos.index')}}" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Saiba Mais <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
 
         </div>

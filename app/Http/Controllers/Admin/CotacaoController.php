@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
 use App\Models\{
+    Acomodacao,
     Cliente,
     Cidade,
     Tabela,
@@ -24,6 +25,7 @@ use App\Models\{
     PremiacaoCorretoresConfiguracoes,
     PremiacaoCorretoresLancados,
     PremiacaoCorretoraLancadas,
+    Tarefa,
     User
 };
 use Illuminate\Support\Facades\DB;
@@ -202,18 +204,24 @@ class CotacaoController extends Controller
 
     public function montarPlano(Request $request)
     {
+        // return $request->all();
         if(empty($request->nome) || empty($request->telefone) || empty($request->email) || empty($request->cidade)) {
             return "error";
         }
+        
         if(!preg_match('/^\([1-9]{2}\) [0-9]{1} [0-9]{4}-[0-9]{4}$/',$request->telefone)) {
             return "error";
         }
+        
         if(!filter_var($request->email,FILTER_VALIDATE_EMAIL)) {
             return "error";
         }
+              
+
         if(empty($request->faixas[0][1]) && empty($request->faixas[0][2]) && empty($request->faixas[0][3]) && empty($request->faixas[0][4]) && empty($request->faixas[0][5]) && empty($request->faixas[0][6]) && empty($request->faixas[0][7]) && empty($request->faixas[0][8]) && empty($request->faixas[0][9]) && empty($request->faixas[0][10])) {
             return "error";
-        }     
+        }
+        
         if($request->modelo == "pf") {
             $where_planos_pegar = ' AND (plano_id = (SELECT id FROM planos WHERE NOME LIKE "%Coletivo Por Adesão%") OR plano_id = (SELECT id FROM planos WHERE NOME LIKE "%Individual%"))';
         } else {
@@ -223,13 +231,32 @@ class CotacaoController extends Controller
             $query->where("cidade_id",$request->cidade);   
         })->get();        
         if(count($verificarPlano) >= 1) {           
+           
             $cliente = Cliente::find($request->cliente_id);
-            $cliente->etiqueta_id = 2;
-            $cliente->ultimo_contato = date("Y-m-d");
-            $cliente->save();          
+            
+
+
+
             $cot = Cotacao::where('cliente_id',$request->cliente_id)->first();
             /** Cliente Ja Possui Cotacao??? */    
             if(!$cot) {
+                
+                $cliente->etiqueta_id = 2;
+                $cliente->ultimo_contato = date("Y-m-d");
+                $cliente->lead = ($cliente->lead == 0 ? 1 : 0);
+                $cliente->save();          
+
+
+
+                $tarefa = new Tarefa();
+                $tarefa->cliente_id = $request->cliente_id;
+                $tarefa->user_id = auth()->user()->id;
+                $tarefa->titulo_id = 1;
+                $tarefa->data = date("Y-m-d");
+                $tarefa->descricao = "Envio de Orçamento para o cliente ".$cliente->nome;
+                $tarefa->save();
+
+
                 $cotacao = new Cotacao();
                 $cotacao->cliente_id = $request->cliente_id;
                 $cotacao->cidade_id = $request->cidade;
@@ -281,7 +308,8 @@ class CotacaoController extends Controller
         ->whereRaw("cotacao_id = ".$cot->id." AND ta.cidade_id = ".$cot->cidade_id)
         ->groupByRaw("ta.administradora_id,ta.faixa_etaria,ta.odonto")
         ->orderByRaw("ta.administradora_id,card,fe.nome")    
-        ->get();        
+        ->get();   
+      
                
         $faixas = CotacaoFaixaEtaria::where("cotacao_id","=",$cot->id)
             ->selectRaw("(SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = cotacao_faixa_etarias.faixa_etaria_id) AS faixa_nome")  
@@ -320,13 +348,15 @@ class CotacaoController extends Controller
 
     public function contrato($id)
     {
-        
+       
         $cliente = Cliente::where("id",$id)->first();
+        
         if(!$cliente) {
             return redirect()->back();
         }
         $cidades = Cidade::all();
-        $administradoras = Administradora::all();
+        $administradoras = Cidade::where("id",$cliente->cidade_id)->with('administradoras')->first();
+        
         $operadoras = Operadora::all();
         if($cliente->pessoa_fisica) {
             $planos = Planos::where("nome","LIKE","%Individual%")->orWhere("nome","LIKE","%Coletivo Por Ade%")->get();
@@ -358,17 +388,20 @@ class CotacaoController extends Controller
     public function storeContrato(Request $request)
     {
        
-       $rules = [
-         "valor_adesao" => "required",
-         "cpf" => "unique:clientes,cpf"
-       ];
+       
+       $valor = str_replace([".",","],["","."],$request->valor); 
+       
+    //    $rules = [
+    //      "valor_adesao" => "required",
+    //      "cpf" => "unique:clientes,cpf"
+    //    ];
 
-       $message = [
-        "valor_adesao.required" => "E valor adesão e campo obrigatorio",
-        "cpf.unique" => "CPF já está cadastrado"
-       ];
+    //    $message = [
+    //     "valor_adesao.required" => "E valor adesão e campo obrigatorio",
+    //     "cpf.unique" => "CPF já está cadastrado"
+    //    ];
 
-       $request->validate($rules,$message); 
+    //    $request->validate($rules,$message); 
         /** Vai Na Tabela Cliente E acaba de realizar o cadastro */       
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->etiqueta_id = 3;
@@ -377,7 +410,7 @@ class CotacaoController extends Controller
         $cliente->data_nascimento = date('Y-m-d',strtotime($request->data_nascimento));
         $cliente->responsavel_financeiro = $request->responsavel_financeiro;
         $cliente->cpf_financeiro = $request->cpf_financeiro;
-        $cliente->endereco_financeiro = $request->endereco_financeiro;
+        $cliente->endereco = $request->endereco_financeiro;
         $cliente->data_vigente = date('Y-m-d',strtotime($request->data_vigencia));
         $cliente->valor_adesao = str_replace([".",","],["","."],$request->valor_adesao);
         $cliente->data_boleto = date('Y-m-d',strtotime($request->data_boleto));
@@ -392,7 +425,10 @@ class CotacaoController extends Controller
             $cotacao->acomodacao_id = $request->acomodacao;
             $cotacao->financeiro_id = ($request->plano == 1 ? 3 : 1);
             $cotacao->codigo_externo = $request->codigo_externo;
-            $cotacao->valor = $request->valor;
+            $cotacao->coparticipacao = ($request->coparticipacao == "sim" ? 1 : 0);
+            $cotacao->odonto = ($request->odonto == "sim" ? 1 : 0);
+            $cotacao->valor = $valor;
+            $cotacao->acomodacao_id = Acomodacao::where("nome",'LIKE',"%{$request->acomodacao}%")->first()->id;
             $cotacao->save();
         } else {
             $cotacao = new Cotacao();
@@ -406,7 +442,10 @@ class CotacaoController extends Controller
             $cotacao->user_id = auth()->user()->id;
             $cotacao->corretora_id = auth()->user()->corretora_id;
             $cotacao->codigo_externo = $request->codigo_externo;
-            $cotacao->valor = $request->valor;
+            $cotacao->coparticipacao = ($request->coparticipacao == "sim" ? 1 : 0);
+            $cotacao->odonto = ($request->odonto == "sim" ? 1 : 0);
+            $cotacao->acomodacao_id = Acomodacao::where("nome",'LIKE',"%{$request->acomodacao}%")->first()->id;
+            $cotacao->valor = $valor;
             $cotacao->save();
         }
         
@@ -437,7 +476,8 @@ class CotacaoController extends Controller
 
 
         /** Comissao Corretor */
-        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes::where("plano_id",$request->plano)
+        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+            ::where("plano_id",$request->plano)
             ->where("administradora_id",$request->administradora)
             ->where("user_id",auth()->user()->id)
             ->where("cidade_id",$request->cidade)
@@ -454,52 +494,60 @@ class CotacaoController extends Controller
                 } else {
                     $comissaoVendedor->data = date("Y-m-d",strtotime($request->data_boleto."+{$comissao_corretor_contagem}month"));
                 }
-
-                
-                $comissaoVendedor->valor = ($request->valor * $c->valor) / 100;
+                $comissaoVendedor->valor = ($valor * $c->valor) / 100;
                 $comissaoVendedor->save();  
                 $comissao_corretor_contagem++;  
             }
         }
 
         /** Premiacao Corretor Por Total de Vida */
-        $premiacao_configurada_corretor = PremiacaoCorretoresConfiguracoes::where("plano_id",$request->plano)->where("administradora_id",$request->administradora)->where("user_id",auth()->user()->id)->first();
+        $premiacao_configurada_corretor = PremiacaoCorretoresConfiguracoes
+            ::where("plano_id",$request->plano)
+            ->where("administradora_id",$request->administradora)
+            ->where("user_id",auth()->user()->id)
+            ->where("cidade_id",$request->cidade)
+            ->get();
         // dd($premiacao_configurada_corretor->valor);
         // $dd = (float) $premiacao_configurada_corretor->valor * $totalVidas;
-       
-        if($premiacao_configurada_corretor) {
-            $premiacaoCorretoresLancados = new PremiacaoCorretoresLancados();
-            $premiacaoCorretoresLancados->comissao_id = $comissao->id;
-            $premiacaoCorretoresLancados->user_id = auth()->user()->id;
-            $premiacaoCorretoresLancados->total = (float) $premiacao_configurada_corretor->valor * $totalVidas;
-            $premiacaoCorretoresLancados->save();
+        $premiacao_corretor_contagem = 0;
+        if(count($premiacao_configurada_corretor)>=1) {
+            foreach($premiacao_configurada_corretor as $k => $p) {
+                $premiacaoCorretoresLancados = new PremiacaoCorretoresLancados();
+
+                $premiacaoCorretoresLancados->comissao_id = $comissao->id;
+                $premiacaoCorretoresLancados->user_id = auth()->user()->id;
+                $premiacaoCorretoresLancados->total = (float) $p->valor * $totalVidas;
+                if($premiacao_corretor_contagem == 0) {
+                    $premiacaoCorretoresLancados->data = date('Y-m-d',strtotime($request->data_boleto));
+                } else {
+                    $premiacaoCorretoresLancados->data = date("Y-m-d",strtotime($request->data_boleto."+{$premiacao_corretor_contagem}month"));
+                }
+                $premiacaoCorretoresLancados->save();
+                $premiacao_corretor_contagem++;
+            }
+
+
+            
         }
         
         /** Comissao Corretora */   
         $comissoes_configurada_corretora = ComissoesCorretoraConfiguracoes::where("administradora_id",$request->administradora)->get();
         $comissoes_corretora_contagem=0;
         if(count($comissoes_configurada_corretora)>=1) {
-            foreach($comissoes_configurada_corretora as $cc) {
-                
+            foreach($comissoes_configurada_corretora as $cc) {                
                 $comissaoCorretoraLancadas = new ComissoesCorretoraLancadas();
                 $comissaoCorretoraLancadas->comissao_id = $comissao->id;            
                 $comissaoCorretoraLancadas->parcela = $cc->parcela;
-                
                 if($comissoes_corretora_contagem == 0) {
                     $comissaoCorretoraLancadas->data = date('Y-m-d',strtotime($request->data_boleto));
                 } else {
                     $comissaoCorretoraLancadas->data = date("Y-m-d",strtotime($request->data_boleto."+{$comissoes_corretora_contagem}month"));
                 }
-                
-                
-                $comissaoCorretoraLancadas->valor = ($request->valor * $cc->valor) / 100;
+                $comissaoCorretoraLancadas->valor = ($valor * $cc->valor) / 100;
                 $comissaoCorretoraLancadas->save();
                 $comissoes_corretora_contagem++;
             }
-            
-
         }
-
         
         /** Premiação Corretora */
         $premiacao_administradora_corretora = Administradora::where("id",$request->administradora)->first();
@@ -512,11 +560,8 @@ class CotacaoController extends Controller
 
         }
 
-        return redirect()->route('contratos.index')->with('success',"Contrato com o cliente ".$cliente->nome." foi realizados com sucesso!");
+        return redirect()->route('contratos.pf.pendentes');
     }
-
-
-
 
 
     public function montarValoresFormularioAcomodacao(Request $request)

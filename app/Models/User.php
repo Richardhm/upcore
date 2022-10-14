@@ -79,4 +79,10 @@ class User extends Authenticatable
         return $this->hasMany(Orcamento::class);
     }
 
+    public function adminlte_image()
+    {
+        return auth()->user()->image;
+    }    
+
+
 }

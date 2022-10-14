@@ -156,7 +156,10 @@
                 $.ajax({
                     method:"POST",
                     data:"id="+id,
-                    url:"{{route('comissoes.mudarStatus')}}"     
+                    url:"{{route('comissoes.mudarStatus')}}",
+                    success:function(res) {
+                        console.log(res);
+                    }     
                 })
            });  
 

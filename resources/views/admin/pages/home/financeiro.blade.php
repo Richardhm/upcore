@@ -2,7 +2,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard - Financeiro</h1>
+    <h1 class="text-white">Dashboard - Financeiro</h1>
 @stop
 
 @section('content_top_nav_right')
@@ -66,7 +66,7 @@
 
     <section class="container-fluid mt-3">
         <div class="d-flex">                 
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <div class="d-flex justify-content-between">
                     <h3 class="ml-2">{{$quantidade_aguardando_boleto_coletivo}}</h3>
                     <p class="align-self-center mr-2">R$ {{number_format($aguardando_boleto_coletivo_total,2,",",".")}}</p>                        
@@ -76,7 +76,7 @@
                     <span>Vidas: &nbsp; <b>{{$aguardando_boleto_coletivo_vidas ?? 0}}</b></span>
                 </div>
             </div>
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <div class="d-flex justify-content-between">
                     <h3 class="ml-2">{{$quantidade_aguardando_pagamento_adesao_coletivo}}</h3>
                     <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_boleto_coletivo_total,2,",",".")}}</p>                        
@@ -89,7 +89,7 @@
                     <span class="ml-auto">Vidas: &nbsp; <b>{{$aguardando_pagamento_boleto_coletivo_vidas ?? 0}}</b></span>
                 </div>
             </div>
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <div class="d-flex justify-content-between border-bottom">
                     <h3>{{$quantidade_pagamento_vigencia}}</h3>
                     <p class="align-self-center mr-2">R$ {{number_format($aguardando_pagamento_vigencia_total,2,",",".")}}</p>                        
@@ -102,7 +102,7 @@
                     <span class="ml-auto">Vidas: &nbsp; <b>{{$aguardando_pagamento_vigencia_vidas ?? 0}}</b></span>
                 </div>
             </div>    
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <div class="d-flex justify-content-between">
                     <h3>{{$quantidade_aguardando_pagamento_plano_individual}}</h3>
                     <p class="align-self-center mr-2">R$ {{number_format($aguardando_individual_total,2,",",".")}}</p>                        
@@ -115,7 +115,7 @@
                     <span class="ml-auto">Vidas: &nbsp; <b>{{$aguardando_individual_vidas ?? 0}}</b></span>
                 </div>
             </div>    
-            <div class="small-box flex-fill mr-2 shadow" style="border:3px solid black;">
+            <div class="small-box flex-fill mr-2 shadow bg-white" style="border:3px solid black;">
                 <div class="d-flex justify-content-between">
                     <h3>{{$quantidade_pagamento_empresarial}}</h3>
                     <p class="align-self-center mr-2">R$ {{number_format($valor_aguardando_pagamento_empresarial,2,",",".")}}</p>                        

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Administradora;
 use App\Models\Cidade;
 use App\Models\Planos;
+use App\Models\PremiacaoCorretoraLancadas;
 use App\Models\PremiacaoCorretoresConfiguracoes;
 
 class ComissoesCorretoresConfiguracoesController extends Controller
@@ -21,6 +22,7 @@ class ComissoesCorretoresConfiguracoesController extends Controller
 
     public function index($id)
     {
+        
         $administradoras = Administradora::all();
         $planos = Planos::all();
         $cidades = Cidade::all();
@@ -38,15 +40,11 @@ class ComissoesCorretoresConfiguracoesController extends Controller
             ->selectRaw("(SELECT nome FROM cidades WHERE cidades.id = comissoes_corretores_configuracoes.cidade_id) as cidade")
             ->selectRaw("(SELECT id FROM cidades WHERE cidades.id = comissoes_corretores_configuracoes.cidade_id) as id_cidade")
             ->selectRaw("(SELECT GROUP_CONCAT(valor) FROM comissoes_corretores_configuracoes AS dentro WHERE dentro.plano_id = comissoes_corretores_configuracoes.plano_id AND dentro.administradora_id = comissoes_corretores_configuracoes.administradora_id AND dentro.cidade_id = comissoes_corretores_configuracoes.cidade_id AND dentro.user_id = comissoes_corretores_configuracoes.user_id) AS parcela")
+            ->selectRaw("(SELECT GROUP_CONCAT(premiacao_corretores_configuracoes.valor,'|') FROM premiacao_corretores_configuracoes WHERE premiacao_corretores_configuracoes.user_id = ?) AS premiacoes",[$id])
             ->groupByRaw("administradora_id,cidade_id,plano_id")
             ->get();
-                
-        // $premiacoes = PremiacaoCorretoresConfiguracoes::where("user_id",$id)
-        //     ->selectRaw("id")
-        //     ->selectRaw("valor")
-        //     ->selectRaw("(SELECT nome FROM planos WHERE planos.id = premiacao_corretores_configuracoes.plano_id) as plano")
-        //     ->selectRaw("(SELECT nome FROM administradoras WHERE administradoras.id = premiacao_corretores_configuracoes.administradora_id) as administradora")
-        //     ->get();         
+        // dd($comissoes);    
+         
         
         $premiacoes = PremiacaoCorretoresConfiguracoes::where("user_id",$id)
             ->selectRaw("user_id")
@@ -97,24 +95,32 @@ class ComissoesCorretoresConfiguracoesController extends Controller
 
     public function store(Request $request)
     {
-        $verificar = ComissoesCorretoresConfiguracoes::where("user_id",$request->user_id)->where("plano_id",$request->plano_id)->where("cidade_id",$request->cidade_id)->where("administradora_id",$request->administradora_id)->get();
-        if(count($verificar)>=1) {
-            return "error";
-            //return redirect()->route('comissao.corretores.cadastrar',$request->user_id)->with("errorjatem","Esse usuario já tem comissões com o plano e administradora respectivamente")->withInput($request->all());
-        } else {
-            $ii=1;
-            foreach($request->parcelas as $k => $v):
-                $cad = new ComissoesCorretoresConfiguracoes();
-                $cad->user_id = $request->user_id;
-                $cad->plano_id = $request->plano_id;
-                $cad->cidade_id = $request->cidade_id;
-                $cad->administradora_id = $request->administradora_id;
-                $cad->valor = $v;
-                $cad->parcela = $ii++;
-                $cad->save();
-            endforeach;
-            return "sucesso";
+        $ii=0;        
+        if(isset($request->parcelas) && $request->parcelas != null) {
+            foreach($request->parcelas as $k => $v) {
+                $co = new ComissoesCorretoresConfiguracoes();
+                $co->user_id = $request->user_id;
+                $co->plano_id = $request->plano_id;
+                $co->cidade_id = $request->cidade_id;
+                $co->administradora_id = $request->administradora_id;
+                $co->valor = $v;
+                $co->parcela = $ii++;
+                $co->save();
+            }
         }
+
+        if(isset($request->premiacoes)  && $request->premiacoes != null) {
+            foreach($request->premiacoes as $k => $v) {
+                $pe = new PremiacaoCorretoresConfiguracoes();
+                $pe->plano_id = $request->plano_id;
+                $pe->administradora_id = $request->administradora_id;
+                $pe->valor = $v; 
+                $pe->parcela = $k+1;
+                $pe->user_id = $request->user_id;
+                $pe->save();
+            }
+        }
+        return "sucesso";
     }
 
     public function editar(Request $request) 

@@ -10,8 +10,12 @@ class Cliente extends Model
     use HasFactory;
 
     protected $table = 'clientes';
-    protected $fillable = ['cidade_id','user_id','nome','telefone','email','cpf','endereco','cnpj','nome_empresa','pessoa_fisica','pessoa_juridica','etiqueta_id','ultimo_contato'];
+    protected $fillable = ['cidade_id','user_id','origem_id','nome','telefone','email','cpf','endereco','cnpj','nome_empresa','pessoa_fisica','pessoa_juridica','etiqueta_id','ultimo_contato'];
 
+    public function origem() 
+    {
+        return $this->belongsTo(Origem::class);
+    }
 
     public function orcamentos()
     {

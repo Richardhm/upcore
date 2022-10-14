@@ -8,6 +8,7 @@ use App\Models\{
     Comissao,
     ComissoesCorretoraLancadas,
     ComissoesCorretorLancados,
+    Cotacao,
     PremiacaoCorretoresLancados,
     PremiacaoCorretoraLancadas,
     User
@@ -64,14 +65,28 @@ class ComissoesController extends Controller
 
     public function mudarStatus(Request $request)
     {
+        // return $request->all();
         $id = $request->id;
         $comissao = ComissoesCorretorLancados::where("id",$id)->first();
-        if(!$comissao) {
-            return false;
-        }
         $comissao->status = $comissao->status ? false : true;
         $comissao->save();
-        return $comissao->status;
+        // $comissao_id = $comissao->comissao_id;
+        $all_comissao = ComissoesCorretorLancados::where("comissao_id",$comissao->comissao_id)->get();
+        
+        $cadeado_comissao = true;
+        foreach($all_comissao as $cc) {
+            if($cc->status == 0) $cadeado_comissao = false;
+        }
+        if($cadeado_comissao) {
+            $comissao = Comissao::find($comissao->id);
+            return $comissao;
+        }
+        // if(!$comissao) {
+        //     return false;
+        // }
+        // $comissao->status = $comissao->status ? false : true;
+        // $comissao->save();
+        // return $comissao->status;
     }
 
     public function mudarStatusPremiacao(Request $request)
@@ -113,5 +128,8 @@ class ComissoesController extends Controller
         $comissao->save();        
         return $comissao->status;
     }
+
+    
+
 
 }

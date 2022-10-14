@@ -646,6 +646,8 @@ class HomeController extends Controller
                 ->selectRaw("SUM(quantidade_vidas) as quantidade")
                 ->first()
                 ->quantidade;
+
+            $qtd_leads = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->where("visivel",1)->count();    
                         
             
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
@@ -702,7 +704,7 @@ class HomeController extends Controller
                 "aguardando_individual_qtd" => $aguardando_individual_qtd,
                 "aguardando_individual_total" => $aguardando_individual_total,
                 "aguardando_individual_vidas" => $aguardando_individual_vidas,
-
+                "qtd_leads" => $qtd_leads,
                 "aguardando_pagamento_empresarial" => $aguardando_pagamento_empresarial,
                 "valor_aguardando_pagamento_empresarial" => $valor_aguardando_pagamento_empresarial,
                 "qtd_vidas_aguardando_pagamento_empresarial" => $qtd_vidas_aguardando_pagamento_empresarial
@@ -942,9 +944,6 @@ class HomeController extends Controller
         ];
     }
 
-
-
-
     public function comissoes(Request $request)
     {
         if($request->ajax()) {
@@ -995,7 +994,7 @@ class HomeController extends Controller
                 $tarefas = Tarefa::where("status",0)
                 ->selectRaw('(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) AS cliente')
                 ->selectRaw('(SELECT name FROM users WHERE users.id = tarefas.user_id) AS corretor')
-                ->selectRaw("title")
+                ->selectRaw("(SELECT titulo FROM tarefas_titulos WHERE tarefas.titulo_id = tarefas_titulos.id) as title")
                 ->selectRaw("DATE_FORMAT(data, '%d/%m/%Y') as data")
                 ->selectRaw("DATA - DATE(NOW()) AS falta")
                 ->get();
@@ -1003,7 +1002,7 @@ class HomeController extends Controller
             } else {
                 $tarefas = Tarefa::where("user_id",auth()->user()->id)->where("status",0)
                 ->selectRaw('(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) AS cliente')
-                ->selectRaw("title")
+                ->selectRaw("(SELECT titulo FROM tarefas_titulos WHERE tarefas.titulo_id = tarefas_titulos.id) as title")
                 ->selectRaw("DATE_FORMAT(data, '%d/%m/%Y') as data")
                 ->selectRaw("DATA - DATE(NOW()) AS falta")
                 ->get();
@@ -1038,15 +1037,8 @@ class HomeController extends Controller
         }
     }
 
-
-
-
-
-
-
     public function searchHome()
-    {
-        
+    {        
         $operadoras = Operadora::all();
         $administradoras = Administradora::all();
         $tipos = Planos::all();    
@@ -1169,17 +1161,25 @@ class HomeController extends Controller
                 "planos" => $planos,
                 
             ])->with("error","Não existe registro nesse periodo de tempo");
-        }   
-    
-            
-        
-        
-        
+        }           
     }
 
 
 
+    public function calendario()
+    {
+        return view('admin.pages.home.calendario');
+    }
 
+    public function calculadora() 
+    {
+        return view("admin.pages.home.calculadora");
+    }
+
+    public function lembretes()
+    {
+        return view("admin.pages.home.lembretes");
+    }
 
 
 

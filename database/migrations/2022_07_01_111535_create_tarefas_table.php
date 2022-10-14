@@ -18,8 +18,9 @@ class CreateTarefasTable extends Migration
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('motivo_id')->nullable();
+            $table->unsignedBigInteger('titulo_id');
             $table->date('data');
-            $table->string('title');
+            
             $table->text('descricao');
             
             $table->text('descricao_motivo')->nullable();
@@ -30,6 +31,7 @@ class CreateTarefasTable extends Migration
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete("cascade");
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
             $table->foreign('motivo_id')->references('id')->on('tarefa_motivo_perdas')->onDelete("cascade");
+            $table->foreign('titulo_id')->references('id')->on('tarefas_titulos')->onDelete("cascade");
             $table->timestamps();
         });
     }

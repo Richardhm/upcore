@@ -67,7 +67,7 @@ return [
     'usermenu_enabled' => true,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
+    'usermenu_image' => true,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
 
@@ -121,15 +121,15 @@ return [
     |
     */
 
-    'classes_body' => '',
-    'classes_brand' => '',
+    'classes_body' => 'bg-fundo',
+    'classes_brand' => 'bg-logo',
     'classes_brand_text' => '',
-    'classes_content_wrapper' => '',
+    'classes_content_wrapper' => 'bg-fundo',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-orange elevation-4',
-    'classes_sidebar_nav' => 'sidebar-dark-primary',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_sidebar' => 'bg-escuro elevation-4',
+    'classes_sidebar_nav' => '',
+    'classes_topnav' => 'bg-escuro',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -146,7 +146,7 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => false,
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
@@ -228,62 +228,204 @@ return [
         [
             'text'    => 'Dashboard',
             'icon'    => 'fas fa-home',
-            'url'    => 'admin', 
-            'active' => ['admin','/',"/admin/home/pesquisa","admin/financeiro/aguardandoboletocoletivo"]
+            'url'    => '',
+            'icon_color' => 'white', 
+            'classes'  => 'text-white text-bold',
+            //'active' => ['admin','/',"/admin/home/pesquisa","admin/financeiro/aguardandoboletocoletivo"],
+            'submenu' => [
+                [
+                    "text" => "Controle Clientes",
+                    "url" => "",
+                    'icon'    => 'fas fa-house-user',
+                    'classes'  => 'text-white'
+                ],
+                [
+                    "text" => "Controle Financeiro",
+                    "url" => "",
+                    'icon'    => 'fas fa-coins',
+                    'classes'  => 'text-white'    
+                ]
+            ]
         ],
-        // [
-        //     'text'    => 'Orcamento',
-        //     'key'  => 'orcamento',
-        //     'icon'    => 'fas fa-cash-register',
-        //     'url'    => 'admin/orcamento',
-        //     'active' => ['orcamento',"http://localhost:8000/admin/orcamento/*",'orcamentos',"http://localhost:8000/admin/orcamentos/*"],
-        //     'can' => 'orçamento'     
-        // ],
+
         [
-            "text" => "Contrato",
+            'text'    => 'Leads',
+            'icon'    => 'fab fa-intercom',
+            'url'    => '', 
+            'classes'  => 'text-white text-bold',
+            'submenu' => [
+                [
+                    "text" => "Prospecção",
+                    "url" => "admin/leads/prospeccao",
+                    'icon'    => 'fas fa-user',
+                    'classes'  => 'text-white'    
+                ],
+                [
+                    "text" => "Plantão de Vendas",
+                    "url" => "",
+                    'icon'    => 'fab fa-salesforce',
+                    'classes'  => 'text-white'
+                ]
+                
+            ]
+        ],
+
+        [
+            'text'    => 'Clientes',
+            'icon'    => 'fas fa-users',
+            'url'    => '', 
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold',
+            'submenu' => [
+                [
+                    "text" => "Pessoa Fisica",
+                    "url" => "admin/clientes/pf",
+                    'icon'    => 'fas fa-list',
+                    'classes' => 'text-white'    
+                ],
+                [
+                    "text" => "Pessoa Juridica",
+                    "url" => "admin/clientes/pj",
+                    'icon'    => 'fa fa-file-signature',
+                    'classes' => ' text-white'
+                ]
+                
+            ]
+        ],
+
+        [
+            "text" => "Contratos PF",
+            "url" => "admin/contratos",
+            "icon" => "fas fa-id-card-alt",
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold',
+            'submenu' => [
+                [
+                    "text" => "Pendentes",
+                    "url" => "admin/contratos/pf/pendentes",
+                    'icon'    => 'fas fa-ellipsis-h',
+                    'classes' => 'text-white'    
+                ],
+                [
+                    "text" => "Finalizados",
+                    "url" => "",
+                    'icon'    => 'fas fa-thumbs-up',
+                    'classes' => 'text-white'
+                ]
+                
+            ]
+            
+        ],
+
+        [
+            "text" => "Contratos PJ",
             "url" => "admin/contratos",
             "icon" => "fas fa-file-contract",
-            "can" => "contratos"
-            // 'submenu' => [
-            //     [
-            //         "text" => "Cadastrar",
-            //         "url" => "",
-            //         'icon'    => 'fa fa-file-signature'
-            //     ],
-            //     [
-            //         "text" => "Listar",
-            //         "url" => "",
-            //         'icon'    => 'fas fa-list'    
-            //     ]
-            // ]
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold',
+            'submenu' => [
+                [
+                    "text" => "Pendentes",
+                    "url" => "admin/contratos/pj/pendentes",
+                    'icon'    => 'fas fa-ellipsis-h',
+                    'classes' => 'text-white'    
+                ],
+                [
+                    "text" => "Finalizados",
+                    "url" => "",
+                    'icon'    => 'fas fa-thumbs-up',
+                    'classes' => 'text-white'
+                ]
+                
+            ]
+            
         ],
-        [
-            "text" => "Clientes",
-            "url" => "admin/clientes",
-            "icon" => "fas fa-user-cog",
-            "can" => "clientes",
-            "active" => ['clientes','admin/clientes/cadastrar']
-        ],
+
         [
             "text" => "Comissões",
             "url" => "admin/comissoes",
-            "icon" => "fas fa-money-check-alt",
             "can" => "comissoes",
-            'active' => ['comissoes',"http://localhost:8000/admin/comissoes/*"]
-
+            "icon" => "fas fa-money-check-alt",
+            "active" => ['clientes','admin/clientes/cadastrar'],
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold'
         ],
+
         [
-            "text" => "Tarefas",
-            "url" => "admin/tarefas",
-            "icon" => "fas fa-tasks",
-            "can" => "tarefas",
-            'active' => ['comissoes',"http://localhost:8000/admin/tarefas/*"]
-
+            "text" => "Chat",
+            "url" => "admin/clientes",
+            "icon" => "fab fa-rocketchat",
+            "active" => ['clientes','admin/clientes/cadastrar'],
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold'
         ],
+
+        [
+            "text" => "Email",
+            "url" => "admin/clientes",
+            "icon" => "fas fa-envelope",
+            "active" => ['clientes','admin/clientes/cadastrar'],
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold'
+        ],
+
+        [
+            "text" => "Calculadora",
+            "url" => "admin/calculadora",
+            "icon" => "fas fa-calculator",
+            "active" => ['calculadora','admin/calculadora'],
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold'
+        ],
+
+        [
+            "text" => "Calendario",
+            "url" => "admin/calendario",
+            "icon" => "fas fa-calendar-alt",
+            "active" => ['calendario','admin/calendario'],
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold'
+        ],
+
+        [
+            "text" => "Lembretes",
+            "url" => "admin/lembretes",
+            "icon" => "fas fa-sticky-note",
+            "active" => ['lembretes','admin/lembretes'],
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold'
+        ],
+
+
+        // [
+        //     "text" => "Leads",
+        //     "url" => "admin/clientes",
+        //     "icon" => "fas fa-user-cog",
+        //     "can" => "clientes",
+        //     "active" => ['clientes','admin/clientes/cadastrar']
+        // ],
+        // [
+        //     "text" => "Comissões",
+        //     "url" => "admin/comissoes",
+        //     "icon" => "fas fa-money-check-alt",
+        //     "can" => "comissoes",
+        //     'active' => ['comissoes',"http://localhost:8000/admin/comissoes/*"]
+
+        // ],
+        // [
+        //     "text" => "Tarefas",
+        //     "url" => "admin/tarefas",
+        //     "icon" => "fas fa-tasks",
+        //     "can" => "tarefas",
+        //     'active' => ['comissoes',"http://localhost:8000/admin/tarefas/*"]
+
+        // ],
         [
             'text'    => 'Configurações',
             'icon'    => 'fas fa-cog',
             'can'     => 'configuracoes',
+            'icon_color' => 'white',
+            'classes' => 'text-white text-bold',
             'submenu' => [
                 [
                     'text' => 'Corretora',
@@ -291,7 +433,7 @@ return [
                     'icon' => 'fas fa-hands-helping',
                     //"can" => "corretora",
                     "can" => "configuracoes",
-                    
+                    'classes' => 'text-white',
                     'active' => ['corretora',"http://localhost:8000/admin/corretora/*"]
                 ],
                 [
@@ -300,6 +442,7 @@ return [
                     'icon'    => 'fab fa-centos',
                     // 'can'     => 'operadora',
                     'can'     => 'configuracoes',
+                    'classes' => 'text-white',
                     'active' => ['operadora',"http://localhost:8000/admin/operadora/*"]  
                 ],
                 [
@@ -308,6 +451,7 @@ return [
                     'icon' => 'fab fa-superpowers',
                     // 'can'  => 'administradora',
                     'can'  => 'configuracoes',
+                    'classes' => 'text-white',
                     'active' => ['administradora',"http://localhost:8000/admin/administradora/*"]
                 ],
                 [
@@ -315,6 +459,7 @@ return [
                     "url" => "admin/cidades",
                     "icon" => "fas fa-city",
                     'can'  => 'configuracoes',
+                    'classes' => 'text-white',
                     "active" => ['cidades',"http://localhost:8000/admin/cidades/*"]
 
                 ],
@@ -324,6 +469,7 @@ return [
                     'icon' => 'fas fa-users',
                     // 'can'  => 'corretor',
                     'can'  => 'configuracoes',
+                    'classes' => 'text-white',
                     'active' => ['corretores',"http://localhost:8000/admin/corretores/*"]
                 ],
                 [
@@ -331,6 +477,7 @@ return [
                     "url" => "admin/planos",
                     "icon" => "fas fa-clipboard-list",
                     'can'  => 'configuracoes',
+                    'classes' => 'text-white',
                     "active" => ['planos',"http://localhost:8000/admin/planos/*"]
 
                 ],
@@ -340,6 +487,7 @@ return [
                     'icon' => 'fas fa-money-bill',
                     // 'can'  => 'tabela',
                     'can'  => 'configuracoes',
+                    'classes' => 'text-white',
                     'active' => ['tabela',"http://localhost:8000/admin/tabela/*"]
                 ],
                 [
@@ -348,9 +496,18 @@ return [
                     'icon' => 'fas fa-tag',
                     'can'  => 'configuracoes',
                     // 'can'  => 'etiquetas',
+                    'classes' => 'text-white',
                     'active' => ['etiquetas',"http://localhost:8000/admin/etiquetas/*"]
                 ],
-                
+                [
+                    'text' => 'Origem',
+                    'url'  => 'admin/origem',
+                    'icon' => 'fab fa-hive',
+                    'can'  => 'configuracoes',
+                    // 'can'  => 'etiquetas',
+                    'classes' => 'text-white',
+                    'active' => ['etiquetas',"http://localhost:8000/admin/etiquetas/*"]
+                ]
             ],
         ],
        

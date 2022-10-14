@@ -1,62 +1,49 @@
 @extends('adminlte::page')
 @section('title', 'Contrato')
 @section('plugins.jqueryUi', true)
+@section('plugins.Toastr', true)
 @section('content_header')
-    <h3>Contratos</h3>
+    <h3 class="text-white">Realizar Contratos</h3>
 @stop
 @section('content')
-<div class="card card-primary card-tabs">
-    <div class="card-header p-0 pt-1">
-        <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
-            <li class="pt-2 px-3"><h3 class="card-title">Realizar Contratos <i class="fas fa-hand-point-right"></i></h3></li>
-            <li class="nav-item">
-                <a class="nav-link {{($cliente->pessoa_fisica == 1 && $cliente->pessoa_juridica == 0) ? 'active' : ''}}" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="{{($cliente->pessoa_fisica == 1 && $cliente->pessoa_juridica == 0) ? true : false}}">Pessoa Fisica <i class="fas fa-user-alt"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{($cliente->pessoa_fisica == 0 && $cliente->pessoa_juridica == 1)  ? 'active' : ''}}" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="{{($cliente->pessoa_fisica == 0 && $cliente->pessoa_juridica == 1) ? true : false}}">Pessoa Juridica <i class="fas fa-balance-scale"></i></a>
-            </li>
-            
-        </ul>
-    </div>
-    <div class="card-body">
-        <div class="tab-content" id="custom-tabs-two-tabContent">
-            <div class="tab-pane fade {{($cliente->pessoa_fisica == 1 && $cliente->pessoa_juridica == 0) ? 'show active' : ''}}" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
-            
-            <form action="{{route('contrato.store')}}" method="post" class="px-3" name="cadastrar_pessoa_fisca_formulario">
-                @csrf              
 
-                <input type="hidden" name="change_cidade" id="change_cidade" value="{{$cliente->cidade->nome ?? ''}}">
-                <input type="hidden" name="change_operadora" id="change_operadora" value="">
-                <input type="hidden" name="change_administradora" id="change_administradora" value="">
-                <input type="hidden" name="change_coparticipacao" id="change_coparticipacao" value="">
-                <input type="hidden" name="change_odonto" id="change_odonto" value="">
-                <input type="hidden" name="change_plano" id="change_plano" value="">
+    <div class="card shadow" style="background-color:rgba(0,0,0,0.5);color:#FFF;">
+        <div class="card-body" style="box-shadow:rgba(0,0,0,0.8) 0.6em 0.7em 5px;">
+        <form action="{{route('contrato.store')}}" method="post" class="px-3" name="cadastrar_pessoa_fisca_formulario">
+            @csrf              
+
+            <input type="hidden" name="change_cidade" id="change_cidade" value="{{$cliente->cidade->nome ?? ''}}">
+            <input type="hidden" name="change_operadora" id="change_operadora" value="">
+            <input type="hidden" name="change_administradora" id="change_administradora" value="">
+            <input type="hidden" name="change_coparticipacao" id="change_coparticipacao" value="">
+            <input type="hidden" name="change_odonto" id="change_odonto" value="">
+            <input type="hidden" name="change_plano" id="change_plano" value="">
 
 
-                <input type="hidden" name="change_faixa_0_18" id="change_faixa_0_18" value="">
-                <input type="hidden" name="change_faixa_19_23" id="change_faixa_19_23" value="">
-                <input type="hidden" name="change_faixa_24_28" id="change_faixa_24_28" value="">
-                <input type="hidden" name="change_faixa_29_33" id="change_faixa_29_33" value="">
-                <input type="hidden" name="change_faixa_34_38" id="change_faixa_34_38" value="">
-                <input type="hidden" name="change_faixa_39_43" id="change_faixa_39_43" value="">
-                <input type="hidden" name="change_faixa_44_48" id="change_faixa_44_48" value="">
-                <input type="hidden" name="change_faixa_49_53" id="change_faixa_49_53" value="">
-                <input type="hidden" name="change_faixa_54_58" id="change_faixa_54_58" value="">
-                <input type="hidden" name="change_faixa_59" id="change_faixa_59" value="">
+            <input type="hidden" name="change_faixa_0_18" id="change_faixa_0_18" value="">
+            <input type="hidden" name="change_faixa_19_23" id="change_faixa_19_23" value="">
+            <input type="hidden" name="change_faixa_24_28" id="change_faixa_24_28" value="">
+            <input type="hidden" name="change_faixa_29_33" id="change_faixa_29_33" value="">
+            <input type="hidden" name="change_faixa_34_38" id="change_faixa_34_38" value="">
+            <input type="hidden" name="change_faixa_39_43" id="change_faixa_39_43" value="">
+            <input type="hidden" name="change_faixa_44_48" id="change_faixa_44_48" value="">
+            <input type="hidden" name="change_faixa_49_53" id="change_faixa_49_53" value="">
+            <input type="hidden" name="change_faixa_54_58" id="change_faixa_54_58" value="">
+            <input type="hidden" name="change_faixa_59" id="change_faixa_59" value="">
 
-               <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente->id}}">
-                <div class="form-row mt-3">
-                    <div class="col col-md-3">
+            <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente->id}}">
+                <div class="form-row mt-1">
+                    <div class="col-2">
                         <div class="form-group">
-                            <label for="nome">Titular:</label>
+                            <span for="nome">Titular:</span>
                             <input type="text" name="nome" id="nome" required class="form-control" placeholder="Nome" value="{{$cliente->nome}}">
                             <div class="errorcliente"></div>
                         </div>
                     </div>
 
-                    <div class="col col-md-3">
+                    <div class="col-2">
                         <div class="form-group">
-                            <label for="cpf">CPF:</label>
+                            <span for="cpf">CPF:</span>
                             <input type="text" name="cpf" id="cpf" required class="form-control" value="{{old('cpf')}}" placeholder="XXX.XXXX.XXX-XX">
                             <div class="errorcpf"></div>
                             @if($errors->has('cpf'))
@@ -65,70 +52,66 @@
                         </div>
                     </div>
 
-                    <div class="col col-md-3">
+                    <div class="col-2">
                         <div class="form-group">
-                            <label for="data_nascimento">Data Nascimento:</label>
+                            <span for="data_nascimento">Data Nascimento:</span>
                             <input type="date" name="data_nascimento" value="{{old('data_nascimento')}}" required id="data_nascimento" class="form-control">
                             <div class="errordatanascimento"></div>
                         </div>
                     </div>
 
-                    <div class="col col-md-3">
+                    <div class="col-3">
                         <div class="form-group">
-                            <label for="email">Email:</label>
+                            <span for="email">Email:</span>
                             <input type="email" name="email" id="email" required placeholder="Email" class="form-control" value="{{$cliente->email}}">
                             <div class="erroremail"></div>
                         </div>
                     </div>    
-                </div>    
-                
-                <div class="form-row mt-3">
-                    <div class="col col-md-4">
+                    <div class="col-3">
                         <div class="form-group">
-                            <label for="responsavel_financeiro">Responsavel Financeiro:<small style='font-size:0.7em;color:#666;'>(Preencher apenas se o cliente for de menor)</small></label>
+                            <span style="font-size:0.947em;">Responsavel Financeiro: <small style='font-size:0.675em;color:#FFF;'>(Preencher se o cliente é menor de idade)</small></span>
                             <input type="text" name="responsavel_financeiro" id="responsavel_financeiro" placeholder="Responsavel Financeiro" class="form-control" value="">
                             <div class="errorresponsavelfinanceiro"></div>
                         </div>
-                    </div>    
+                    </div>
+                </div>    
+                
+                <div class="d-flex">
+                        
 
-                    <div class="col col-md-4">
+                    <div class="flex-basis:20%;">
                         <div class="form-group">
-                            <label for="cpf_financeiro">CPF Financeiro:<small style='font-size:0.7em;color:#666;'>(Preencher apenas se o cliente for de menor)</small></label>
+                            <span for="cpf_financeiro">CPF Financeiro: <small style='font-size:0.675em;color:#FFF;'>(Preencher se o cliente é menor de idade)</small></span>
                             <input type="text" name="cpf_financeiro" id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control" value="">
                             <div class="errorcpfresponsavelfinanceiro"></div>
                            
                         </div>
                     </div>
 
-                    <div class="col col-md-4">
+                    <div style="flex-basis:19%;margin:0 1%;">
                         <div class="form-group">
-                            <label for="endereco_financeiro">Endereço Completo:</label>
+                            <span for="endereco_financeiro">Endereço Completo:</span>
                             <input type="text" name="endereco_financeiro" required id="endereco_financeiro" value="{{old('endereco_financeiro')}}" placeholder="Endereço Completo" class="form-control" value="">
                             <div class="errorenderefinanceiro"></div>
                         </div>
                     </div>
 
-                </div>
-                                
-                
-                <div class="form-row mt-3">
-                    
-                    <div class="col col-md-3">
+                    <div style="flex-basis:19%;">
                         <div class="form-group">
-                            <label for="cidade">Cidade:</label>
+                            <span for="cidade">Cidade:</span>
                             <select name="cidade" required id="cidade" class="form-control change_valores">
                                 <option value="">--Escolher a cidade--</option>
-                                
                                 @foreach($cidades as $c)
                                     <option value="{{$c->id}}" {{$cliente->cidade_id == $c->id ? 'selected' : ''}}>{{$c->nome}}</option>
                                 @endforeach
                             </select>   
                            <div class="errorcidade"></div>
                         </div>
-                    </div>    
-                    <div class="col col-md-3">
+                    </div>
+
+                    <div style="flex-basis:18%;margin:0 1%;">
                         <div class="form-group">
-                            <label for="operadora">Operadora:</label>
+                            <span for="operadora">Operadora:</span>
                             <select name="operadora" required id="operadora" class="form-control">
                                 <option value="">--Escolher a Operadora--</option>
                                 @foreach($operadoras as $o)
@@ -137,200 +120,56 @@
                             </select>
                             <div class="erroroperadora"></div>
                         </div>
-                    </div>  
-                    <div class="col col-md-3">
+                    </div>
+
+                    <div style="flex-basis:18%;">
                         <div class="form-group">
-                            <label for="administradora">Administradora:</label>
+                            <span for="administradora">Administradora:</span>
                             <select name="administradora" required id="administradora" class="form-control">
-                                <option value="">--Escolher a Administradora--</option>
-                                @foreach($administradoras as $admin)
+                                <option value="">--Escolher Administradora--</option>
+                                @foreach($administradoras->administradoras as $admin)
                                     <option value="{{$admin->id}}" {{old('administradora') == $admin->id ? 'selected' : ''}}>{{$admin->nome}}</option>
                                 @endforeach
                             </select>    
                             <div class="erroradministradora"></div>
                         </div>
                     </div>
-                    <div class="col col-md-3">
+
+
+                </div>
+                
+                <div class="form-row mt-1">
+                    
+                    <div class="col-3">
                         <div class="form-group">
-                            <label for="codigo_externo">Codigo Externo:</label>
+                            <span for="Plano">Planos:</span>
+                            <!-- <input type="text" id="plano" name="plano"> -->
+                            <select name="plano" id="plano" class="form-control">
+                                <option value="">--Escolher um Plano--</option>
+                                
+                            </select>    
+                            <div class="errorplano"></div>
+                        </div>
+                    </div>    
+
+
+
+                    <div class="col-3">
+                        <div class="form-group">
+                            <span for="codigo_externo">Codigo Externo:</span>
                             <input type="text" name="codigo_externo" required id="codigo_externo" value="{{old('codigo_externo')}}" class="form-control" placeholder="COD.">
                             <div class="errorcodigo"></div>
                         </div>
-                    </div>        
-                </div>
-               <section>
-                    <h4 class="">Faixas Etarias</h4>
-                    <div class="errorfaixas"></div>
-                    <div class="form-row mb-4">
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">0-18</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-0-18" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" data-change="change_faixa_0_18" name="faixas_etarias[1]" value="{{isset($colunas) && in_array(1,$colunas) ? $faixas[array_search(1, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-0-18" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">19-23</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-19-23" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" data-change="change_faixa_19_23" name="faixas_etarias[2]" value="{{isset($colunas) && in_array(2,$colunas) ? $faixas[array_search(2, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-19-23" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">24-28</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-24-28" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" data-change="change_faixa_24_28" name="faixas_etarias[3]" value="{{isset($colunas) && in_array(3,$colunas) ? $faixas[array_search(3, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-24-28" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">29-33</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-29-33" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" data-change="change_faixa_29_33" name="faixas_etarias[4]" value="{{isset($colunas) && in_array(4,$colunas) ? $faixas[array_search(4, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-29-33" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">34-38</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-34-38" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" name="faixas_etarias[5]" data-change="change_faixa_34_38" value="{{isset($colunas) && in_array(5,$colunas) ? $faixas[array_search(5, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-34-38" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div> 
-                        
-                    </div>    
-                
-                    <div class="form-row mb-4">    
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">39-43</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-39-43" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" name="faixas_etarias[6]" data-change="change_faixa_39_43" value="{{isset($colunas) && in_array(6,$colunas) ? $faixas[array_search(6, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-39-43" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">44-48</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-44-48" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" name="faixas_etarias[7]" data-change="change_faixa_44_48" value="{{isset($colunas) && in_array(7,$colunas) ? $faixas[array_search(7, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-44-48" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-                        <div class="col-6 col-md-2 col-sm-4">
-                            <span for="">49-53</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-49-53" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" name="faixas_etarias[8]" data-change="change_faixa_49_53" value="{{isset($colunas) && in_array(8,$colunas) ? $faixas[array_search(8, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-49-53" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-                        <div class="col-6 col-sm-4 col-md-2">
-                            <span for="">54-58</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus" id="faixa-54-58" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" name="faixas_etarias[9]" data-change="change_faixa_54_58" value="{{isset($colunas) && in_array(9,$colunas) ? $faixas[array_search(9, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-54-58"  class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>      
-
-                        <div class="col-6 col-sm-4 col-md-2">
-                            <span for="">59+</span>
-                            <div class="border border-secondary rounded p-1">
-                                <div class="d-flex content">
-                                    <button type="button" class="flex-fill minus"  id="faixa-59" style="border:none;background:transparent;" aria-label="−" tabindex="0">
-                                        <span class="text-dark font-weight-bold">－</span>
-                                    </button>
-                                    <input type="tel" data-change="change_faixa_59" name="faixas_etarias[10]" value="{{isset($colunas) && in_array(10,$colunas) ? $faixas[array_search(10, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-59" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="flex-fill plus" style="border:none;background:transparent;" aria-label="+" tabindex="0">
-                                        <span class="text-dark font-weight-bold">＋</span>
-                                    </button>
-                                </div>
-                            </div>  
-                        </div>   
-                    </div>   
-            </section> 
-
-             <div class="form-row mt-3">
+                    </div>
                     
-                    <div class="col-3 col-md-3">
-                        <div class="form-group">
-                            <label for="coparticipacao">Coparticipação:</label><br />
+                    <div class="col-3">
+                        <div class="form-group d-flex justify-content-center flex-column">
+                            <span>Coparticipação:</span>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_sim">
-                                    <input type="radio" name="coparticipacao" id="coparticipacao_radio_sim" value="sim" {{old('coparticipacao') == "sim" ? 'checked' : ''}}> Sim
+                                <label class="btn btn-outline-light" id="coparticipacao_sim">
+                                    <input type="radio" name="coparticipacao" id="coparticipacao_radio_sim"  value="sim" {{old('coparticipacao') == "sim" ? 'checked' : ''}}> Sim
                                 </label>
-                                <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_nao">
+                                <label class="btn btn-outline-light" id="coparticipacao_nao">
                                     <input type="radio" name="coparticipacao" id="coparticipacao_radio_nao" value="nao" {{old('coparticipacao') == "nao" ? 'checked' : ''}}> Não
                                 </label>
                                 
@@ -338,15 +177,15 @@
                             <div class='errorcoparticipacao'></div>
                         </div>
                     </div>    
-                    <div class="col-3 col-md-3">
-                        <div class="form-group">
-                            <label for="odonto">Odonto:</label><br />
+                    <div class="col-3">
+                        <div class="form-group  d-flex justify-content-center flex-column">
+                            <span for="odonto">Odonto:</span>
                             
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-secondary btn-lg" id="odonto_sim">
+                                <label class="btn btn-outline-light" id="odonto_sim">
                                     <input type="radio" name="odonto" id="odonto_radio_sim" value="sim" {{old('odonto') == "sim" ? 'checked' : ''}}> Sim
                                 </label>
-                                <label class="btn btn-outline-secondary btn-lg" id="odonto_nao">
+                                <label class="btn btn-outline-light" id="odonto_nao">
                                     <input type="radio" name="odonto" id="odonto_radio_nao" value="nao" {{old('odonto') == "nao" ? 'checked' : ''}}> Não
                                 </label>
                                 
@@ -354,136 +193,448 @@
                             <div class='errorodonto'></div>
                         </div>
                     </div> 
+    
+
+
+
+
+
+                </div>
+               <section>
+                    <h4>Faixas Etarias</h4>
+                    <div class="errorfaixas"></div>
+                    <!--COMEÇO Faixa Etaria-->
+                    <div class="d-flex">
+
+                        <div  style="flex-basis:10%;">
+                            <span for="">0-18</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-0-18" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" data-change="change_faixa_0_18" name="faixas_etarias[1]" value="{{isset($colunas) && in_array(1,$colunas) ? $faixas[array_search(1, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-0-18" class="text-center font-weight-bold flex-fill faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
+                                    <button type="button" class="d-flex justify-content-center plus" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+
+                        <div  style="flex-basis:10%;margin:0 10px;">
+                            <span for="">19-23</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-19-23" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em">－</span>
+                                    </button>
+                                    <input type="tel" data-change="change_faixa_19_23" name="faixas_etarias[2]" value="{{isset($colunas) && in_array(2,$colunas) ? $faixas[array_search(2, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-19-23" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
+                                    <button type="button" class="d-flex justify-content-center plus" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+                        <div  style="flex-basis:10%;">
+                            <span for="">24-28</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-24-28" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em">－</span>
+                                    </button>
+                                    <input type="tel" data-change="change_faixa_24_28" name="faixas_etarias[3]" value="{{isset($colunas) && in_array(3,$colunas) ? $faixas[array_search(3, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-24-28" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+                        <div  style="flex-basis:10%;margin:0 10px;">
+                            <span for="">29-33</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-29-33" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" data-change="change_faixa_29_33" name="faixas_etarias[4]" value="{{isset($colunas) && in_array(4,$colunas) ? $faixas[array_search(4, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-29-33" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
+                                    <button type="button" class="plus  d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+                        <div  style="flex-basis:10%;">
+                            <span for="">34-38</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-34-38" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" name="faixas_etarias[5]" data-change="change_faixa_34_38" value="{{isset($colunas) && in_array(5,$colunas) ? $faixas[array_search(5, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-34-38" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div> 
+                        
+                        
+                
                     
-                    <div class="col-6 col-md-6">
-                        <div class="form-group">
-                            <label for="odonto">Plano:</label><br />
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                @foreach($planos as $p)
-                                <label class="btn btn-outline-secondary btn-lg">
-                                    <input type="radio" class="planos_aqui" name="plano" id="plano" value="{{$p->id}}">{{$p->nome}}
-                                </label>
-                                @endforeach
-                            </div>    
+
+                        <div  style="flex-basis:10%;margin:0 10px;">
+                            <span for="">39-43</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-39-43" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" name="faixas_etarias[6]" data-change="change_faixa_39_43" value="{{isset($colunas) && in_array(6,$colunas) ? $faixas[array_search(6, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-39-43" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+
+                        <div  style="flex-basis:10%;">
+                            <span for="">44-48</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-44-48" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" name="faixas_etarias[7]" data-change="change_faixa_44_48" value="{{isset($colunas) && in_array(7,$colunas) ? $faixas[array_search(7, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-44-48" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+                        <div  style="flex-basis:10%;margin:0 10px;">
+                            <span for="">49-53</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-49-53" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" name="faixas_etarias[8]" data-change="change_faixa_49_53" value="{{isset($colunas) && in_array(8,$colunas) ? $faixas[array_search(8, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-49-53" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+                        <div style="flex-basis:10%;margin:0 10px 0 0;">
+                            <span for="">54-58</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-54-58" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    <input type="tel" name="faixas_etarias[9]" data-change="change_faixa_54_58" value="{{isset($colunas) && in_array(9,$colunas) ? $faixas[array_search(9, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-54-58"  class="text-center font-weight-bold faixas_etarias d-flex" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
+                        </div>      
+
+                        <div style="flex-basis:10%;">
+                            <span for="">59+</span>
+                            <div class="border border-white rounded">
+                                <div class="d-flex content">
+
+                                    <button type="button" class="minus d-flex justify-content-center"  id="faixa-59" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
+                                    </button>
+                                    
+                                    <input type="tel" data-change="change_faixa_59" name="faixas_etarias[10]" value="{{isset($colunas) && in_array(10,$colunas) ? $faixas[array_search(10, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-59" class="text-center font-weight-bold faixas_etarias d-flex" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
+                                    
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                        <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
+                                    </button>
+                                </div>
+                            </div>  
                         </div>
-                        <div class='errorplano'></div>  
-                    </div>         
+                    </div>
+                    <!--Fim Faixa Etaria-->                      
+                </section> 
+             <div class="form-row mt-3">
+                    <div class="col-12 d-flex rounded">
+                        <button class="botao d-flex rounded-lg align-self-center w-100 text-center justify-content-center py-2 text-navy" style="text-decoration:underline;font-weight:bold;font-size:1.8em;background-color:rgb(133,255,199);border:3px solid #FFF;">Mostrar Planos</button>
+                    </div>
                 </div>
                 <div id="resultado">
-
-                </div>               
-            </form>
-            </div>
-            <div class="tab-pane fade {{($cliente->pessoa_fisica == 0 && $cliente->pessoa_juridica == 1) ? 'show active' : ''}}" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
-                <form action="">
-                    <div class="form-row mt-3">
-                        <div class="col-6 col-md-4">
-                            <div class="form-group">
-                                <label for="nome">Operadora:</label>
-                                <select name="" id="" class="form-control">
-                                    <option value="">--Escolher a Operadora--</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-4">
-                            <div class="form-group">
-                                <label for="cpf">CNPJ:</label>
-                                <input type="text" name="cnpj" id="cnpj" class="form-control" placeholder="CNPJ" value="{{$cliente->cnpj}}">
-                                <div class="errorcnpj"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-4">
-                            <div class="form-group">
-                                <label for="cpf">Razão Social:</label>
-                                <input type="text" name="razao_social" id="razao_social" class="form-control" placeholder="Razão Social">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                        
-                    </div>  
-                    
-                    <div class="form-row mt-3">
-
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="proprietaria">Proprietaria</label>
-                                <input type="text" name="proprietaria" id="proprietaria" class="form-control" placeholder="Proprietario">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="contato">Contato</label>
-                                <input type="text" name="contato" id="proprietaria" class="form-control" placeholder="Contato">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="celular">Telefone</label>
-                                <input type="text" name="celular" id="celular" class="form-control" placeholder="Celular">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                    </div>    
-
-                    <div class="form-row mt-3">
-
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="text" name="proprietaria" id="proprietaria" class="form-control" placeholder="Proprietario">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="contato">Quantidade de Vidas</label>
-                                <input type="text" name="contato" id="proprietaria" class="form-control" placeholder="Contato">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="celular">Valor</label>
-                                <input type="text" name="celular" id="celular" class="form-control" placeholder="Celular">
-                                <div class="errornome"></div>
-                            </div>
-                        </div>
-
-                    </div>    
-                    
-                    <button type="submit" class="btn btn-block btn-primary">Cadastrar</button>
-                </form>
-            </div>
-            
+                </div>    
         </div>
     </div>
-</div>    
-  
-</div>
-@stop   
+    
+    </form>             
+@stop  
+
+@section('css')
+    <style>
+        .botao:hover {
+            background-color: rgba(0,0,0,0.5) !important;
+            color:#FFF !important;
+        }
+
+        .valores-acomodacao {
+            background-color:rgba(0,0,0,0.5);
+            color:#FFF;
+            width:32%;
+            box-shadow:rgba(0,0,0,0.8) 0.6em 0.7em 5px;
+            
+        }
+
+
+        .valores-acomodacao:hover {
+            cursor:pointer;
+            box-shadow: none;
+        }
+
+        .table thead tr {
+            background-color:rgb(36,125,157);
+            
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: rgba(0,0,0,0.5);
+        }
+        .table tbody tr:nth-child(even) {
+            background-color:rgb(36,125,157);
+        }
+
+        .destaque {
+            border:4px solid rgba(36,125,157);
+        }
+
+
+    </style>
+@stop
+
+
+
+
+
+
+
+
+
+
 @section('js')
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>   
+   
     <script>
         $(function(){
             $('#cpf').mask('000.000.000-00');       
             $('#cpf_financeiro').mask('000.000.000-00');       
             //$('#valor_adesao').mask("#.##0,00", {reverse: true});
-            
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });    
+            
+
+            $('body').on('click','.valores-acomodacao',function(e){
+                let valor_plano = $(this).find('.valor_plano').text().replace("R$ ","");
+                let tipo = $(this).find('.tipo').text();
+                $("#valor").val(valor_plano);
+                $("#acomodacao").val(tipo);
+
+                if(!$(this).hasClass('destaque')) {
+                    $('#data_vigencia').val('')
+                    $('#data_boleto').val('');
+                    $('#valor_adesao').val('');
+                }
+
+
+                $(".valores-acomodacao").removeClass('destaque');
+                $(this).addClass('destaque');
+
+                $('body,html').animate({
+                    scrollTop:$(window).scrollTop() + $(window).height(),
+                },1500);
+                $("#btn_submit").html("<button type='submit' class='btn btn-block btn-light my-4 salvar_contrato'>Salvar Contrato</button>")
+                
+                
+               
+                $('.valores-acomodacao').not('.destaque').each(function(i,e){
+                    $(e).find('.vigente').val('')
+                    $(e).find('.boleto').val('')
+                    $(e).find('.valor_adesao').val('')
+                    
+                });
+
+                if($(e.target).is('.form-control')) {
+                    return;
+                } 
+
+                // $(this).find(".vigente").change(function(){
+                //     if($(this).find("#boleto").val() != "" && $(this).find("#adesao") != "") {
+                //         $('body,html').animate({
+                //             scrollTop:$(window).scrollTop() + $(window).height(),
+                //         },1500);
+                //         $("#btn_submit").html("<button type='submit' class='btn btn-block btn-light my-4 salvar_contrato'>Salvar Contrato</button>")
+                //     } 
+                // });
+
+                // $(this).find(".boleto").change(function(){
+                //     if($(this).find("#adesao").val() != "" && $(this).find("#vigente") != "") {
+                //         $('body,html').animate({
+                //             scrollTop:$(window).scrollTop() + $(window).height(),
+                //         },1500);
+                //         $("#btn_submit").html("<button type='submit' class='btn btn-block btn-light my-4 salvar_contrato'>Salvar Contrato</button>")
+                //     }
+                // });
+
+                // $(this).find(".adesao").change(function(){
+                //     if($(this).find("#boleto").val() != "" && $(this).find("#vigente") != "") {
+                        
+                //     }
+                // });
+
+
+
+                // if($("#data_vigencia").val() != "" && $("#data_boleto").val() != "" && $("#valor_adesao").val() != "") {
+                //     console.log("Entreiiiiiiiiii");
+                //     // $('body,html').animate({
+                //     //         scrollTop:$(window).scrollTop() + $(window).height(),
+                //     //     },1500);
+                //     // $("#btn_submit").html("<button type='submit' class='btn btn-block btn-light my-4 salvar_contrato'>Salvar Contrato</button>")
+                // }
+
+
+                // $("#vigente").change(function(){
+                //     console.log("Mudei");
+                    // if($("#boleto").val() != "") {
+                    //     console.log("Boleto Tem");
+                    // } else {
+                    //     console.log("Boleto Nao");
+                    // }
+                // });
+
+                
+
             });
+
+            $("form[name='cadastrar_pessoa_fisca_formulario']").on('submit',function(e){
+                 if($("#data_vigencia").val() == "") {
+                        toastr["error"]("Data Vigencia e campo obrigatorio")
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+                        return false;
+                }
+
+                if($("#data_boleto").val() == "") {
+                    
+                    toastr["error"]("Data Boleto e campo obrigatorio")
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+                    return false;    
+                }
+
+                if($("#valor_adesao").val() == "") {
+                    toastr["error"]("Valor Adesão e campo obrigatorio")
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                    return false;
+                    // atual.find('input[name="adesao"]').keyup(function(){
+                    //     console.log($(this).val().length);
+                    // });
+                }
+                return true;
+            });
+
+
+
+
+            $("#administradora").on('change',function(){
+               let id = $(this).val();
+               
+               $.ajax({
+                    url:"{{route('contratos.pegarPlanosPorAdministradoras')}}",
+                    data:"administradora="+id,
+                    method:"POST",
+                    success:function(res) {
+                        if(res.planos.length >= 1) {
+                            let selecionado = null;
+                            if($("#plano").val()) {
+                                selecionado = $("#plano").val();
+                            } 
+                            console.log(selecionado)
+                            $("#plano").html("");
+                            $("#plano").prepend("<option value=''>--Escolher um Plano--</option>");
+                            $(res.planos).each(function(index,value){
+                                $("#plano").append($(`<option ${value.id == selecionado ? 'selected' : ''}>`).val(value.id).text(value.nome));
+                            });
+                        } else {
+                            $("#plano").html("");
+                            $("#plano").append('<option value="">--Esta administradora não possui planos cadastradas--</option>');
+                        }
+                    }    
+               });
+            });
+
+              
+
+
+
+            
 
             function TestaCPF(cpf) {
                 cpf = cpf.replace(/[^\d]+/g,'');	
@@ -569,24 +720,25 @@
 
 
             
-           $("body").on("click","input[name='plano']",function(){
-                
+           $("body").on("click",".botao",function(){
                 $("#change_plano").val($(this).val());
+
                 if($("#nome").val() == "") {
                     $("#change_plano").val($(this).val())
                     $('.errorcliente').html("<p class='alert alert-danger'>Cliente e campo obrigatório<p>");
                     return false;
                 } else {
                     $('.errorcliente').html("");
-                }  
+                }
+                
                 if($("#cpf").val() == "") {
                     $("#change_plano").val($(this).val())
                     $('.errorcpf').html("<p class='alert alert-danger'>CPF e campo obrigatório<p>");
                     return false;
                 } else {
                     $('.errorcpf').html("");
-                }                 
-
+                }             
+                
                 // if(!TestaCPF($("#cpf").val())) {
                 //     $("#change_plano").val($(this).val())
                 //     $('.errorcpf').html("<p class='alert alert-danger'>CPF Invalido<p>");
@@ -631,7 +783,6 @@
                 //     $(".errorcpfresponsavelfinanceiro").html("");
                 // }
 
-                
                 if($("#endereco_financeiro").val() == "") {
                     $("#change_plano").val($(this).val())
                     //$(this).val('');
@@ -640,8 +791,6 @@
                 } else {
                     $(".errorenderefinanceiro").html("");
                 }
-                
-
 
                 if($("#cidade").val() == "") {
                     $("#change_plano").val($(this).val())
@@ -712,6 +861,7 @@
                     $('.errorfaixas').html("");
                 }
 
+
                 if(!$('input:radio[name=coparticipacao]').is(':checked')) {
                     $("#change_plano").val($(this).val())
                     //$(this).val('');
@@ -733,20 +883,23 @@
                     cliente_id:$("#cliente_id").val(),
                     data_boleto:$("#data_boleto").val(),
                     data_vigencia:$("#data_vigente").val(),
-                    cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input:radio[name=coparticipacao]:checked").val(),odonto: $('input:radio[name=odonto]:checked').val(), plano:$(this).val(),
+                    cidade:$("#cidade").val(),
+                    operadora: $("#operadora").val(),
+                    administradora: $("#administradora").val(),
+                    coparticipacao: $("input:radio[name=coparticipacao]:checked").val(),
+                    odonto: $('input:radio[name=odonto]:checked').val(), 
+                    plano:$("#plano").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
+                //console.log(data);
                 montarValores(data);
+                return false;
             });
 
 
             $("body").on('change','#acomodacao',function(){
-                
                 let valor = $(this).attr('data-valor');
-                let atual = $(this);
-                
-                
-                
+                let atual = $(this);                
                 if(atual.closest('.valores-acomodacao').find('#vigente').val() == "") {
                     $("#change_plano").val($(this).val())
                     atual.closest('.valores-acomodacao').find('.errordatavigente').html("<p class='alert alert-danger' style='font-size:0.79em;'>Este e campo obrigatório</p>");
@@ -805,7 +958,12 @@
                     cliente_id:$("#cliente_id").val(),
                     data_boleto:$("#data_boleto").val(),
                     data_vigencia:$("#data_vigente").val(),
-                    cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
+                    cidade:$("#cidade").val(),
+                    operadora: $("#operadora").val(),
+                    administradora: $("#administradora").val(),
+                    coparticipacao: $("input[name='change_coparticipacao']").val(),
+                    odonto: $("input[name='change_odonto']").val(), 
+                    plano:$("#plano").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
                 montarValores(data);
@@ -816,7 +974,12 @@
                     cliente_id:$("#cliente_id").val(),
                     data_boleto:$("#data_boleto").val(),
                     data_vigencia:$("#data_vigente").val(),
-                    cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
+                    cidade:$("#cidade").val(),
+                    operadora: $("#operadora").val(),
+                    administradora: $("#administradora").val(),
+                    coparticipacao: $("input[name='change_coparticipacao']").val(),
+                    odonto: $("input[name='change_odonto']").val(), 
+                    plano:$("#plano").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
                 montarValores(data);
@@ -827,8 +990,23 @@
                     cliente_id:$("#cliente_id").val(),
                     data_boleto:$("#data_boleto").val(),
                     data_vigencia:$("#data_vigente").val(),
-                    cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
-                    faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
+                    cidade:$("#cidade").val(),
+                    operadora: $("#operadora").val(),
+                    administradora: $("#administradora").val(),
+                    coparticipacao: $("input[name='change_coparticipacao']").val(),
+                    odonto: $("input[name='change_odonto']").val(), 
+                    plano:$("#plano").val(),
+                    faixas: {
+                        '1': $("#faixa-input-0-18").val(), 
+                        '2': $("#faixa-input-19-23").val(),
+                        '3': $("#faixa-input-24-28").val(),
+                        '4': $("#faixa-input-29-33").val(),
+                        '5': $("#faixa-input-34-38").val(),
+                        '6': $("#faixa-input-39-43").val(),
+                        '7': $("#faixa-input-44-48").val(),
+                        '8': $("#faixa-input-49-53").val(),
+                        '9': $("#faixa-input-54-58").val(),
+                        '10': $("#faixa-input-59").val()}
                 };
                 montarValores(data);             
             });
@@ -838,7 +1016,12 @@
                     cliente_id:$("#cliente_id").val(),
                     data_boleto:$("#data_boleto").val(),
                     data_vigencia:$("#data_vigente").val(),
-                    cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
+                    cidade:$("#cidade").val(),
+                    operadora: $("#operadora").val(),
+                    administradora: $("#administradora").val(),
+                    coparticipacao: $("input[name='change_coparticipacao']").val(),
+                    odonto: $("input[name='change_odonto']").val(), 
+                    plano:$("#plano").val(),
                     faixas: {'1': $("#faixa-input-0-18").val(), '2': $("#faixa-input-19-23").val(),'3': $("#faixa-input-24-28").val(),'4': $("#faixa-input-29-33").val(),'5': $("#faixa-input-34-38").val(),'6': $("#faixa-input-39-43").val(),'7': $("#faixa-input-44-48").val(),'8': $("#faixa-input-49-53").val(),'9': $("#faixa-input-54-58").val(),'10': $("#faixa-input-59").val()}
                 };
                 montarValores(data);             
@@ -857,7 +1040,12 @@
                     cliente_id:$("#cliente_id").val(),
                     data_boleto:$("#data_boleto").val(),
                     data_vigencia:$("#data_vigente").val(),
-                    cidade:$("#cidade").val(),operadora: $("#operadora").val(),administradora: $("#administradora").val(),coparticipacao: $("input[name='change_coparticipacao']").val(),odonto: $("input[name='change_odonto']").val(), plano:$("input[name='change_plano']").val(),
+                    cidade:$("#cidade").val(),
+                    operadora: $("#operadora").val(),
+                    administradora: $("#administradora").val(),
+                    coparticipacao: $("input[name='change_coparticipacao']").val(),
+                    odonto: $("input[name='change_odonto']").val(), 
+                    plano:$("#plano").val(),
                     faixas: {'1': $("#change_faixa_0_18").val(), '2': $("#change_faixa_19_23").val(),'3': $("#change_faixa_24_28").val(),'4': $("#change_faixa_29_33").val(),'5': $("#change_faixa_34_38").val(),'6': $("#change_faixa_39_43").val(),'7': $("#change_faixa_44_48").val(),'8': $("#change_faixa_49_53").val(),'9': $("#change_faixa_54_58").val(),'10': $("#change_faixa_59").val()}
                 };
                 montarValores(data);      
@@ -887,37 +1075,4 @@
             }
         });
     </script>
-@stop
-@section('css')
-  
-
-<style>
-    .flex{display:-webkit-box;display:flex}
-    .vtex-product-quantity-1-x-quantitySelectorContainer .vtex-numeric-stepper-container {
-        display: flex;
-        
-    }
-
-    .vtex-product-quantity-1-x-quantitySelectorContainer {
-	    margin-bottom:0;
-	    border-radius:8px;
-	    border:1px solid #80c343
-    }
-    .vtex-product-quantity-1-x-quantitySelectorContainer .vtex-numeric-stepper__minus-button,.vtex-product-quantity-1-x-quantitySelectorContainer .vtex-numeric-stepper__plus-button {
-	    background:transparent;
-	    border:none;
-	    width:auto!important
-    }
-    .vtex-product-quantity-1-x-quantitySelectorContainer .vtex-numeric-stepper__input {
-	    background:transparent;
-	    border:none;
-	    line-height:1.5rem;
-	    font-weight:400;
-	    font-size:1.25rem;
-	    text-align:center;
-	    outline:0
-    }
-   
-</style>
-     
 @stop

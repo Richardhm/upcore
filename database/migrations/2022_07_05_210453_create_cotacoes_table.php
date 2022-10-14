@@ -26,6 +26,8 @@ class CreateCotacoesTable extends Migration
             $table->unsignedBigInteger("financeiro_id")->nullable();
             $table->string("codigo_externo")->nullable();
             $table->decimal("valor",10,2)->nullable();
+            $table->boolean('coparticipacao')->default(0);
+            $table->boolean('odonto')->default(0);
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete("cascade");
             $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete("cascade");
             $table->foreign('operadora_id')->references('id')->on('operadoras')->onDelete("cascade");

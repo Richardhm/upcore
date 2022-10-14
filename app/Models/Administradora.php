@@ -24,7 +24,7 @@ class Administradora extends Model
 
     public function planos()
     {
-        return $this->belongsToMany(Planos::class,'administradora_planos', 'plano_id', 'administradora_id');
+        return $this->belongsToMany(Planos::class,'administradora_planos', 'administradora_id','plano_id');
     }
 
 }

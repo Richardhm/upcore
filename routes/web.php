@@ -65,17 +65,10 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::put("/corretores/{id}/update","App\Http\Controllers\Admin\CorretoresController@update")->name("corretores.update");
     Route::delete("/corretores/deletar/{id}","App\Http\Controllers\Admin\CorretoresController@destroy")->name("corretores.destroy");    
     Route::get("/corretores/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@index")->name('comissao.corretores.index');
-
-    Route::post("/corretores/parcelas/ajax","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@pegarParcelas")->name('comissao.pegarparcelas.ajax');
-    
+    Route::post("/corretores/parcelas/ajax","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@pegarParcelas")->name('comissao.pegarparcelas.ajax');   
     Route::get("/corretores/cadastrar/comissao/{id}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@create")->name('comissao.corretores.cadastrar');
-    
     Route::post("/corretores/comissao/store","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@store")->name('comissao.corretores.store');
     Route::post("/corretores/comissao/editar","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@editar")->name('comissao.corretores.editar');
-
-
-
-
     Route::get("/corretores/{id_corretor}/detalhes/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@detalhes")->name('comissao.corretores.detalhes');
     Route::delete("/corretores/{id_corretor}/deletar/{id_plano}/{id_administradora}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@deletarComissaoIndividual")->name('comissao.corretores.deletar');
     Route::delete("/corretores/deletar/parcela/{id_parcela}","App\Http\Controllers\Admin\ComissoesCorretoresConfiguracoesController@deletarParcelaIndividual")->name('comissao.corretores.deletar.parcela');
@@ -105,6 +98,8 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/tabela/search","App\Http\Controllers\Admin\TabelaController@search")->name("tabela.search");
     Route::post("/tabelas/pegar/cidades/administradoras","App\Http\Controllers\Admin\TabelaController@pegarCidadeAdministradora")->name("cidades.administradoras.pegar");
     Route::post("/tabela/orcamento/alterar","App\Http\Controllers\Admin\TabelaController@edit")->name("tabela.edit.valor");
+    /** FIM Tabela */
+
 
     /** Etiquetas */
     Route::get("/etiquetas","App\Http\Controllers\Admin\EtiquetasController@index")->name("etiquetas.index");
@@ -114,6 +109,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::delete("/etiquetas/deletar/{id}","App\Http\Controllers\Admin\EtiquetasController@deletar")->name("etiquetas.destroy");
     Route::put("/etiquetas/{id}/update","App\Http\Controllers\Admin\EtiquetasController@update")->name("etiquetas.update");
     Route::get("/etiqueta/{id}","App\Http\Controllers\Admin\EtiquetasController@listarPorEtiquetaEspefifica")->name("home.listarPorEtiquetaEspecifica");
+    /** Fim Etiquetas */
 
     /** Cidades */
     Route::get("/cidades","App\Http\Controllers\Admin\CidadeController@index")->name('cidades.index');
@@ -122,6 +118,9 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/cidades/{cidade}/vincular","App\Http\Controllers\Admin\CidadeController@vincularAdministradora")->name("cidade.vincular.administradora");
     Route::post("/cidades/store","App\Http\Controllers\Admin\CidadeController@store")->name('cidades.store');
     Route::delete("/cidades/destroy/{id}","App\Http\Controllers\Admin\CidadeController@destroy")->name("cidades.destroy");
+    /** Fim Cidades */
+
+
 
     /** Tabela de preços quando escolher a administradora pegar as cidades via AJAX*/
     Route::post("/cidades/pegar","App\Http\Controllers\Admin\CidadeController@pegarCidade")->name("cidades.pegar");    
@@ -158,21 +157,71 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/clientes/dos/corretores","App\Http\Controllers\Admin\ClienteController@pegarClientesCorretores")->name("clientes.pegarClientesCorretores");
     Route::post("/clientes/contrato/sem/orcamento","App\Http\Controllers\Admin\ClienteController@contratoSemOrcamento")->name("clientes.contratoSemOrcamento");
     Route::post("/cliente/searchclienteAjax","App\Http\Controllers\Admin\ClienteController@searchclienteAjax")->name("cliente.searchclienteAjax");
-    
     Route::post("/cliente/listarPorEtiqueta","App\Http\Controllers\Admin\ClienteController@listarPorEtiqueta")->name("cliente.listarPorEtiqueta");
-
     Route::post("/cliente/listarPorEtiquetaAll","App\Http\Controllers\Admin\ClienteController@listarPorEtiquetaAll")->name("cliente.listarPorEtiquetaAll");
-    Route::get("/contratos","App\Http\Controllers\Admin\ClienteController@listarContratos")->name("contratos.index");
+    
+    // Route::get("/contratos","App\Http\Controllers\Admin\ClienteController@listarContratos")->name("contratos.index");
+    // Route::get("/contratos/listagem","App\Http\Controllers\Admin\ClienteController@listarContratosAjax")->name("contratos.index.listagem");
+    // Route::get("/contratos/negociados","App\Http\Controllers\Admin\ClienteController@listarContratosAjaxNegociados")->name("contratos.index.negociados");
+    // Route::get("/contratos/negociacao","App\Http\Controllers\Admin\ClienteController@listarContratosAjaxNegociacao")->name("contratos.index.negociacao");
+    // Route::post("/clientes/editarClientes","App\Http\Controllers\Admin\ClienteController@editarClientes")->name("clientes.editarClientes");
+    // Route::post("/clientes/formeditar/clientes","App\Http\Controllers\Admin\ClienteController@formEditarClientes")->name('clientes.formEditarClientes');
+    // Route::get("/clientes/tarefas/{id}","App\Http\Controllers\Admin\ClienteController@listarClienteEspecifico")->name('cliente.especifico');
+    Route::post("/contratos/pegarplanos","App\Http\Controllers\Admin\ClienteController@pegarPlanosPorAdministradora")->name("contratos.pegarPlanosPorAdministradoras");
 
-    Route::get("/contratos/listagem","App\Http\Controllers\Admin\ClienteController@listarContratosAjax")->name("contratos.index.listagem");
-    Route::get("/contratos/negociados","App\Http\Controllers\Admin\ClienteController@listarContratosAjaxNegociados")->name("contratos.index.negociados");
-    Route::get("/contratos/negociacao","App\Http\Controllers\Admin\ClienteController@listarContratosAjaxNegociacao")->name("contratos.index.negociacao");
+    Route::get("/contratos/pf/pendentes","App\Http\Controllers\Admin\ClienteController@listarContratosPF")->name("contratos.pf.pendentes");
+    Route::get("/contratos/pf/listarpendentesuser","App\Http\Controllers\Admin\ClienteController@listarContratosPFPendentes")->name("contratos.pf.listarpendentes");
+    
+    Route::get("/contratos/pj/pendentes","App\Http\Controllers\Admin\ClienteController@listarContratosPJ")->name("contratos.pj.pendentes");
+    Route::get("/contratos/pj/listarpendentesuser","App\Http\Controllers\Admin\ClienteController@listarContratosPJPendentes")->name("contratos.pj.listarpendentes");
 
-    Route::post("/clientes/editarClientes","App\Http\Controllers\Admin\ClienteController@editarClientes")->name("clientes.editarClientes");
-    Route::post("/clientes/formeditar/clientes","App\Http\Controllers\Admin\ClienteController@formEditarClientes")->name('clientes.formEditarClientes');
 
-    Route::get("/clientes/tarefas/{id}","App\Http\Controllers\Admin\ClienteController@listarClienteEspecifico")->name('cliente.especifico');
+    
+    Route::get("/leads/prospeccao","App\Http\Controllers\Admin\ClienteController@prospeccao")->name('leads.prospeccao');
+    Route::post("/leads/prospeccao/cadastrar","App\Http\Controllers\Admin\ClienteController@prospeccaoStorePF")->name('leads.prospeccao.store');
+    Route::post("/leads/prospeccao/cadastrarpj","App\Http\Controllers\Admin\ClienteController@prospeccaoStorePJ")->name('leads.prospeccao.store.pj');
+    
+    Route::post("/leads/prospeccao/exportar","App\Http\Controllers\Admin\ClienteController@prospeccaoExportar")->name("leads.prospeccao.exportar");
 
+    Route::get("/clientes/pf","App\Http\Controllers\Admin\ClienteController@listarPessoaFisica")->name("clientes.listarfisica");
+    Route::get("/clientes/pj","App\Http\Controllers\Admin\ClienteController@listarPessoaJuridica")->name("clientes.listarjuridica");
+
+
+    Route::get("/clientes/para/gettarefasHoje","App\Http\Controllers\Admin\ClienteController@getClientesParaHoje")->name("cliente.getTarefasParaHoje");
+    Route::get("/clientes/para/gettarefasHojePJ","App\Http\Controllers\Admin\ClienteController@getClientesParaHojePJ")->name("cliente.getTarefasParaHojePJ");
+
+
+
+    Route::get("/cliente/getClientesTarefasAtrasadas","App\Http\Controllers\Admin\ClienteController@getClienteAtrasadasAjax")->name("cliente.getTarefasAtrasadasAjax");
+    Route::get("/cliente/getClientesTarefasAtrasadasPJ","App\Http\Controllers\Admin\ClienteController@getClienteAtrasadasAjaxPJ")->name("cliente.getTarefasAtrasadasAjaxPJ");
+
+    Route::get("/cliente/getClientesTarefasSemana","App\Http\Controllers\Admin\ClienteController@listarClientesSemanaAjax")->name("cliente.listarClientesSemanaAjax");
+    Route::get("/cliente/getClientesTarefasSemanaPJ","App\Http\Controllers\Admin\ClienteController@listarClientesSemanaAjaxPJ")->name("cliente.listarClientesSemanaAjaxPJ");
+    
+    
+    Route::get("/clientes/listarClienteMesAjax","App\Http\Controllers\Admin\ClienteController@listarClienteMesAjax")->name('cliente.listarClienteMesAjax');
+    Route::get("/clientes/listarClienteMesAjaxPJ","App\Http\Controllers\Admin\ClienteController@listarClienteMesAjaxPJ")->name('cliente.listarClienteMesAjaxPJ');
+
+
+
+    Route::get("/clientes/ajaxclientes","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPF")->name("clientes.ajaxclienteslistapf");  
+
+    Route::get("/leads/lerdados","App\Http\Controllers\Admin\ClienteController@prospeccaoLeitura")->name('leads.prospeccao.ler');
+    
+    Route::get("/clientes/para/gettarefasHojeProspeccao","App\Http\Controllers\Admin\ClienteController@getClientesParaHojeProspeccao")->name("cliente.getClientesParaHojeProspeccao");
+    
+    Route::get("/cliente/getClientesTarefasAtrasadasProspeccao","App\Http\Controllers\Admin\ClienteController@getClienteAtrasadasAjaxProspeccao")->name("cliente.getClienteAtrasadasAjaxProspeccao");
+    Route::get("/cliente/getClientesTarefasSemanaProspeccao","App\Http\Controllers\Admin\ClienteController@listarClientesSemanaAjaxProspeccao")->name("cliente.listarClientesSemanaAjaxProspeccao");
+    Route::get("/clientes/listarClienteMesAjaxProspeccao","App\Http\Controllers\Admin\ClienteController@listarClienteMesAjaxProspeccao")->name('cliente.listarClienteMesAjaxProspeccao');
+    Route::get("/clientes/ajaxclientesProspeccao","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPFProspeccao")->name("clientes.ajaxclienteslistapfProspecacao");  
+
+    
+    
+    
+    
+    Route::get("/tarefas/ajaxclientes/pj","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPJ")->name("clientes.ajaxclienteslistapj");  
+
+    Route::post("/comissoes/cliente/detalhes","App\Http\Controllers\Admin\ClienteController@listarDetalhesComissao")->name("comissoes.cliente.detalhes");
 
 
 
@@ -180,31 +229,24 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
     /** Tarefa */
     // Route::get("/clientes/{id}/tarefa","App\Http\Controllers\Admin\TarefaController@agendaTarefa")->name("clientes.agendarTarefa");
-    Route::get("/tarefas","App\Http\Controllers\Admin\TarefaController@index")->name("tarefas.home");
+    
+
+
+    
     Route::post("/tarefas/motivoperdatarefa","App\Http\Controllers\Admin\TarefaController@motivoPerdaTarefa")->name("tarefas.motivoPerdaTarefa");
     Route::get("/tarefas/detalhes/{id_user}","App\Http\Controllers\Admin\TarefaController@tarefasDetalhes")->name("tarefas.tarefasDetalhes");
     Route::post("/tarefas/mudarcorretor","App\Http\Controllers\Admin\TarefaController@mudarCorretor")->name("tarefas.mudarcorretor");
     Route::post("/tarefas/detalhesperda","App\Http\Controllers\Admin\TarefaController@detalhesPerda")->name("tarefas.detalhesperda");
-
-
     Route::post("/clientes/tarefas/listagem","App\Http\Controllers\Admin\TarefaController@listarTarefaEspecificaCategoriaLink")->name("clientes.listarTarefasEspecifica");
     Route::post("/clientes/tarefas/especifico/listagem","App\Http\Controllers\Admin\TarefaController@listarTarefaEspecificaCategoriaLinkCliente")->name("clientes.listarTarefasEspecificaCliente");
-
-
-
-
+    Route::post("/clientes/hostoricocliente","App\Http\Controllers\Admin\TarefaController@historicoCliente")->name("cliente.historicoCliente");
     Route::post("/clientes/tarefas/especifica","App\Http\Controllers\Admin\TarefaController@listarTarefaPeloId")->name("tarefa.listarTarefaPorId");
     Route::post("/clientes/tarefas/pesquisar","App\Http\Controllers\Admin\TarefaController@pegarHistoricoDoCliente")->name("tarefa.pegarHisticoDoCliente");
     Route::post('/clientes/tarefas/search',"App\Http\Controllers\Admin\TarefaController@searchTarefas")->name("tarefas.personalizadas");
-
-
     Route::post("/clientes/tarefas/store","App\Http\Controllers\Admin\TarefaController@cadastrarTarefa")->name("clientes.cadastrarTarefa");
     Route::post("/clientes/tarefas/cadastrarAjax","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjax")->name("tarefas.cadastrarTarefasAjax");
     Route::post("/clientes/tarefas/cadastrarAjaxCliente","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjaxCliente")->name("tarefas.cadastrarTarefasAjaxCliente");
-
-
-
-
+    Route::post("/clientes/fullClientesAjax","App\Http\Controllers\Admin\TarefaController@listarClientesAjax")->name("tarefas.listarClientesFull");
     Route::post("/clientes/fullcalendar/especifico","App\Http\Controllers\Admin\TarefaController@clienteTarefaEspecifica")->name("cliente.tarefaEspecifica");
     Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\TarefaController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");
     Route::post("/clientes/eventdrop/edit","App\Http\Controllers\Admin\TarefaController@tarefaEventDropEdit")->name("cliente.eventdrop.edit");
@@ -214,16 +256,17 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/cliente/getclientesemtarefa","App\Http\Controllers\Admin\TarefaController@getClienteSemTarefaAjax")->name("cliente.getClienteSemTarefaAjax");
     Route::any("/cliente/tarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@tarefasRealizadasAjax")->name("tarefa.tarefasRealizadas");
     Route::get("/cliente/gettarefasRealizadasAjax","App\Http\Controllers\Admin\TarefaController@getTarefasRealizadasAjax")->name('tarefa.getTarefasRealizadasAjax');
-    Route::any("/tarefas/para/tarefasHoje","App\Http\Controllers\Admin\TarefaController@tarefasParaHoje")->name("cliente.tarefasParaHoje");
-    Route::get("/tarefas/para/gettarefasHoje","App\Http\Controllers\Admin\TarefaController@getTarefasParaHoje")->name("cliente.getTarefasParaHoje");
+    Route::any("/tarefas/para/tarefasHoje","App\Http\Controllers\Admin\TarefaController@tarefasParaHoje")->name("cliente.tarefasParaHoje");   
     Route::any("/tarefas/listarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@listarTodasAsTarefasAjax")->name("tarefas.listarTodasAsTarefasAjax");
     Route::get("/tarefas/getListarTodasAsTarefasAjax","App\Http\Controllers\Admin\TarefaController@getListarTodasAsTarefasAjax")->name('tarefas.getListarTodasAsTarefasAjax');    
     Route::any("/cliente/clientestarefaatrasadas","App\Http\Controllers\Admin\TarefaController@clienteTarefasAtrasadasAjax")->name("cliente.tarefasatrasadasajax");
-    Route::get("/cliente/getClientesTarefasAtrasadas","App\Http\Controllers\Admin\TarefaController@getClienteTarefasAtrasadasAjax")->name("cliente.getTarefasAtrasadasAjax");
+    
+
     Route::any("/tarefas/para/proximas03dias","App\Http\Controllers\Admin\TarefaController@tarefasProximo03Dias")->name("cliente.tarefasProximas");
     Route::get("/tarefas/para/getProximos03dias","App\Http\Controllers\Admin\TarefaController@getTarefasProximo03Dias")->name("cliente.getTarefasProximo03Dias");
     Route::post("/cliente/tarefaMudarStatusAjax","App\Http\Controllers\Admin\TarefaController@mudarStatusTarefaAjax")->name("cliente.mudarStatusTarefaAjax");
     Route::post("/tarefas/marcarTarefasRealizarAjax","App\Http\Controllers\Admin\TarefaController@marcarTarefasRealizarAjax")->name("tarefas.marcarTarefasRealizarAjax");
+    Route::post("/tarefas/cadastrarTitulo","App\Http\Controllers\Admin\TarefaController@cadastrarTitulo")->name('tarefas.cadastrarTitulo');
     /** Fim Tarefa */
 
     /** Comissoes && Premiações */
@@ -231,13 +274,13 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("comissoes/{id}/detalhes","App\Http\Controllers\Admin\ComissoesController@detalhes")->name("comissoes.detalhes");
     Route::post("comissoes/mudarStatus","App\Http\Controllers\Admin\ComissoesController@mudarStatus")->name("comissoes.mudarStatus");
     Route::post("comissoes/mudarStatusCorretor","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretor")->name("comissoes.mudarStatusCorretor");
-
     Route::post("comissoes/mudarStatus/premiacao","App\Http\Controllers\Admin\ComissoesController@mudarStatusPremiacao")->name("comissoes.mudarStatusPremiacao");    
     Route::post("comissoes/mudarStatusCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretora")->name("comissoes.mudarStatusCorretora");
-    Route::post("comissoes/mudarStatus/premiacaoCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretoraPremiacao")->name("comissoes.mudarStatusCorretoraPremiacao");
-    
+    Route::post("comissoes/mudarStatus/premiacaoCorretora","App\Http\Controllers\Admin\ComissoesController@mudarStatusCorretoraPremiacao")->name("comissoes.mudarStatusCorretoraPremiacao");   
     Route::post("/corretores/premiacao/ajax","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@pegarParcelas")->name('premiacao.pegarparcelas.ajax');
     Route::post("/corretores/premiacao/editar","App\Http\Controllers\Admin\PremiacaoCorretoresConfiguracoesController@editarPremiacao")->name('premiacao.corretores.edit');
+    
+    
     
     /** Fim Comissoes && Premiações */
 
@@ -250,26 +293,30 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/financeiro/setaguardandopagamentovigencia","App\Http\Controllers\Admin\FinanceiroController@setAguardandoPagamentoVigencia")->name("financeiro.setAguardandoPagamentoVigencia");
     Route::get("/financeiro/individual","App\Http\Controllers\Admin\FinanceiroController@planoIndividual")->name("financeiro.planoindividual");
     Route::post("/financeiro/setaguardandopagamentovigenciaIndividual","App\Http\Controllers\Admin\FinanceiroController@setPlanoIndividual")->name("financeiro.setPlanoIndividual");
-
     Route::get("/financeiro/{id_user}/aguardandoboletocoletivo","App\Http\Controllers\Admin\FinanceiroController@colaboradorAguardandoBoletocoletivo")->name("financeiro.homeColaboradorAguardandoBoletoColetivo");
     Route::get("/financeiro/{id_user}/aguardandoPagAdesaoColetivo","App\Http\Controllers\Admin\FinanceiroController@colaboradorAguardandoPagAdesaoColetivo")->name("financeiro.homeColaboradorAguardandoPagAdesaoColetivo");
     Route::get("/financeiro/{id_user}/aguardandoPagVigencia","App\Http\Controllers\Admin\FinanceiroController@colaboradorAguardandoPagVigencia")->name("financeiro.homeColaboradorAguardandoPagVigencia");
     Route::get("/financeiro/{id_user}/individual","App\Http\Controllers\Admin\FinanceiroController@colaboradorPlanoIndividual")->name("financeiro.colaboradorPlanoindividual");
-
     /** Back */
     Route::post("/financeiro/backAguardandoPagamentoAdesaoColetivo","App\Http\Controllers\Admin\FinanceiroController@backAguardandoPagamentoAdesaoColetivo")->name("financeiro.backAguardandoPagamentoAdesaoColetivo");
     Route::post("/financeiro/backAguardandoBoletoColetivo","App\Http\Controllers\Admin\FinanceiroController@backAguardandoBoletoColetivo")->name("financeiro.backAguardandoBoletoColetivo");
     /** Back */
-
     Route::post("/financeiro/backMes","App\Http\Controllers\Admin\FinanceiroController@mesChange")->name("financeiro.mesChange");
     Route::get("/financeiro/juridica","App\Http\Controllers\Admin\FinanceiroController@cadastrarJuridico")->name("financeiro.cadastrarJuridico");
     Route::post("/financeiro/juridica","App\Http\Controllers\Admin\FinanceiroController@storeJuridico")->name("financeiro.storeJuridico");
-
     Route::get("/financeiro/aguardandojuridico","App\Http\Controllers\Admin\FinanceiroController@aguardandojuridico")->name("financeiro.empresarial");
     Route::get("/financeiro/{id_user}/aguardandojuridico","App\Http\Controllers\Admin\FinanceiroController@aguardandojuridicoColaborador")->name("financeiro.empresarialColaborador");
     /*** Fim Financeiro */
 
     
+    Route::get("/origem","App\Http\Controllers\Admin\OrigemController@index")->name("origem.index");    
+    Route::post("/origem/store","App\Http\Controllers\Admin\OrigemController@store")->name("origem.store");    
+    Route::get("/origem/readorigem","App\Http\Controllers\Admin\OrigemController@readOrigem")->name("origem.readorigem");    
+
+
+    Route::get("/calendario","App\Http\Controllers\Admin\HomeController@calendario")->name("home.calendario");
+    Route::get("/calculadora","App\Http\Controllers\Admin\HomeController@calculadora")->name("home.calculadora");
+    Route::get("/lembretes","App\Http\Controllers\Admin\HomeController@lembretes")->name("home.lembretes");
 
 
 

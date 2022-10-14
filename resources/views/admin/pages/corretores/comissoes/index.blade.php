@@ -3,19 +3,13 @@
 @section('content_header')
     <div class="d-flex justify-content-between">
         <div>
-            <h1>
+            <h1 class="text-white">
                 Cadastrar Comissoes: <button type="button" class="btn btn-warning cadastrar_comissoes" data-toggle="modal" data-target="#exampleModal">
                 <i class="fas fa-plus"></i>
                 </button>
             </h1>
         </div>
-        <div>
-            <h1>
-                Cadastrar Premiações: <button type="button" class="btn btn-warning cadastrar_comissoes" data-toggle="modal" data-target="#cadastrarPremiacaoModal">
-                <i class="fas fa-plus"></i>
-                </button>
-            </h1>
-        </div>
+        
     </div>
 @stop
 @section('content')
@@ -25,7 +19,7 @@
     </ol>   
     
     <div class="row">
-        <div class="col-6">
+        <div class="col-12">
 
             <div class="card">
                 @if(count($comissoes) >= 1)
@@ -69,49 +63,7 @@
 
         </div>
 
-        <div class="col-6">
-            <div class="card">
-                @if(count($premiacoes) >= 1)
-                    <div class="card-body">
-                        <div class="card-header mb-2">
-                            <h2>Premiações</h2>
-                        </div>
-                        <div class="d-flex flex-wrap">
-                            @php  $parcelas = "";@endphp    
-                            @foreach($premiacoes as $p)
-                                <div class="card_premiacao mr-3 d-flex flex-column" style="border:1px solid black;border-radius:5px;margin-bottom:10px;flex-basis:30%;flex-wrap:wrap;">
-                                    <div class="d-flex" style="min-height:80px;flex-wrap:wrap;">
-                                        <div class="text-center d-flex justify-content-center align-items-center" style="border-right:1px solid black;border-bottom:1px solid black;width:50%;">
-                                            <span class="" data-administradora="{{$p->id_administradora}}" style="font-size:0.875em;">{{$p->administradora}}</span>
-                                        </div>
-                                        <div class="text-center d-flex justify-content-center align-items-center" style="border-bottom:1px solid black;width:50%;">
-                                            <span class="text-center" data-plano="{{$p->id_plano}}" style="font-size:0.875em;">
-                                                {{$p->plano}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    @php
-                                        $parcelas = explode("|,",$p->parcela)
-                                    @endphp
-                                    <div style="border-top:1px solid black;">  
-                                        @foreach($parcelas as $k => $p)
-                                            <p class="d-flex justify-content-around mt-3 parcelas" style="font-size:0.875em;">
-                                                <b>Parcela {{$k+1}}:</b>
-                                                <span>{{str_replace("|","",$p)}}</span>
-                                            </p>
-                                        @endforeach
-                                    </div>                            
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>      
-                @else 
-                    <h5 class="py-3 text-center">Este Corretor Não possui premiações cadastradas!</h5>
-                @endif     
-            </div>
-
-        </div>
+        
     </div>    
 
 
@@ -120,7 +72,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Cadastrar Comissão</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cadastrar Comissão/Premiação</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -163,21 +115,46 @@
                         </div>
                     </div>
                     <hr />
-                    <div class="form-group">
-                        <label>Comissões:</label> 
-                        <div class="errorparcela"></div>
-                        <div class="campos">
-                            <div class="campo_repetir">
-                                <label>Parcela 1:</label> 
-                                <input type="text" id="parcelas" name="parcelas[]" placeholder="%" />
-                                <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo"><i class="fas fa-minus"></i></button>
+                    <div class="row">
+                        <div class="col border-right border-dark">
+                            <div class="form-group">
+                                <label>Comissões:</label> 
+                                <div class="errorparcela"></div>
+                                <div class="campos">
+                                    <div class="campo_repetir">
+                                        <label>Parcela 1:</label> 
+                                        <input type="text" id="parcelas" name="parcelas[]" placeholder="%" />
+                                        <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo"><i class="fas fa-minus"></i></button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm acrescentar"><i class="fas fa-plus"></i></button>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-sm acrescentar"><i class="fas fa-plus"></i></button>
-                        
+
+                        <div class="col">
+
+                            <div class="form-group">
+                                <label>Premiacões:</label> 
+                                <div class="errorparcela"></div>
+                                <div class="campos_premiacao">
+                                    <div class="campo_repetir_premiacao">
+                                        <label>Parcela 1:</label> 
+                                        <input type="text" id="premiacoes" class="premiacoes" name="premiacoes[]" placeholder="R$" />
+                                        <button type="button" value="Delete" class="btn btn-danger btn-sm deletar_campo_premiacao"><i class="fas fa-minus"></i></button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm acrescentar_premiacao"><i class="fas fa-plus"></i></button>
+                            </div>
+
+
+
+                        </div>
+
+
                     </div>
+
                     <hr>
-                    <button type="submit" class="btn btn-info btn-block">Cadastrar Comissão</button>
+                    <button type="submit" class="btn btn-info btn-block">Cadastrar Comissão/Premiação</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -588,15 +565,25 @@
                         } else {
                             $(".errorparcela").html("");
                         }
+
+                        if(form.find('#premiacoes').val().length == 0) {
+                            $(".errorparcela").html("<p class='alert alert-danger'>Preencher pelo menos 1 parcela</p>");
+                        } else {
+                            $(".errorparcela").html("");
+                        }
+
+
+
                     },
                     success:function(res) {
-                       if(res == "sucesso") {
-                            window.location.reload();
-                        // $("form[id='form_cadastrar_comissao']").submit();
-                        //     return true;
-                       } else {
-                        console.log("Naoooo Entreiii");
-                       }
+                        console.log(res);
+                    //    if(res == "sucesso") {
+                    //         window.location.reload();
+                    //     // $("form[id='form_cadastrar_comissao']").submit();
+                    //     //     return true;
+                    //    } else {
+                    //     console.log("Naoooo Entreiii");
+                    //    }
                     
                     }
                 });

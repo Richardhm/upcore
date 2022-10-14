@@ -2,6 +2,7 @@
 
 @section('adminlte_css_pre')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    
 @stop
 
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
@@ -19,6 +20,8 @@
 @endif
 
 @section('auth_header', "Login")
+
+
 
 @section('auth_body')
     <form action="{{ $login_url }}" method="post">
@@ -95,4 +98,12 @@
             </a>
         </p>
     @endif
+@stop
+
+@section('css')
+    <style>
+        body {
+            background-color: red;
+        }
+    </style>
 @stop

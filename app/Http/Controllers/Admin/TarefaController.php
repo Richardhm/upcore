@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{
+    Cidade,
     Cliente,
+    Cotacao,
     Tarefa,
     TarefaMotivoPerda,
+    TarefasTitulo,
     User
 };
 use Illuminate\Support\Facades\Auth;
@@ -18,45 +21,128 @@ class TarefaController extends Controller
 {
     public function index()
     {
+        $qtd_atrasada = $clientes = Cliente::where("user_id",auth()->user()->id)->where('lead',0)->whereHas('tarefas',function($query){
+            $query->where('status',0);
+            $query->whereDate('data','<',date('Y-m-d'));
+        })->count(); 
         
-         $user = User::find(auth()->user()->id);
-         if($user->isAdmin()) {
-            $users = DB::table('users')
-                ->selectRaw("users.id,users.name,users.email")
-                ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.user_id = users.id) AS tarefas_total")
-                ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 1) AS preco")
-                ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 2) AS ja_tem_plano")
-                ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 3) AS fez_unimed")
-                ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 4) AS sem_interesse")
-                ->selectRaw("(SELECT COUNT(*) FROM clientes WHERE clientes.user_id = users.id) AS total_clientes")
-                ->whereRaw("admin IS NULL")
-                ->whereRaw("id IN(SELECT user_id FROM permission_user WHERE permission_id IN(SELECT id FROM permissions WHERE NAME = 'clientes' OR NAME LIKE '%tarefas%' OR NAME LIKE '%contratos%') GROUP BY user_id)")
-                ->get();  
+        $qtd_hoje = Cliente::where("user_id",auth()->user()->id)->where('lead',0)->whereHas('tarefas',function($query){
+            $query->where('status',0);
+            $query->whereDate('data',"=",date('Y-m-d'));
+        })->count();
+        
+        $qtd_semana = Cliente::where("user_id",auth()->user()->id)->where('lead',0)->whereHas('tarefas',function($query){
+            $query->where('status',0);
+            $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
+        })->count();
+        
+        $qtd_mes = Cliente::where("user_id",auth()->user()->id)->where('lead',0)->whereHas('tarefas',function($query){
+            $query->where('status',0);
+            $query->whereRaw("MONTH(data) = MONTH(NOW())");
+        })->count();
+
+        $titulos = TarefasTitulo::where("id","!=",1)->get();
+
+        $clientes_total = Cliente::where("user_id",auth()->user()->id)->count();
+        $negociacao = Cliente::where("user_id",auth()->user()->id)->where("etiqueta_id",3)->count();
+        $finalizados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->count();
+        $cadastrado_mes = Cliente::where("user_id",auth()->user()->id)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
+        $finalizados_mes = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereRaw("MONTH(updated_at) = MONTH(NOW())")->count();
+
+        return view('admin.pages.tarefas.page',[
+            'qtd_atrasada' => $qtd_atrasada,
+            'qtd_hoje' => $qtd_hoje,
+            'qtd_semana' => $qtd_semana,
+            'qtd_mes' => $qtd_mes,
+            'clientes_total' => $clientes_total,
+            'negociacao' => $negociacao,
+            'finalizados' => $finalizados,
+            'cadastrado_mes' => $cadastrado_mes,
+            'finalizados_mes' => $finalizados_mes,
+            'titulos' => $titulos
+        ]);
+        //  $user = User::find(auth()->user()->id);
+        //  if($user->isAdmin()) {
+        //     $users = DB::table('users')
+        //         ->selectRaw("users.id,users.name,users.email")
+        //         ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE tarefas.user_id = users.id) AS tarefas_total")
+        //         ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 1) AS preco")
+        //         ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 2) AS ja_tem_plano")
+        //         ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 3) AS fez_unimed")
+        //         ->selectRaw("(SELECT COUNT(*) FROM tarefas WHERE tarefas.user_id = users.id AND tarefas.motivo_id = 4) AS sem_interesse")
+        //         ->selectRaw("(SELECT COUNT(*) FROM clientes WHERE clientes.user_id = users.id) AS total_clientes")
+        //         ->whereRaw("admin IS NULL")
+        //         ->whereRaw("id IN(SELECT user_id FROM permission_user WHERE permission_id IN(SELECT id FROM permissions WHERE NAME = 'clientes' OR NAME LIKE '%tarefas%' OR NAME LIKE '%contratos%') GROUP BY user_id)")
+        //         ->get();  
                
-            return view('admin.pages.tarefas.administrador',[
-                "users" => $users
-            ]);
+        //     return view('admin.pages.tarefas.administrador',[
+        //         "users" => $users
+        //     ]);
 
 
-         } else {
-            
-            $id_user = auth()->user()->id;
-            $clientes = Cliente::where("user_id",$id_user)->get();
-            $motivos = TarefaMotivoPerda::all();
-            return view('admin.pages.tarefas.page',[
-                "clientes" => $clientes,
-                "motivos" => $motivos
-            ]);
-         }
+        //  } else {
+        //     $cidades = Cidade::all();
+        //     $id_user = auth()->user()->id;
 
+        //     $clientes = Cliente::where("user_id",$id_user)->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //     })->get();
 
+        //     $motivos = TarefaMotivoPerda::all();
+        //     $titulos = TarefasTitulo::where("id","!=",1)->get();
+        //     return view('admin.pages.tarefas.page',[
+        //         "clientes" => $clientes,
+        //         "motivos" => $motivos,
+        //         "cidades" => $cidades,
+        //         "titulos" => $titulos
+        //     ]);
+        //  }       
+    }
 
+   
+
+    public function historicoCliente(Request $request)
+    {
+        $tarefas = Tarefa::where("cliente_id",$request->id)
+            ->orderBy('created_at','desc')
+            ->with('titulo')->get();
         
+        return view('admin.pages.tarefas.ajax.timeline',[
+            "tarefas" => $tarefas
+        ]);
+    }
+
+
+
+
+    public function listarClientesAjax(Request $request)
+    {
+        $clientes = Cliente::where("user_id",auth()->user()->id)->get();
+        return view('admin.pages.tarefas.ajax.todos-os-clientes',[
+            "clientes" => $clientes
+        ]);
+    }
+
+
+    
+
+
+    
+
+
+
+
+    public function cadastrarTitulo(Request $request)
+    {
+        if(empty($request->titulo)) {
+            return "errortitulo";
+        }
+        TarefasTitulo::create($request->all());
+        return "sucesso";
     }
 
     public function tarefasDetalhes($id)
     {
-        
         $preco = Tarefa::where("user_id",$id)->where("motivo_id",1)->selectRaw("(select nome from clientes where clientes.id = tarefas.cliente_id) as nome")->get();
         $ja_tem_plano = Tarefa::where("user_id",$id)->where("motivo_id",2)->selectRaw("(select nome from clientes where clientes.id = tarefas.cliente_id) as nome")->get();
         $fez_unimed = Tarefa::where("user_id",$id)->where("motivo_id",3)->selectRaw("(select nome from clientes where clientes.id = tarefas.cliente_id) as nome")->get();
@@ -129,16 +215,23 @@ class TarefaController extends Controller
     public function motivoPerdaTarefa(Request $request)
     {
         
-        $cad = Tarefa::find($request->motivo_perda_tarefa_id);
-        
-        $cad->motivo_id = $request->motivo;
-        Tarefa::where("cliente_id",$cad->cliente_id)->update(["visivel"=>0]);
+        $cli = Cliente::find($request->motivo_cliente_id);
+        $cli->visivel = 0;
+        $cli->ultimo_contato = date("Y-m-d");
+        $cli->save();
+
+        $tarefa = Tarefa::find($request->tarefa_id_cadastrado_aqui);
+        $tarefa->motivo_id = $request->motivo;
         
         if($request->descricao_motivo) {
-            $cad->descricao_motivo = $request->descricao_motivo;
+            $tarefa->descricao_motivo = $request->descricao_motivo;
         }
-        if($cad->save()) {
-            return $cad->cliente_id;
+
+
+
+
+        if($tarefa->save()) {
+            return $cli->id;
         } else {
             return "error";
         }
@@ -271,54 +364,65 @@ class TarefaController extends Controller
 
     public function cadastrarTarefaAjax(Request $request)
     {
+        
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->ultimo_contato = date("Y-m-d");
         $cliente->save();
+        
+        
+        $tarefa_cliente = Tarefa::where("cliente_id",$request->cliente_id)->update(['status'=>1,'visivel'=>0]);
+
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
+            
+        
+
+
         $tarefa = Tarefa::create($data);
         $hoje = date("Y-m-d");
         $data_form = $request->data;
         $data_form_explode = explode("-",$data_form);
         $numeroSemanaDataHoje=intval( date('z', mktime(0,0,0,date("m"),date('d'),date("Y")) ) / 7 ) + 1;
         $numeroSemanaDataForm=intval( date('z', mktime(0,0,0,$data_form_explode[1],$data_form_explode[2],$data_form_explode[0]) ) / 7 ) + 1;
-        $titulo = "";
-        if($data_form < $hoje) {
-            $titulo = "atraso";
-        } elseif(date('m') == date("m",strtotime($data_form)) && date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje != $numeroSemanaDataForm) {
-            $titulo = "mes";
-        } elseif(date("d") ==  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
-            $titulo = "hoje";
-        } elseif(date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
-            $titulo = "semana";
-        } else {
-            $titulo = "personalizado";
-        }
+        // $titulo = "";
+        // if($data_form < $hoje) {
+        //     $titulo = "atraso";
+        // } elseif(date('m') == date("m",strtotime($data_form)) && date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje != $numeroSemanaDataForm) {
+        //     $titulo = "mes";
+        // } elseif(date("d") ==  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
+        //     $titulo = "hoje";
+        // } elseif(date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
+        //     $titulo = "semana";
+        // } else {
+        //     $titulo = "personalizado";
+        // }
+        // $tarefas = null;
+        // switch($titulo) {
+        //     case "atraso":
+        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("data < now()")->with('cliente')->get();
+        //     break;
+        //     case "hoje":
+        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereDate('data',"=",date('Y-m-d'))->with('cliente')->get();
+        //     break;
+        //     case "semana":
+        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->with('cliente')->get();
+        //     break;    
+        //     case "mes":
+        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("MONTH(data) = MONTH(NOW())")->get();
+        //     break;
+        // }
 
-        switch($titulo) {
-            case "atraso":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("data < now()")->with('cliente')->get();
-            break;
-            case "hoje":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereDate('data',"=",date('Y-m-d'))->with('cliente')->get();
-            break;
-            case "semana":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->with('cliente')->get();
-            break;    
-            case "mes":
-                $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("MONTH(data) = MONTH(NOW())")->get();
-            break;
-        }
+        // if($tarefas != null  && count($tarefas) >= 1) {
+        //     return view('admin.pages.tarefas.ajax.listar-por-categoria',[
+        //         "tarefas" => $tarefas,
+        //         "titulo" => $titulo,
+        //         "tarefa" => $tarefa->id
+        //     ]);
+        // } else {
+        //     return $tarefas;
+        // }
 
-        if(count($tarefas) >= 1) {
-            return view('admin.pages.tarefas.ajax.listar-por-categoria',[
-                "tarefas" => $tarefas,
-                "titulo" => $titulo,
-                "tarefa" => $tarefa->id
-            ]);
-        } else {
-            return $tarefas;
-        }
+        return $request->cliente_id;
     }
 
     public function cadastrarTarefaAjaxCliente(Request $request)
@@ -375,7 +479,7 @@ class TarefaController extends Controller
         }
     }
 
-
+    
 
 
 
@@ -456,29 +560,7 @@ class TarefaController extends Controller
         return view('admin.pages.tarefas.ajax.hoje');
     }
     
-    public function getTarefasParaHoje(Request $request)
-    {
-        if($request->ajax()) {
-            $user = User::where("id",auth()->user()->id)->first();
-            if($user->hasPermission('configuracoes') || $user->isAdmin()) {
-                $tarefasHoje = Tarefa::whereDate('data',"=",date('Y-m-d'))
-                ->selectRaw("title")
-                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) as cliente")
-                ->selectRaw('(SELECT name FROM users WHERE users.id = tarefas.user_id) as corretor')
-                ->selectRaw("DATE_FORMAT(data,'%d/%m/%Y') as criacao")
-                ->get();
-                return $tarefasHoje;  
-            } else {
-                $tarefasHoje = Tarefa::where("user_id",auth()->user()->id)
-                ->whereDate('data',"=",date('Y-m-d'))
-                ->selectRaw("title")
-                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) as cliente")
-                ->selectRaw("DATE_FORMAT(data,'%d/%m/%Y') as criacao")
-                ->get();
-                return $tarefasHoje;  
-            }    
-        }  
-    }   
+    
 
     public function clienteTarefasAtrasadasHome()
     {
@@ -524,31 +606,7 @@ class TarefaController extends Controller
         return view("admin.pages.tarefas.ajax.cliente-tarefas-atrasadas");
     }
 
-    public function getClienteTarefasAtrasadasAjax(Request $request)
-    {
-        if($request->ajax()) {
-            $user = User::where("id",auth()->user()->id)->first();
-            if($user->hasPermission('configuracoes') || $user->isAdmin()) {
-                $tarefasAtrasadas = Tarefa::where("status",0)
-                ->selectRaw("title,id")
-                ->selectRaw("DATE_FORMAT(data,'%d/%m/%Y') as criacao")
-                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) as cliente")
-                ->selectRaw("(SELECT name FROM users WHERE users.id = tarefas.user_id) as corretor")
-                ->whereDate('data','<',date('Y-m-d'))
-                ->get();           
-                return $tarefasAtrasadas;
-            } else {
-                $tarefasAtrasadas = Tarefa::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->selectRaw("title,id")
-                ->selectRaw("DATE_FORMAT(data,'%d/%m/%Y') as criacao")
-                ->selectRaw("(SELECT nome FROM clientes WHERE clientes.id = tarefas.cliente_id) as cliente")
-                ->whereDate('data','<',date('Y-m-d'))
-                ->get();           
-                return $tarefasAtrasadas;
-            }       
-        }
-    }
+    
 
 
 

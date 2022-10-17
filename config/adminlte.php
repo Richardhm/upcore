@@ -31,7 +31,7 @@ return [
     */
 
     'use_ico_only' => false,
-    'use_full_favicon' => false,
+    'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +85,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
+    // 'layout_fixed_navbar' => ['xs'=>false,'sm'=>false,'md'=>false,'lg'=>false,'xl'=>false],
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -121,17 +122,17 @@ return [
     |
     */
 
-    'classes_body' => 'bg-fundo',
+    'classes_body' => 'sidebar-mini bg-fundo',
     'classes_brand' => 'bg-logo',
     'classes_brand_text' => '',
     'classes_content_wrapper' => 'bg-fundo',
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'bg-escuro elevation-4',
-    'classes_sidebar_nav' => '',
+    'classes_sidebar_nav' => 'nav-child-indent',
     'classes_topnav' => 'bg-escuro',
-    'classes_topnav_nav' => 'navbar-expand',
-    'classes_topnav_container' => 'container',
+    'classes_topnav_nav' => 'navbar-expand-lg',
+    'classes_topnav_container' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -145,11 +146,11 @@ return [
     |
     */
 
-    'sidebar_mini' => 'lg',
+    'sidebar_mini' => '',
     'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
-    'sidebar_collapse_remember_no_transition' => true,
+    'sidebar_collapse_remember_no_transition' => false,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => true,
@@ -171,8 +172,8 @@ return [
     'right_sidebar_icon' => 'fas fa-cogs',
     'right_sidebar_theme' => 'dark',
     'right_sidebar_slide' => true,
-    'right_sidebar_push' => true,
-    'right_sidebar_scrollbar_theme' => 'os-theme-light',
+    'right_sidebar_push' => false,
+    'right_sidebar_scrollbar_theme' => 'os-theme-dark',
     'right_sidebar_scrollbar_auto_hide' => 'l',
 
     /*
@@ -230,7 +231,7 @@ return [
             'icon'    => 'fas fa-home',
             'url'    => '',
             'icon_color' => 'white', 
-            'classes'  => 'text-white text-bold',
+            'classes'  => 'text-white',
             //'active' => ['admin','/',"/admin/home/pesquisa","admin/financeiro/aguardandoboletocoletivo"],
             'submenu' => [
                 [
@@ -252,22 +253,26 @@ return [
             'text'    => 'Leads',
             'icon'    => 'fab fa-intercom',
             'url'    => '', 
-            'classes'  => 'text-white text-bold',
-            'submenu' => [
-                [
-                    "text" => "Prospecção",
-                    "url" => "admin/leads/prospeccao",
-                    'icon'    => 'fas fa-user',
-                    'classes'  => 'text-white'    
-                ],
-                [
-                    "text" => "Plantão de Vendas",
-                    "url" => "",
-                    'icon'    => 'fab fa-salesforce',
-                    'classes'  => 'text-white'
-                ]
+            'classes'  => 'text-white',
+            'key'  => 'prospeccao',
+            // 'submenu' => [
+            //     [
+            //         "text" => "Prospecção",
+            //         "url" => "admin/leads/prospeccao",
+            //         'icon'    => 'fas fa-user',
+            //         'classes'  => 'text-white',
+            //         ,
+                    
+                        
+            //     ],
+            //     [
+            //         "text" => "Plantão de Vendas",
+            //         "url" => "",
+            //         'icon'    => 'fab fa-salesforce',
+            //         'classes'  => 'text-white'
+            //     ]
                 
-            ]
+            // ]
         ],
 
         [
@@ -275,22 +280,23 @@ return [
             'icon'    => 'fas fa-users',
             'url'    => '', 
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold',
-            'submenu' => [
-                [
-                    "text" => "Pessoa Fisica",
-                    "url" => "admin/clientes/pf",
-                    'icon'    => 'fas fa-list',
-                    'classes' => 'text-white'    
-                ],
-                [
-                    "text" => "Pessoa Juridica",
-                    "url" => "admin/clientes/pj",
-                    'icon'    => 'fa fa-file-signature',
-                    'classes' => ' text-white'
-                ]
+            'classes' => 'text-white',
+            'key' => 'clientes'
+            // 'submenu' => [
+            //     [
+            //         "text" => "Pessoa Fisica",
+            //         "url" => "admin/clientes/pf",
+            //         'icon'    => 'fas fa-list',
+            //         'classes' => 'text-white'    
+            //     ],
+            //     [
+            //         "text" => "Pessoa Juridica",
+            //         "url" => "admin/clientes/pj",
+            //         'icon'    => 'fa fa-file-signature',
+            //         'classes' => ' text-white'
+            //     ]
                 
-            ]
+            // ]
         ],
 
         [
@@ -298,22 +304,23 @@ return [
             "url" => "admin/contratos",
             "icon" => "fas fa-id-card-alt",
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold',
-            'submenu' => [
-                [
-                    "text" => "Pendentes",
-                    "url" => "admin/contratos/pf/pendentes",
-                    'icon'    => 'fas fa-ellipsis-h',
-                    'classes' => 'text-white'    
-                ],
-                [
-                    "text" => "Finalizados",
-                    "url" => "",
-                    'icon'    => 'fas fa-thumbs-up',
-                    'classes' => 'text-white'
-                ]
+            'classes' => 'text-white',
+            'key' => 'contratos_pf'
+            // 'submenu' => [
+            //     [
+            //         "text" => "Pendentes",
+            //         "url" => "admin/contratos/pf/pendentes",
+            //         'icon'    => 'fas fa-ellipsis-h',
+            //         'classes' => 'text-white'    
+            //     ],
+            //     [
+            //         "text" => "Finalizados",
+            //         "url" => "",
+            //         'icon'    => 'fas fa-thumbs-up',
+            //         'classes' => 'text-white'
+            //     ]
                 
-            ]
+            // ]
             
         ],
 
@@ -322,7 +329,7 @@ return [
             "url" => "admin/contratos",
             "icon" => "fas fa-file-contract",
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold',
+            'classes' => 'text-white',
             'submenu' => [
                 [
                     "text" => "Pendentes",
@@ -348,7 +355,7 @@ return [
             "icon" => "fas fa-money-check-alt",
             "active" => ['clientes','admin/clientes/cadastrar'],
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold'
+            'classes' => 'text-white'
         ],
 
         [
@@ -357,7 +364,7 @@ return [
             "icon" => "fab fa-rocketchat",
             "active" => ['clientes','admin/clientes/cadastrar'],
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold'
+            'classes' => 'text-white'
         ],
 
         [
@@ -366,7 +373,7 @@ return [
             "icon" => "fas fa-envelope",
             "active" => ['clientes','admin/clientes/cadastrar'],
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold'
+            'classes' => 'text-white'
         ],
 
         [
@@ -375,7 +382,7 @@ return [
             "icon" => "fas fa-calculator",
             "active" => ['calculadora','admin/calculadora'],
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold'
+            'classes' => 'text-white'
         ],
 
         [
@@ -384,7 +391,7 @@ return [
             "icon" => "fas fa-calendar-alt",
             "active" => ['calendario','admin/calendario'],
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold'
+            'classes' => 'text-white'
         ],
 
         [
@@ -393,7 +400,7 @@ return [
             "icon" => "fas fa-sticky-note",
             "active" => ['lembretes','admin/lembretes'],
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold'
+            'classes' => 'text-white'
         ],
 
 
@@ -425,7 +432,7 @@ return [
             'icon'    => 'fas fa-cog',
             'can'     => 'configuracoes',
             'icon_color' => 'white',
-            'classes' => 'text-white text-bold',
+            'classes' => 'text-white',
             'submenu' => [
                 [
                     'text' => 'Corretora',

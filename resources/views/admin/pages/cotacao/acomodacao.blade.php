@@ -31,24 +31,24 @@
             <div class="errorvaloradesao"></div>
         </div>
         <div class="d-flex my-2" style="padding:0px;">
-                <div class="">
+                <div class="ml-2">
                     <div class="form-group">
-                        <label for="data_vigente" class="ml-2">Data Vigencia:</label>
-                        <input type="date" name="vigente" id="vigente" value="" class="form-control vigente">
+                        <p style="margin:0;padding:0;">Data Vigencia:</p>
+                        <input type="date" name="vigente" id="vigente" value="" class="form-control form-control-sm vigente">
                     </div>
                     
                 </div>    
                 <div class="mx-1">
                     <div class="form-group">
-                        <label for="data_boleto" class="ml-2">Data Boleto:</label>
-                        <input type="date" name="boleto" id="boleto" value="" placeholder="Data Boleto" class="form-control boleto">
+                        <p style="margin:0;padding:0;">Data Boleto:</p>
+                        <input type="date" name="boleto" id="boleto" value="" placeholder="Data Boleto" class="form-control form-control-sm boleto">
                     </div>
                     
                 </div>
-                <div class="">
+                <div class="mr-2">
                     <div class="form-group">
-                        <label for="valor_adesao">Valor Adesão:</label>
-                        <input type="text" name="adesao" id="adesao" placeholder="R$" class="form-control valor_adesao">
+                        <p style="margin:0;padding:0;">Valor Adesão:</p>
+                        <input type="text" name="adesao" id="adesao" placeholder="R$" class="form-control form-control-sm valor_adesao">
                     </div>
                 </div>
         </div>

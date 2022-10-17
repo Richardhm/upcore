@@ -31,7 +31,67 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        
+
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
+
+            $event->menu->addIn('prospeccao', [
+                'text' => 'Prospecção',
+                'label'       => $event->qteLeeds(),
+                'label_color' => 'success',
+                'url' => 'admin/leads/prospeccao',
+                'icon'    => 'fas fa-user',
+                'classes'  => 'text-white'
+                        
+            ],[
+                
+                "text" => "Plantão de Vendas",
+                "url" => "",
+                'icon'    => 'fab fa-salesforce',
+                'classes'  => 'text-white',
+                'label'       => 0,
+                'label_color' => 'danger',
+                    
+            ]);
+
+            $event->menu->addIn('clientes',[
+                "text" => "Pessoa Fisica",
+                "url" => "admin/clientes/pf",
+                'icon'    => 'fas fa-list',
+                'classes' => 'text-white',
+                'label'       => $event->qtdClientePF(),
+                'label_color' => 'success',    
+            ],[
+                "text" => "Pessoa Juridica",
+                "url" => "admin/clientes/pj",
+                'icon'    => 'fa fa-file-signature',
+                'classes' => ' text-white',
+                'label'       => $event->qtdClietePJ(),
+                'label_color' => 'primary',   
+
+            ]);
+
+            $event->menu->addIn('contratos_pf',
+                [
+                    "text" => "Pendentes",
+                    "url" => "admin/contratos/pf/pendentes",
+                    'icon'    => 'fas fa-ellipsis-h',
+                    'classes' => 'text-white',
+                    'label'       => $event->qtdContratosPF(),
+                    'label_color' => 'primary',     
+                ],
+                [
+                    "text" => "Finalizados",
+                    "url" => "",
+                    'icon'    => 'fas fa-thumbs-up',
+                    'classes' => 'text-white',
+                    'label'       => 0,
+                    'label_color' => 'danger',     
+                ]
+        );
+
+
+
             // if($event->userAuthenticate()->admin) {
             //     $event->menu->addIn('orcamento', [
             //         'text' => 'Cadastrar Orçamentos',

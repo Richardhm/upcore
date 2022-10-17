@@ -1,346 +1,409 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gerenciamento de Tarefas</title>
+@extends('adminlte::page')
+@section('title', 'Clientes Pessoa FÍSICA')
+@section('plugins.Datatables', true)
+@section('content_header')
+    <h4 class="text-white">GERENCIAMENTO CLIENTES PESSOA(S) FÍSICA(S)</h4>  
+@stop
+@section('content')
+<section class="d-flex justify-content-between" style="flex-wrap: wrap;">
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{asset('vendor/fontawesome-free/css/all.min.css')}}">
-  
-  <link rel="stylesheet" href="{{asset('vendor/datatables/dataTables.bootstrap4.min.css')}}" />  
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('vendor/adminlte/dist/css/adminlte.min.css')}}">
+@section('right-sidebar')
 
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <style>
-    body, html {background-image:url('/storage/fundo.png');}
-    * {padding:0;margin:0;list-style: none;box-sizing: border-box;}
-    .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
-    .alvo {cursor:pointer;}
-    ::-webkit-scrollbar {width: 12px;}
-    ::-webkit-scrollbar-track {background: orange;}
-    ::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
-    textarea {resize: none;}   
-  </style>
-</head>
-<body>
-    
-    <section class="d-flex justify-content-between" style="flex-wrap: wrap;">
+    <!-- <a href="#" data-widget="control-sidebar">Toggle Control Sidebar</a>     -->
+@stop
+<aside class="control-sidebar" style="background: linear-gradient(90deg, rgb(0, 29, 54), rgb(12, 101, 168));">
+<div class="d-flex flex-column align-items-center justify-content-center">
 
-        <!--TOPO-->
-        <div class="d-flex text-white align-items-center justify-content-between" style="flex-basis:100%;height:5vh">
-            <span style="margin-left:8px;">GERENCIAMENTO CLIENTES PESSOA FÍSICAS</span>
-            <a href="{{route('admin.home')}}" class="text-white mr-2 border-bottom">Dashboard</a>
-        </div>
-        <!--Fim TOPO-->
-
-
-        <!--COLUNA LEFT-->
-        <div class="d-flex flex-column text-white ml-1" style="flex-basis:15%;height:95vh;">
-
-            <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
-                <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Tarefas</h5>
-                <ul class="d-flex flex-column" style="margin-bottom:0px;">
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
-                            <span class="ml-2" style="font-weight: bold;">Atrasadas</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_atrasada}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 hoje">
-                            <span class="ml-2" style="font-weight: bold;">Hoje</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_hoje}}</span>
-                        </a>    
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 semana">
-                            <span class="ml-2" style="font-weight: bold;">Semana</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_semana}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 mes">
-                            <span class="ml-2" style="font-weight: bold;">Mês</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_mes}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 todos">
-                            <span class="ml-2" style="font-weight: bold;">Todos</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$clientes_total}}</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="d-flex flex-column mt-2 py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
-                <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Clientes</h5>
-                <ul class="d-flex flex-column" style="margin-bottom:0px;">
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Total Geral</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$clientes_total}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Em Negociação</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$negociacao}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Finalizados</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$finalizados}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Cadastrados no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$cadastrado_mes}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Perdidos</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$perdidos}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Perdidos no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$perdidos_mes}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Finalizados no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$finalizados_mes}}</span>
-                    </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Em Negociação no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$negociacao_mes}}</span>
-                    </li>
-                </ul>
-            </div>
-
-
-        </div>
-        <!--FIM COLUNA LEFT-->
-
-        <!--COLUNA CENTRO-->
-        <div class="text-white p-2 align-self-start" style="flex-basis:45%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
-            <div id="table" class="py-3">
-                <table id="tabela" class="table listarclientes">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Telefone</th>
-                            <th>Tarefa</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>   
-            </div> 
-        </div>  
-        <!--FIM COLUNA CENTRO-->
+        <a href="" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
+            <i class="fas fa-phone fa-lg"></i>
+            Nova Tarefa
+            
+        </a>
         
-        <!--COLUNA RIGHT-->
-        <div class="d-flex mr-1" style="flex-basis:39%;flex-wrap: wrap;height:95vh;">
-            <!---FORM--->
-            <div class="py-2" style="background-color:rgba(0,0,0,0.5);border-radius:5px;height:380px;">
-                <form action="">
+        <a href="" data-orcamento class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
+            <i class="fas fa-phone fa-lg"></i>
+            Orçamento
+            
+        </a>
 
-                    <div class="form-row" style="margin-right: 0;margin-left:0;">
-                        <div class="col">
-                            <span class="text-white">Cliente:</span>
-                            <input type="text" name="nome" id="nome" class="form-control">
-                        </div>
-                        <div class="col">
-                            <span class="text-white">Cidade:</span>
-                            <input type="text" name="cidade" id="cidade" class="form-control">
-                        </div>
-                    </div>
+        <a href="" data-contrato class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
+            <i class="fas fa-phone fa-lg"></i>
+            Contrato
+        </a>
 
-                    <div class="form-row" style="margin-right: 0;margin-left:0;">
-                        <div class="col">
-                            <span class="text-white">Telefone:</span>
-                            <input type="text" name="telefone" id="telefone" class="form-control">
-                        </div>
-                        <div class="col">
-                            <span class="text-white">Email:</span>
-                            <input type="text" name="email" id="email" class="form-control">
-                        </div>
-                    </div>
+        <a href="" data-perda data-toggle="modal"  data-target="#motivoDaPerda" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
+            <i class="fas fa-phone fa-lg"></i>
+            Perda
+        </a>
 
-                    <div style="display: flex;">
-                        <div style="flex-basis:22%;margin-right:2%;margin-left:5px;">
-                            <span class="text-white">Data Cadastro:</span>
-                            <input type="text" name="data_cadastro" id="data_cadastro" class="form-control">
-                        </div>
-                        <div style="flex-basis:10%;margin-right:2%;">
-                            <span class="text-white">Dias:</span>
-                            <input type="text" name="dias_cadastro" id="dias_cadastro" class="form-control">
-                        </div>
-                        <div style="flex-basis:22%;margin-right:2%;">
-                            <span class="text-white">Ultimo Contato:</span>
-                            <input type="text" name="ultimo_contato" id="ultimo_contato" class="form-control">
-                        </div>
-                        <div style="flex-basis:10%;margin-right:2%;">
-                            <span class="text-white">Dias:</span>
-                            <input type="text" name="dias_contato" id="dias_contato" class="form-control">
-                        </div>
-                        <div style="flex-basis:29%;margin-right:4px;">
-                            <span class="text-white">Origem Leads:</span>
-                            <input type="text" name="origem_leads" id="origem_leads" class="form-control">    
-                        </div>    
-                    </div>
+        
+        <a href="" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
+            <i class="fas fa-phone fa-lg"></i>
+            Ligar
+        </a>           
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white whatsapp" style="background-color:rgba(0,0,0,0.4);">
+            <i class="fab fa-whatsapp fa-lg"></i>
+            Whatsapp
+        </a>           
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white email" style="background-color:rgba(0,0,0,0.4);">
+            <i class="far fa-envelope fa-lg"></i>    
+            Email
+        </a>           
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
+            <i class="fas fa-sms fa-lg"></i>
+            SMS
+        </a>           
+       
+        
+    </div>
+</aside>
 
-                    <div style="display:flex;flex-basis:100%;">
-                        <div style="flex-basis:48%;margin-right:2%;margin-left:5px;">
-                            <span class="text-white">Quantidade de Vidas:</span>
-                            <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control">
-                        </div>
-                        <div style="flex-basis:48%;">
-                            <span class="text-white">Status:</span>
-                            <input type="text" name="status" id="status" class="form-control">
-                        </div>
-                    </div>
+@section('content_top_nav_right')
 
-                    <div class="d-flex">
-                        <div style="flex-basis:98%;margin-left:5px;">
-                            <span class="text-white">Descrição:</span>
-                            <textarea name="descricao_tarefa" id="descricao_tarefa" name="descricao_tarefa" class="form-control"></textarea>
-                        </div>
-                    </div>
+    
+    <a href="#" data-widget="control-sidebar" class="d-flex align-items-center"><i class="fas fa-cogs"></i></a>
+@stop
 
 
-                    <div style="display:flex;margin:5px 0 0 0;" class="d-flex justify-content-center">
-                        <a href="#" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" style="pointer-events: none;background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;">Nova Tarefa</a>
-                        <a href="#" data-orcamento style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Orçamento</a>
-                        <a href="#" data-contrato style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Contrato</a>
-                        <a href="#" data-perda data-toggle="modal" data-target="#motivoDaPerda" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Perda</a>
-                    </div>
 
-                    
 
-                </form>
+<!--COLUNA LEFT-->
+<div class="d-flex flex-column text-white ml-1" style="flex-basis:15%;height:95vh;">
+
+    <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
+        <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Tarefas</h5>
+        <ul style="margin:0px;padding:0px;">
+            <li>
+                <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
+                    <span class="ml-2">Atrasadas</span>
+                    <span class="mr-2">{{$qtd_atrasada}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="" class="d-flex justify-content-between text-white py-1 hoje">
+                    <span class="ml-2">Hoje</span>
+                    <span class="mr-2">{{$qtd_hoje}}</span>
+                </a>    
+            </li>
+            <li>
+                <a href="" class="d-flex justify-content-between text-white py-1 semana">
+                    <span class="ml-2">Semana</span>
+                    <span class="mr-2">{{$qtd_semana}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="" class="d-flex justify-content-between text-white py-1 mes">
+                    <span class="ml-2">Mês</span>
+                    <span class="mr-2">{{$qtd_mes}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="" class="d-flex justify-content-between text-white py-1 todos">
+                    <span class="ml-2">Todos</span>
+                    <span class="mr-2">{{$clientes_total}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="d-flex flex-column mt-2 py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
+        <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Clientes</h5>
+        <ul style="margin:0px;padding:0px;">
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Total Geral</span>
+                <span class="mr-2">{{$clientes_total}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Em Negociação</span>
+                <span class="mr-2">{{$negociacao}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Finalizados</span>
+                <span class="mr-2">{{$finalizados}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Cadastrados no Mês</span>
+                <span class="mr-2">{{$cadastrado_mes}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Perdidos</span>
+                <span class="mr-2">{{$perdidos}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Perdidos no Mês</span>
+                <span class="mr-2">{{$perdidos_mes}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Finalizados no Mês</span>
+                <span class="mr-2">{{$finalizados_mes}}</span>
+            </li>
+            <li class="d-flex justify-content-between text-white py-1">
+                <span class="ml-2">Em Negociação no Mês</span>
+                <span class="mr-2">{{$negociacao_mes}}</span>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+<!--FIM COLUNA LEFT-->
+
+<!--COLUNA CENTRO-->
+<div class="text-white p-2 align-self-start" style="flex-basis:45%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
+    <div id="table" class="py-3">
+        <table id="tabela" class="table listarclientes">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Tarefa</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>   
+    </div> 
+</div>  
+<!--FIM COLUNA CENTRO-->
+
+<!--COLUNA RIGHT-->
+<div class="d-flex mr-1" style="flex-basis:39%;flex-wrap: wrap;height:95vh;">
+    <!---FORM--->
+    <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;height:240px;">
+        <form action="">
+
+            <div class="form-row" style="margin-right: 0;margin-left:0;">
+                <div class="col">
+                    <span class="text-white">Cliente:</span>
+                    <input type="text" name="nome" id="nome" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Cidade:</span>
+                    <input type="text" name="cidade" id="cidade" class="form-control form-control-sm" readonly>
+                </div>
             </div>
-            <!---FIM FORM--->
 
-            <!--TIMELINE--->
-            <div style="overflow-y:scroll;background-color:rgba(0,0,0,0.5);border-radius:5px;height:calc(100% - 385px);flex-basis:100%;" id="historico">
-                
-                
-                
+            <div class="form-row" style="margin-right: 0;margin-left:0;">
+                <div class="col">
+                    <span class="text-white">Telefone:</span>
+                    <input type="text" name="telefone" id="telefone" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Email:</span>
+                    <input type="text" name="email" id="email" class="form-control form-control-sm" readonly>
+                </div>
             </div>
 
+            <div style="display: flex;">
+                <div style="flex-basis:22%;margin-right:2%;margin-left:5px;">
+                    <span class="text-white">Data Cadastro:</span>
+                    <input type="text" name="data_cadastro" id="data_cadastro" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:10%;margin-right:2%;">
+                    <span class="text-white">Dias:</span>
+                    <input type="text" name="dias_cadastro" id="dias_cadastro" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:22%;margin-right:2%;">
+                    <span class="text-white">Ultimo Contato:</span>
+                    <input type="text" name="ultimo_contato" id="ultimo_contato" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:10%;margin-right:2%;">
+                    <span class="text-white">Dias:</span>
+                    <input type="text" name="dias_contato" id="dias_contato" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:29%;margin-right:4px;">
+                    <span class="text-white">Origem Leads:</span>
+                    <input type="text" name="origem_leads" id="origem_leads" class="form-control form-control-sm" readonly>    
+                </div>    
+            </div>
 
-            <!--FIM TIMELINE--->
+            <div style="display:flex;flex-basis:100%;">
+                <div style="flex-basis:48%;margin-right:2%;margin-left:5px;">
+                    <span class="text-white">Quantidade de Vidas:</span>
+                    <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:48%;">
+                    <span class="text-white">Status:</span>
+                    <input type="text" name="status" id="status" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
+
+            <!-- <div class="d-flex">
+                <div style="flex-basis:98%;margin-left:5px;">
+                    <span class="text-white">Descrição:</span>
+                    <textarea name="descricao_tarefa" id="descricao_tarefa" name="descricao_tarefa" class="form-control form-control-sm" readonly></textarea>
+                </div>
+            </div> -->
+
+
+            <!-- <div style="display:flex;margin:5px 0 0 0;" class="d-flex justify-content-center">
+                <a href="#" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" style="pointer-events: none;background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;">Nova Tarefa</a>
+                <a href="#" data-orcamento style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Orçamento</a>
+                <a href="#" data-contrato style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Contrato</a>
+                <a href="#" data-perda data-toggle="modal" data-target="#motivoDaPerda" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Perda</a>
+            </div> -->
 
             
-           
 
-        </div>
-        <!--FIM Coluna RIGHT-->
-
-
-        <!--Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
-    <div class="modal fade" id="cadastrarClienteClienteEspecifico" tabindex="-1" role="dialog" aria-labelledby="cadastrarClienteClienteEspecificoLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="background-color:rgba(0,0,0,0.5);">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel" style="color:#FFF;">Cadastrar Nova Atividade</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true" style="color:#FFF;">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post" name="nova_atividade">
-                    @csrf                    
-                    <div class="form-group">
-                        <label for="title" style="color:#FFF;">Titulo:</label>
-                        <select name="titulo_id" id="titulo_id" class="form-control">
-                            <option value="">--Titulo Da Tarefa--</option>
-                            @foreach($titulos as $t)
-                                <option value="{{$t->id}}">{{$t->titulo}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <input type="hidden" name="cliente_id" id="cliente_id_cadastrado_aqui" />
-                    <div class="form-group">
-                        <label for="" style="color:#FFF;">Data</label>
-                        <input type="date" name="data" id="data" class="form-control">
-                        @if($errors->has('data'))
-                            <p class="alert alert-danger">{{$errors->first('data')}}</p>
-                        @endif
-                    </div>
-                    <div class="form-group">
-                        <label for="descricao" style="color:#FFF;">Descrição:</label>
-                        <textarea name="descricao" id="descricao" class="form-control" rows="5"></textarea>
-                        @if($errors->has('descricao'))
-                            <p class="alert alert-danger">{{$errors->first('descricao')}}</p>
-                        @endif
-                    </div>
-                    <input type="submit" class="btn btn-primary btn-block" value="Agendas Tarefa">
-                </form>  
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" data-dismiss="modal">Fechar</button>
-                
-            </div>
-            </div>
-        </div>
+        </form>
     </div>
-    <!--Fim Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
+    <!---FIM FORM--->
 
-    <!------Modal Perda Cliente---------->
-    <div class="modal fade" id="motivoDaPerda" tabindex="-1" aria-labelledby="motivoDaPerdaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="background-color:rgba(0,0,0,0.5)">
-                <div class="modal-header">
-                    <h5 class="modal-title text-white" id="motivoDaPerdaLabel">Motivo Da Perda</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" class="text-white">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="POST" name="motivo_perda_tarefa" id="motivo_perda_tarefa">
-                        <input type="hidden" name="motivo_cliente_id" id="motivo_cliente_id">
-                        <input type="hidden" name="tarefa_id_cadastrado_aqui" id="tarefa_id_cadastrado_aqui">
-                        @csrf
-                        <div id="motivo_perda_error"></div>
-                        <div class="form-row">
-                            @foreach($motivos as $k => $v)
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <input type="radio" id="motivo_perda" name="motivo" value="{{$v->id}}" />
-                                        <label for="motivo_perda" class="text-white">{{$v->descricao}}</label>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>    
-                        <div id="motivo_textarea">
+    <!--TIMELINE--->
+    <div class="timelines" id="historico">
+        
+        
+        
+    </div>
+
+
+    <!--FIM TIMELINE--->
+
+    
+   
+
+</div>
+<!--FIM Coluna RIGHT-->
+
+
+<!--Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
+<div class="modal fade" id="cadastrarClienteClienteEspecifico" tabindex="-1" role="dialog" aria-labelledby="cadastrarClienteClienteEspecificoLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content" style="background-color:rgba(0,0,0,0.5);">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="color:#FFF;">Cadastrar Nova Atividade</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" style="color:#FFF;">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form action="" method="post" name="nova_atividade">
+            @csrf                    
+            <div class="form-group">
+                <label for="title" style="color:#FFF;">Titulo:</label>
+                <select name="titulo_id" id="titulo_id" class="form-control">
+                    <option value="">--Titulo Da Tarefa--</option>
+                    @foreach($titulos as $t)
+                        <option value="{{$t->id}}">{{$t->titulo}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <input type="hidden" name="cliente_id" id="cliente_id_cadastrado_aqui" />
+            <div class="form-group">
+                <label for="" style="color:#FFF;">Data</label>
+                <input type="date" name="data" id="data" class="form-control">
+                @if($errors->has('data'))
+                    <p class="alert alert-danger">{{$errors->first('data')}}</p>
+                @endif
+            </div>
+            <div class="form-group">
+                <label for="descricao" style="color:#FFF;">Descrição:</label>
+                <textarea name="descricao" id="descricao" class="form-control" rows="5"></textarea>
+                @if($errors->has('descricao'))
+                    <p class="alert alert-danger">{{$errors->first('descricao')}}</p>
+                @endif
+            </div>
+            <input type="submit" class="btn btn-primary btn-block" value="Agendas Tarefa">
+        </form>  
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Fechar</button>
+        
+    </div>
+    </div>
+</div>
+</div>
+<!--Fim Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
+
+<!------Modal Perda Cliente---------->
+<div class="modal fade" id="motivoDaPerda" tabindex="-1" aria-labelledby="motivoDaPerdaLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content" style="background-color:rgba(0,0,0,0.5)">
+        <div class="modal-header">
+            <h5 class="modal-title text-white" id="motivoDaPerdaLabel">Motivo Da Perda</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form action="" method="POST" name="motivo_perda_tarefa" id="motivo_perda_tarefa">
+                <input type="hidden" name="motivo_cliente_id" id="motivo_cliente_id">
+                <input type="hidden" name="tarefa_id_cadastrado_aqui" id="tarefa_id_cadastrado_aqui">
+                @csrf
+                <div id="motivo_perda_error"></div>
+                <div class="form-row">
+                    @foreach($motivos as $k => $v)
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="radio" id="motivo_perda" name="motivo" value="{{$v->id}}" />
+                                <label for="motivo_perda" class="text-white">{{$v->descricao}}</label>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Enviar</button>
-                    </form>    
+                    @endforeach
+                </div>    
+                <div id="motivo_textarea">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
+                <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+            </form>    
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
         </div>
     </div>
-    <!------Fim Modal Perda Cliente---------->
-
-
-
-
+</div>
+</div>
+<!------Fim Modal Perda Cliente---------->
 
 </section>
+@stop
 
-<script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{asset('js/jquery.mask.min.js')}}"></script>
-<script src="{{asset('vendor/sweetalert2/sweetalert2.js')}}"></script>
-<script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
-<script>
-    $(function(){
+@section('css')
+    <style>
+        ul {list-style: none;}
+        .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
+        .alvo {cursor:pointer;}
         
+        textarea {resize: none;}   
+
+        .timelines {
+            overflow-y:scroll;
+            background-color:rgba(0,0,0,0.5);
+            border-radius:5px;
+            height:calc(100% - 250px);
+            flex-basis:100%;
+        }
+
+        .timelines::-webkit-scrollbar {width: 12px;}
+        .timelines::-webkit-scrollbar-track {background: orange;}
+        .timelines::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
+
+
+    </style>
+@stop
+
+
+
+@section('js')
+    <script>
+        $(function(){
+            
+            $("#my-toggle-button").ControlSidebar('toggle');
+            
+
+
+            // $(".fa-bars").on('click',function(){
+            //     if($('body').hasClass('sidebar-collapse')) {
+            //         $('body').removeClass('sidebar-mini');
+            //         $('body').addClass('sidebar-hidden')
+            //     } else {
+            //         $('body').removeClass('sidebar-hidden');
+            //         $('body').addClass('sidebar-mini')
+            //     }
+            // });
+
+
+
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -385,6 +448,10 @@
                 } else {
                     $(row).addClass('alvo');
                 }
+            },
+            drawCallback: function () {
+                $('.page-link').addClass('btn-sm border-0');
+                // $('.form-control').addClass('bg-dark');
             }
         });
         
@@ -524,15 +591,6 @@
             return false; 
         });
 
-
-
-
-
-
-
-
-
-
         $("form[name='nova_atividade']").on('submit',function(e){
             var form = $(this);
             $.ajax({
@@ -589,8 +647,18 @@
                 }
             })
         }
+        
+        //$.fn.dataTable.ext.classes.sPageButton = 'paginate_button page-item btn-sm';    
 
     });
-</script>
-</body>
-</html>
+    $('.pagination').addClass('pagination-sm')
+    //$('.dataTables_filter').addClass('btn btn-sm btn-dark');
+    //$('.dataTables_paginate').addClass('btn btn-sm btn-dark');
+    // $.fn.dataTable.ext.classes.sPageButton = 'btn-sm';
+    //$.fn.dataTable.ext.classes.sPageButton = 'paginate_button page-item btn-sm'; 
+    </script>
+@stop
+
+
+
+

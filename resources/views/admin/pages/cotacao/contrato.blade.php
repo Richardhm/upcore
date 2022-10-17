@@ -3,7 +3,7 @@
 @section('plugins.jqueryUi', true)
 @section('plugins.Toastr', true)
 @section('content_header')
-    <h3 class="text-white">Realizar Contratos</h3>
+    <h3 class="text-white">Contratos</h3>
 @stop
 @section('content')
 
@@ -32,19 +32,20 @@
             <input type="hidden" name="change_faixa_59" id="change_faixa_59" value="">
 
             <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente->id}}">
-                <div class="form-row mt-1">
-                    <div class="col-2">
+
+                <div class="d-flex">
+                    <div style="flex-basis:24%">
                         <div class="form-group">
                             <span for="nome">Titular:</span>
-                            <input type="text" name="nome" id="nome" required class="form-control" placeholder="Nome" value="{{$cliente->nome}}">
+                            <input type="text" name="nome" id="nome" required class="form-control form-control-sm" placeholder="Nome" value="{{$cliente->nome}}">
                             <div class="errorcliente"></div>
                         </div>
                     </div>
 
-                    <div class="col-2">
+                    <div style="flex-basis:12%;margin:0% 1%;">
                         <div class="form-group">
                             <span for="cpf">CPF:</span>
-                            <input type="text" name="cpf" id="cpf" required class="form-control" value="{{old('cpf')}}" placeholder="XXX.XXXX.XXX-XX">
+                            <input type="text" name="cpf" id="cpf" required class="form-control form-control-sm" value="{{old('cpf')}}" placeholder="XXX.XXXX.XXX-XX">
                             <div class="errorcpf"></div>
                             @if($errors->has('cpf'))
                                 <p class="alert alert-danger">{{$errors->first('cpf')}}</p>
@@ -52,54 +53,49 @@
                         </div>
                     </div>
 
-                    <div class="col-2">
+                    <div style="flex-basis:15%">
                         <div class="form-group">
                             <span for="data_nascimento">Data Nascimento:</span>
-                            <input type="date" name="data_nascimento" value="{{old('data_nascimento')}}" required id="data_nascimento" class="form-control">
+                            <input type="date" name="data_nascimento" value="{{old('data_nascimento')}}" required id="data_nascimento" class="form-control  form-control-sm">
                             <div class="errordatanascimento"></div>
                         </div>
                     </div>
 
-                    <div class="col-3">
+                    <div style="flex-basis:15%;margin:0% 1%;">
                         <div class="form-group">
                             <span for="email">Email:</span>
-                            <input type="email" name="email" id="email" required placeholder="Email" class="form-control" value="{{$cliente->email}}">
+                            <input type="email" name="email" id="email" required placeholder="Email" class="form-control  form-control-sm" value="{{$cliente->email}}">
                             <div class="erroremail"></div>
                         </div>
                     </div>    
-                    <div class="col-3">
+                    <div style="flex-basis:36%">
                         <div class="form-group">
-                            <span style="font-size:0.947em;">Responsavel Financeiro: <small style='font-size:0.675em;color:#FFF;'>(Preencher se o cliente é menor de idade)</small></span>
-                            <input type="text" name="responsavel_financeiro" id="responsavel_financeiro" placeholder="Responsavel Financeiro" class="form-control" value="">
+                            <span style="font-size:0.947em;">Responsavel Financeiro: <small style='font-size:0.8em;color:#FFF;'>(Preencher se o cliente é menor de idade)</small></span>
+                            <input type="text" name="responsavel_financeiro" id="responsavel_financeiro" placeholder="Responsavel Financeiro" class="form-control  form-control-sm" value="">
                             <div class="errorresponsavelfinanceiro"></div>
                         </div>
                     </div>
                 </div>    
+
                 
                 <div class="d-flex">
                         
 
-                    <div class="flex-basis:20%;">
+                    <div style="flex-basis:24%;">
                         <div class="form-group">
                             <span for="cpf_financeiro">CPF Financeiro: <small style='font-size:0.675em;color:#FFF;'>(Preencher se o cliente é menor de idade)</small></span>
-                            <input type="text" name="cpf_financeiro" id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control" value="">
+                            <input type="text" name="cpf_financeiro" id="cpf_financeiro" placeholder="XXX.XXXX.XXX-XX" class="form-control form-control-sm" value="">
                             <div class="errorcpfresponsavelfinanceiro"></div>
                            
                         </div>
                     </div>
 
-                    <div style="flex-basis:19%;margin:0 1%;">
-                        <div class="form-group">
-                            <span for="endereco_financeiro">Endereço Completo:</span>
-                            <input type="text" name="endereco_financeiro" required id="endereco_financeiro" value="{{old('endereco_financeiro')}}" placeholder="Endereço Completo" class="form-control" value="">
-                            <div class="errorenderefinanceiro"></div>
-                        </div>
-                    </div>
+                   
 
-                    <div style="flex-basis:19%;">
+                    <div style="flex-basis:12%;margin:0 1%;">
                         <div class="form-group">
                             <span for="cidade">Cidade:</span>
-                            <select name="cidade" required id="cidade" class="form-control change_valores">
+                            <select name="cidade" required id="cidade" class="form-control form-control-sm change_valores">
                                 <option value="">--Escolher a cidade--</option>
                                 @foreach($cidades as $c)
                                     <option value="{{$c->id}}" {{$cliente->cidade_id == $c->id ? 'selected' : ''}}>{{$c->nome}}</option>
@@ -109,10 +105,10 @@
                         </div>
                     </div>
 
-                    <div style="flex-basis:18%;margin:0 1%;">
+                    <div style="flex-basis:16%">
                         <div class="form-group">
                             <span for="operadora">Operadora:</span>
-                            <select name="operadora" required id="operadora" class="form-control">
+                            <select name="operadora" required id="operadora" class="form-control form-control-sm">
                                 <option value="">--Escolher a Operadora--</option>
                                 @foreach($operadoras as $o)
                                 <option value="{{$o->id}}" {{old('operadora') == $o->id ? 'selected' : ''}}>{{$o->nome}}</option>
@@ -122,10 +118,12 @@
                         </div>
                     </div>
 
-                    <div style="flex-basis:18%;">
+                    
+
+                    <div style="flex-basis:15%;margin:0% 1%;">
                         <div class="form-group">
                             <span for="administradora">Administradora:</span>
-                            <select name="administradora" required id="administradora" class="form-control">
+                            <select name="administradora" required id="administradora" class="form-control  form-control-sm">
                                 <option value="">--Escolher Administradora--</option>
                                 @foreach($administradoras->administradoras as $admin)
                                     <option value="{{$admin->id}}" {{old('administradora') == $admin->id ? 'selected' : ''}}>{{$admin->nome}}</option>
@@ -135,16 +133,24 @@
                         </div>
                     </div>
 
+                    <div style="flex-basis:36%;">
+                        <div class="form-group">
+                            <span for="endereco_financeiro">Endereço Completo:</span>
+                            <input type="text" name="endereco_financeiro" required id="endereco_financeiro" value="{{old('endereco_financeiro')}}" placeholder="Endereço Completo" class="form-control  form-control-sm" value="">
+                            <div class="errorenderefinanceiro"></div>
+                        </div>
+                    </div>
+
 
                 </div>
                 
-                <div class="form-row mt-1">
+                <div class="d-flex">
                     
-                    <div class="col-3">
+                    <div style="flex-basis:23%;">
                         <div class="form-group">
                             <span for="Plano">Planos:</span>
                             <!-- <input type="text" id="plano" name="plano"> -->
-                            <select name="plano" id="plano" class="form-control">
+                            <select name="plano" id="plano" class="form-control  form-control-sm">
                                 <option value="">--Escolher um Plano--</option>
                                 
                             </select>    
@@ -154,22 +160,22 @@
 
 
 
-                    <div class="col-3">
+                    <div style="flex-basis:25%;margin:0 1%;">
                         <div class="form-group">
                             <span for="codigo_externo">Codigo Externo:</span>
-                            <input type="text" name="codigo_externo" required id="codigo_externo" value="{{old('codigo_externo')}}" class="form-control" placeholder="COD.">
+                            <input type="text" name="codigo_externo" required id="codigo_externo" value="{{old('codigo_externo')}}" class="form-control  form-control-sm" placeholder="COD.">
                             <div class="errorcodigo"></div>
                         </div>
                     </div>
                     
-                    <div class="col-3">
+                    <div style="flex-basis:24%;margin:0 3% 0 0">
                         <div class="form-group d-flex justify-content-center flex-column">
                             <span>Coparticipação:</span>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-light" id="coparticipacao_sim">
+                                <label class="btn btn-outline-light" id="coparticipacao_sim" style="padding:0.21rem 0.75rem;">
                                     <input type="radio" name="coparticipacao" id="coparticipacao_radio_sim"  value="sim" {{old('coparticipacao') == "sim" ? 'checked' : ''}}> Sim
                                 </label>
-                                <label class="btn btn-outline-light" id="coparticipacao_nao">
+                                <label class="btn btn-outline-light" id="coparticipacao_nao" style="padding:0.21rem 0.75rem;">
                                     <input type="radio" name="coparticipacao" id="coparticipacao_radio_nao" value="nao" {{old('coparticipacao') == "nao" ? 'checked' : ''}}> Não
                                 </label>
                                 
@@ -177,15 +183,15 @@
                             <div class='errorcoparticipacao'></div>
                         </div>
                     </div>    
-                    <div class="col-3">
+                    <div style="flex-basis:24%;">
                         <div class="form-group  d-flex justify-content-center flex-column">
                             <span for="odonto">Odonto:</span>
                             
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-light" id="odonto_sim">
+                                <label class="btn btn-outline-light" id="odonto_sim" style="padding:0.21rem 0.75rem;">
                                     <input type="radio" name="odonto" id="odonto_radio_sim" value="sim" {{old('odonto') == "sim" ? 'checked' : ''}}> Sim
                                 </label>
-                                <label class="btn btn-outline-light" id="odonto_nao">
+                                <label class="btn btn-outline-light" id="odonto_nao" style="padding:0.21rem 0.75rem;">
                                     <input type="radio" name="odonto" id="odonto_radio_nao" value="nao" {{old('odonto') == "nao" ? 'checked' : ''}}> Não
                                 </label>
                                 
@@ -201,20 +207,21 @@
 
                 </div>
                <section>
-                    <h4>Faixas Etarias</h4>
+                    
                     <div class="errorfaixas"></div>
                     <!--COMEÇO Faixa Etaria-->
+                    <p style="font-size:1.4em;margin:0 0 5px 0;padding:0;">Faixas Etarias:</p>
                     <div class="d-flex">
-
+                        
                         <div  style="flex-basis:10%;">
-                            <span for="">0-18</span>
+                            <span for="">0-18:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-0-18" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-0-18" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" data-change="change_faixa_0_18" name="faixas_etarias[1]" value="{{isset($colunas) && in_array(1,$colunas) ? $faixas[array_search(1, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-0-18" class="text-center font-weight-bold flex-fill faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="d-flex justify-content-center plus" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="d-flex justify-content-center plus" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -223,14 +230,14 @@
 
 
                         <div  style="flex-basis:10%;margin:0 10px;">
-                            <span for="">19-23</span>
+                            <span for="">19-23:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-19-23" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-19-23" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em">－</span>
                                     </button>
                                     <input type="tel" data-change="change_faixa_19_23" name="faixas_etarias[2]" value="{{isset($colunas) && in_array(2,$colunas) ? $faixas[array_search(2, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-19-23" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="d-flex justify-content-center plus" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="d-flex justify-content-center plus" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em">＋</span>
                                     </button>
                                 </div>
@@ -238,14 +245,14 @@
                         </div>      
 
                         <div  style="flex-basis:10%;">
-                            <span for="">24-28</span>
+                            <span for="">24-28:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-24-28" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="d-flex justify-content-center minus" id="faixa-24-28" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em">－</span>
                                     </button>
                                     <input type="tel" data-change="change_faixa_24_28" name="faixas_etarias[3]" value="{{isset($colunas) && in_array(3,$colunas) ? $faixas[array_search(3, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-24-28" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em">＋</span>
                                     </button>
                                 </div>
@@ -253,14 +260,14 @@
                         </div>      
 
                         <div  style="flex-basis:10%;margin:0 10px;">
-                            <span for="">29-33</span>
+                            <span for="">29-33:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-29-33" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-29-33" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" data-change="change_faixa_29_33" name="faixas_etarias[4]" value="{{isset($colunas) && in_array(4,$colunas) ? $faixas[array_search(4, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-29-33" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="plus  d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus  d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -268,14 +275,14 @@
                         </div>      
 
                         <div  style="flex-basis:10%;">
-                            <span for="">34-38</span>
+                            <span for="">34-38:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-34-38" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-34-38" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" name="faixas_etarias[5]" data-change="change_faixa_34_38" value="{{isset($colunas) && in_array(5,$colunas) ? $faixas[array_search(5, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-34-38" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -287,14 +294,14 @@
                     
 
                         <div  style="flex-basis:10%;margin:0 10px;">
-                            <span for="">39-43</span>
+                            <span for="">39-43:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-39-43" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-39-43" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" name="faixas_etarias[6]" data-change="change_faixa_39_43" value="{{isset($colunas) && in_array(6,$colunas) ? $faixas[array_search(6, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-39-43" class="text-center font-weight-bold flex-fill w-25 faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" class="text-center" />
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -303,14 +310,14 @@
 
 
                         <div  style="flex-basis:10%;">
-                            <span for="">44-48</span>
+                            <span for="">44-48:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-44-48" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-44-48" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" name="faixas_etarias[7]" data-change="change_faixa_44_48" value="{{isset($colunas) && in_array(7,$colunas) ? $faixas[array_search(7, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-44-48" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -318,14 +325,14 @@
                         </div>      
 
                         <div  style="flex-basis:10%;margin:0 10px;">
-                            <span for="">49-53</span>
+                            <span for="">49-53:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-49-53" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-49-53" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" name="faixas_etarias[8]" data-change="change_faixa_49_53" value="{{isset($colunas) && in_array(8,$colunas) ? $faixas[array_search(8, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-49-53" class="text-center font-weight-bold faixas_etarias" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -333,14 +340,14 @@
                         </div>      
 
                         <div style="flex-basis:10%;margin:0 10px 0 0;">
-                            <span for="">54-58</span>
+                            <span for="">54-58:</span>
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
-                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-54-58" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center" id="faixa-54-58" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     <input type="tel" name="faixas_etarias[9]" data-change="change_faixa_54_58" value="{{isset($colunas) && in_array(9,$colunas) ? $faixas[array_search(9, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-54-58"  class="text-center font-weight-bold faixas_etarias d-flex" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -352,13 +359,13 @@
                             <div class="border border-white rounded">
                                 <div class="d-flex content">
 
-                                    <button type="button" class="minus d-flex justify-content-center"  id="faixa-59" style="border:none;background:transparent;width:30%;" aria-label="−" tabindex="0">
+                                    <button type="button" class="minus d-flex justify-content-center"  id="faixa-59" style="border:none;background:#FF0000;width:30%;" aria-label="−" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">－</span>
                                     </button>
                                     
                                     <input type="tel" data-change="change_faixa_59" name="faixas_etarias[10]" value="{{isset($colunas) && in_array(10,$colunas) ? $faixas[array_search(10, array_column($faixas, 'faixa_etaria_id'))]['faixa_quantidade'] : ''}}" id="faixa-input-59" class="text-center font-weight-bold faixas_etarias d-flex" style="border:none;width:40%;font-size:1.2em;" value="" step="1" min="0" />
                                     
-                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:transparent;width:30%;" aria-label="+" tabindex="0">
+                                    <button type="button" class="plus d-flex justify-content-center" style="border:none;background:#00FF00;width:30%;" aria-label="+" tabindex="0">
                                         <span class="text-white font-weight-bold" style="font-size:1.5em;">＋</span>
                                     </button>
                                 </div>
@@ -369,7 +376,7 @@
                 </section> 
              <div class="form-row mt-3">
                     <div class="col-12 d-flex rounded">
-                        <button class="botao d-flex rounded-lg align-self-center w-100 text-center justify-content-center py-2 text-navy" style="text-decoration:underline;font-weight:bold;font-size:1.8em;background-color:rgb(133,255,199);border:3px solid #FFF;">Mostrar Planos</button>
+                        <button class="botao d-flex rounded-lg align-self-center w-100 text-center justify-content-center text-navy" style="text-decoration:underline;font-weight:bold;font-size:1.6em;background-color:rgb(133,255,199);border:3px solid #FFF;">Mostrar Planos</button>
                     </div>
                 </div>
                 <div id="resultado">
@@ -435,6 +442,20 @@
    
     <script>
         $(function(){
+
+            $(".fa-bars").on('click',function(){
+                if($('body').hasClass('sidebar-collapse')) {
+                    $('body').removeClass('sidebar-mini');
+                    $('body').addClass('sidebar-hidden')
+                } else {
+                    $('body').removeClass('sidebar-hidden');
+                    $('body').addClass('sidebar-mini')
+                }
+            });
+
+
+
+
             $('#cpf').mask('000.000.000-00');       
             $('#cpf_financeiro').mask('000.000.000-00');       
             //$('#valor_adesao').mask("#.##0,00", {reverse: true});
@@ -733,7 +754,7 @@
                 
                 if($("#cpf").val() == "") {
                     $("#change_plano").val($(this).val())
-                    $('.errorcpf').html("<p class='alert alert-danger'>CPF e campo obrigatório<p>");
+                    $('.errorcpf').html("<p class='alert alert-danger'>CPF é obrigatório<p>");
                     return false;
                 } else {
                     $('.errorcpf').html("");
@@ -750,7 +771,7 @@
                 if($("#data_nascimento").val() == "") {
                     $("#change_plano").val($(this).val())
                     //$(this).val('');
-                    $('.errordatanascimento').html("<p class='alert alert-danger'>Data e campo obrigatório<p>");
+                    $('.errordatanascimento').html("<p class='alert alert-danger'>Data é obrigatório<p>");
                     return false;
                 } else {
                     $('.errordatanascimento').html("");
@@ -759,10 +780,40 @@
                 if($("#email").val() == "") {
                     $("#change_plano").val($(this).val())
                     //$(this).val('');
-                    $('.erroremail').html("<p class='alert alert-danger'>Email e campo obrigatório</p>")
+                    $('.erroremail').html("<p class='alert alert-danger'>Email é obrigatório</p>")
                     return false;
                 } else {
                     $(".erroremail").html("");
+                }
+
+                if($("#cidade").val() == "") {
+                    $("#change_plano").val($(this).val())
+                    //$(this).val('');
+                    $('.errorcidade').html("<p class='alert alert-danger'>Cidade é obrigatório<p>");
+                    return false;
+                } else {
+                    $('.change_cidade').val($("#cidade").val());
+                    $(".errorcidade").html("");
+                }
+
+                if($("#operadora").val() == "") {
+                    $("#change_plano").val($(this).val())
+                    //$(this).val('');
+                    $('.erroroperadora').html("<p class='alert alert-danger'>Operadora é obrigatório<p>");
+                    return false;
+                } else {
+                    $('#change_operadora').val($("#operadora").val());
+                    $(".erroroperadora").html("");
+                }
+
+                if($("#administradora").val() == "") {
+                    $("#change_plano").val($(this).val())
+                    //$(this).val('');
+                    $('.erroradministradora').html("<p class='alert alert-danger' style='font-size:0.8em;'>Administradora é obrigatório<p>");
+                    return false;
+                } else {
+                    $('#change_administradora').val($("#administradora").val());
+                    $('.erroradministradora').html("");
                 }
 
                 // if($("#responsavel_financeiro").val() == "") {
@@ -786,46 +837,29 @@
                 if($("#endereco_financeiro").val() == "") {
                     $("#change_plano").val($(this).val())
                     //$(this).val('');
-                    $('.errorenderefinanceiro').html("<p class='alert alert-danger'>Este e campo obrigatório</p>")
+                    $('.errorenderefinanceiro').html("<p class='alert alert-danger'>Endereço é obrigatório</p>")
                     return false;
                 } else {
                     $(".errorenderefinanceiro").html("");
                 }
 
-                if($("#cidade").val() == "") {
-                    $("#change_plano").val($(this).val())
+                if($("#plano").val() == "") {
+                    //$("#change_plano").val($(this).val())
                     //$(this).val('');
-                    $('.errorcidade').html("<p class='alert alert-danger'>Cidade e campo obrigatório<p>");
+                    $('.errorplano').html("<p class='alert alert-danger'>Plano é obrigatório</p>")
                     return false;
                 } else {
-                    $('.change_cidade').val($("#cidade").val());
-                    $(".errorcidade").html("");
+                    $(".errorplano").html("");
                 }
 
-                if($("#operadora").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    //$(this).val('');
-                    $('.erroroperadora').html("<p class='alert alert-danger'>Operadora e campo obrigatório<p>");
-                    return false;
-                } else {
-                    $('#change_operadora').val($("#operadora").val());
-                    $(".erroroperadora").html("");
-                }
+                
 
-                if($("#administradora").val() == "") {
-                    $("#change_plano").val($(this).val())
-                    //$(this).val('');
-                    $('.erroradministradora').html("<p class='alert alert-danger'>Administradora e campo obrigatório<p>");
-                    return false;
-                } else {
-                    $('#change_administradora').val($("#administradora").val());
-                    $('.erroradministradora').html("");
-                }
+                
 
                 if($("#codigo_externo").val() == "") {
                     $("#change_plano").val($(this).val())
                     //$(this).val('');
-                    $('.errorcodigo').html("<p class='alert alert-danger'>Código e campo obrigatório<p>");
+                    $('.errorcodigo').html("<p class='alert alert-danger'>Código é obrigatório<p>");
                     return false;
                 } else {
                     $('.errorcodigo').html('');

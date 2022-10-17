@@ -312,7 +312,7 @@ class ClienteController extends Controller
 
         $motivos = TarefaMotivoPerda::all();
 
-        return view('admin.pages.tarefas.juridica',[
+        return view('admin.pages.tarefas.juridico',[
             'qtd_atrasada' => $qtd_atrasada,
             'qtd_hoje' => $qtd_hoje,
             'qtd_semana' => $qtd_semana,
@@ -398,6 +398,8 @@ class ClienteController extends Controller
             ->where("visivel",1)
             ->whereDate('created_at','<',date('Y-m-d'))
             ->count();
+
+          
         
         $qtdHoje = Cliente::
             where("user_id",auth()->user()->id)
@@ -621,7 +623,7 @@ class ClienteController extends Controller
         $clientes = Cliente::
             where("user_id",auth()->user()->id)
             ->where("lead",1)
-            ->where('pessoa_fisica',1)
+            
             ->where('visivel',1)
             ->where("etiqueta_id","!=",3)
             ->whereDate("created_at","<",date('Y-m-d'))

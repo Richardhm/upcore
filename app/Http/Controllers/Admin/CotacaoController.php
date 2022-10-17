@@ -35,7 +35,6 @@ class CotacaoController extends Controller
 {
     public function orcamento($id)
     {
-        
         $cliente = Cliente::where("id",$id)->first();
         if(!$cliente) {
             return redirect()->back();
@@ -308,7 +307,9 @@ class CotacaoController extends Controller
         ->whereRaw("cotacao_id = ".$cot->id." AND ta.cidade_id = ".$cot->cidade_id)
         ->groupByRaw("ta.administradora_id,ta.faixa_etaria,ta.odonto")
         ->orderByRaw("ta.administradora_id,card,fe.nome")    
-        ->get();   
+        ->get();
+        
+    // return $planos;    
       
                
         $faixas = CotacaoFaixaEtaria::where("cotacao_id","=",$cot->id)
@@ -348,7 +349,6 @@ class CotacaoController extends Controller
 
     public function contrato($id)
     {
-       
         $cliente = Cliente::where("id",$id)->first();
         
         if(!$cliente) {

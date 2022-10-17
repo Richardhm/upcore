@@ -657,6 +657,19 @@
 @section('js')
     <script>
          $(document).ready(function(){
+            // $(".fa-bars").on('click',function(){
+                
+            //     if($('body').hasClass('sidebar-collapse')) {
+            //         $('body').removeClass('sidebar-mini');
+            //         $('body').addClass('sidebar-hidden')
+            //     } else {
+            //         $('body').removeClass('sidebar-hidden');
+            //         $('body').addClass('sidebar-mini')
+            //     }
+            // });
+
+
+
             $(".listartarefas").DataTable({
                 "language": {
                     "url": "{{asset('traducao/pt-BR.json')}}"

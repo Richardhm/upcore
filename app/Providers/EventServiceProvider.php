@@ -36,22 +36,20 @@ class EventServiceProvider extends ServiceProvider
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
 
             $event->menu->addIn('prospeccao', [
-                'text' => 'Prospecção',
-                'label'       => $event->qteLeeds(),
-                'label_color' => 'success',
-                'url' => 'admin/leads/prospeccao',
+                'text' => 'Pessoa Física',
+                'url' => 'admin/leads/pessoa_fisica',
                 'icon'    => 'fas fa-user',
-                'classes'  => 'text-white'
+                'classes'  => 'text-white',
+                'label'       => $event->qtdLeedsPF(),
+                'label_color' => 'success',    
                         
             ],[
-                
-                "text" => "Plantão de Vendas",
-                "url" => "",
-                'icon'    => 'fab fa-salesforce',
+                "text" => "Pessoa Jurídica",
+                "url" => "admin/leads/pessoa_juridica",
+                'icon'    => 'fas fa-user-tie',
                 'classes'  => 'text-white',
-                'label'       => 0,
-                'label_color' => 'danger',
-                    
+                'label'       => $event->qtdLeedsPJ(),
+                'label_color' => 'info',    
             ]);
 
             $event->menu->addIn('clientes',[

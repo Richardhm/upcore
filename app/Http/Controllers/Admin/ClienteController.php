@@ -385,45 +385,17 @@ class ClienteController extends Controller
     {
         $cidades = Cidade::all();
         $origens = Origem::all();
-        //$qtdAtrasado = Cliente::where("lead",1)->where("visivel",1)->whereDate("created_at","<",date('Y-m-d'))->count();
-        //$qtdHoje = Cliente::where("lead",1)->where("visivel",1)->whereDate('created_at',"=",date('Y-m-d'))->count();
-        //$qtdSemana = Cliente::where("lead",1)->where("visivel",1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();
-        //$qtdMes = Cliente::where("lead",1)->where("visivel",1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
-        $qtdTotal = Cliente::where("lead",1)->where("visivel",1)->count();
+        $qtdTotal = Cliente::where("lead",1)->where("visivel",1)->where('pessoa_fisica',1)->count();
         
-        $qtdAtrasado = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('lead',1)
-            ->where("etiqueta_id","!=",3)
-            ->where("visivel",1)
-            ->whereDate('created_at','<',date('Y-m-d'))
-            ->count();
+        $qtdAtrasado = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("pessoa_fisica",1)->where("visivel",1)->whereDate('created_at','<',date('Y-m-d'))->count();
+        $qtdHoje = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("pessoa_fisica",1)->where("visivel",1)->whereDate('created_at','=',date('Y-m-d'))->count();    
+        $qtdSemana = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("pessoa_fisica",1)->where("visivel",1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();        
+        $qtdMes = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("pessoa_fisica",1)->where("visivel",1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();        
 
-          
-        
-        $qtdHoje = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('lead',1)
-            ->where("etiqueta_id","!=",3)
-            ->where("visivel",1)
-            ->whereDate('created_at','=',date('Y-m-d'))
-            ->count();    
+        $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_fisica",1)->count();
+        $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_fisica",1)->count();
+        $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_fisica",1)->count();
 
-        $qtdSemana = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('lead',1)
-            ->where("etiqueta_id","!=",3)
-            ->where("visivel",1)
-            ->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")
-            ->count();        
-
-        $qtdMes = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('lead',1)
-            ->where("etiqueta_id","!=",3)
-            ->where("visivel",1)
-            ->whereRaw("MONTH(created_at) = MONTH(NOW())")
-            ->count();        
 
 
 
@@ -434,9 +406,48 @@ class ClienteController extends Controller
             "qtdHoje" => $qtdHoje,
             "qtdSemana" => $qtdSemana,
             "qtdMes" => $qtdMes,
-            "qtdTotal" => $qtdTotal
+            "qtdTotal" => $qtdTotal,
+            "qtdProps" => $qtdProps,
+            "qtdVendas" => $qtdVendas,
+            "qtdAtendimento" => $qtdAtendimento
         ]);   
     }
+
+    public function leadsPJ()
+    {
+        $cidades = Cidade::all();
+        $origens = Origem::all();
+        $qtdTotal = Cliente::where("lead",1)->where("visivel",1)->where('pessoa_juridica',1)->count();
+        
+        $qtdAtrasado = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','<',date('Y-m-d'))->count();
+        $qtdHoje = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','=',date('Y-m-d'))->count();    
+        $qtdSemana = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();        
+        $qtdMes = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();        
+
+        $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_juridica",1)->count();
+        $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_juridica",1)->count();
+        $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_juridica",1)->count();
+
+
+
+
+        return view('admin.pages.clientes.juridico',[
+            "cidades" => $cidades,
+            "origem" => $origens,
+            "qtdAtrasado" => $qtdAtrasado,
+            "qtdHoje" => $qtdHoje,
+            "qtdSemana" => $qtdSemana,
+            "qtdMes" => $qtdMes,
+            "qtdTotal" => $qtdTotal,
+            "qtdProps" => $qtdProps,
+            "qtdVendas" => $qtdVendas,
+            "qtdAtendimento" => $qtdAtendimento
+        ]);   
+    }
+
+
+
+
 
     public function prospeccaoExportar(Request $request)
     {
@@ -463,6 +474,7 @@ class ClienteController extends Controller
         $cliente->nome = $request->nome;
         $cliente->pessoa_fisica = 1;
         $cliente->pessoa_juridica = 0;
+        $cliente->lead_id = 2;
         $cliente->ultimo_contato = date("Y-m-d");
         $cliente->email = $request->email;
         if($cliente->save()) {
@@ -481,6 +493,7 @@ class ClienteController extends Controller
         $cliente->cnpj = $request->cnpj;
         $cliente->origem_id = 1;
         $cliente->etiqueta_id = 1;
+        $cliente->lead_id = 2;
         $cliente->telefone = $request->telefone;
         $cliente->telefone_empresa = (!empty($request->telefone_empresa) ? $request->telefone_empresa : null);
         $cliente->pessoa_fisica = 0;
@@ -501,9 +514,115 @@ class ClienteController extends Controller
         
     }
 
-    public function prospeccaoLeitura()
+  
+
+    // public function leadPF()
+    // {
+    //     $clientes = Cliente::
+    //         where("user_id",auth()->user()->id)
+    //         ->where('pessoa_fisica',1)
+    //         ->where("lead",1)
+    //         ->with('origem')
+    //         ->orderBy("id","DESC")
+    //         ->get();
+    //     return $clientes;
+    // }
+
+    public function leadPlantaoVendasPF()
     {
-        $clientes = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->with('origem')->get();
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_fisica',1)
+            ->where("lead",1)
+            ->where("lead_id",1)
+            ->with('origem')
+            ->orderBy("created_at","ASC")
+            ->get();
+
+            
+
+        return $clientes;
+    }
+
+    public function leadPlantaoVendasPJ()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_fisica',1)
+            ->where("lead",1)
+            ->where("lead_id",1)
+            ->with('origem')
+            ->orderBy("created_at","ASC")
+            ->get();
+
+            
+
+        return $clientes;
+    }
+
+    public function leadProspeccaoPF()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_fisica',1)
+            ->where("lead",1)
+            ->where("lead_id",2)
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            ->with('origem')
+            ->get();
+
+       
+        return $clientes;
+    }
+
+    public function leadProspeccaoPJ()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_juridica',1)
+            ->where("lead",1)
+            ->where("lead_id",2)
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            ->with('origem')
+            ->get();
+
+       
+        return $clientes;
+    }
+
+    public function leadAtendimentoPF()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_fisica',1)
+            ->where("lead",1)
+            ->where("lead_id",3)
+            ->with('origem')
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), updated_at)>0,concat(DATEDIFF(NOW(), updated_at),' dias'),TIMEDIFF(now(), updated_at)) AS tempo")
+            ->with('origem')
+            ->get();
+        return $clientes;
+    }
+
+    public function leadAtendimentoPJ()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_juridica',1)
+            ->where("lead",1)
+            ->where("lead_id",3)
+            ->with('origem')
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), updated_at)>0,concat(DATEDIFF(NOW(), updated_at),' dias'),TIMEDIFF(now(), updated_at)) AS tempo")
+            ->with('origem')
+            ->get();
         return $clientes;
     }
 
@@ -562,12 +681,58 @@ class ClienteController extends Controller
             where("user_id",auth()->user()->id)
             ->where("lead",1)
             ->where("visivel",1)
-            
+            ->where('pessoa_fisica',1)
             ->where("etiqueta_id","!=",3)
             ->whereDate('created_at',"=",date('Y-m-d'))
+            ->orderBy("created_at","ASC")
+            
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            
         ->with('origem')->get();
         return $clientes;                
     } 
+
+    public function getClientesParaHojeProspeccaoPJ(Request $request)
+    {
+        $clientes = Cliente::
+            where("user_id",auth()->user()->id)
+            ->where("lead",1)
+            ->where("visivel",1)
+            ->where('pessoa_juridica',1)
+            ->where("etiqueta_id","!=",3)
+            ->whereDate('created_at',"=",date('Y-m-d'))
+            ->orderBy("created_at","ASC")
+            
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            
+        ->with('origem')->get();
+        return $clientes;                
+    } 
+
+
+    public function mudarStatusLeads(Request $request) 
+    {
+        $cliente = Cliente::where("id",$request->id)->first();
+        $cliente->lead_id = 3;
+        $cliente->save();
+        $atendimento = Cliente::where("lead_id",3)->where('pessoa_fisica',1)->where('lead',1)->count();
+        $planta_vendas = Cliente::where("lead_id",1)->where('pessoa_fisica',1)->where('lead',1)->count();
+        $prospeccao = Cliente::where("lead_id",2)->where('pessoa_fisica',1)->where('lead',1)->count();
+        return ["atedimento"=>$atendimento,"plantao_vendas"=>$planta_vendas,"prospeccao"=>$prospeccao];
+    }
+
+    public function mudarStatusLeadsPJ(Request $request) 
+    {
+        $cliente = Cliente::where("id",$request->id)->first();
+        $cliente->lead_id = 3;
+        $cliente->save();
+        $atendimento = Cliente::where("lead_id",3)->where('pessoa_juridica',1)->where('lead',1)->count();
+        $planta_vendas = Cliente::where("lead_id",1)->where('pessoa_juridica',1)->where('lead',1)->count();
+        $prospeccao = Cliente::where("lead_id",2)->where('pessoa_juridica',1)->where('lead',1)->count();
+        return ["atedimento"=>$atendimento,"plantao_vendas"=>$planta_vendas,"prospeccao"=>$prospeccao];
+    }
 
 
 
@@ -623,11 +788,32 @@ class ClienteController extends Controller
         $clientes = Cliente::
             where("user_id",auth()->user()->id)
             ->where("lead",1)
-            
+            ->where('pessoa_fisica',1)
             ->where('visivel',1)
             ->where("etiqueta_id","!=",3)
             ->whereDate("created_at","<",date('Y-m-d'))
-        ->with('origem')->get();
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            ->with('origem')
+            ->get();
+        return $clientes;            
+    }
+
+    public function getClienteAtrasadasAjaxProspeccaoPJ(Request $request)
+    {
+        $clientes = Cliente::
+            where("user_id",auth()->user()->id)
+            ->where("lead",1)
+            ->where('visivel',1)
+            ->where('pessoa_juridica',1)
+            ->where("etiqueta_id","!=",3)
+            ->whereDate("created_at","<",date('Y-m-d'))
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            ->with('origem')
+            ->get();
         return $clientes;            
     }
 
@@ -682,12 +868,35 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::
         where("user_id",auth()->user()->id)
-        
+        ->where('pessoa_fisica',1)
         ->where("etiqueta_id","!=",3)
         ->where("lead",1)
         ->where('visivel',1)
         ->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")
-        ->with('origem')->get();
+        ->orderBy("created_at","ASC")
+        ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+        ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+        
+        ->with('origem')
+        ->get();
+        return $clientes;      
+    }
+
+    public function listarClientesSemanaAjaxProspeccaoPJ(Request $request)
+    {
+        $clientes = Cliente::
+        where("user_id",auth()->user()->id)
+        ->where('pessoa_fisica',1)
+        ->where("etiqueta_id","!=",3)
+        ->where("lead",1)
+        ->where('visivel',1)
+        ->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")
+        ->orderBy("created_at","ASC")
+        ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+        ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+        
+        ->with('origem')
+        ->get();
         return $clientes;      
     }
 
@@ -737,12 +946,33 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::
             where("user_id",auth()->user()->id)
-            
+            ->where('pessoa_fisica',1)
             ->where("etiqueta_id","!=",3)
             ->where("lead",1)
             ->where('visivel',1)
             ->whereRaw("MONTH(created_at) = MONTH(NOW())")
-            ->with('origem')->get();
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            ->with('origem')
+            ->get();
+        return $clientes; 
+    }
+
+    public function listarClienteMesAjaxProspeccaoPJ(Request $request)
+    {
+        $clientes = Cliente::
+            where("user_id",auth()->user()->id)
+            ->where('pessoa_juridica',1)
+            ->where("etiqueta_id","!=",3)
+            ->where("lead",1)
+            ->where('visivel',1)
+            ->whereRaw("MONTH(created_at) = MONTH(NOW())")
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
+            ->with('origem')
+            ->get();
         return $clientes; 
     }
 

@@ -4,8 +4,8 @@
 @section('plugins.Toastr', true)
 @section('content_header')
     <div class="d-flex align-items-center">
-        <h4 class="text-white">Leads Pessoa Física</h4>     
-        <i class="fas fa-user-plus text-white ml-3 cad" data-toggle="modal" data-target="#cadastrarPessoaFisica"></i> 
+        <h4 class="text-white">Leads Pessoa Juridica</h4>     
+        <i class="fas fa-user-plus text-white ml-3 cad" data-toggle="modal" data-target="#cadastrarPessoaJuridica"></i> 
     </div>
     
 @stop
@@ -384,7 +384,7 @@
                     "url": "{{asset('traducao/pt-BR.json')}}"
                 },
                 ajax: {
-                    "url":"{{ route('leads.prospeccao.leadPlantaoVendasPF') }}",
+                    "url":"{{ route('leads.prospeccao.leadPlantaoVendasPJ') }}",
                     "dataSrc": ""
                 },
                 "lengthMenu": [10,20,30,40,100],
@@ -499,7 +499,7 @@
                 $(".todos").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Atrasado</h4>");
-                ta.ajax.url("{{ route('cliente.getClienteAtrasadasAjaxProspeccao') }}").load();
+                ta.ajax.url("{{ route('cliente.getClienteAtrasadasAjaxProspeccaoPJ') }}").load();
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -512,7 +512,7 @@
                 $(".atrasada").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Hoje</h4>");
-                ta.ajax.url("{{ route('cliente.getClientesParaHojeProspeccao') }}").load();
+                ta.ajax.url("{{ route('cliente.getClientesParaHojeProspeccaoPJ') }}").load();
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -529,7 +529,7 @@
                 // $("li").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Semana</h4>");
-                ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxProspeccao') }}").load();
+                ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxProspeccaoPJ') }}").load();
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -545,7 +545,7 @@
                 $(".todos").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Mês</h4>");
-                ta.ajax.url("{{ route('cliente.listarClienteMesAjaxProspeccao') }}").load();
+                ta.ajax.url("{{ route('cliente.listarClienteMesAjaxProspeccaoPJ') }}").load();
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -561,7 +561,7 @@
                 $(".mes").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Todos</h4>");
-                ta.ajax.url("{{ route('cliente.listarClienteMesAjaxProspeccao') }}").load();
+                ta.ajax.url("{{ route('cliente.listarClienteMesAjaxProspeccaoPJ') }}").load();
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -657,7 +657,7 @@
                 $(".mes").removeClass('fundo');
                 $(".todos").removeClass('fundo');
                 $("#title").html("<h4>Prospecção</h4>");
-                ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPF') }}").load();
+                ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPJ') }}").load();
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -674,7 +674,7 @@
                 $(".semana").removeClass('fundo');
                 $(".mes").removeClass('fundo');
                 $(".todos").removeClass('fundo');
-                ta.ajax.url("{{ route('leads.prospeccao.leadPlantaoVendasPF') }}").load();
+                ta.ajax.url("{{ route('leads.prospeccao.leadPlantaoVendasPJ') }}").load();
                 $("#title").html("<h4>Plantão de Vendas</h4>");
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -694,7 +694,7 @@
                 $(".semana").removeClass('fundo');
                 $(".mes").removeClass('fundo');
                 $(".todos").removeClass('fundo');
-                ta.ajax.url("{{ route('leads.prospeccao.leadAtendimentoPF') }}").load();
+                ta.ajax.url("{{ route('leads.prospeccao.leadAtendimentoPJ') }}").load();
                 $("#title").html("<h4>Atendimento Iniciado</h4>");
                 $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -778,6 +778,10 @@
                             $("#telefone_empresa").val('');
                             $("#email_empresa").val('');
                             $('#cadastrarPessoaJuridica').modal('hide');
+                            $('div[class*="atendimento_inciado"]').removeClass('fundo');
+                            $('div[class*="plantao_vendas"]').removeClass('fundo');
+                            $('div[class*="prospeccao"]').addClass('fundo');
+                            ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPJ') }}").load();
                         }
                     }
                 });
@@ -886,7 +890,7 @@
 
             function mudarStatus(id) {
                 $.ajax({
-                    url:"{{route('leads.prospeccao.mudarStatus')}}",
+                    url:"{{route('leads.prospeccao.mudarStatusPJ')}}",
                     method:"POST",
                     data:"id="+id,
                     success:function(res) {
@@ -897,7 +901,7 @@
                         $('div[class*="prospeccao"]').removeClass('fundo');
                         $('div[class*="plantao_vendas"]').removeClass('fundo');    
                         $('div[class*="atendimento_inciado"]').addClass('fundo');
-                        ta.ajax.url("{{ route('leads.prospeccao.leadAtendimentoPF') }}").load();
+                        ta.ajax.url("{{ route('leads.prospeccao.leadAtendimentoPJ') }}").load();
                     }
                 }); 
             }

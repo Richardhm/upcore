@@ -21,6 +21,7 @@ class CreateClientesTable extends Migration
             $table->unsignedBigInteger('cidade_id');
             $table->unsignedBigInteger('etiqueta_id');
             $table->unsignedBigInteger('origem_id')->nullable();
+            $table->unsignedBigInteger('lead_id')->nullable();
             $table->boolean('lead')->default(1);
             $table->boolean('visivel')->default(1);
             $table->string("nome");
@@ -53,6 +54,7 @@ class CreateClientesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
             $table->foreign('etiqueta_id')->references('id')->on('etiquetas')->onDelete("cascade");
             $table->foreign('origem_id')->references('id')->on('origems')->onDelete("cascade");
+            $table->foreign('lead_id')->references('id')->on('leads')->onDelete("cascade");
 
 
             $table->timestamps();

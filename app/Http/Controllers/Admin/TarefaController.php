@@ -367,6 +367,7 @@ class TarefaController extends Controller
         
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->ultimo_contato = date("Y-m-d");
+        $cliente->star = $request->star;
         $cliente->save();
         
         
@@ -374,7 +375,7 @@ class TarefaController extends Controller
 
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
-            
+        $data['visivel'] = 1;    
         
 
 

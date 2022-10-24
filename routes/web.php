@@ -221,6 +221,11 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
     Route::post("/leads/mudarStatusLeads","App\Http\Controllers\Admin\ClienteController@mudarStatusLeads")->name('leads.prospeccao.mudarStatus');
     Route::post("/leads/mudarStatusLeadsPJ","App\Http\Controllers\Admin\ClienteController@mudarStatusLeadsPJ")->name('leads.prospeccao.mudarStatusPJ');
+
+    // Route::post("/leads/")
+
+
+
     //Route::get("/leads/lerdados","App\Http\Controllers\Admin\ClienteController@leadPF")->name('leads.prospeccao.ler');
     //Route::get("/leads/lerdados","App\Http\Controllers\Admin\ClienteController@leadPF")->name('leads.prospeccao.ler');
     

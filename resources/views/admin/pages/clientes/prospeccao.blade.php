@@ -64,32 +64,63 @@
             <ul style="margin:0px;padding:0px;">
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
-                    <span class="ml-2">Atrasadas</span>
-                    <span class="mr-2">{{$qtdAtrasado}}</span>
+                    <span class="ml-2">Atrasadas</span>                     
+                    @if($qtdAtrasado == 0)
+                        <span class="badge badge-danger  mr-1" id="quantidade_atrasadas">{{$qtdAtrasado}}</span>
+                    @else
+                        <span class="badge badge-info  mr-1" id="quantidade_atrasadas">{{$qtdAtrasado}}</span>
+                    @endif
                 </a>
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 hoje">
                     <span class="ml-2">Hoje</span>
-                    <span class="mr-2">{{$qtdHoje}}</span>
+                    @if($qtdHoje == 0)
+                        <span class="badge badge-danger  mr-1" id="quantidade_hoje">{{$qtdHoje}}</span>
+                    @else
+                        <span class="badge badge-info  mr-1" id="quantidade_hoje">{{$qtdHoje}}</span>
+                    @endif
                 </a>    
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 semana">
                     <span class="ml-2">Semana</span>
-                    <span class="mr-2">{{$qtdSemana}}</span>
+                    @if($qtdSemana == 0)
+                        <span class="badge badge-danger  mr-1" id="quantidade_hoje">{{$qtdSemana}}</span>
+                    @else
+                        <span class="badge badge-info  mr-1" id="quantidade_hoje">{{$qtdSemana}}</span>
+                    @endif
                 </a>
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 mes">
                     <span class="ml-2">Mês</span>
-                    <span class="mr-2">{{$qtdMes}}</span>
+
+                    @if($qtdMes == 0)
+                        <span class="badge badge-danger  mr-1" id="quantidade_hoje">{{$qtdMes}}</span>
+                    @else
+                        <span class="badge badge-info  mr-1" id="quantidade_hoje">{{$qtdMes}}</span>
+                    @endif
+
+
+
+                   
                 </a>
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 todos">
                     <span class="ml-2">Total Leads</span>
-                    <span class="mr-2">{{$qtdTotal}}</span>
+
+                    @if($qtdTotal == 0)
+                        <span class="badge badge-danger  mr-1" id="quantidade_hoje">{{$qtdTotal}}</span>
+                    @else
+                        <span class="badge badge-info  mr-1" id="quantidade_hoje">{{$qtdTotal}}</span>
+                    @endif
+
+
+
+
+                    
                 </a>
             </li>
         </ul>
@@ -114,6 +145,7 @@
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Email</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -152,7 +184,12 @@
         <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white exportar" style="background-color:rgba(0,0,0,0.4);">
             <i class="fas fa-file-csv fa-lg"></i>
             Exportar
-        </a>           
+        </a>       
+        
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white editar" style="background-color:rgba(0,0,0,0.4);">
+            <i class="far fa-edit"></i>
+            Editar
+        </a>       
         
     </div>
     
@@ -328,7 +365,7 @@
         .green-color {color:green;}    
         .header {background-color:red;}
         #title {width:400px;height:20px;color:#FFF;display:block;}
-        .textoforte {font-weight: bold;}
+        .textoforte {background-color:rgba(255,255,255,0.5);color:black;}
     </style>
 @stop
 
@@ -342,12 +379,9 @@
 
             $("#checkbox-pai").on('change',function(){
                 if($(this).is(":checked")) {
-                    // $('.marcar_cliente').attr("checked",'checked');
-                    // $('.marcar_cliente').removeAttr("checked");
                     $("#marcar_cliente").prop('checked', true); 
                     $(".marcar_cliente").prop('checked', true); 
                     $('input[type="checkbox"]').prop("checked",true);
-                    // $('#marcar_cliente').removeAttr("checked",false);
                     $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                     $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                     $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -359,7 +393,6 @@
                     $(".marcar_cliente").prop('checked', false); 
                     $('input[type="checkbox"]').prop("checked",false);
                     $('#marcar_cliente').removeAttr("checked",false);
-
                     $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
                     $('tr').removeClass('textoforte'); 
                 }
@@ -403,21 +436,40 @@
                     {data:"nome",name:"nome"},
                     {data:"telefone",name:"telefone"},
                     {data:"email",name:"email"},
+                    {data:"created_at",name:"status"},
                 ],
-                "columnDefs": [ {
-                        "targets": 0,
-                        "createdCell": function (td, cellData, rowData, row, col) {
-                            $(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
-                        }},
+                "columnDefs": [ 
                         {
-                        "targets": 2,
-                        "createdCell": function (td, cellData, rowData, row, col) {
-                            //console.log(row);
-                            let datas = cellData.split("T")[0]
-                            let alvo = datas.split("-").reverse().join("/")
-                            $(td).html(alvo);
-                        }
-                    }],
+                            "targets": 0,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                $(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
+                            }    
+                        },
+                        {
+                            "targets": 2,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                //console.log(row);
+                                let datas = cellData.split("T")[0]
+                                let alvo = datas.split("-").reverse().join("/")
+                                $(td).html(alvo);
+                            }    
+                        },
+                        {
+                            "targets": 7,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                //console.log(cellData);
+                                const now = new Date(Date.now()).toISOString().split("T")[0];    
+                                let criacao = new Date(cellData.split("T")[0]).toISOString().split("T")[0];
+                                if(criacao == now) {
+                                    $(td).html('<span class="badge badge-success" style="width:90%;">Hoje</span>')
+                                    
+                                } else {
+                                    $(td).html('<span class="badge badge-danger" style="width:90%;">Atrasado</span>')
+                                }
+
+                            }
+                        }    
+                    ],
 
                 rowCallback: function (row, data) {
                     if ( $(row).hasClass('odd') ) {
@@ -426,23 +478,21 @@
                         $(row).addClass('alvo');
                     }
                 },
-                "createdRow":function(row, data, dataIndex) {
-                    const now = new Date(Date.now()).toISOString().split("T")[0];    
-                    let criacao = new Date(data.created_at.split("T")[0]).toISOString().split("T")[0];
-                    if(criacao == now) {
-                        $(row).addClass('green-color');
-                    } else if(criacao < now) {
-                        $(row).addClass('red-color');
-                    } else {
+                // "createdRow":function(row, data, dataIndex) {
+                //     const now = new Date(Date.now()).toISOString().split("T")[0];    
+                //     let criacao = new Date(data.created_at.split("T")[0]).toISOString().split("T")[0];
+                //     if(criacao == now) {
+                //         $(row).addClass('green-color');
+                //     } else if(criacao < now) {
+                //         $(row).addClass('red-color');
+                //     } else {
 
-                    }
-                },
+                //     }
+                // },
                 "initComplete": function( settings, json ) {
                     $('#title').html("<h4>Plantão de Vendas</h4>");
                 }
             });
-
-
 
             $('table').on('click', 'tbody tr', function (e) {
                 if(!$(e.target).hasClass('marcar_cliente')) {
@@ -450,46 +500,25 @@
                     let telefone = $(this).closest('tr').find("td:eq(5)").text().replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","");
                     let email = $(this).closest('tr').find("td:eq(6)").text();
                     let marcados = $(this).closest("table").find("input[type=checkbox]:checked");
-                
-                
                     if($(this).closest('tr').find('.marcar_cliente').prop('checked')) {
                         $(this).closest('tr').find('.marcar_cliente').prop('checked',false);
                         $(this).closest('tr').removeClass('textoforte');
-
                         ta.$('tr').removeClass('textoforte');
-                        ta.$('tr').find('.marcar_cliente').prop('checked',false);
-                    
+                        ta.$('tr').find('.marcar_cliente').prop('checked',false);                   
                         $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                         $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
-                    $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
-
-
-
-
-                } else {
-                    ta.$('tr').removeClass('textoforte');
-                    ta.$('tr').find('.marcar_cliente').prop('checked',false);
-                    
-                    $(this).closest('tr').find('.marcar_cliente').prop('checked',true);
-                    $(this).closest('tr').addClass('textoforte');
-                    $(".orcamento").attr('style','cursor:pointer').attr("href","/admin/cotacao/orcamento/"+id);
-                    $(".whatsapp").attr('style','cursor:pointer').attr('data-id',id).attr("href","https://api.whatsapp.com/send?phone=55"+telefone).attr('target',"_blank");
-                    $(".email").attr('style','cursor:pointer').attr('data-id',id).attr("href","mailto:"+email);                
+                        $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                    } else {
+                        ta.$('tr').removeClass('textoforte');
+                        ta.$('tr').find('.marcar_cliente').prop('checked',false);
+                        $(this).closest('tr').find('.marcar_cliente').prop('checked',true);
+                        $(this).closest('tr').addClass('textoforte');
+                        $(".orcamento").attr('style','cursor:pointer').attr("href","/admin/cotacao/orcamento/"+id);
+                        $(".whatsapp").attr('style','cursor:pointer').attr('data-id',id).attr("href","https://api.whatsapp.com/send?phone=55"+telefone).attr('target',"_blank");
+                        $(".email").attr('style','cursor:pointer').attr('data-id',id).attr("href","mailto:"+email);                
+                    }
                 }
-
-
-
-
-
-
-                }
-               
-                
-
-
             });
-
-
 
             $(".atrasada").on('click',function(){
                 $("div").removeClass('fundo');
@@ -526,7 +555,6 @@
                 $(".hoje").removeClass('fundo');
                 $(".mes").removeClass('fundo');
                 $(".todos").removeClass('fundo');
-                // $("li").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Semana</h4>");
                 ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxProspeccao') }}").load();
@@ -569,7 +597,6 @@
                 return false;
             });
 
-
             $("form[name='cadastrar_pessoa_fisica']").on('submit',function(){
                 let form = $(this);
                 $.ajax({
@@ -611,7 +638,7 @@
                     success:function(res) {
                         if(res != "error") {
                             ta.ajax.reload();
-                            toastr["success"](res + " cadastrado com sucesso")
+                            toastr["success"](res.nome + " cadastrado com sucesso")
                             toastr.options = {
                                 "closeButton": false,
                                 "debug": false,
@@ -639,8 +666,16 @@
                             $('div[class*="plantao_vendas"]').removeClass('fundo');
                             $('div[class*="prospeccao"]').addClass('fundo');
                             ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPF') }}").load();
+                            $("#qtdVendas").html(res.quantidade_plantao_vendas);
+                            $("#prospeccao").html(res.quantidade_prospeccao);
+                            $("#qtdAtendimento").html(res.quantidade_atendimento_iniciado);
+                            $("#quantidade_atrasadas").html(res.atrasada);
+                            $("#quantidade_hoje").html(res.hoje);
+                            $("#quantidade_semana").html(res.semana);
+                            $("#quantidade_mes").html(res.mes);
+                            $("#quantidade_total").html(res.mes);
                         } else {
-
+                            
                         }
                     }
                 });
@@ -702,8 +737,6 @@
                 $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
                 return false;
             });
-
-
 
             $("form[name='cadastrar_pessoa_jurica']").on('submit',function(){
                 let form = $(this);
@@ -802,7 +835,6 @@
             //     });
             // }    
 
-
             $("body").on('change','input[name="marcar_cliente"]',function(){
                 let marcados = $('input[type=checkbox]:checked').length;
                 if(marcados == 1) {
@@ -812,12 +844,14 @@
                     let email = data.closest('tr').find("td:eq(6)").text();
                     $(".orcamento").attr('style','cursor:pointer').attr("href","/admin/cotacao/orcamento/"+id);
                     $(".whatsapp").attr('style','cursor:pointer').attr('data-id',id).attr("href","https://api.whatsapp.com/send?phone=55"+telefone).attr('target',"_blank");
-                    $(".email").attr('style','cursor:pointer').attr('data-id',id).attr("href","mailto:"+email);                 
+                    $(".email").attr('style','cursor:pointer').attr('data-id',id).attr("href","mailto:"+email);
+                    $(".editar").attr('style','cursor:pointer').attr("data-id",id);                 
                 } else {
                     $('tr').removeClass('textoforte'); 
                     $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                     $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                     $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                    $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").attr('data-id',"");
                 }            
                 if(marcados >= 1) {
                     $(".exportar").attr('style','cursor:pointer');
@@ -826,9 +860,6 @@
                 }
 
                 // selecionados();
-
-
-
 
             });
 
@@ -883,6 +914,12 @@
                 let id = $(this).attr('data-id');
                 mudarStatus(id)
             });
+
+            
+       
+
+
+
 
             function mudarStatus(id) {
                 $.ajax({

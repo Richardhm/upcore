@@ -1,68 +1,12 @@
 @extends('adminlte::page')
 @section('title', 'Clientes Pessoa FÍSICA')
 @section('plugins.Datatables', true)
+@section('plugins.Stars', true)
 @section('content_header')
-    <h4 class="text-white">GERENCIAMENTO CLIENTES PESSOA(S) FÍSICA(S)</h4>  
+    <h4 class="text-white">CLIENTES PESSOA FÍSICA</h4>  
 @stop
 @section('content')
 <section class="d-flex justify-content-between" style="flex-wrap: wrap;">
-
-@section('right-sidebar')
-
-    <!-- <a href="#" data-widget="control-sidebar">Toggle Control Sidebar</a>     -->
-@stop
-<aside class="control-sidebar" style="background: linear-gradient(90deg, rgb(0, 29, 54), rgb(12, 101, 168));">
-<div class="d-flex flex-column align-items-center justify-content-center">
-
-        <a href="" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
-            <i class="fas fa-phone fa-lg"></i>
-            Nova Tarefa
-            
-        </a>
-        
-        <a href="" data-orcamento class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
-            <i class="fas fa-phone fa-lg"></i>
-            Orçamento
-            
-        </a>
-
-        <a href="" data-contrato class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
-            <i class="fas fa-phone fa-lg"></i>
-            Contrato
-        </a>
-
-        <a href="" data-perda data-toggle="modal"  data-target="#motivoDaPerda" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none;">
-            <i class="fas fa-phone fa-lg"></i>
-            Perda
-        </a>
-
-        
-        <a href="" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
-            <i class="fas fa-phone fa-lg"></i>
-            Ligar
-        </a>           
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white whatsapp" style="background-color:rgba(0,0,0,0.4);">
-            <i class="fab fa-whatsapp fa-lg"></i>
-            Whatsapp
-        </a>           
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white email" style="background-color:rgba(0,0,0,0.4);">
-            <i class="far fa-envelope fa-lg"></i>    
-            Email
-        </a>           
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
-            <i class="fas fa-sms fa-lg"></i>
-            SMS
-        </a>           
-       
-        
-    </div>
-</aside>
-
-@section('content_top_nav_right')
-
-    
-    <a href="#" data-widget="control-sidebar" class="d-flex align-items-center"><i class="fas fa-cogs"></i></a>
-@stop
 
 
 
@@ -169,7 +113,7 @@
 <!--COLUNA RIGHT-->
 <div class="d-flex mr-1" style="flex-basis:39%;flex-wrap: wrap;height:95vh;">
     <!---FORM--->
-    <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;height:240px;">
+    <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;height:225px;">
         <form action="">
 
             <div class="form-row" style="margin-right: 0;margin-left:0;">
@@ -181,6 +125,10 @@
                     <span class="text-white">Cidade:</span>
                     <input type="text" name="cidade" id="cidade" class="form-control form-control-sm" readonly>
                 </div>
+                <div class="col">
+                    <span class="text-white">Status:</span>
+                    <input type="text" name="status" id="status" class="form-control form-control-sm" readonly>
+                </div>
             </div>
 
             <div class="form-row" style="margin-right: 0;margin-left:0;">
@@ -191,6 +139,10 @@
                 <div class="col">
                     <span class="text-white">Email:</span>
                     <input type="text" name="email" id="email" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Quantidade de Vidas:</span>
+                    <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control form-control-sm" readonly>
                 </div>
             </div>
 
@@ -217,15 +169,15 @@
                 </div>    
             </div>
 
-            <div style="display:flex;flex-basis:100%;">
-                <div style="flex-basis:48%;margin-right:2%;margin-left:5px;">
-                    <span class="text-white">Quantidade de Vidas:</span>
-                    <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control form-control-sm" readonly>
-                </div>
-                <div style="flex-basis:48%;">
-                    <span class="text-white">Status:</span>
-                    <input type="text" name="status" id="status" class="form-control form-control-sm" readonly>
-                </div>
+            <div class="grupo-botoes">
+                <a href="#" data-tarefa class="ml-1">Nova Tarefa</a>
+                <a href="#" data-ligar class="mx-2">Ligar</a>
+                <a href="#" data-whatsapp>Whatsapp</a>
+                <a href="#" data-email class="mx-2">Email</a>
+                <a href="#" data-orcamento class="mr-2">Orçamento</a>
+                <a href="#" data-contrato>Contrato</a>
+                
+               
             </div>
 
             <!-- <div class="d-flex">
@@ -287,29 +239,46 @@
                         <option value="{{$t->id}}">{{$t->titulo}}</option>
                     @endforeach
                 </select>
+                <div id="error_titulo"></div>
             </div>
             <input type="hidden" name="cliente_id" id="cliente_id_cadastrado_aqui" />
             <div class="form-group">
                 <label for="" style="color:#FFF;">Data</label>
                 <input type="date" name="data" id="data" class="form-control">
-                @if($errors->has('data'))
-                    <p class="alert alert-danger">{{$errors->first('data')}}</p>
-                @endif
+                <div id="error_data"></div>    
             </div>
             <div class="form-group">
                 <label for="descricao" style="color:#FFF;">Descrição:</label>
                 <textarea name="descricao" id="descricao" class="form-control" rows="5"></textarea>
-                @if($errors->has('descricao'))
-                    <p class="alert alert-danger">{{$errors->first('descricao')}}</p>
-                @endif
+                <div id="error_descricao"></div>  
             </div>
+            <input type="hidden" name="star" id="star">
+            <div class="d-flex justify-content-center mb-3">
+                <div id="rateYo"></div>
+            </div>
+            <div id="error_star"></div>
+
+            <div class="text-center mx-auto text-center mb-3" style="width:95%;border-radius:10px;">
+                <div class="d-flex flex-column">
+                    <small class="d-flex">
+                        <div id="frio"></div><span class="text-white">Frio</span>
+                    </small>
+                    <small class="d-flex">
+                        <div id="normo"></div><span class="text-white">Morno</span>
+                    </small>
+                    <small class="d-flex">
+                        <div id="quente"></div><span class="text-white">Quente</span>
+                    </small>
+                </div>
+        
+            </div>
+
+
+
             <input type="submit" class="btn btn-primary btn-block" value="Agendas Tarefa">
         </form>  
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-warning" data-dismiss="modal">Fechar</button>
-        
-    </div>
+    
     </div>
 </div>
 </div>
@@ -359,6 +328,7 @@
 
 @section('css')
     <style>
+        
         ul {list-style: none;}
         .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
         .alvo {cursor:pointer;}
@@ -369,13 +339,36 @@
             overflow-y:scroll;
             background-color:rgba(0,0,0,0.5);
             border-radius:5px;
-            height:calc(100% - 250px);
+            height:calc(100% - 230px);
             flex-basis:100%;
         }
 
         .timelines::-webkit-scrollbar {width: 12px;}
         .timelines::-webkit-scrollbar-track {background: orange;}
         .timelines::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
+
+        .grupo-botoes {
+            margin-top: 10px;
+            /* background-color: green; */
+            display: flex;
+        }
+
+        .grupo-botoes > a {
+            font-size:0.875em;
+            width:15%;
+            padding:5px 0;
+            background-color:rgba(0,0,0,0.4);
+            border:2px solid #FFF;
+            text-align:center;
+            color:#FFF;
+            /* pointer-events: none; */
+        }
+
+
+        .grupo-botoes > a:hover {
+            background-color:rgba(255,255,255,0.5) !important;
+            cursor:pointer !important;
+        }
 
 
     </style>
@@ -386,23 +379,64 @@
 @section('js')
     <script>
         $(function(){
-            
-            $("#my-toggle-button").ControlSidebar('toggle');
-            
+
+            $("#frio").rateYo({
+                rating:1,
+                readOnly: true,
+                spacing: "10px",
+                starWidth: "20px",
+                numStars: 3,
+                minValue: 0,
+                maxValue: 3,
+                // normalFill: 'o',
+                ratedFill: 'orange',
+                fullStar: true,
+            });
+
+            $("#normo").rateYo({
+                rating:2,
+                readOnly: true,
+                spacing: "10px",
+                starWidth: "20px",
+                numStars: 3,
+                minValue: 0,
+                maxValue: 3,
+                // normalFill: 'orange',
+                ratedFill: 'orange',
+                fullStar: true,
+            });
+
+            $("#quente").rateYo({
+                rating:3,
+                readOnly: true,
+                spacing: "10px",
+                starWidth: "20px",
+                numStars: 3,
+                minValue: 0,
+                maxValue: 3,
+                // normalFill: 'orange',
+                ratedFill: 'orange',
+                fullStar: true,
+            });
 
 
-            // $(".fa-bars").on('click',function(){
-            //     if($('body').hasClass('sidebar-collapse')) {
-            //         $('body').removeClass('sidebar-mini');
-            //         $('body').addClass('sidebar-hidden')
-            //     } else {
-            //         $('body').removeClass('sidebar-hidden');
-            //         $('body').addClass('sidebar-mini')
-            //     }
-            // });
-
-
-
+            $("#rateYo").rateYo({
+            // rating: 1.5,
+            spacing: "10px",
+            starWidth: "20px",
+            numStars: 3,
+            minValue: 0,
+            maxValue: 3,
+            normalFill: 'white',
+            ratedFill: 'orange',
+            fullStar: true,
+            onSet: function (rating, rateYoInstance) {
+                
+                $("input[name='star']").val(rating);
+                //alert("Rating is set to: " + rating);
+            }
+  
+        });
 
         $.ajaxSetup({
             headers: {
@@ -459,7 +493,11 @@
         // var table = $("body").find("#tabela").DataTable();
         $('table').on('click', 'tbody tr', function () {
             let data = table.row(this).data();
-            console.log(data);
+            if(data.star) {
+                
+                $("#star").val(data.star);
+                $("#rateYo").rateYo('rating', data.star);
+            } 
             let quantidade_vidas = 0;
             if(data.cotacao && !!data.cotacao) {
                 //quantidade_vidas = data.cotacao.somarCotacaoFaixaEtaria.soma;
@@ -499,10 +537,14 @@
             $("#dias_contato").val(ultimoEmDias);
             $("#origem_leads").val(data.origem.nome);
             
-            $("a[data-orcamento]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/orcamento/"+data.id);
-            $("a[data-contrato]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/contrato/"+data.id);
-            $("a[data-tarefa]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer');
-            $("a[data-perda]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer');
+            //$("a[data-orcamento]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/orcamento/"+data.id);
+            $("a[data-orcamento]").attr("href","/admin/cotacao/orcamento/"+data.id);
+            $("a[data-contrato]").attr("href","/admin/cotacao/contrato/"+data.id);
+            $("a[data-email]").attr("href","mailto:"+data.email);
+            $("a[data-whatsapp]").attr("href","https://api.whatsapp.com/send?phone=55"+data.telefone.replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","")).attr('target',"_blank");
+            $("a[data-tarefa]").attr('data-toggle','modal').attr('data-target','#cadastrarClienteClienteEspecifico');
+            //$("a[data-perda]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer');
+            
             
             historicoCliente(data.id);
 
@@ -598,17 +640,13 @@
                 method:"POST",
                 data:$(this).serialize(),
                 beforeSend:function() {
-                    if(form.find("#title").val() == "") {
+                    if(form.find("#titulo_id").val() == "") {
                         $("#error_titulo").html("<p class='alert alert-danger'>Título e campo obrigatório</p>")
                     } else {
                         $("#error_titulo").html("");
                     }
                      
-                    if(form.find("#cliente_id").val() == "") {
-                        $("#error_cliente_id").html("<p class='alert alert-danger'>Cliente e campo obrigatório</p>")
-                    } else {
-                        $("#error_cliente_id").html("");
-                    }
+                    
 
                     if(form.find("#data").val() == "") {
                         $("#error_data").html("<p class='alert alert-danger'>Data e campo obrigatório</p>")
@@ -621,8 +659,15 @@
                     } else {
                         $("#error_descricao").html("");
                     }
+
+                    if(form.find("#star").val() == "") {
+                        $("#error_star").html("<p class='alert alert-danger'>Escolha um nivel de interesse desse cliente</p>")
+                    } else {
+                        $("#error_star").html("");
+                    }
                 },
                 success:function(res) {
+                    // console.log(res);
                     $("#cadastrarClienteClienteEspecifico").modal('hide');
                     ta.ajax.reload();
                     form.find('#title').val('');

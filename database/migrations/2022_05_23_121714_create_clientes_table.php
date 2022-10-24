@@ -24,6 +24,7 @@ class CreateClientesTable extends Migration
             $table->unsignedBigInteger('lead_id')->nullable();
             $table->boolean('lead')->default(1);
             $table->boolean('visivel')->default(1);
+            $table->integer("star")->nullable();
             $table->string("nome");
             
             $table->string("telefone")->nullable();

@@ -478,7 +478,27 @@ class ClienteController extends Controller
         $cliente->ultimo_contato = date("Y-m-d");
         $cliente->email = $request->email;
         if($cliente->save()) {
-            return $request->nome;
+            $qtd_plantao_vendas = Cliente::where("lead",1)->where("user_id",auth()->user()->id)->where("pessoa_fisica",1)->where('visivel',1)->where("etiqueta_id","!=",3)->where("lead_id",1)->count();
+            $qtd_prospeccao = Cliente::where("lead",1)->where("user_id",auth()->user()->id)->where("pessoa_fisica",1)->where('visivel',1)->where("etiqueta_id","!=",3)->where("lead_id",2)->count();
+            $qtd_atendimento_iniciado = Cliente::where("lead",1)->where("user_id",auth()->user()->id)->where("pessoa_fisica",1)->where('visivel',1)->where("etiqueta_id","!=",3)->where("lead_id",3)->count();
+            $atrasado = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->where('pessoa_fisica',1)->where('visivel',1)->where("etiqueta_id","!=",3)->whereDate("created_at","<",date('Y-m-d'))->count();
+            $hoje = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->where("visivel",1)->where('pessoa_fisica',1)->where("etiqueta_id","!=",3)->whereDate('created_at',"=",date('Y-m-d'))->count();
+            $semana = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where("etiqueta_id","!=",3)->where("lead",1)->where('visivel',1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();
+            $mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where("etiqueta_id","!=",3)->where("lead",1)->where('visivel',1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
+            
+            
+            return [
+                "quantidade_plantao_vendas" => $qtd_plantao_vendas,
+                "quantidade_prospeccao" => $qtd_prospeccao,
+                "quantidade_atendimento_iniciado" => $qtd_atendimento_iniciado,
+                "nome" => $cliente->nome,
+                "atrasado" => $atrasado,
+                "hoje" => $hoje,
+                "semana" => $semana,
+                "mes" => $mes,
+                "total" => $mes
+
+            ];
         } else {
             return "error";
         }

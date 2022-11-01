@@ -1038,7 +1038,8 @@ class HomeController extends Controller
     }
 
     public function searchHome()
-    {        
+    {      
+        
         $operadoras = Operadora::all();
         $administradoras = Administradora::all();
         $tipos = Planos::all();    

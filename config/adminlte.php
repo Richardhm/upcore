@@ -236,14 +236,14 @@ return [
             'submenu' => [
                 [
                     "text" => "Controle Clientes",
-                    "url" => "",
+                    "url" => "/admin",
                     'icon'    => 'fas fa-house-user',
                     'classes'  => 'text-white'
                 ],
                 [
                     "text" => "Controle Financeiro",
                     "url" => "",
-                    'icon'    => 'fas fa-coins',
+                    'icon'    => 'fas fa-house-user',
                     'classes'  => 'text-white'    
                 ]
             ]
@@ -358,23 +358,23 @@ return [
             'classes' => 'text-white'
         ],
 
-        [
-            "text" => "Chat",
-            "url" => "admin/clientes",
-            "icon" => "fab fa-rocketchat",
-            "active" => ['clientes','admin/clientes/cadastrar'],
-            'icon_color' => 'white',
-            'classes' => 'text-white'
-        ],
+        // [
+        //     "text" => "Chat",
+        //     "url" => "admin/clientes",
+        //     "icon" => "fab fa-rocketchat",
+        //     "active" => ['clientes','admin/clientes/cadastrar'],
+        //     'icon_color' => 'white',
+        //     'classes' => 'text-white'
+        // ],
 
-        [
-            "text" => "Email",
-            "url" => "admin/clientes",
-            "icon" => "fas fa-envelope",
-            "active" => ['clientes','admin/clientes/cadastrar'],
-            'icon_color' => 'white',
-            'classes' => 'text-white'
-        ],
+        // [
+        //     "text" => "Email",
+        //     "url" => "admin/clientes",
+        //     "icon" => "fas fa-envelope",
+        //     "active" => ['clientes','admin/clientes/cadastrar'],
+        //     'icon_color' => 'white',
+        //     'classes' => 'text-white'
+        // ],
 
         // [
         //     "text" => "Calculadora",

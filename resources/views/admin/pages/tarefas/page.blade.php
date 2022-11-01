@@ -5,6 +5,49 @@
 @section('content_header')
     <h4 class="text-white">CLIENTES PESSOA FÍSICA</h4>  
 @stop
+
+@section('content_top_nav_right')
+
+<li class="nav-item">
+        <a href="{{route('home.calculadora')}}" class="nav-link text-white">
+            <i class="fas fa-calculator"></i>
+            Calculadora
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{route('home.calendario')}}" class="nav-link text-white">
+            <i class="fas fa-calendar-alt"></i>
+            Calendario
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{route('home.lembretes')}}" class="nav-link text-white">
+            <i class="fas fa-sticky-note"></i>
+            Lembretes
+        </a>
+    </li>
+    <li class="nav-item">
+        <!-- <div class="d-flex align-items-center bg-danger"> -->
+            
+            <a href="{{route('admin.home.search')}}" class="nav-link text-white">
+                <i class="fas fa-money-check-alt"></i>
+                Tabela de Preços
+            </a>
+        <!-- </div> -->
+        
+    </li>
+
+@stop
+
+
+
+
+
+
+
+
+
+
 @section('content')
 <section class="d-flex justify-content-between" style="flex-wrap: wrap;">
 

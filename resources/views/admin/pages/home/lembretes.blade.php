@@ -44,16 +44,24 @@
      .card_themes {display: flex;}
      .card_theme {border-radius: 50%;height:20px;width:20px;list-style: none;margin:0 15px;cursor:pointer;display: flex;display: none;}
      #menus {
-        width:70%;
+        width:60%;
         display: flex;
         align-items: center;
      }
      #dashboard {
-        width:30%;
+        width:40%;
         justify-content: flex-end;
         justify-content: end;
         text-align: right;
+        display:flex;
         
+        
+     }
+
+     #dashboard a {
+        
+        margin:0 7px;
+        font-size: 1.2em;;
      }
 
      #dashboard h4 {
@@ -108,6 +116,18 @@
                 </ul>
             </div>                
             <div id="dashboard">
+                <a href="{{route('home.calculadora')}}" class="nav-link text-white">
+                    <i class="fas fa-calculator"></i>
+                    Calculadora
+                </a>
+                <a href="{{route('home.calendario')}}" class="nav-link text-white">
+                    <i class="fas fa-calendar-alt"></i>
+                    Calendario
+                </a>
+                <a href="{{route('admin.home.search')}}" class="nav-link text-white">
+                    <i class="fas fa-money-check-alt"></i>
+                    Tabela de Preços
+                </a>
                 <h4>
                    <a href="{{route('admin.home')}}">Dashboard</a> 
                 </h4>

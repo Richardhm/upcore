@@ -195,6 +195,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::get("/clientes/para/gettarefasHoje","App\Http\Controllers\Admin\ClienteController@getClientesParaHoje")->name("cliente.getTarefasParaHoje");
     Route::get("/clientes/para/gettarefasHojePJ","App\Http\Controllers\Admin\ClienteController@getClientesParaHojePJ")->name("cliente.getTarefasParaHojePJ");
 
+    Route::get("/clientes/pegartodososclientespf","App\Http\Controllers\Admin\ClienteController@pegarTodosOsClientesPF")->name("cliente.pegartodososclientespf");
 
 
     Route::get("/cliente/getClientesTarefasAtrasadas","App\Http\Controllers\Admin\ClienteController@getClienteAtrasadasAjax")->name("cliente.getTarefasAtrasadasAjax");
@@ -210,6 +211,26 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
 
     Route::get("/clientes/ajaxclientes","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPF")->name("clientes.ajaxclienteslistapf");  
+
+    Route::get("/clientes/ajaxclientesporid","App\Http\Controllers\Admin\ClienteController@pegarClientesAjaxId")->name("clientes.ajaxclienteslistaporid");
+    Route::post("/clientes/ajaxclientesporidpost","App\Http\Controllers\Admin\ClienteController@pegarClientesAjaxIdPost")->name("clientes.ajaxclienteslistaporidpost");
+
+    Route::post("/clientes/ajaxclienteseditarajax","App\Http\Controllers\Admin\ClienteController@editarClienteAjax")->name("cliente.editarajax");
+
+
+
+    Route::post("/clientes/ajaxmudarestagiocliente","App\Http\Controllers\Admin\ClienteController@mudarEstagioCliente")->name('clientes.mudarestagiocliente');
+    // Route::get("/clientes/ajaxclientesinteressefrio","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxInterreseFrio")->name("clientes.ajaxclienteslistainteressefrio");  
+    // Route::get("/clientes/ajaxclientesinteressemorno","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxInterreseMorno")->name("clientes.ajaxclienteslistainteressemorno");  
+    // Route::get("/clientes/ajaxclientesinteressequente","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxInterreseQuente")->name("clientes.ajaxclienteslistainteressequente");  
+
+    // Route::get("/clientes/ajaxclientesinteressefriopj","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxInterreseFrioPJ")->name("clientes.ajaxclienteslistainteressefriopj");  
+    // Route::get("/clientes/ajaxclientesinteressemornopj","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxInterreseMornoPJ")->name("clientes.ajaxclienteslistainteressemornopj");  
+    // Route::get("/clientes/ajaxclientesinteressequentepj","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxInterreseQuentePJ")->name("clientes.ajaxclienteslistainteressequentepj");  
+
+
+
+
 
     
     Route::get("/leads/lerdados","App\Http\Controllers\Admin\ClienteController@leadPlantaoVendasPF")->name('leads.prospeccao.leadPlantaoVendasPF');

@@ -46,18 +46,18 @@
                       
                       
                       <tr>
-                          <td rowspan="2" style="vertical-align:top;background-color:rgba(0,0,0,0.8);text-align:center;font-size:0.875em;border-right:1px solid #FFF;border-bottom:1px solid #FFF;">Faixa Etária</td>
+                          <td rowspan="2" style="vertical-align:middle;background-color:rgba(0,0,0,0.8);text-align:center;font-size:0.875em;border-right:1px solid #FFF;border-bottom:1px solid #FFF;">Faixa Etária</td>
                           <td colspan="2" style="text-align:center;font-size:0.875em;border-bottom:1px solid #FFF;border-right:1px solid #FFF;" class="">Com Copar</td>
                           <td colspan="2" style="text-align:center;background-color:rgba(0,0,0,0.8);font-size:0.875em;border-bottom:1px solid #FFF;" class="">Sem Copar</td>
                       </tr>
                       <tr>
                           
-                          <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;border-bottom:1px solid #FFF;" class="">APART</td>
-                          <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;" class="">ENFER</td>
+                          <td style="text-align:center;font-size:0.875em;border-right:1px solid #FFF;border-bottom:1px solid #FFF;" class="">APART</td>
+                          <td style="text-align:center;font-size:0.875em;border-right:1px solid #FFF;border-bottom:1px solid #FFF;" class="">ENFER</td>
                           
 
-                          <td style="text-align:right;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;" class="">APART</td>
-                          <td style="text-align:right;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;" class="">ENFER</td>
+                          <td style="text-align:center;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;border-bottom:1px solid #FFF;border-right:1px solid #FFF;" class="">APART</td>
+                          <td style="text-align:center;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;border-bottom:1px solid #FFF;" class="">ENFER</td>
                           
                       </tr>
                   </thead>
@@ -67,13 +67,13 @@
                       
                           <td style="text-align:right;background-color:rgba(0,0,0,0.8);font-size:0.875em;border-right:1px solid #FFF;border-right:1px solid #FFF;">{{$planos[$i]->nome}}</td>
                           <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;" class="">
-                            {{number_format($planos[$i]->apartamento_coparticipacao,2,",",".")}}
+                            <span style="margin-right:6px;">{{number_format($planos[$i]->apartamento_coparticipacao,2,",",".")}}</span>
                             @php
                               $total_apartamento_coparticipacao += $planos[$i]->apartamento_coparticipacao;
                             @endphp
                           </td>
                           <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;" class="">
-                            {{number_format($planos[$i]->enfermaria_coparticipacao,2,",",".")}}
+                          <span style="margin-right:6px;">{{number_format($planos[$i]->enfermaria_coparticipacao,2,",",".")}}</span>
                             @php
                               $total_enfermaria_coparticipacao += $planos[$i]->enfermaria_coparticipacao;
                             @endphp
@@ -81,14 +81,14 @@
                           
                           </td>
 
-                          <td style="text-align:right;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;" class="">
-                            {{number_format($planos[$i]->apartamento_sem_coparticipacao,2,",",".")}}
+                          <td style="text-align:right;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;border-right:1px solid white" class="">
+                          <span style="margin-right:6px;">{{number_format($planos[$i]->apartamento_sem_coparticipacao,2,",",".")}}</span>
                             @php
                               $total_apartamento_sem_coparticipacao += $planos[$i]->apartamento_sem_coparticipacao
                             @endphp
                           </td>
                           <td style="text-align:right;background-color:rgba(0,0,0,0.8);color:orange;font-size:0.875em;" class="">
-                            {{number_format($planos[$i]->enfermaria_sem_coparticipacao,2,",",".")}}
+                          <span style="margin-right:6px;">{{number_format($planos[$i]->enfermaria_sem_coparticipacao,2,",",".")}}</span>
                             @php
                               $total_enfermaria_sem_coparticipacao += $planos[$i]->enfermaria_sem_coparticipacao
                             @endphp
@@ -101,12 +101,20 @@
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td style="text-align:right;background-color:rgba(0,0,0,0.8);border-right:1px solid #FFF;" class="">Total</td>
-                      <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;" class="">{{isset($total_apartamento_coparticipacao) ? number_format($total_apartamento_coparticipacao,2,",",".") : 0}}</td>
-                      <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;" class="">{{isset($total_enfermaria_coparticipacao) ? number_format($total_enfermaria_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:right;background-color:rgba(0,0,0,0.8);border-right:1px solid #FFF;border-top:1px solid white;" class="">Total</td>
+                      <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;border-top:1px solid white;" class="">
+                      <span style="margin-right:6px;">{{isset($total_apartamento_coparticipacao) ? number_format($total_apartamento_coparticipacao,2,",",".") : 0}}</span>
+                      </td>
+                      <td style="text-align:right;font-size:0.875em;border-right:1px solid #FFF;border-top:1px solid white;" class="">
+                      <span style="margin-right:6px;">{{isset($total_enfermaria_coparticipacao) ? number_format($total_enfermaria_coparticipacao,2,",",".") : 0}}</span>
+                      </td>
                       
-                      <td style="text-align:right;color:orange;background-color:rgba(0,0,0,0.8);font-size:0.875em;" class="">{{isset($total_apartamento_sem_coparticipacao) ? number_format($total_apartamento_sem_coparticipacao,2,",",".") : 0}}</td>
-                      <td style="text-align:right;color:orange;background-color:rgba(0,0,0,0.8);font-size:0.875em;" class="">{{isset($total_enfermaria_sem_coparticipacao) ? number_format($total_enfermaria_sem_coparticipacao,2,",",".") : 0}}</td>
+                      <td style="text-align:right;color:orange;background-color:rgba(0,0,0,0.8);font-size:0.875em;border-right:1px solid white;border-top:1px solid white;" class="">
+                      <span style="margin-right:6px;">{{isset($total_apartamento_sem_coparticipacao) ? number_format($total_apartamento_sem_coparticipacao,2,",",".") : 0}}</span>
+                      </td>
+                      <td style="text-align:right;color:orange;background-color:rgba(0,0,0,0.8);font-size:0.875em;border-top:1px solid white;" class="">
+                      <span style="margin-right:6px;">{{isset($total_enfermaria_sem_coparticipacao) ? number_format($total_enfermaria_sem_coparticipacao,2,",",".") : 0}}</span>
+                      </td>
                       
                     </tr>
                   </tfoot>
@@ -133,12 +141,12 @@
         
       <tfoot>
         <tr>
-          <td style="text-align:right;font-size:0.875em;" class="">Total</td>
-          <td style="text-align:right;font-size:0.875em;" class="">{{isset($total_apartamento_coparticipacao) ? number_format($total_apartamento_coparticipacao,2,",",".") : 0}}</td>
-          <td style="text-align:right;font-size:0.875em;" class="">{{isset($total_enfermaria_coparticipacao) ? number_format($total_enfermaria_coparticipacao,2,",",".") : 0}}</td>
+          <td style="text-align:right;font-size:0.875em;border-right:1px solid white;background-color:rgba(0,0,0,0.8);border-top:1px solid white;" class="">Total</td>
+          <td style="text-align:right;font-size:0.875em;border-right:1px solid white;border-top:1px solid white;" class="">{{isset($total_apartamento_coparticipacao) ? number_format($total_apartamento_coparticipacao,2,",",".") : 0}}</td>
+          <td style="text-align:right;font-size:0.875em;border-right:1px solid white;border-top:1px solid white;" class="">{{isset($total_enfermaria_coparticipacao) ? number_format($total_enfermaria_coparticipacao,2,",",".") : 0}}</td>
           <!-- <td style="text-align:center;" class="">{{isset($total_ambulatorial_coparticipacao) ? number_format($total_ambulatorial_coparticipacao,2,",",".") : 0}}</td> -->
-          <td style="text-align:right;font-size:0.875em;" class="">{{isset($total_apartamento_sem_coparticipacao) ? number_format($total_apartamento_sem_coparticipacao,2,",",".") : 0}}</td>
-          <td style="text-align:right;font-size:0.875em;" class="">{{isset($total_enfermaria_sem_coparticipacao) ? number_format($total_enfermaria_sem_coparticipacao,2,",",".") : 0}}</td>
+          <td style="text-align:right;font-size:0.875em;border-right:1px solid white;background-color:rgba(0,0,0,0.8);border-top:1px solid white;" class="">{{isset($total_apartamento_sem_coparticipacao) ? number_format($total_apartamento_sem_coparticipacao,2,",",".") : 0}}</td>
+          <td style="text-align:right;font-size:0.875em;border-right:1px solid white;background-color:rgba(0,0,0,0.8);border-top:1px solid white;" class="">{{isset($total_enfermaria_sem_coparticipacao) ? number_format($total_enfermaria_sem_coparticipacao,2,",",".") : 0}}</td>
           <!-- <td style="text-align:center;" class="">{{isset($total_ambulatorial_sem_coparticipacao) ? number_format($total_ambulatorial_sem_coparticipacao,2,",",".") : 0}}</td> -->
           
           

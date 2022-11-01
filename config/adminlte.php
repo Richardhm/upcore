@@ -300,7 +300,7 @@ return [
         ],
 
         [
-            "text" => "Contratos PF",
+            "text" => "Contratos",
             "url" => "admin/contratos",
             "icon" => "fas fa-id-card-alt",
             'icon_color' => 'white',
@@ -324,29 +324,29 @@ return [
             
         ],
 
-        [
-            "text" => "Contratos PJ",
-            "url" => "admin/contratos",
-            "icon" => "fas fa-file-contract",
-            'icon_color' => 'white',
-            'classes' => 'text-white',
-            'submenu' => [
-                [
-                    "text" => "Pendentes",
-                    "url" => "admin/contratos/pj/pendentes",
-                    'icon'    => 'fas fa-ellipsis-h',
-                    'classes' => 'text-white'    
-                ],
-                [
-                    "text" => "Finalizados",
-                    "url" => "",
-                    'icon'    => 'fas fa-thumbs-up',
-                    'classes' => 'text-white'
-                ]
+        // [
+        //     "text" => "Contratos PJ",
+        //     "url" => "admin/contratos",
+        //     "icon" => "fas fa-file-contract",
+        //     'icon_color' => 'white',
+        //     'classes' => 'text-white',
+        //     'submenu' => [
+        //         [
+        //             "text" => "Pendentes",
+        //             "url" => "admin/contratos/pj/pendentes",
+        //             'icon'    => 'fas fa-ellipsis-h',
+        //             'classes' => 'text-white'    
+        //         ],
+        //         [
+        //             "text" => "Finalizados",
+        //             "url" => "",
+        //             'icon'    => 'fas fa-thumbs-up',
+        //             'classes' => 'text-white'
+        //         ]
                 
-            ]
+        //     ]
             
-        ],
+        // ],
 
         [
             "text" => "Comissões",
@@ -376,32 +376,32 @@ return [
             'classes' => 'text-white'
         ],
 
-        [
-            "text" => "Calculadora",
-            "url" => "admin/calculadora",
-            "icon" => "fas fa-calculator",
-            "active" => ['calculadora','admin/calculadora'],
-            'icon_color' => 'white',
-            'classes' => 'text-white'
-        ],
+        // [
+        //     "text" => "Calculadora",
+        //     "url" => "admin/calculadora",
+        //     "icon" => "fas fa-calculator",
+        //     "active" => ['calculadora','admin/calculadora'],
+        //     'icon_color' => 'white',
+        //     'classes' => 'text-white'
+        // ],
 
-        [
-            "text" => "Calendario",
-            "url" => "admin/calendario",
-            "icon" => "fas fa-calendar-alt",
-            "active" => ['calendario','admin/calendario'],
-            'icon_color' => 'white',
-            'classes' => 'text-white'
-        ],
+        // [
+        //     "text" => "Calendario",
+        //     "url" => "admin/calendario",
+        //     "icon" => "fas fa-calendar-alt",
+        //     "active" => ['calendario','admin/calendario'],
+        //     'icon_color' => 'white',
+        //     'classes' => 'text-white'
+        // ],
 
-        [
-            "text" => "Lembretes",
-            "url" => "admin/lembretes",
-            "icon" => "fas fa-sticky-note",
-            "active" => ['lembretes','admin/lembretes'],
-            'icon_color' => 'white',
-            'classes' => 'text-white'
-        ],
+        // [
+        //     "text" => "Lembretes",
+        //     "url" => "admin/lembretes",
+        //     "icon" => "fas fa-sticky-note",
+        //     "active" => ['lembretes','admin/lembretes'],
+        //     'icon_color' => 'white',
+        //     'classes' => 'text-white'
+        // ],
 
 
         // [

@@ -559,8 +559,12 @@ class CotacaoController extends Controller
             $premiacaoCorretoraLancadas->save();
 
         }
-
-        return redirect()->route('contratos.pf.pendentes');
+        if($cliente->pessoa_fisica == 1) {
+            return redirect()->route('contratos.pf.pendentes');
+        } else {
+            return redirect()->route('contratos.pj.pendentes');
+        }
+        
     }
 
 

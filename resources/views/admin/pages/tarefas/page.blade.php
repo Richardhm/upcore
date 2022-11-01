@@ -17,74 +17,116 @@
     <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
         <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Tarefas</h5>
         <ul style="margin:0px;padding:0px;">
-            <li>
+           
+            <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
                     <span class="ml-2">Atrasadas</span>
-                    <span class="mr-2">{{$qtd_atrasada}}</span>
+                    <span class="mr-2">{{$tarefas->atrasada}}</span>
                 </a>
             </li>
-            <li>
+            <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 hoje">
                     <span class="ml-2">Hoje</span>
-                    <span class="mr-2">{{$qtd_hoje}}</span>
+                    <span class="mr-2">{{$tarefas->hoje}}</span>
                 </a>    
             </li>
-            <li>
+            <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 semana">
                     <span class="ml-2">Semana</span>
-                    <span class="mr-2">{{$qtd_semana}}</span>
+                    <span class="mr-2">{{$tarefas->semana}}</span>
                 </a>
             </li>
-            <li>
+            <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 mes">
                     <span class="ml-2">Mês</span>
-                    <span class="mr-2">{{$qtd_mes}}</span>
+                    <span class="mr-2">{{$tarefas->mes}}</span>
                 </a>
             </li>
-            <li>
+            <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 todos">
                     <span class="ml-2">Todos</span>
-                    <span class="mr-2">{{$clientes_total}}</span>
+                    <span class="mr-2">{{$tarefas->todas}}</span>
                 </a>
             </li>
+
+
+
+
+
         </ul>
     </div>
 
     <div class="d-flex flex-column mt-2 py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
         <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Clientes</h5>
-        <ul style="margin:0px;padding:0px;">
-            <li class="d-flex justify-content-between text-white py-1">
+        <ul style="margin:0px;padding:0px;" id="estagios">
+            <li class="d-flex justify-content-between text-white py-1 total_geral">
                 <span class="ml-2">Total Geral</span>
                 <span class="mr-2">{{$clientes_total}}</span>
             </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Em Negociação</span>
-                <span class="mr-2">{{$negociacao}}</span>
-            </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Finalizados</span>
-                <span class="mr-2">{{$finalizados}}</span>
-            </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Cadastrados no Mês</span>
-                <span class="mr-2">{{$cadastrado_mes}}</span>
-            </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Perdidos</span>
-                <span class="mr-2">{{$perdidos}}</span>
-            </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Perdidos no Mês</span>
-                <span class="mr-2">{{$perdidos_mes}}</span>
-            </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Finalizados no Mês</span>
-                <span class="mr-2">{{$finalizados_mes}}</span>
-            </li>
-            <li class="d-flex justify-content-between text-white py-1">
-                <span class="ml-2">Em Negociação no Mês</span>
-                <span class="mr-2">{{$negociacao_mes}}</span>
-            </li>
+
+            @foreach($estagios as $e)
+
+                @if($e->nome == "Interessado Frio")
+                    
+                    <li class="d-flex justify-content-between text-white py-1 link_page" data-id="{{$e->id}}">
+                        <span class="ml-2 title">
+                            Interessado   
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>     
+                        </span>
+                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                    </li>
+
+                @elseif($e->nome == "Interessado Morno")
+                    <li class="d-flex justify-content-between text-white py-1 link_page" data-id="{{$e->id}}">
+                        <span class="ml-2 title">
+                            Interessado  
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>      
+                        </span>
+                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                    </li>
+                
+                @elseif($e->nome == "Interessado Quente")
+                    <li class="d-flex justify-content-between text-white py-1 link_page" data-id="{{$e->id}}">
+                        <span class="ml-2 title">
+                            Interessado
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                        </span>
+                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                    </li>
+                @elseif($e->nome == "Sem Interesse")
+                    <li class="d-flex justify-content-between text-white py-1">
+                        <span class="ml-2 title">
+                            Sem Interessado
+                            
+                        </span>
+                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                    </li>
+                @else
+
+                    <li class="d-flex justify-content-between text-white py-1 link_page" data-id="{{$e->id}}">
+                        <span class="ml-2 title">
+                            {{$e->nome}}        
+                        </span>
+                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                    </li>
+
+                @endif
+
+                  
+
+
+
+
+
+                    
+                
+            @endforeach
+
+
+
         </ul>
     </div>
 
@@ -127,7 +169,20 @@
                 </div>
                 <div class="col">
                     <span class="text-white">Status:</span>
-                    <input type="text" name="status" id="status" class="form-control form-control-sm" readonly>
+                    <select name="estagios-clientes" id="estagios-clientes" class="form-control-sm estagios-clientes" readonly="readonly"> 
+                        <option value="">--Escolher Status--</option>
+                        @foreach($estagios as $e) 
+                            @if($e->nome == "Interessado Frio")
+                                <option value="{{$e->id}}">Interessado<span style="background-color:red;">&#9733;</span></option>
+                            @elseif($e->nome == "Interessado Morno")
+                                <option value="{{$e->id}}">Interessado<span style="background-color:red;">&#9733;&#9733;</span></option>
+                            @elseif($e->nome == "Interessado Quente")
+                                <option value="{{$e->id}}">Interessado<span style="background-color:red;">&#9733;&#9733;&#9733;</span></option>
+                            @else
+                                <option value="{{$e->id}}">{{$e->nome}}</option>
+                            @endif
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
@@ -235,9 +290,11 @@
                 <label for="title" style="color:#FFF;">Titulo:</label>
                 <select name="titulo_id" id="titulo_id" class="form-control">
                     <option value="">--Titulo Da Tarefa--</option>
-                    @foreach($titulos as $t)
-                        <option value="{{$t->id}}">{{$t->titulo}}</option>
+                   
+                    @foreach($estagios as $e)
+                       <option value="{{$e->id}}">{{$e->nome}}</option>
                     @endforeach
+                    
                 </select>
                 <div id="error_titulo"></div>
             </div>
@@ -301,18 +358,18 @@
                 @csrf
                 <div id="motivo_perda_error"></div>
                 <div class="form-row">
-                    @foreach($motivos as $k => $v)
-                        <div class="col-6">
-                            <div class="form-group">
-                                <input type="radio" id="motivo_perda" name="motivo" value="{{$v->id}}" />
-                                <label for="motivo_perda" class="text-white">{{$v->descricao}}</label>
-                            </div>
-                        </div>
-                    @endforeach
+                    <label for="" class="text-white">Motivo Da Perda:</label>
+                    <select name="perda_cliente" id="perda_cliente" class="form-control">
+                        <option value="">--Escolha o Motivo--</option>
+                        @foreach($motivos as $k => $v)
+                            <option value="{{$v->id}}" name="motivo_perda_cliente">{{$v->descricao}}</option>
+                        @endforeach    
+                    </select>
+                    
                 </div>    
                 <div id="motivo_textarea">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+                <button type="submit" class="btn btn-primary btn-block mt-2">Enviar</button>
             </form>    
         </div>
         <div class="modal-footer">
@@ -327,50 +384,26 @@
 @stop
 
 @section('css')
-    <style>
-        
+    <style>        
+        select[readonly] {background: #eee;pointer-events: none;touch-action: none;}
         ul {list-style: none;}
         .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
-        .alvo {cursor:pointer;}
-        
+        .alvo {cursor:pointer;}       
         textarea {resize: none;}   
-
-        .timelines {
-            overflow-y:scroll;
-            background-color:rgba(0,0,0,0.5);
-            border-radius:5px;
-            height:calc(100% - 230px);
-            flex-basis:100%;
-        }
-
+        .timelines {overflow-y:scroll;background-color:rgba(0,0,0,0.5);border-radius:5px;height:calc(100% - 230px);flex-basis:100%;}
         .timelines::-webkit-scrollbar {width: 12px;}
         .timelines::-webkit-scrollbar-track {background: orange;}
         .timelines::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
-
-        .grupo-botoes {
-            margin-top: 10px;
-            /* background-color: green; */
-            display: flex;
+        .grupo-botoes {margin-top: 10px;display: flex;}
+        .grupo-botoes > a {font-size:0.875em;width:15%;padding:5px 0;background-color:rgba(0,0,0,0.4);border:2px solid #FFF;text-align:center;color:#FFF;}
+        .grupo-botoes > a:hover {background-color:rgba(255,255,255,0.5) !important;cursor:pointer !important;}
+        .link_page:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
+        .links_tarefas:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
+        .fundo {background: rgba(255,255,255,0.5);}
+        .total_geral{cursor: pointer;}
+        .total_geral:hover{
+            background: rgba(255,255,255,0.5);
         }
-
-        .grupo-botoes > a {
-            font-size:0.875em;
-            width:15%;
-            padding:5px 0;
-            background-color:rgba(0,0,0,0.4);
-            border:2px solid #FFF;
-            text-align:center;
-            color:#FFF;
-            /* pointer-events: none; */
-        }
-
-
-        .grupo-botoes > a:hover {
-            background-color:rgba(255,255,255,0.5) !important;
-            cursor:pointer !important;
-        }
-
-
     </style>
 @stop
 
@@ -380,63 +413,37 @@
     <script>
         $(function(){
 
-            $("#frio").rateYo({
-                rating:1,
-                readOnly: true,
-                spacing: "10px",
-                starWidth: "20px",
-                numStars: 3,
-                minValue: 0,
-                maxValue: 3,
-                // normalFill: 'o',
-                ratedFill: 'orange',
-                fullStar: true,
-            });
+            
 
-            $("#normo").rateYo({
-                rating:2,
-                readOnly: true,
-                spacing: "10px",
-                starWidth: "20px",
-                numStars: 3,
-                minValue: 0,
-                maxValue: 3,
-                // normalFill: 'orange',
-                ratedFill: 'orange',
-                fullStar: true,
-            });
-
-            $("#quente").rateYo({
-                rating:3,
-                readOnly: true,
-                spacing: "10px",
-                starWidth: "20px",
-                numStars: 3,
-                minValue: 0,
-                maxValue: 3,
-                // normalFill: 'orange',
-                ratedFill: 'orange',
-                fullStar: true,
-            });
+            $('.estagios-clientes').on('change',function(){
+                let id = $(this).val();
+               
+                let cliente = $("#cliente_id_cadastrado_aqui").val();
+                if(id != 6) {
+                    $.ajax({
+                        url:"{{route('clientes.mudarestagiocliente')}}",
+                        method:"POST",
+                        data:"id="+id+"&cliente="+cliente,
+                        success:function(res) {
+                            $("#estagios").find('li:eq(1)').find('.quantidade').text(res.qtd_frio);   
+                            $("#estagios").find('li:eq(2)').find('.quantidade').text(res.qtd_morno);   
+                            $("#estagios").find('li:eq(3)').find('.quantidade').text(res.qtd_quente);   
+                            $("#estagios").find('li:eq(4)').find('.quantidade').text(res.qtd_aguardando_doc);   
+                            $("#estagios").find('li:eq(5)').find('.quantidade').text(res.qtd_aguardando_inte_futuro);   
+                            $("#estagios").find('li:eq(6)').find('.quantidade').text(res.qtd_aguardando_sem_interesse);   
+                        }
+                    })
+                } else {
+                    $("#motivoDaPerda").modal('show');
+                }
+            });    
 
 
-            $("#rateYo").rateYo({
-            // rating: 1.5,
-            spacing: "10px",
-            starWidth: "20px",
-            numStars: 3,
-            minValue: 0,
-            maxValue: 3,
-            normalFill: 'white',
-            ratedFill: 'orange',
-            fullStar: true,
-            onSet: function (rating, rateYoInstance) {
-                
-                $("input[name='star']").val(rating);
-                //alert("Rating is set to: " + rating);
-            }
-  
-        });
+            $("#frio").rateYo({rating:1,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
+            $("#normo").rateYo({rating:2,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
+            $("#quente").rateYo({rating:3,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
+
+            $("#rateYo").rateYo({spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,normalFill: 'white',ratedFill: 'orange',fullStar: true,onSet: function (rating, rateYoInstance) {$("input[name='star']").val(rating);}});
 
         $.ajaxSetup({
             headers: {
@@ -445,15 +452,17 @@
         });
 
         let ta = $(".listarclientes").DataTable({
+            dom: '<"d-flex justify-content-between"<"#title">ft><t><"d-flex justify-content-between"lp>',
+
             "language": {
                 "url": "{{asset('traducao/pt-BR.json')}}"
             },
             ajax: {
-                "url":"{{ route('clientes.ajaxclienteslistapf') }}",
+                "url":"{{ route('cliente.getTarefasAtrasadasAjax') }}",
                 "dataSrc": ""
             },
-            "lengthMenu": [10,20,30,40,100],
-            "ordering": true,
+            "lengthMenu": [50,100,150,200,300,500],
+            "ordering": false,
             "paging": true,
             "searching": true,
             "info": true,
@@ -486,17 +495,46 @@
             drawCallback: function () {
                 $('.page-link').addClass('btn-sm border-0');
                 // $('.form-control').addClass('bg-dark');
+            },
+            "initComplete": function( settings, json ) {
+                $('#title').html("<h4>Atrasadas</h4>");
             }
         });
         
         var table = $("#tabela").DataTable();
+
+        /** Realizar o search de todos os leeads não so do cliente logado */
+
+        // table.on( 'search.dt', function () {
+        //     console.log(table.search());
+        //     //$('#filterInfo').html( 'Currently applied global search: '+table.search() );
+        // });
+
+
+
         // var table = $("body").find("#tabela").DataTable();
         $('table').on('click', 'tbody tr', function () {
             let data = table.row(this).data();
-            if(data.star) {
+            
+            $('select[name="estagios-clientes"]').removeAttr('readonly');
+            if(data.estagio_id) {
+                $('option[value="'+data.estagio_id+'"]').prop('selected',true);
+            } else {
+                $('option[value=""]').prop('selected',true);
+            }
+            
+
+            if(data.estagio_id) {
                 
-                $("#star").val(data.star);
-                $("#rateYo").rateYo('rating', data.star);
+                if(data.estagio_id == 1) {
+                    $("#rateYo").rateYo('rating', 1);
+                } else if(data.estagio_id == 2) {
+                    $("#rateYo").rateYo('rating', 2);
+                } else if(data.estagio_id == 3) {
+                    $("#rateYo").rateYo('rating', 3);
+                } else {
+                    $("#rateYo").rateYo('rating', 0);
+                }
             } 
             let quantidade_vidas = 0;
             if(data.cotacao && !!data.cotacao) {
@@ -550,30 +588,110 @@
 
         });
 
-        $(".hoje").on('click',function(){
-            ta.ajax.url("{{ route('cliente.getTarefasParaHoje') }}").load();
-            return false;
+        //$("select").find("option:eq(1)").html('<i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>');
+
+        $('.total_geral').on('click',function(){
+            $('#title').html("<h4>Total Geral</h4>");
+            ta.ajax.url("{{route('cliente.pegartodososclientespf')}}").load();
+            $("#estagios").find(".link_page").removeClass('fundo');
+            $(this).addClass('fundo');
+        });
+
+
+
+
+
+        $('.link_page').on('click',function(){
+            //$('.total_geral').removeClass('fundo');
+            //$("#estagios").find("li:not(.total_geral)").removeClass('fundo');
+            
+            if($(this).attr('data-id')) {
+                $('.total_geral').removeClass('fundo');
+                $("#estagios").find('li').removeClass('fundo');
+                $(".atrasada").removeClass('fundo');
+                $(".hoje").removeClass('fundo');
+                $(".semana").removeClass('fundo');
+                $(".mes").removeClass('fundo');
+                $(".todos").removeClass('fundo');
+                let titulo = $(this).find('.title').html();
+                let id = $(this).attr('data-id');
+                let url = "/admin/clientes/ajaxclientesporid?";
+                url += "&id="+id;
+                $('#title').html("<h4>"+titulo+"</h4>");
+                ta.ajax.url(url).load();
+                
+                $(this).addClass('fundo');
+                
+            }
+            
         });
 
         $(".atrasada").on('click',function(){
+            $(this).addClass('fundo');
+            $('.total_geral').removeClass('fundo');
+            $('.link_page').removeClass('fundo');
+            $('.hoje').removeClass('fundo');
+            $('.semana').removeClass('fundo');
+            $('.mes').removeClass('fundo');
+            $('.todos').removeClass('fundo');
+            $("#title").html("<h4>Atrasadas</h4>");
             ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjax') }}").load();
             return false;
         });
 
+        $(".hoje").on('click',function(){
+            $(this).addClass('fundo');
+            $('.total_geral').removeClass('fundo');
+            $('.link_page').removeClass('fundo');
+            $('.atrasada').removeClass('fundo');
+            $('.semana').removeClass('fundo');
+            $('.mes').removeClass('fundo');
+            $('.todos').removeClass('fundo');
+            $("#title").html("<h4>Hoje</h4>");
+            ta.ajax.url("{{ route('cliente.getTarefasParaHoje') }}").load();
+            return false;
+        });
+
         $(".semana").on('click',function(){
+            $(this).addClass('fundo');
+            $('.total_geral').removeClass('fundo');
+            $('.link_page').removeClass('fundo');
+            $('.atrasada').removeClass('fundo');
+            $('.hoje').removeClass('fundo');
+            $('.mes').removeClass('fundo');
+            $('.todos').removeClass('fundo');
+            $("#title").html("<h4>Semana</h4>");
             ta.ajax.url("{{ route('cliente.listarClientesSemanaAjax') }}").load();
             return false;
         });
 
         $(".mes").on('click',function(){
+            $(this).addClass('fundo');
+            $('.total_geral').removeClass('fundo');
+            $('.link_page').removeClass('fundo');
+            $('.atrasada').removeClass('fundo');
+            $('.semana').removeClass('fundo');
+            $('.hoje').removeClass('fundo');
+            $('.todos').removeClass('fundo');
+            $("#title").html("<h4>Mês</h4>");    
             ta.ajax.url("{{ route('cliente.listarClienteMesAjax') }}").load();
             return false;
         });
 
         $(".todos").on('click',function(){
+            $(this).addClass('fundo');
+            $('.total_geral').removeClass('fundo');
+            $('.link_page').removeClass('fundo');
+            $('.atrasada').removeClass('fundo');
+            $('.semana').removeClass('fundo');
+            $('.mes').removeClass('fundo');
+            $('.hoje').removeClass('fundo');
+            $("#title").html("<h4>Todos</h4>");
             ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
             return false;
         }); 
+
+       
 
         $(".nova_tarefa").on('click',function(){
             let id = $().val();
@@ -581,10 +699,10 @@
             return false;
         });  
 
-        $("body").on('change','input[name="motivo"]',function(){
+        $("body").on('change','select[name="perda_cliente"]',function(){
             let valor = $(this).val();
             if(valor == 4) {
-                $("#motivo_textarea").html("<label for='descricao_motivo' class='text-white'>Porque Sem interesse?</label><textarea name='descricao_motivo' id='descricao_motivo' rows='4' cols='60'></textarea>")
+                $("#motivo_textarea").html("<label for='descricao_motivo' class='text-white'>Porque Sem interesse?</label><textarea name='descricao_motivo' class='form-control' id='descricao_motivo' rows='4' cols='60'></textarea>")
             } else {
                 $("#motivo_textarea").html("");
             }
@@ -597,16 +715,18 @@
                 method:"POST",
                 data:$(this).serialize(),
                 beforeSend:function() {
-                    
-                    if ($('input[name="motivo"]:checked').length == 0) {
-                        $("#motivo_perda_error").html("<p class='alert alert-danger text-center'>Marque o motivo pelo menos 1 motivo</p>");
+                    if($("#perda_cliente :selected").val() == "") {
+                        
+                        $("#motivo_perda_error").html("<p class='alert alert-danger text-center'>Marque pelo menos 1 motivo para a perda</p>");
                         $("#motivoDaPerda").modal('show');
                         return false;
                     } else {
+                       
                         $("#motivo_preco_error").html("");
                     }
+                    
 
-                    if($('input[name="motivo"]:checked').val() == 4) {
+                    if($("#perda_cliente :selected").val() == 4) {
                         if($('#descricao_motivo').val() == "") {
                             $("#motivoDaPerda").modal('show');
                             $("#motivo_textarea").append("<p class='alert alert-danger text-center'>Explique o motivo do cliente estar sem interesse</p>")
@@ -617,12 +737,34 @@
                 },
 
                 success:function(res) {
-                    
+                   
                     if(res != "error") {
                         $("#motivoDaPerda").modal('hide');
+                        $("input[name='nome']").val('');
+                        $("input[name='cidade']").val('');
+                        $("select[name='estagios-clientes']").val('').prop('readonly',true);
+                        $("input[name='telefone']").val('');
+                        $("input[name='email']").val('');
+                        $("input[name='quantidade_vidas']").val('');
+                        $("input[name='data_cadastro']").val('');
+                        $("input[name='dias_contato']").val('');
+                        $("input[name='origem_leads']").val('');
+                        $("input[name='ultimo_contato']").val('');
+                        $("input[name='dias_cadastro']").val('');
                         $('input[name="motivo"]').prop('checked', false);
                         $("#descricao_motivo").val('');
                         $("#motivo_textarea").html("");
+
+                        $("a[data-orcamento]").attr("href","#");
+                        $("a[data-contrato]").attr("href","#");
+                        $("a[data-email]").attr("href","#");
+                        $("a[data-whatsapp]").attr("href","#");
+                        $("a[data-tarefa]").removeAttr('data-toggle','modal').removeAttr('data-target','#cadastrarClienteClienteEspecifico');
+
+
+                        location.reload();
+
+                        $("#historico").html("");
                         
                         ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
                     } else {
@@ -644,9 +786,7 @@
                         $("#error_titulo").html("<p class='alert alert-danger'>Título e campo obrigatório</p>")
                     } else {
                         $("#error_titulo").html("");
-                    }
-                     
-                    
+                    }                  
 
                     if(form.find("#data").val() == "") {
                         $("#error_data").html("<p class='alert alert-danger'>Data e campo obrigatório</p>")
@@ -678,7 +818,6 @@
 
                 }
             });    
-            
             return false;
         });
 
@@ -697,6 +836,13 @@
 
     });
     $('.pagination').addClass('pagination-sm')
+    
+    
+    
+    
+    
+    
+    
     //$('.dataTables_filter').addClass('btn btn-sm btn-dark');
     //$('.dataTables_paginate').addClass('btn btn-sm btn-dark');
     // $.fn.dataTable.ext.classes.sPageButton = 'btn-sm';

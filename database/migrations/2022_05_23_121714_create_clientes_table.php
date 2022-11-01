@@ -22,9 +22,10 @@ class CreateClientesTable extends Migration
             $table->unsignedBigInteger('etiqueta_id');
             $table->unsignedBigInteger('origem_id')->nullable();
             $table->unsignedBigInteger('lead_id')->nullable();
+            $table->unsignedBigInteger('estagio_id')->nullable();
             $table->boolean('lead')->default(1);
             $table->boolean('visivel')->default(1);
-            $table->integer("star")->nullable();
+            // $table->integer("star")->nullable();
             $table->string("nome");
             
             $table->string("telefone")->nullable();
@@ -48,7 +49,7 @@ class CreateClientesTable extends Migration
             $table->boolean('pessoa_fisica');
             $table->boolean('pessoa_juridica');
             
-            $table->text('anotacoes')->nullable();
+            //$table->text('anotacoes')->nullable();
             
             $table->date("ultimo_contato")->nullable();
             $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete("cascade");
@@ -56,7 +57,7 @@ class CreateClientesTable extends Migration
             $table->foreign('etiqueta_id')->references('id')->on('etiquetas')->onDelete("cascade");
             $table->foreign('origem_id')->references('id')->on('origems')->onDelete("cascade");
             $table->foreign('lead_id')->references('id')->on('leads')->onDelete("cascade");
-
+            $table->foreign('estagio_id')->references('id')->on('estagio_clientes')->onDelete("cascade");
 
             $table->timestamps();
         });

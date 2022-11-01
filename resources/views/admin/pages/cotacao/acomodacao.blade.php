@@ -3,21 +3,25 @@
 <section class="d-flex justify-content-between">
     @foreach($valores as $v)
     <div class="d-flex justify-content-center flex-column rounded valores-acomodacao mb-3 py-2">
-        <!-- <div class="text-center my-2 icheck-success d-inline">
-            <input type="radio" name="acomodacao" id="acomodacao" value="{{$v->id_acomodacao}}" data-valor="{{$v->total}}">
-        </div> -->
-        <h4 class="text-center py-5 d-flex justify-content-center mx-auto align-items-center" style="background-color:rgba(0,0,0,0.4);border-radius:50%;border:6px solid rgb(44,108,206);width:100px;height:100px;">
-            <img src="{{\Illuminate\Support\Facades\Storage::url($v->operadora)}}" class="p-2 d-flex align-self-center" alt="" width="80" height="50" align="center">
-        </h4>
-        <div class="d-flex border-top border-bottom align-items-center">
-            <div class="col-6 border-right">
-                <p class="text-center h-100 my-auto py-2">{{$v->plano}}</p> 
-            </div>
-            <div class="col-6">
-                <p class="text-center h-100 my-auto py-2 tipo">{{$v->modelo}}</p>   
+        
+        <div class="d-flex">
+            <h4 class="text-center py-5 d-flex justify-content-center mx-auto align-items-center" style="background-color:rgba(0,0,0,0.4);border-radius:50%;border:6px solid rgb(44,108,206);width:100px;height:100px;">
+                <img src="{{\Illuminate\Support\Facades\Storage::url($v->operadora)}}" class="p-2 d-flex align-self-center" alt="" width="80" height="50" align="center">
+            </h4>
+            <div class="d-flex w-50 flex-column align-self-center align-items-end align-content-center flex-wrap">    
+                <div class="d-flex flex-column">
+                    <p class="text-center" style="margin:0;padding:0;font-size:1.2em;">{{$v->plano}}</p> 
+                    <p class="text-center" style="margin:0;padding:0;font-size:1.2em;">{{$v->modelo}}</p>   
+                </div>            
+                
             </div>
         </div>
-        <div class="d-flex border-bottom">
+
+        
+
+
+
+        <div class="d-flex border-bottom border-top">
             <div class="col-6 border-right">
                 <p class="text-center h-100 my-auto py-2">{{$v->coparticipacao}}</p>
             </div>

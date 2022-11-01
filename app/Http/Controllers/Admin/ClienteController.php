@@ -14,6 +14,7 @@ use App\Models\{
     AdministradoraCidade,
     ComissoesCorretoresConfiguracoes,
     Cotacao,
+    EstagioClientes,
     Operadora,
     Origem,
     Planos,
@@ -102,231 +103,389 @@ class ClienteController extends Controller
         }
     }
 
+    public function pegarTodosOsClientesPF(Request $request)
+    {
+        $visivel = 1;
+        $clientes = Cliente::
+                where("user_id",auth()->user()->id)
+                ->where("visivel",1)
+                ->where("lead",0)
+                ->where("pessoa_fisica",1)
+                
+                ->whereHas('tarefas',function($query) use($visivel){
+                    $query->where("user_id",auth()->user()->id);
+                    $query->whereRaw("motivo_id IS NULL");
+                    $query->where("visivel",$visivel);
+                })
+                ->with('tarefas',function($query) use($visivel){
+                    $query->where("status",0);
+                    $query->where("visivel",$visivel)
+                    ->with('titulo');
+                })
+                ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+                ->get();
+        return $clientes;        
+    }
+
+
+
+
     public function listarPessoaFisica()
     {
-    
-        $qtd_atrasada = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('pessoa_fisica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where("visivel",1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereDate('data','<',date('Y-m-d'));
-        })->count();
+       
+        // $qtd_atrasada = Cliente::
+        //     where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where("visivel",1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereDate('data','<',date('Y-m-d'));
+        // })->count();
               
         
-        $qtd_hoje = Cliente
-            ::where("user_id",auth()->user()->id)
-            ->where('pessoa_fisica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where('visivel',1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereDate('data',"=",date('Y-m-d'));
-            })->count();
+        // $qtd_hoje = Cliente
+        //     ::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('visivel',1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereDate('data',"=",date('Y-m-d'));
+        //     })->count();
         
-        $qtd_semana = Cliente
-            ::where("user_id",auth()->user()->id)
-            ->where('pessoa_fisica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where('visivel',1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
-            })->count();
+        // $qtd_semana = Cliente
+        //     ::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('visivel',1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
+        //     })->count();
         
-        $qtd_mes = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('pessoa_fisica',1)
-            ->where('lead',0)
-            ->where('visivel',1)
-            ->where('etiqueta_id',"!=",3)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereRaw("MONTH(data) = MONTH(NOW())");
-            })
-        ->count();
+        // $qtd_mes = Cliente::
+        //     where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where('visivel',1)
+        //     ->where('etiqueta_id',"!=",3)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereRaw("MONTH(data) = MONTH(NOW())");
+        //     })
+        // ->count();
         
         
 
         $titulos = TarefasTitulo::where("id","!=",1)->get();
 
-        $clientes_total = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where("etiqueta_id","!=",3)->where('visivel',1)->where('lead',0)->count();
-        $negociacao = Cliente::where("user_id",auth()->user()->id)
-            ->where('pessoa_fisica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id",3)
-            ->whereHas("cotacao",function($query){
-                $query->where("financeiro_id","!=",6);
-            })            
-            ->count();
-        //$finalizados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->toSql();
-        $finalizados = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id",3)
-            ->whereHas('cotacao',function($query){
-                $query->where('financeiro_id',6);
-            })->count();
-                
+        $clientes_total = Cliente::where("user_id",auth()->user()->id)
+                                ->where('pessoa_fisica',1)
+                                ->where('visivel',1)
+                                ->where('lead',0)
+                                ->count();
         
-        $cadastrado_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
-
-        $perdidos = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_fisica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
-            $query->whereRaw("motivo_id IS NOT NULL");
-        })->count();
+        // $interesse_frio = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",1)
+        //     ->toSql();
+         
+            
         
-        $perdidos_mes = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_fisica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
-            $query->whereRaw("motivo_id IS NOT NULL");
-        })->count();
+        // $interesse_morno = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",2)
+        //     ->count();
+
+        // $interesse_quente = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",3)
+        //     ->count();    
+
+        // $aguardando_doc = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",4)
+        //     ->count();
+
+        // $interesse_futuro = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",5)
+        //     ->count();
+        
+        // $sem_interesse =     
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",6)
+        //     ->whereMonth('created_at', date('m'))
+        //     ->count();
+
+        // $sem_interesse_mes =     
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("visivel",1)
+        //     ->where("estagio_id",6)
+        //     ->whereMonth('created_at',"!=",date('m'))
+        //     ->count();        
+            
+        
+        // $cadastrado_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
+
+        // $perdidos = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_fisica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
+        //     $query->whereRaw("motivo_id IS NOT NULL");
+        // })->count();
+        
+        // $perdidos_mes = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_fisica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
+        //     $query->whereRaw("motivo_id IS NOT NULL");
+        // })->count();
 
         
-        $finalizados_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id",3)
-            ->whereHas('cotacao',function($query){
-                $query->where('financeiro_id',6);
-                $query->whereRaw("MONTH(updated_at) = MONTH(NOW())");
-            })->count();
+        // $finalizados_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id",3)
+        //     ->whereHas('cotacao',function($query){
+        //         $query->where('financeiro_id',6);
+        //         $query->whereRaw("MONTH(updated_at) = MONTH(NOW())");
+        //     })->count();
 
-        $negociacao_mes = Cliente::where("user_id",auth()->user()->id)
-            ->where('pessoa_fisica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id",3)
-            ->whereHas("cotacao",function($query){
-                $query->where("financeiro_id","!=",6);
-                $query->whereRaw("MONTH(created_at) = MONTH(NOW())");
-            })->count();            
+        // $negociacao_mes = Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_fisica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id",3)
+        //     ->whereHas("cotacao",function($query){
+        //         $query->where("financeiro_id","!=",6);
+        //         $query->whereRaw("MONTH(created_at) = MONTH(NOW())");
+        //     })->count();            
           
 
 
         $motivos = TarefaMotivoPerda::all();
 
+        $tarefas = Tarefa
+            ::selectRaw("(SELECT COUNT(id) FROM tarefas WHERE DATA < DATE(NOW()) AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS atrasada")    
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE DATA = DATE(NOW()) AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS hoje")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now() AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS semana")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE MONTH(DATA) = MONTH(NOW()) AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS mes")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS todas")
+            ->whereRaw("user_id = 2 AND visivel = 1 AND motivo_id IS NULL")
+            ->first();
+            
+
+
+        $estagios = EstagioClientes::
+            selectRaw('id,nome')
+            ->selectRaw('(SELECT COUNT(*) FROM clientes WHERE clientes.estagio_id = estagio_clientes.id AND lead = 0 AND pessoa_fisica = 1) AS quantidade')
+            ->get();
+
+        
+        // dd($estagios);    
+
+         $clientes_total = Cliente::where("user_id",auth()->user()->id)->whereRaw("visivel = 1 AND lead = 0 AND pessoa_fisica = 1")->count();   
+
+
+
+
+
+
         return view('admin.pages.tarefas.page',[
-            'qtd_atrasada' => $qtd_atrasada,
-            'qtd_hoje' => $qtd_hoje,
-            'qtd_semana' => $qtd_semana,
-            'qtd_mes' => $qtd_mes,
+            // 'qtd_atrasada' => $qtd_atrasada,
+            // 'qtd_hoje' => $qtd_hoje,
+            // 'qtd_semana' => $qtd_semana,
+            // 'qtd_mes' => $qtd_mes,
             'clientes_total' => $clientes_total,
-            'negociacao' => $negociacao,
-            'finalizados' => $finalizados,
-            'cadastrado_mes' => $cadastrado_mes,
-            'finalizados_mes' => $finalizados_mes,
-            'negociacao_mes' => $negociacao_mes,
+            'tarefas' => $tarefas,
+            'estagios' => $estagios,
             'titulos' => $titulos,
             'motivos' => $motivos,
-            'perdidos' => $perdidos,
-            'perdidos_mes' => $perdidos_mes
+           
         ]);
     }
 
     public function listarPessoaJuridica()
     {
-        $qtd_atrasada = Cliente::
-            where("user_id",auth()->user()->id)
-            ->where('pessoa_juridica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where("visivel",1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereDate('data','<',date('Y-m-d'));
-            })->count(); 
+       
+        // $qtd_atrasada = Cliente::
+        //     where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where("visivel",1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereDate('data','<',date('Y-m-d'));
+        //     })->count(); 
 
-        $qtd_hoje = Cliente
-            ::where("user_id",auth()->user()->id)
-            ->where('pessoa_juridica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where('visivel',1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereDate('data',"=",date('Y-m-d'));
-            })->count();
+        // $qtd_hoje = Cliente
+        //     ::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('visivel',1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereDate('data',"=",date('Y-m-d'));
+        //     })->count();
 
-        $qtd_semana = Cliente
-            ::where("user_id",auth()->user()->id)
-            ->where('pessoa_juridica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where('visivel',1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
-            })->count();    
+        // $qtd_semana = Cliente
+        //     ::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('visivel',1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
+        //     })->count();    
 
-        $qtd_mes = Cliente
-            ::where("user_id",auth()->user()->id)
-            ->where('pessoa_juridica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id","!=",3)
-            ->where('visivel',1)
-            ->whereHas('tarefas',function($query){
-                $query->where('status',0);
-                $query->whereRaw("MONTH(data) = MONTH(NOW())");
-            })->count();
+        // $qtd_mes = Cliente
+        //     ::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('visivel',1)
+        //     ->whereHas('tarefas',function($query){
+        //         $query->where('status',0);
+        //         $query->whereRaw("MONTH(data) = MONTH(NOW())");
+        //     })->count();
+
+        // $interesse_frio = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where("star",1)
+             
+        //     ->count();
         
+        // $interesse_morno = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('star',2)
+        //     ->count();
 
-        $titulos = TarefasTitulo::where("id","!=",1)->get();
+        // $interesse_quente = 
+        //     Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id","!=",3)
+        //     ->where('star',3)
+        //     ->count();        
 
-        $clientes_total = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where("etiqueta_id","!=",3)->where('visivel',1)->where('lead',0)->count();
-        $negociacao = Cliente::where("user_id",auth()->user()->id)
-            ->where('pessoa_juridica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id",3)
-            ->whereHas("cotacao",function($query){
-                $query->where("financeiro_id","!=",6);
-            })            
-            ->count();
-        //$finalizados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->toSql();
-        $finalizados = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id",3)
-            ->whereHas('cotacao',function($query){
-                $query->where('financeiro_id',6);
-            })->count();
-                
-        
-        $cadastrado_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
-
-        $perdidos = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_juridica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
-            $query->whereRaw("motivo_id IS NOT NULL");
-        })->count();
-        
-        $perdidos_mes = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_juridica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
-            $query->whereRaw("motivo_id IS NOT NULL");
-        })->count();
-
-        
-        $finalizados_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id",3)
-            ->whereHas('cotacao',function($query){
-                $query->where('financeiro_id',7);
-                $query->whereRaw("MONTH(updated_at) = MONTH(NOW())");
-            })->count();
-
-        $negociacao_mes = Cliente::where("user_id",auth()->user()->id)
-            ->where('pessoa_juridica',1)
-            ->where('lead',0)
-            ->where("etiqueta_id",3)
-            ->whereHas("cotacao",function($query){
-                $query->where("financeiro_id","!=",6);
-                $query->whereRaw("MONTH(created_at) = MONTH(NOW())");
-            })->count();            
 
         $motivos = TarefaMotivoPerda::all();
 
+        $tarefas = Tarefa
+            ::selectRaw("(SELECT COUNT(id) FROM tarefas WHERE DATA < DATE(NOW()) AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS atrasada")    
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE DATA = DATE(NOW()) AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS hoje")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now() AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS semana")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE MONTH(DATA) = MONTH(NOW()) AND user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS mes")
+            ->selectRaw("(SELECT COUNT(id) FROM tarefas WHERE user_id = 2 AND visivel = 1 AND motivo_id IS NULL AND cliente_id IN(SELECT id FROM clientes WHERE clientes.id = tarefas.cliente_id AND clientes.pessoa_fisica = 1 AND visivel = 1)) AS todas")
+            ->whereRaw("user_id = 2 AND visivel = 1 AND motivo_id IS NULL")
+            ->first();
+            
+
+
+        $estagios = EstagioClientes::
+            selectRaw('id,nome')
+            ->selectRaw('(SELECT COUNT(*) FROM clientes WHERE clientes.estagio_id = estagio_clientes.id AND lead = 0 AND pessoa_fisica = 1) AS quantidade')
+            ->get();
+
+            $clientes_total = Cliente::where("user_id",auth()->user()->id)->whereRaw("visivel = 1 AND lead = 0 AND pessoa_fisica = 1")->count();   
+        
+
+        // $titulos = TarefasTitulo::where("id","!=",1)->get();
+
+        // $clientes_total = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where("etiqueta_id","!=",3)->where('visivel',1)->where('lead',0)->count();
+        // $negociacao = Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id",3)
+        //     ->whereHas("cotacao",function($query){
+        //         $query->where("financeiro_id","!=",6);
+        //     })            
+        //     ->count();
+        // //$finalizados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->toSql();
+        // $finalizados = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id",3)
+        //     ->whereHas('cotacao',function($query){
+        //         $query->where('financeiro_id',6);
+        //     })->count();
+                
+        
+        // $cadastrado_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();
+
+        // $perdidos = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_juridica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
+        //     $query->whereRaw("motivo_id IS NOT NULL");
+        // })->count();
+        
+        // $perdidos_mes = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->where('pessoa_juridica',1)->where('lead',0)->whereRaw("MONTH(created_at) = MONTH(NOW())")->whereHas('tarefas',function($query){
+        //     $query->whereRaw("motivo_id IS NOT NULL");
+        // })->count();
+
+        
+        // $finalizados_mes = Cliente::where("user_id",auth()->user()->id)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id",3)
+        //     ->whereHas('cotacao',function($query){
+        //         $query->where('financeiro_id',7);
+        //         $query->whereRaw("MONTH(updated_at) = MONTH(NOW())");
+        //     })->count();
+
+        // $negociacao_mes = Cliente::where("user_id",auth()->user()->id)
+        //     ->where('pessoa_juridica',1)
+        //     ->where('lead',0)
+        //     ->where("etiqueta_id",3)
+        //     ->whereHas("cotacao",function($query){
+        //         $query->where("financeiro_id","!=",6);
+        //         $query->whereRaw("MONTH(created_at) = MONTH(NOW())");
+        //     })->count();            
+
+        $motivos = TarefaMotivoPerda::all();
+
+        $titulos = TarefasTitulo::where("id","!=",1)->get();
+
+
         return view('admin.pages.tarefas.juridico',[
-            'qtd_atrasada' => $qtd_atrasada,
-            'qtd_hoje' => $qtd_hoje,
-            'qtd_semana' => $qtd_semana,
-            'qtd_mes' => $qtd_mes,
             'clientes_total' => $clientes_total,
-            'negociacao' => $negociacao,
-            'finalizados' => $finalizados,
-            'cadastrado_mes' => $cadastrado_mes,
-            'finalizados_mes' => $finalizados_mes,
+            'tarefas' => $tarefas,
+            'estagios' => $estagios,
             'titulos' => $titulos,
             'motivos' => $motivos,
-            'perdidos' => $perdidos,
-            'perdidos_mes' => $perdidos_mes,
-            'negociacao_mes' => $negociacao_mes
+            // 'qtd_atrasada' => $qtd_atrasada,
+            // 'qtd_hoje' => $qtd_hoje,
+            // 'qtd_semana' => $qtd_semana,
+            // 'qtd_mes' => $qtd_mes,
+            // 'clientes_total' => $clientes_total,
+            // 'interesse_frio' => $interesse_frio,
+            // 'interesse_morno' => $interesse_morno,
+            // 'interesse_quente' => $interesse_quente,
+            // 'negociacao' => $negociacao,
+            // 'finalizados' => $finalizados,
+            // 'cadastrado_mes' => $cadastrado_mes,
+            // 'finalizados_mes' => $finalizados_mes,
+            // 'titulos' => $titulos,
+            // 'motivos' => $motivos,
+            // 'perdidos' => $perdidos,
+            // 'perdidos_mes' => $perdidos_mes,
+            // 'negociacao_mes' => $negociacao_mes
         ]);
     }
 
@@ -358,31 +517,210 @@ class ClienteController extends Controller
     {
         $id_user = auth()->user()->id;
         $visivel = 1;
-
-        $clientes = Cliente::where("user_id",$id_user)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
-
+        $clientes = Cliente
+            ::where("user_id",$id_user)
+            ->where('pessoa_fisica',1)
+            ->where('lead',0)
+            // ->where("etiqueta_id","!=",3)
+            ->where("visivel",$visivel)
         ->whereHas('tarefas',function($query) use($visivel){
+            $query->where("user_id",auth()->user()->id);
+            $query->whereRaw("motivo_id IS NULL");
             $query->where("visivel",$visivel);
         })
         ->with('tarefas',function($query) use($visivel){
-            $query->where("visivel",$visivel)->with('titulo');
+            $query->where("status",0);
+            $query->where("visivel",$visivel)
+            ->with('titulo');
         })
-
-
         ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
         ->get();
-
-        
-
-        //->with(['tarefas.titulo','cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])->get();
-        //dd($clientes);
         return $clientes;
     }
+
+    public function pegarClientesAjaxId(Request $request)
+    {
+        $id = $request->id;
+        $visivel = 1;
+        $clientes = Cliente::where("user_id",auth()->user()->id)
+            ->where("lead",0)
+            ->where("visivel",1)
+            ->where("estagio_id",$id)
+            ->where("pessoa_fisica",1)
+            ->whereHas('tarefas',function($query) use($visivel){
+                        $query->where("visivel",$visivel);
+                    })
+                    ->with('tarefas',function($query) use($visivel){
+                        $query->where("visivel",$visivel)->with('titulo');
+                    })
+                    ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+            ->get();
+        return $clientes;    
+
+    }
+
+    public function pegarClientesAjaxIdPost(Request $request)
+    {
+        $id = $request->id;
+        $clientes = Cliente::where("user_id",auth()->user()->id)
+                    ->where("id",$id)
+                    // ->with(['cidade','origem'])
+            ->first();
+        return $clientes;    
+    }
+
+    public function editarClienteAjax(Request $request) 
+    {
+        $id = $request->editar_cliente_id;
+        $cliente = Cliente::where("id",$id)->first();
+        $cliente->nome = $request->editar_nome;
+        $cliente->email = $request->editar_email;
+        $cliente->cidade_id = $request->editar_cidade_id;
+        $cliente->telefone = $request->editar_telefone;
+        $cliente->origem_id = $request->editar_origem_id;
+        $cliente->save();
+        return $cliente;
+    }
+
+
+
+    public function mudarEstagioCliente(Request $request)
+    {
+        $id = $request->id;
+        $ci = $request->cliente;
+        $cliente = Cliente::where("id",$ci)->first();
+        $cliente->estagio_id = $id;
+        $cliente->save();
+        $qtd_frio = Cliente::where("user_id",auth()->user()->id)->where("visivel",1)->where("estagio_id",1)->where('pessoa_fisica',1)->where('lead',0)->count();
+        $qtd_morno = Cliente::where("user_id",auth()->user()->id)->where("visivel",1)->where("estagio_id",2)->where('pessoa_fisica',1)->where('lead',0)->count();
+        $qtd_quente = Cliente::where("user_id",auth()->user()->id)->where("visivel",1)->where("estagio_id",3)->where('pessoa_fisica',1)->where('lead',0)->count();
+        $qtd_aguardando_doc = Cliente::where("user_id",auth()->user()->id)->where("visivel",1)->where("estagio_id",4)->where('pessoa_fisica',1)->where('lead',0)->count();
+        $qtd_aguardando_inte_futuro = Cliente::where("user_id",auth()->user()->id)->where("visivel",1)->where("estagio_id",5)->where('pessoa_fisica',1)->where('lead',0)->count();
+        $qtd_aguardando_sem_interesse = Cliente::where("user_id",auth()->user()->id)->where("visivel",1)->where("estagio_id",6)->where('pessoa_fisica',1)->where('lead',0)->whereMonth("created_at",date('m'))->count();
+        
+        return [
+            "qtd_frio" => $qtd_frio,
+            "qtd_morno" => $qtd_morno,
+            "qtd_quente" => $qtd_quente,
+            "qtd_aguardando_doc" => $qtd_aguardando_doc,
+            "qtd_aguardando_inte_futuro" => $qtd_aguardando_inte_futuro,
+            "qtd_aguardando_sem_interesse" => $qtd_aguardando_sem_interesse
+        ];
+    }
+
+
+
+    // public function listarClientesAjaxInterreseFrio(Request $request)
+    // {
+    //     $id_user = auth()->user()->id;
+    //     $visivel = 1;
+    //     $clientes = Cliente::where("user_id",$id_user)->where('star',1)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
+    //     ->whereHas('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel);
+    //     })
+    //     ->with('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel)->with('titulo');
+    //     })
+    //     ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+    //     ->get();
+    //     return $clientes;
+    // }
+
+    // public function listarClientesAjaxInterreseMorno(Request $request)
+    // {
+    //     $id_user = auth()->user()->id;
+    //     $visivel = 1;
+    //     $clientes = Cliente::where("user_id",$id_user)->where('star',2)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
+    //     ->whereHas('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel);
+    //     })
+    //     ->with('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel)->with('titulo');
+    //     })
+    //     ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+    //     ->get();
+    //     return $clientes;
+    // }
+
+    // public function listarClientesAjaxInterreseQuente(Request $request)
+    // {
+    //     $id_user = auth()->user()->id;
+    //     $visivel = 1;
+    //     $clientes = Cliente::where("user_id",$id_user)->where('star',3)->where('pessoa_fisica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
+    //     ->whereHas('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel);
+    //     })
+    //     ->with('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel)->with('titulo');
+    //     })
+    //     ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+    //     ->get();
+    //     return $clientes;
+    // }
+
+
+    // public function listarClientesAjaxInterreseFrioPJ(Request $request)
+    // {
+    //     $id_user = auth()->user()->id;
+    //     $visivel = 1;
+    //     $clientes = Cliente::where("user_id",$id_user)->where('star',1)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
+    //     ->whereHas('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel);
+    //     })
+    //     ->with('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel)->with('titulo');
+    //     })
+    //     ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+    //     ->get();
+    //     return $clientes;
+    // }
+
+    // public function listarClientesAjaxInterreseMornoPJ(Request $request)
+    // {
+    //     $id_user = auth()->user()->id;
+    //     $visivel = 1;
+    //     $clientes = Cliente::where("user_id",$id_user)->where('star',2)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
+    //     ->whereHas('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel);
+    //     })
+    //     ->with('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel)->with('titulo');
+    //     })
+    //     ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+    //     ->get();
+    //     return $clientes;
+    // }
+
+    // public function listarClientesAjaxInterreseQuentePJ(Request $request)
+    // {
+    //     $id_user = auth()->user()->id;
+    //     $visivel = 1;
+    //     $clientes = Cliente::where("user_id",$id_user)->where('star',3)->where('pessoa_juridica',1)->where('lead',0)->where("etiqueta_id","!=",3)->where("visivel",$visivel)
+    //     ->whereHas('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel);
+    //     })
+    //     ->with('tarefas',function($query) use($visivel){
+    //         $query->where("visivel",$visivel)->with('titulo');
+    //     })
+    //     ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+    //     ->get();
+    //     return $clientes;
+    // }
+
+
+
+
+
+
+
+
+
 
 
 
     public function prospeccao()
     {
+        
         $cidades = Cidade::all();
         $origens = Origem::all();
         $qtdTotal = Cliente::where("lead",1)->where("visivel",1)->where('pessoa_fisica',1)->count();
@@ -395,9 +733,6 @@ class ClienteController extends Controller
         $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_fisica",1)->count();
         $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_fisica",1)->count();
         $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_fisica",1)->count();
-
-
-
 
         return view('admin.pages.clientes.prospeccao',[
             "cidades" => $cidades,
@@ -415,6 +750,7 @@ class ClienteController extends Controller
 
     public function leadsPJ()
     {
+       
         $cidades = Cidade::all();
         $origens = Origem::all();
         $qtdTotal = Cliente::where("lead",1)->where("visivel",1)->where('pessoa_juridica',1)->count();
@@ -427,9 +763,6 @@ class ClienteController extends Controller
         $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_juridica",1)->count();
         $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_juridica",1)->count();
         $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_juridica",1)->count();
-
-
-
 
         return view('admin.pages.clientes.juridico',[
             "cidades" => $cidades,
@@ -496,7 +829,9 @@ class ClienteController extends Controller
                 "hoje" => $hoje,
                 "semana" => $semana,
                 "mes" => $mes,
-                "total" => $mes
+                "total" => $mes,
+                "id" => $cliente->id,
+                "nome" => $cliente->nome
 
             ];
         } else {
@@ -506,6 +841,7 @@ class ClienteController extends Controller
 
     public function prospeccaoStorePJ(Request $request)
     {
+        
         $cliente = new Cliente();
         $cliente->user_id = auth()->user()->id;
         $cliente->cidade_id = $request->cidade_id;
@@ -516,12 +852,40 @@ class ClienteController extends Controller
         $cliente->lead_id = 2;
         $cliente->telefone = $request->telefone;
         $cliente->telefone_empresa = (!empty($request->telefone_empresa) ? $request->telefone_empresa : null);
+        $cliente->nome_empresa = $request->nome_empresa;
         $cliente->pessoa_fisica = 0;
         $cliente->pessoa_juridica = 1;
         $cliente->ultimo_contato = date("Y-m-d");
         $cliente->email = $request->email;
         if($cliente->save()) {
-            return $request->nome;
+
+            $qtdAtrasado = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','<',date('Y-m-d'))->count();
+            $qtdHoje = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','=',date('Y-m-d'))->count();    
+            $qtdSemana = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();        
+            $qtdMes = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();        
+
+            $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_juridica",1)->count();
+            $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_juridica",1)->count();
+            $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_juridica",1)->count();
+
+            return [
+                "quantidade_atrasado" => $qtdAtrasado,
+                "quantidade_hoje" => $qtdHoje,
+                "quantidade_semana" => $qtdSemana,
+                "quantidade_mes" => $qtdMes,
+                "quantidade_prospeccao" => $qtdProps,
+                "quantidade_vendas" => $qtdVendas,
+                "quantidade_atendimento" => $qtdAtendimento,
+                "id" => $cliente->id,
+                "nome" => $cliente->nome
+
+            ];
+
+
+
+
+
+            return $cliente->id;
         } else {
             return "error";
         }
@@ -656,17 +1020,19 @@ class ClienteController extends Controller
             ->where("lead",0)
             ->where("visivel",1)
             ->where('pessoa_fisica',1)
-            ->where("etiqueta_id","!=",3)
+            // ->where("etiqueta_id","!=",3)
             
             ->whereHas('tarefas',function($query){
-                $query->where("status",0);
+                $query->where("visivel",1);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->where("user_id",auth()->user()->id);
                 $query->whereDate('data','=',date('Y-m-d'));
             })
             ->with('tarefas',function($query){
-                $query->where("status",0);
+                // $query->where("status",0);
                 $query->whereDate('data','=',date('Y-m-d'))->with('titulo');
             })
-        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])->get();
+        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
         return $clientes;                
     } 
 
@@ -764,10 +1130,13 @@ class ClienteController extends Controller
             ->where("lead",0)
             ->where('pessoa_fisica',1)
             ->where('visivel',1)
-            ->where("etiqueta_id","!=",3)
+            // ->where("etiqueta_id","!=",3)
             ->whereHas('tarefas',function($query){
-                $query->where("status",0);
+                $query->where("user_id",auth()->user()->id);
+                $query->where("visivel",1);
+                $query->whereRaw("motivo_id IS NULL");
                 $query->whereDate("data","<",date('Y-m-d'));
+                $query->orderByRaw("DATA");
             })
             ->with('tarefas',function($query){
                 $query->where("status",0);
@@ -777,6 +1146,19 @@ class ClienteController extends Controller
 
         ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
         return $clientes;                
+
+            // $tarefas = Tarefa::where("user_id",auth()->user()->id)
+            //             ->where("visivel",1)
+            //             ->whereRaw("motivo_id IS NULL")
+            //             ->whereRaw("DATA < DATE(NOW())")
+            //             ->with(['cliente','cliente.cidade','cliente.etiqueta','cliente.cotacao.somarCotacaoFaixaEtaria','cliente.origem'])
+            //             ->get();
+
+            // return $tarefas;            
+
+
+
+
     }
 
     public function getClienteAtrasadasAjaxPJ(Request $request)
@@ -786,10 +1168,13 @@ class ClienteController extends Controller
             ->where("lead",0)
             ->where('pessoa_juridica',1)
             ->where('visivel',1)
-            ->where("etiqueta_id","!=",3)
+            //->where("etiqueta_id","!=",3)
             ->whereHas('tarefas',function($query){
-                $query->where("status",0);
+                $query->where("user_id",auth()->user()->id);
+                $query->where("visivel",1);
+                $query->whereRaw("motivo_id IS NULL");
                 $query->whereDate("data","<",date('Y-m-d'));
+                $query->orderByRaw("DATA");
             })
             ->with('tarefas',function($query){
                 $query->where("status",0);
@@ -843,16 +1228,18 @@ class ClienteController extends Controller
         $clientes = Cliente::
             where("user_id",auth()->user()->id)
             ->where("pessoa_fisica",1)
-            ->where("etiqueta_id","!=",3)
+            // ->where("etiqueta_id","!=",3)
             ->where("lead",0)
             ->where('visivel',1)
            
             ->whereHas('tarefas',function($query) use($visivel){
-                $query->where("status",0);
+                $query->where("visivel",1);
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
                 $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
             })
             ->with('tarefas',function($query) use($visivel){
-                $query->where("status",0);
+                // $query->where("status",0);
                 $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()")->with('titulo');
             })
             ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
@@ -877,7 +1264,8 @@ class ClienteController extends Controller
                 $query->where("status",0);
                 $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()")->with('titulo');
             })
-            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
+            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])
+            ->get();
         return $clientes;      
     }
 
@@ -925,19 +1313,21 @@ class ClienteController extends Controller
         $clientes = Cliente::
             where("user_id",auth()->user()->id)
             ->where("pessoa_fisica",1)
-            ->where("etiqueta_id","!=",3)
+            // ->where("etiqueta_id","!=",3)
             ->where("lead",0)
             ->where('visivel',1)
             ->whereHas('tarefas',function($query){
-                $query->where("status",0);
-                $query->whereRaw("MONTH(created_at) = MONTH(NOW())");
+                $query->where("visivel",1);
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->whereRaw("MONTH(data) = MONTH(NOW())");
             })
             ->with('tarefas',function($query){
                 $query->where("status",0);
-                $query->whereRaw("MONTH(created_at) = MONTH(NOW())")->with('titulo');
+                $query->whereRaw("MONTH(data) = MONTH(NOW())")->with('titulo');
             })
-            
-            ->with(['cidade','etiqueta','origem'])->get();
+            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
+            // ->with(['cidade','etiqueta','origem'])->get();
         return $clientes; 
     }
 
@@ -1507,7 +1897,7 @@ class ClienteController extends Controller
             ->with('clientes',function($query) use($fisica){
                 $query->where('pessoa_fisica',$fisica);
             })
-            ->with(['administradora','financeiro','cidade','acomodacao'])
+            ->with(['administradora','financeiro','cidade','acomodacao','somarCotacaoFaixaEtaria','plano'])
             ->get();
         return $contratos;       
     }
@@ -1528,7 +1918,7 @@ class ClienteController extends Controller
             ->with('clientes',function($query) use($juridica){
                 $query->where('pessoa_juridica',$juridica);
             })
-            ->with(['administradora','financeiro','cidade','acomodacao'])
+            ->with(['administradora','financeiro','cidade','acomodacao','somarCotacaoFaixaEtaria','plano'])
             ->get();
         return $contratos;       
     }

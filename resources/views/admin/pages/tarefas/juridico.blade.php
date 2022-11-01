@@ -1,8 +1,9 @@
 @extends('adminlte::page')
-@section('title', 'Contrato')
+@section('title', 'Cliente Pessoa Juridica')
 @section('plugins.Datatables', true)
+@section('plugins.Stars', true)
 @section('content_header')
-    <h4 class="text-white">GERENCIAMENTO CLIENTES PESSOA(S) JURIDICA(S)</h4>  
+    <h4 class="text-white">CLIENTES PESSOA JURÌDICA</h4>  
 @stop
 @section('content')
 
@@ -16,67 +17,85 @@
             <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
                 <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Tarefas</h5>
                 <ul style="margin:0px;padding:0px;">
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
-                            <span class="ml-2" style="font-weight: bold;">Atrasadas</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_atrasada}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 hoje">
-                            <span class="ml-2" style="font-weight: bold;">Hoje</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_hoje}}</span>
-                        </a>    
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 semana">
-                            <span class="ml-2" style="font-weight: bold;">Semana</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_semana}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" class="d-flex justify-content-between text-white py-1 mes">
-                            <span class="ml-2" style="font-weight: bold;">Mês</span>
-                            <span class="mr-2" style="font-weight: bold;">{{$qtd_mes}}</span>
-                        </a>
-                    </li>
+                <li class="links_tarefas">
+                <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
+                    <span class="ml-2">Atrasadas</span>
+                    <span class="mr-2">{{$tarefas->atrasada}}</span>
+                </a>
+            </li>
+            <li class="links_tarefas">
+                <a href="" class="d-flex justify-content-between text-white py-1 hoje">
+                    <span class="ml-2">Hoje</span>
+                    <span class="mr-2">{{$tarefas->hoje}}</span>
+                </a>    
+            </li>
+            <li class="links_tarefas">
+                <a href="" class="d-flex justify-content-between text-white py-1 semana">
+                    <span class="ml-2">Semana</span>
+                    <span class="mr-2">{{$tarefas->semana}}</span>
+                </a>
+            </li>
+            <li class="links_tarefas">
+                <a href="" class="d-flex justify-content-between text-white py-1 mes">
+                    <span class="ml-2">Mês</span>
+                    <span class="mr-2">{{$tarefas->mes}}</span>
+                </a>
+            </li>
+            <li class="links_tarefas">
+                <a href="" class="d-flex justify-content-between text-white py-1 todos">
+                    <span class="ml-2">Todos</span>
+                    <span class="mr-2">{{$tarefas->todas}}</span>
+                </a>
+            </li>
                 </ul>
             </div>
 
             <div class="d-flex flex-column mt-2 py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
                 <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Clientes</h5>
                 <ul style="margin:0px;padding:0px;">
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Total Geral</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$clientes_total}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page total_geral">
+                        <span class="ml-2">Total Geral</span>
+                        <span class="mr-2">{{$clientes_total}}</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Em Negociação</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$negociacao}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page interessado_frio">
+                        <div>
+                            <span class="ml-2">Interessado</span>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                        </div>
+                        <span class="mr-2">0</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Finalizados</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$finalizados}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page interessado_morno">
+                        <div>
+                            <span class="ml-2">Interessado</span>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                        </div>
+                        <span class="mr-2">0</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Cadastrados no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$cadastrado_mes}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page interessado_quente">
+                        <div>
+                            <span class="ml-2">Interessado</span>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                            <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
+                        </div>
+                        <span class="mr-2">0</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Perdidos</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$perdidos}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page">
+                        <span class="ml-2">Aguard. Documentação</span>
+                        <span class="mr-2">0</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Perdidos no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$perdidos_mes}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page">
+                        <span class="ml-2">Interesse Futuro</span>
+                        <span class="mr-2">0</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Finalizados no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$finalizados_mes}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page">
+                        <span class="ml-2">Sem Interesse</span>
+                        <span class="mr-2">0</span>
                     </li>
-                    <li class="d-flex justify-content-between text-white py-1">
-                        <span class="ml-2" style="font-weight: bold;">Em Negociação no Mês</span>
-                        <span class="mr-2" style="font-weight: bold;">{{$negociacao_mes}}</span>
+                    <li class="d-flex justify-content-between text-white py-1 link_page">
+                        <span class="ml-2">Sem Interesse no Mês</span>
+                        <span class="mr-2">0</span>
                     </li>
                 </ul>
             </div>
@@ -106,79 +125,72 @@
         <!--COLUNA RIGHT-->
         <div class="d-flex mr-1" style="flex-basis:39%;flex-wrap: wrap;height:95vh;">
             <!---FORM--->
-            <div class="py-2" style="background-color:rgba(0,0,0,0.5);border-radius:5px;height:380px;">
+            <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;height:225px;">
                 <form action="">
 
-                    <div class="form-row" style="margin-right: 0;margin-left:0;">
-                        <div class="col">
-                            <span class="text-white">Cliente:</span>
-                            <input type="text" name="nome" id="nome" class="form-control" readonly>
-                        </div>
-                        <div class="col">
-                            <span class="text-white">Cidade:</span>
-                            <input type="text" name="cidade" id="cidade" class="form-control" readonly>
-                        </div>
-                    </div>
+                <div class="form-row" style="margin-right: 0;margin-left:0;">
+                <div class="col">
+                    <span class="text-white">Cliente:</span>
+                    <input type="text" name="nome" id="nome" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Cidade:</span>
+                    <input type="text" name="cidade" id="cidade" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Status:</span>
+                    <input type="text" name="status" id="status" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
 
-                    <div class="form-row" style="margin-right: 0;margin-left:0;">
-                        <div class="col">
-                            <span class="text-white">Telefone:</span>
-                            <input type="text" name="telefone" id="telefone" class="form-control" readonly>
-                        </div>
-                        <div class="col">
-                            <span class="text-white">Email:</span>
-                            <input type="text" name="email" id="email" class="form-control" readonly>
-                        </div>
-                    </div>
+            <div class="form-row" style="margin-right: 0;margin-left:0;">
+                <div class="col">
+                    <span class="text-white">Telefone:</span>
+                    <input type="text" name="telefone" id="telefone" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Email:</span>
+                    <input type="text" name="email" id="email" class="form-control form-control-sm" readonly>
+                </div>
+                <div class="col">
+                    <span class="text-white">Quantidade de Vidas:</span>
+                    <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control form-control-sm" readonly>
+                </div>
+            </div>
 
-                    <div style="display: flex;">
-                        <div style="flex-basis:22%;margin-right:2%;margin-left:5px;">
-                            <span class="text-white">Data Cadastro:</span>
-                            <input type="text" name="data_cadastro" id="data_cadastro" class="form-control" readonly>
-                        </div>
-                        <div style="flex-basis:10%;margin-right:2%;">
-                            <span class="text-white">Dias:</span>
-                            <input type="text" name="dias_cadastro" id="dias_cadastro" class="form-control" readonly>
-                        </div>
-                        <div style="flex-basis:22%;margin-right:2%;">
-                            <span class="text-white">Ultimo Contato:</span>
-                            <input type="text" name="ultimo_contato" id="ultimo_contato" class="form-control" readonly>
-                        </div>
-                        <div style="flex-basis:10%;margin-right:2%;">
-                            <span class="text-white">Dias:</span>
-                            <input type="text" name="dias_contato" id="dias_contato" class="form-control" readonly>
-                        </div>
-                        <div style="flex-basis:29%;margin-right:4px;">
-                            <span class="text-white">Origem Leads:</span>
-                            <input type="text" name="origem_leads" id="origem_leads" class="form-control" readonly>    
-                        </div>    
-                    </div>
+            <div style="display: flex;">
+                <div style="flex-basis:22%;margin-right:2%;margin-left:5px;">
+                    <span class="text-white">Data Cadastro:</span>
+                    <input type="text" name="data_cadastro" id="data_cadastro" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:10%;margin-right:2%;">
+                    <span class="text-white">Dias:</span>
+                    <input type="text" name="dias_cadastro" id="dias_cadastro" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:22%;margin-right:2%;">
+                    <span class="text-white">Ultimo Contato:</span>
+                    <input type="text" name="ultimo_contato" id="ultimo_contato" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:10%;margin-right:2%;">
+                    <span class="text-white">Dias:</span>
+                    <input type="text" name="dias_contato" id="dias_contato" class="form-control form-control-sm" readonly>
+                </div>
+                <div style="flex-basis:29%;margin-right:4px;">
+                    <span class="text-white">Origem Leads:</span>
+                    <input type="text" name="origem_leads" id="origem_leads" class="form-control form-control-sm" readonly>    
+                </div>    
+            </div>
 
-                    <div style="display:flex;flex-basis:100%;">
-                        <div style="flex-basis:48%;margin-right:2%;margin-left:5px;">
-                            <span class="text-white">Quantidade de Vidas:</span>
-                            <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control" readonly>
-                        </div>
-                        <div style="flex-basis:48%;">
-                            <span class="text-white">Status:</span>
-                            <input type="text" name="status" id="status" class="form-control" readonly>
-                        </div>
-                    </div>
-
-                    <div class="d-flex">
-                        <div style="flex-basis:98%;margin-left:5px;">
-                            <span class="text-white">Descrição:</span>
-                            <textarea name="descricao_tarefa" id="descricao_tarefa" name="descricao_tarefa" class="form-control" readonly></textarea>
-                        </div>
-                        
-                    </div>
-
-                    <div style="display:flex;margin:5px 0 0 0;" class="d-flex justify-content-center">
-                        <a href="#" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Nova Tarefa</a>
-                        <a href="#" data-orcamento style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Orçamento</a>
-                        <a href="#" data-contrato style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Contrato</a>
-                        <a href="#" data-perda data-toggle="modal" data-target="#motivoDaPerda" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Perda</a>
-                    </div>
+            <div class="grupo-botoes">
+                <a href="#" data-tarefa class="ml-1">Nova Tarefa</a>
+                <a href="#" data-ligar class="mx-2">Ligar</a>
+                <a href="#" data-whatsapp>Whatsapp</a>
+                <a href="#" data-email class="mx-2">Email</a>
+                <a href="#" data-orcamento class="mr-2">Orçamento</a>
+                <a href="#" data-contrato>Contrato</a>
+                
+               
+            </div>
 
                     
 
@@ -187,10 +199,7 @@
             <!---FIM FORM--->
 
             <!--TIMELINE--->
-            <div style="overflow-y:scroll;background-color:rgba(0,0,0,0.5);border-radius:5px;height:calc(100% - 385px);flex-basis:100%;" id="historico">
-                
-                
-                
+            <div class="timelines" id="historico">
             </div>
 
 
@@ -240,6 +249,30 @@
                             <p class="alert alert-danger">{{$errors->first('descricao')}}</p>
                         @endif
                     </div>
+
+                    <input type="hidden" name="star" id="star">
+                    <div class="d-flex justify-content-center mb-3">
+                        <div id="rateYo"></div>
+                    </div>
+                    <div id="error_star"></div>
+
+                    <div class="text-center mx-auto text-center mb-3" style="width:95%;border-radius:10px;">
+                        <div class="d-flex flex-column">
+                            <small class="d-flex">
+                                <div id="frio"></div><span class="text-white">Frio</span>
+                            </small>
+                            <small class="d-flex">
+                                <div id="normo"></div><span class="text-white">Morno</span>
+                            </small>
+                            <small class="d-flex">
+                                <div id="quente"></div><span class="text-white">Quente</span>
+                            </small>
+                        </div>
+                    </div>
+
+
+
+
                     <input type="submit" class="btn btn-primary btn-block" value="Agendas Tarefa">
                 </form>  
             </div>
@@ -306,15 +339,12 @@
     <script>
         $(function(){
 
-            // $(".fa-bars").on('click',function(){
-            //     if($('body').hasClass('sidebar-collapse')) {
-            //         $('body').removeClass('sidebar-mini');
-            //         $('body').addClass('sidebar-hidden')
-            //     } else {
-            //         $('body').removeClass('sidebar-hidden');
-            //         $('body').addClass('sidebar-mini')
-            //     }
-            // });
+            $("#frio").rateYo({rating:1,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
+            $("#normo").rateYo({rating:2,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
+            $("#quente").rateYo({rating:3,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
+
+            $("#rateYo").rateYo({spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,normalFill: 'white',ratedFill: 'orange',fullStar: true,onSet: function (rating, rateYoInstance) {$("input[name='star']").val(rating);}});
+
 
 
 
@@ -325,11 +355,13 @@
             });
 
         let ta = $(".listarclientes").DataTable({
+            dom: '<"d-flex justify-content-between"<"#title">ft><t><"d-flex justify-content-between"lp>',
             "language": {
                 "url": "{{asset('traducao/pt-BR.json')}}"
             },
             ajax: {
-                "url":"{{ route('clientes.ajaxclienteslistapj') }}",
+                // "url":"{{ route('clientes.ajaxclienteslistapj') }}",
+                "url":"{{ route('cliente.getTarefasAtrasadasAjaxPJ') }}",
                 "dataSrc": ""
             },
             "lengthMenu": [10,20,30,40,100],
@@ -362,14 +394,18 @@
                 } else {
                     $(row).addClass('alvo');
                 }
+            },
+            "initComplete": function( settings, json ) {
+                $('#title').html("<h4>Atrasadas</h4>");
             }
         });
         
         var table = $('#tabela').DataTable();
         $('table').on('click', 'tbody tr', function () {
-            let data = table.row(this).data();
             
-            let quantidade_vidas = 0;
+            let data = table.row(this).data();
+            console.log(data);
+            
             if(data.cotacao && !!data.cotacao) {
                 //quantidade_vidas = data.cotacao.somarCotacaoFaixaEtaria.soma;
                 quantidade_vidas = data.cotacao.somar_cotacao_faixa_etaria[0].soma;
@@ -403,34 +439,104 @@
             $("#dias_contato").val(ultimoEmDias);
             $("#origem_leads").val("-")
             
-            $("a[data-orcamento]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/orcamento/"+data.id);
-            $("a[data-contrato]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer').attr("href","/admin/cotacao/contrato/"+data.id);
-            $("a[data-tarefa]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer');
-            $("a[data-perda]").attr('style','background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;cursor:pointer');
+            $("a[data-orcamento]").attr("href","/admin/cotacao/orcamento/"+data.id);
+            $("a[data-contrato]").attr("href","/admin/cotacao/contrato/"+data.id);
+            $("a[data-email]").attr("href","mailto:"+data.email);
+            $("a[data-whatsapp]").attr("href","https://api.whatsapp.com/send?phone=55"+data.telefone.replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","")).attr('target',"_blank");
+            $("a[data-tarefa]").attr('data-toggle','modal').attr('data-target','#cadastrarClienteClienteEspecifico');
             
             historicoCliente(data.id);
 
         });
 
         $(".atrasada").on('click',function(){
+            $("div").removeClass('fundo');
+            $(".hoje").removeClass('fundo');
+            $(".semana").removeClass('fundo');
+            $(".mes").removeClass('fundo');
+            $(".todos").removeClass('fundo');
+            $(this).addClass('fundo');
+            $("#title").html("<h4>Atrasadas</h4>");
             ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjaxPJ') }}").load();
             return false;
         });
 
         $(".hoje").on('click',function(){
+            $("div").removeClass('fundo');
+            $(".atrasada").removeClass('fundo');
+            $(".semana").removeClass('fundo');
+            $(".mes").removeClass('fundo');
+            $(".todos").removeClass('fundo');
+            $(this).addClass('fundo');
+            $("#title").html("<h4>Hoje</h4>");
             ta.ajax.url("{{ route('cliente.getTarefasParaHojePJ') }}").load();
             return false;
         });
 
         $(".semana").on('click',function(){
+            $("div").removeClass('fundo');
+            $(".hoje").removeClass('fundo');
+            $(".atrasada").removeClass('fundo');
+            $(".mes").removeClass('fundo');
+            $(".todos").removeClass('fundo');
+            $(this).addClass('fundo');
+            $("#title").html("<h4>Semana</h4>");
             ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxPJ') }}").load();
             return false;
         });
 
         $(".mes").on('click',function(){
+            $("div").removeClass('fundo');
+            $(".hoje").removeClass('fundo');
+            $(".semana").removeClass('fundo');
+            $(".atrasada").removeClass('fundo');
+            $(".todos").removeClass('fundo');
+            $(this).addClass('fundo');
+            $("#title").html("<h4>Mês</h4>");
             ta.ajax.url("{{ route('cliente.listarClienteMesAjaxPJ') }}").load();
             return false;
         });
+
+        $(".todos").on('click',function(){
+            $("div").removeClass('fundo');
+            $(".hoje").removeClass('fundo');
+            $(".semana").removeClass('fundo');
+            $(".atrasada").removeClass('fundo');
+            $(".mes").removeClass('fundo');
+            $(this).addClass('fundo');
+            $("#title").html("<h4>Todos</h4>");
+            ta.ajax.url("{{ route('cliente.listarClienteMesAjaxPJ') }}").load();
+            return false;
+        });
+
+        $(".total_geral").on('click',function(){
+            $("#title").html("<h4>Todos</h4>");
+            return false;
+        });
+
+        $(".interessado_frio").on('click',function(){
+            $("#title").html("<h4>Interesse <i class='fas fa-star fa-xs' style='color:rgb(255,165,0);width:10px;'></i></h4>");
+            
+            return false;
+        });
+
+        $(".interessado_morno").on('click',function(){
+            $("#title").html("<h4>Interesse <i class='fas fa-star fa-xs' style='color:rgb(255,165,0);width:10px;'></i><i class='fas fa-star fa-xs' style='color:rgb(255,165,0);width:10px;margin-left:12px;'></i></h4>");
+            
+            return false;
+        });
+
+        $(".interessado_quente").on('click',function(){
+            $("#title").html("<h4>Interesse <i class='fas fa-star fa-xs' style='color:rgb(255,165,0);width:10px;'></i><i class='fas fa-star fa-xs' style='color:rgb(255,165,0);width:10px;margin-left:12px;'></i><i class='fas fa-star fa-xs' style='color:rgb(255,165,0);width:10px;margin-left:12px;'></i></h4>");
+            
+            return false;
+        });
+
+
+
+
+
+
 
         $(".nova_tarefa").on('click',function(){
             let id = $().val();
@@ -551,17 +657,21 @@
 @stop
 
 @section('css')
-        <style>
-            ul {
-                list-style: none;
-            }
-            .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
-    .alvo {cursor:pointer;}
-    ::-webkit-scrollbar {width: 12px;}
-    ::-webkit-scrollbar-track {background: orange;}
-    ::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
-    textarea {resize: none;}   
-        </style>
-
-
+    <style>
+         ul {list-style: none;}
+        .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
+        .alvo {cursor:pointer;}        
+        textarea {resize: none;}   
+        .timelines {overflow-y:scroll;background-color:rgba(0,0,0,0.5);border-radius:5px;height:calc(100% - 230px);flex-basis:100%;}
+        .timelines::-webkit-scrollbar {width: 12px;}
+        .timelines::-webkit-scrollbar-track {background: orange;}
+        .timelines::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
+        .grupo-botoes {margin-top: 10px;display: flex;}
+        .grupo-botoes > a {font-size:0.875em;width:15%;padding:5px 0;background-color:rgba(0,0,0,0.4);border:2px solid #FFF;text-align:center;color:#FFF;}
+        .grupo-botoes > a:hover {background-color:rgba(255,255,255,0.5) !important;cursor:pointer !important;}
+        .link_page:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
+        .links_tarefas:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
+        .textoforte {background-color:rgba(255,255,255,0.5);color:black;}
+        .fundo {background-color: rgba(255,255,255,0.5);}
+    </style>
 @stop

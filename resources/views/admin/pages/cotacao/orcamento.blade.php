@@ -473,20 +473,7 @@
                         if(res == "error") {
                             $('#collapseOne').collapse('show');
                         } else {
-                            console.log(res);
-
-                            // console.log(res);
-                            // $('.errornome').html('');
-                            // $('.errortelefone').html('');
-                            // $(".errortelefoneinvalido").html('');
-                            // $('.erroremail').html('');
-                            // $('.errorcidade').html('');
-                            // $(".erroremailinvalido").html('');
-                            // $('.errorcoparticipacao').html('');
-                            // $('.errorodonto').html('');
-                            // $('.errorfaixa').html('');
-                            // $(".errorpessoa").html('');
-                            // $('#collapseOne').collapse('hide');
+                            
                             $('#aquiPlano').html(res)
                         }
                     }
@@ -512,7 +499,7 @@
                 let cidade = $('select[name="cidades"]').val();
 
                 var element = $('<div></div>');
-                element.html('<a style="margin-right:15px;background-color:#34af23;color:#FFF;" class="border p-1 border-dark rounded" href="https://api.whatsapp.com/send?phone=55'+telefone+'"><i class="fab fa-whatsapp fa-2x"></i></a><a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded" href="/admin/email/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-file-pdf fa-2x"></i></a>');
+                element.html('<a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded" href="/admin/email/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-file-pdf fa-2x"></i></a>');
                 element.addClass("cards_destaque_links")
                 element.hide();
 

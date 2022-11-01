@@ -55,33 +55,33 @@ class EventServiceProvider extends ServiceProvider
             $event->menu->addIn('clientes',[
                 "text" => "Pessoa Fisica",
                 "url" => "admin/clientes/pf",
-                'icon'    => 'fas fa-list',
+                'icon'    => 'fas fa-user',
                 'classes' => 'text-white',
                 'label'       => $event->qtdClientePF(),
                 'label_color' => 'success',    
             ],[
                 "text" => "Pessoa Juridica",
                 "url" => "admin/clientes/pj",
-                'icon'    => 'fa fa-file-signature',
+                'icon'    => 'fas fa-user-tie',
                 'classes' => ' text-white',
                 'label'       => $event->qtdClietePJ(),
-                'label_color' => 'primary',   
+                'label_color' => 'warning',   
 
             ]);
 
             $event->menu->addIn('contratos_pf',
                 [
-                    "text" => "Pendentes",
+                    "text" => "Pessoa Fisica",
                     "url" => "admin/contratos/pf/pendentes",
-                    'icon'    => 'fas fa-ellipsis-h',
+                    'icon'    => 'fas fa-user',
                     'classes' => 'text-white',
                     'label'       => $event->qtdContratosPF(),
                     'label_color' => 'primary',     
                 ],
                 [
-                    "text" => "Finalizados",
-                    "url" => "",
-                    'icon'    => 'fas fa-thumbs-up',
+                    "text" => "Pessoa Juridica",
+                    "url" => "admin/contratos/pj/pendentes",
+                    'icon'    => 'fas fa-user-tie',
                     'classes' => 'text-white',
                     'label'       => 0,
                     'label_color' => 'danger',     

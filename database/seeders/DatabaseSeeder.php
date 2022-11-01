@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             PlanosTableSeeder::class,
             EtiquetasTableSeeder::class,
             FinanceirosTableSeeder::class,
-            TarefaMotivoPerdasSeeder::class
+            TarefaMotivoPerdasSeeder::class,
+            EstagioClientesSeeder::class,
         ]);
     }
 }

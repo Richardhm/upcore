@@ -39,7 +39,7 @@ class EventServiceProvider extends ServiceProvider
                 'text' => 'Pessoa Física',
                 'url' => 'admin/leads/pessoa_fisica',
                 'icon'    => 'fas fa-user',
-                'classes'  => 'text-white',
+                'classes'  => 'text-white ml-3',
                 'label'       => $event->qtdLeedsPF(),
                 'label_color' => 'success',    
                         
@@ -47,7 +47,7 @@ class EventServiceProvider extends ServiceProvider
                 "text" => "Pessoa Jurídica",
                 "url" => "admin/leads/pessoa_juridica",
                 'icon'    => 'fas fa-user-tie',
-                'classes'  => 'text-white',
+                'classes'  => 'text-white ml-3',
                 'label'       => $event->qtdLeedsPJ(),
                 'label_color' => 'info',    
             ]);
@@ -56,14 +56,14 @@ class EventServiceProvider extends ServiceProvider
                 "text" => "Pessoa Fisica",
                 "url" => "admin/clientes/pf",
                 'icon'    => 'fas fa-user',
-                'classes' => 'text-white',
+                'classes' => 'text-white ml-3',
                 'label'       => $event->qtdClientePF(),
                 'label_color' => 'success',    
             ],[
                 "text" => "Pessoa Juridica",
                 "url" => "admin/clientes/pj",
                 'icon'    => 'fas fa-user-tie',
-                'classes' => ' text-white',
+                'classes' => ' text-white ml-3',
                 'label'       => $event->qtdClietePJ(),
                 'label_color' => 'warning',   
 
@@ -74,7 +74,7 @@ class EventServiceProvider extends ServiceProvider
                     "text" => "Pessoa Fisica",
                     "url" => "admin/contratos/pf/pendentes",
                     'icon'    => 'fas fa-user',
-                    'classes' => 'text-white',
+                    'classes' => 'text-white ml-3',
                     'label'       => $event->qtdContratosPF(),
                     'label_color' => 'primary',     
                 ],
@@ -82,7 +82,7 @@ class EventServiceProvider extends ServiceProvider
                     "text" => "Pessoa Juridica",
                     "url" => "admin/contratos/pj/pendentes",
                     'icon'    => 'fas fa-user-tie',
-                    'classes' => 'text-white',
+                    'classes' => 'text-white ml-3',
                     'label'       => 0,
                     'label_color' => 'danger',     
                 ]

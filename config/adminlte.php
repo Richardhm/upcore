@@ -238,13 +238,13 @@ return [
                     "text" => "Controle Clientes",
                     "url" => "/admin",
                     'icon'    => 'fas fa-house-user',
-                    'classes'  => 'text-white'
+                    'classes'  => 'text-white ml-3'
                 ],
                 [
                     "text" => "Controle Financeiro",
                     "url" => "",
                     'icon'    => 'fas fa-house-user',
-                    'classes'  => 'text-white'    
+                    'classes'  => 'text-white ml-3'    
                 ]
             ]
         ],
@@ -651,13 +651,11 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    //'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
                     'location' => '/vendor/select2/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    //'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
                     'location' => '/vendor/select2/select2.min.css',
                 ],
             ],
@@ -668,7 +666,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '/vendor/chart.js/Chart.bundle.min.js',
                 ],
             ],
         ],
@@ -678,7 +676,6 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    //'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
                     'location' => '/vendor/sweetalert2/sweetalert2.js',
                 ],
             ],

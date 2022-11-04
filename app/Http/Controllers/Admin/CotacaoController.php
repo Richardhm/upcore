@@ -308,6 +308,7 @@ class CotacaoController extends Controller
         ->groupByRaw("ta.administradora_id,ta.faixa_etaria,ta.odonto")
         ->orderByRaw("ta.administradora_id,card,fe.nome")    
         ->get();
+       
         
     // return $planos;    
       

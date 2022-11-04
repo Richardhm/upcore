@@ -16,6 +16,7 @@ use App\Models\{
     CotacaoJuridica,
     Etiquetas,
     Operadora,
+    Origem,
     Planos,
     PremiacaoCorretoraLancadas,
     PremiacaoCorretoresLancados,
@@ -341,6 +342,7 @@ class HomeController extends Controller
 
     public function corretor()
     {
+        
             $tarefasHoje = Tarefa::where("user_id",auth()->user()->id)
                 ->where("status",0)
                 ->whereDate('data',date('Y-m-d'))
@@ -378,66 +380,66 @@ class HomeController extends Controller
                 
 
 
-            $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->count();
-            $aguardando_boleto_coletivo_total = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
-            $aguardando_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("financeiro_id",1);
-                $query->where("user_id",auth()->user()->id);
-                $query->where("plano_id","!=",1);
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->count();
+            // $aguardando_boleto_coletivo_total = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
+            // $aguardando_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("financeiro_id",1);
+            //     $query->where("user_id",auth()->user()->id);
+            //     $query->where("plano_id","!=",1);
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
-            $aguardando_pagamento_adesao_coletivo = Cotacao::where("financeiro_id",2)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->count();
-            $aguardando_pagamento_boleto_coletivo_total = Cotacao::where("financeiro_id",2)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
-            $aguardando_pagamento_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("financeiro_id",2);
-                $query->where("user_id",auth()->user()->id);
-                $query->where("plano_id","!=",1);
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $aguardando_pagamento_adesao_coletivo = Cotacao::where("financeiro_id",2)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->count();
+            // $aguardando_pagamento_boleto_coletivo_total = Cotacao::where("financeiro_id",2)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
+            // $aguardando_pagamento_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("financeiro_id",2);
+            //     $query->where("user_id",auth()->user()->id);
+            //     $query->where("plano_id","!=",1);
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
-            $aguardando_pagamento_vigencia = Cotacao::where("financeiro_id",4)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->count();
-            $aguardando_pagamento_vigencia_total = Cotacao::where("financeiro_id",4)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
-            $aguardando_pagamento_vigencia_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("financeiro_id",4);
-                $query->where("user_id",auth()->user()->id);
-                $query->where("plano_id","!=",1);
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $aguardando_pagamento_vigencia = Cotacao::where("financeiro_id",4)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->count();
+            // $aguardando_pagamento_vigencia_total = Cotacao::where("financeiro_id",4)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
+            // $aguardando_pagamento_vigencia_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("financeiro_id",4);
+            //     $query->where("user_id",auth()->user()->id);
+            //     $query->where("plano_id","!=",1);
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
-            $aguardando_individual_qtd = Cotacao::where("financeiro_id",1)->where("user_id",auth()->user()->id)->where("plano_id",1)->count();
-            $aguardando_individual_total = Cotacao::where("financeiro_id",1)->where("user_id",auth()->user()->id)->where("plano_id",1)->selectRaw("sum(valor) as total")->first()->total;
-            $aguardando_individual_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("financeiro_id",1);
-                $query->where("plano_id",1);
-                $query->where("user_id",auth()->user()->id);
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $aguardando_individual_qtd = Cotacao::where("financeiro_id",1)->where("user_id",auth()->user()->id)->where("plano_id",1)->count();
+            // $aguardando_individual_total = Cotacao::where("financeiro_id",1)->where("user_id",auth()->user()->id)->where("plano_id",1)->selectRaw("sum(valor) as total")->first()->total;
+            // $aguardando_individual_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("financeiro_id",1);
+            //     $query->where("plano_id",1);
+            //     $query->where("user_id",auth()->user()->id);
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
-            $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
-            $totalVidasQuantidade = CotacaoFaixaEtaria::whereIn("cotacao_id",function($query){
-                $query->select('cotacoes.id');
-                $query->from('cotacoes');
-                $query->whereRaw("cotacoes.user_id=".auth()->user()->id);
-            })->selectRaw("sum(quantidade) as quantidade_total_vidas")->first()->quantidade_total_vidas;
+            // $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
+            // $totalVidasQuantidade = CotacaoFaixaEtaria::whereIn("cotacao_id",function($query){
+            //     $query->select('cotacoes.id');
+            //     $query->from('cotacoes');
+            //     $query->whereRaw("cotacoes.user_id=".auth()->user()->id);
+            // })->selectRaw("sum(quantidade) as quantidade_total_vidas")->first()->quantidade_total_vidas;
 
-            $totalClientesNegociados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('clientes',function($query){
-                $query->where('etiqueta_id','=',3);
-            })->count();
+            // $totalClientesNegociados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('clientes',function($query){
+            //     $query->where('etiqueta_id','=',3);
+            // })->count();
 
-            $totalVidasClientesNegociados = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("user_id",auth()->user()->id);
-                $query->where("financeiro_id",6);    
-            })->selectRaw("SUM(quantidade) AS total_quantidade")->first()->total_quantidade;
+            // $totalVidasClientesNegociados = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("user_id",auth()->user()->id);
+            //     $query->where("financeiro_id",6);    
+            // })->selectRaw("SUM(quantidade) AS total_quantidade")->first()->total_quantidade;
 
-            $totalClientesNegociacao = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","!=",6)->count();
-            $vidasTotalClientesNegociacao = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("financeiro_id","!=",6);
-                $query->where("user_id",auth()->user()->id);
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $totalClientesNegociacao = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","!=",6)->count();
+            // $vidasTotalClientesNegociacao = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("financeiro_id","!=",6);
+            //     $query->where("user_id",auth()->user()->id);
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
             
-            $clientesCadastradosEsseMes = DB::table('clientes')->whereRaw("user_id = ? AND MONTH(NOW()) = MONTH(created_at) AND YEAR(now()) = YEAR(created_at)",[auth()->user()->id])->count();
-            $clientesCadastradosEsseMesVidas = CotacaoFaixaEtaria::whereHas('cotacao.clientes',function($query){
-                $query->where("user_id",auth()->user()->id);
-                $query->whereMonth('created_at',date('m'));
-                $query->whereYear('created_at',date('Y'));
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $clientesCadastradosEsseMes = DB::table('clientes')->whereRaw("user_id = ? AND MONTH(NOW()) = MONTH(created_at) AND YEAR(now()) = YEAR(created_at)",[auth()->user()->id])->count();
+            // $clientesCadastradosEsseMesVidas = CotacaoFaixaEtaria::whereHas('cotacao.clientes',function($query){
+            //     $query->where("user_id",auth()->user()->id);
+            //     $query->whereMonth('created_at',date('m'));
+            //     $query->whereYear('created_at',date('Y'));
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
             
 
 
@@ -530,38 +532,38 @@ class HomeController extends Controller
 
 
             /*****************************************************Total Restante*********************************************************************************/
-            $totalVendidoRestante = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-                $query->where("status",0);
-                $query->whereRaw("MONTH(data) != MONTH(NOW())");
-            })->selectRaw("sum(valor) as total")->first()->total;
-            $totalVidasVendidasRestante = CotacaoFaixaEtaria::whereHas('cotacao.comissao.comissaoLancadas',function($query){
-                $query->where("status",0);
-                $query->whereRaw("MONTH(data) != MONTH(now())");
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $totalVendidoRestante = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
+            //     $query->where("status",0);
+            //     $query->whereRaw("MONTH(data) != MONTH(NOW())");
+            // })->selectRaw("sum(valor) as total")->first()->total;
+            // $totalVidasVendidasRestante = CotacaoFaixaEtaria::whereHas('cotacao.comissao.comissaoLancadas',function($query){
+            //     $query->where("status",0);
+            //     $query->whereRaw("MONTH(data) != MONTH(now())");
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
-            $totalVendidoCotacaoIndividualRestante = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',1)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-                $query->where("status",0);
-                $query->whereRaw("MONTH(data) != MONTH(NOW())");
-            })->selectRaw("sum(valor) as total")->first()->total;
-            $totalVidasVendidasIndividualRestante = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("plano_id",1);
-                $query->whereHas("comissao.comissaoLancadas",function($query){
-                    $query->where("status",0);
-                    $query->whereRaw("MONTH(data) != MONTH(now())");
-                });
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $totalVendidoCotacaoIndividualRestante = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',1)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
+            //     $query->where("status",0);
+            //     $query->whereRaw("MONTH(data) != MONTH(NOW())");
+            // })->selectRaw("sum(valor) as total")->first()->total;
+            // $totalVidasVendidasIndividualRestante = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("plano_id",1);
+            //     $query->whereHas("comissao.comissaoLancadas",function($query){
+            //         $query->where("status",0);
+            //         $query->whereRaw("MONTH(data) != MONTH(now())");
+            //     });
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
-            $totalVendidoCotacaoColetivoRestante = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',3)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-                $query->where("status",0);
-                $query->whereRaw("MONTH(data) != MONTH(NOW())");
-            })->selectRaw("sum(valor) as total")->first()->total;
-            $totalVidasVendidasColetivoRestante = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("plano_id",3);
-                $query->whereHas("comissao.comissaoLancadas",function($query){
-                    $query->where("status",0);
-                    $query->whereRaw("MONTH(data) != MONTH(now())");
-                });
-            })->selectRaw("sum(quantidade) as total")->first()->total;
+            // $totalVendidoCotacaoColetivoRestante = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',3)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
+            //     $query->where("status",0);
+            //     $query->whereRaw("MONTH(data) != MONTH(NOW())");
+            // })->selectRaw("sum(valor) as total")->first()->total;
+            // $totalVidasVendidasColetivoRestante = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
+            //     $query->where("plano_id",3);
+            //     $query->whereHas("comissao.comissaoLancadas",function($query){
+            //         $query->where("status",0);
+            //         $query->whereRaw("MONTH(data) != MONTH(now())");
+            //     });
+            // })->selectRaw("sum(quantidade) as total")->first()->total;
 
 
 
@@ -569,97 +571,132 @@ class HomeController extends Controller
 
 
             /************************Comissao do Restante***********************************************/
-            $totalComissaoRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereMonth("data","!=",date('m'))
-                ->selectRaw("sum(valor) as total")
-                ->first()
-                ->total;
-            $totalComissaoIndividualRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereMonth("data","!=",date('m'))
-                ->whereHas('comissao.cotacao',function($query){
-                    $query->where("plano_id",1);
-            })
-            ->selectRaw("sum(valor) as total_individual")
-            ->first()
-            ->total_individual;
+            // $totalComissaoRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
+            //     ->where("status",0)
+            //     ->whereMonth("data","!=",date('m'))
+            //     ->selectRaw("sum(valor) as total")
+            //     ->first()
+            //     ->total;
+            // $totalComissaoIndividualRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
+            //     ->where("status",0)
+            //     ->whereMonth("data","!=",date('m'))
+            //     ->whereHas('comissao.cotacao',function($query){
+            //         $query->where("plano_id",1);
+            // })
+            // ->selectRaw("sum(valor) as total_individual")
+            // ->first()
+            // ->total_individual;
 
-            $totalComissaoColetivoRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereMonth("data","!=",date('m'))
-                ->whereHas('comissao.cotacao',function($query){
-                    $query->where("plano_id",3);
-            })
-            ->selectRaw("sum(valor) as total_coletivo")
-            ->first()
-            ->total_coletivo;
+            // $totalComissaoColetivoRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
+            //     ->where("status",0)
+            //     ->whereMonth("data","!=",date('m'))
+            //     ->whereHas('comissao.cotacao',function($query){
+            //         $query->where("plano_id",3);
+            // })
+            // ->selectRaw("sum(valor) as total_coletivo")
+            // ->first()
+            // ->total_coletivo;
 
             /************************Fim Comissao Restante**********************************************/
 
             /*************************PREMIAÇÔES DO MES Restante****************************/
             
-            $totalPremiacaoRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-            ->where("status",0)
-            ->whereMonth("data","!=",date('m'))
-            ->selectRaw("sum(total) as total")
-            ->first()
-            ->total;
+            // $totalPremiacaoRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
+            // ->where("status",0)
+            // ->whereMonth("data","!=",date('m'))
+            // ->selectRaw("sum(total) as total")
+            // ->first()
+            // ->total;
 
-            $totalPremiacaoIndividualRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-            ->where("status",0)
-            ->whereMonth("data","!=",date('m'))
-            ->whereHas('comissao.cotacao',function($query){
-                $query->where("plano_id",0);
-            })
-            ->selectRaw("sum(total) as total_individual")
-            ->first()
-            ->total_individual;
+            // $totalPremiacaoIndividualRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
+            // ->where("status",0)
+            // ->whereMonth("data","!=",date('m'))
+            // ->whereHas('comissao.cotacao',function($query){
+            //     $query->where("plano_id",0);
+            // })
+            // ->selectRaw("sum(total) as total_individual")
+            // ->first()
+            // ->total_individual;
 
-            $totalPremiacaoColetivoRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereMonth("data","!=",date('m'))
-                ->whereHas('comissao.cotacao',function($query){
-                    $query->where("plano_id",3);
-            })
-            ->selectRaw("sum(total) as total_coletivo")
-            ->first()
-            ->total_coletivo;
+            // $totalPremiacaoColetivoRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
+            //     ->where("status",0)
+            //     ->whereMonth("data","!=",date('m'))
+            //     ->whereHas('comissao.cotacao',function($query){
+            //         $query->where("plano_id",3);
+            // })
+            // ->selectRaw("sum(total) as total_coletivo")
+            // ->first()
+            // ->total_coletivo;
 
             
 
-            $aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
-                ->whereRaw("status = 0")
-                ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
-                ->count();
+            // $aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+            //     ->whereRaw("status = 0")
+            //     ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
+            //     ->count();
             
-            $valor_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
-                ->whereRaw("status = 0")
-                ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
-                ->selectRaw("SUM(valor) as total")
-                ->first()
-                ->total;
+            // $valor_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+            //     ->whereRaw("status = 0")
+            //     ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
+            //     ->selectRaw("SUM(valor) as total")
+            //     ->first()
+            //     ->total;
             
-            $qtd_vidas_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
-                ->whereRaw("status = 0")
-                ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
-                ->selectRaw("SUM(quantidade_vidas) as quantidade")
-                ->first()
-                ->quantidade;
+            // $qtd_vidas_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
+            //     ->whereRaw("status = 0")
+            //     ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
+            //     ->selectRaw("SUM(quantidade_vidas) as quantidade")
+            //     ->first()
+            //     ->quantidade;
 
-            $qtd_leads = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->where("visivel",1)->count();    
-                        
+            // $qtd_leads = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->where("visivel",1)->count();    
+                      
+            $coresHexadecimais = "rgb(255, 99, 132)|rgb(54, 162, 235)|rgb(255, 205, 86)";    
+
+            // $leads_grafico = Cliente::
+            //     where("user_id",auth()->user()->id)
+            //     ->where("visivel",1)
+            //     ->where("lead",1)
+            //     ->selectRaw("(SELECT nome FROM origems WHERE origems.id = clientes.origem_id) AS label")
+            //     ->selectRaw("COUNT(origem_id) AS quantidade")    
+            //     ->groupBy("origem_id")
+            //     ->get();
+
+            $leads_grafico = DB::table("origems")
+                        ->selectRaw("nome")
+                        ->selectRaw("(select COUNT(origem_id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 1 AND clientes.visivel = 1) AS quantidade ",[auth()->user()->id])
+                        ->get();
+
+
+            // dd($leads_grafico);
+
+
+            // $contratos_mes = DB::table("cotacoes")
+            //     ->join('clientes', 'clientes.id', '=', 'cotacoes.cliente_id')
+            //     ->whereRaw('cotacoes.user_id = 2 AND cotacoes.financeiro_id != 7 AND clientes.pessoa_fisica = 1')
+            //     ->toSql();
+
+            //dd($contratos_mes);    
+
+            
+
+
+
+
+
             
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
             return view('admin.pages.home.colaborador',[
-                "totalCliente" => $totalCliente,
-                "totalVidasQuantidade" => $totalVidasQuantidade,
-                "totalClientesNegociados" => $totalClientesNegociados,                
-                "totalVidasClientesNegociados" => $totalVidasClientesNegociados,
-                "totalClientesNegociacao" => $totalClientesNegociacao,
-                "vidasTotalClientesNegociacao" => $vidasTotalClientesNegociacao,
-                "clientesCadastradosEsseMes" => $clientesCadastradosEsseMes,
-                "clientesCadastradosEsseMesVidas" => $clientesCadastradosEsseMesVidas,
+                "coresHexadecimais" => $coresHexadecimais,
+                "leads_grafico" => $leads_grafico,
+                // "totalCliente" => $totalCliente,
+                // "totalVidasQuantidade" => $totalVidasQuantidade,
+                // "totalClientesNegociados" => $totalClientesNegociados,                
+                // "totalVidasClientesNegociados" => $totalVidasClientesNegociados,
+                // "totalClientesNegociacao" => $totalClientesNegociacao,
+                // "vidasTotalClientesNegociacao" => $vidasTotalClientesNegociacao,
+                // "clientesCadastradosEsseMes" => $clientesCadastradosEsseMes,
+                // "clientesCadastradosEsseMesVidas" => $clientesCadastradosEsseMesVidas,
                 "etiquetas" => $etiquetas,
                 "totalComissao" => $totalComissao,
                 "totalComissaoIndividual" => $totalComissaoIndividual,
@@ -675,39 +712,39 @@ class HomeController extends Controller
                 "totalPremiacao" => $totalPremiacao,
                 "totalPremiacaoIndividual" => $totalPremiacaoIndividual,
                 "totalPremiacaoColetivo" => $totalPremiacaoColetivo,
-                "totalPremiacaoRestante" => $totalPremiacaoRestante,
-                "totalPremiacaoIndividualRestante" => $totalPremiacaoIndividualRestante,
-                "totalPremiacaoColetivoRestante" => $totalPremiacaoColetivoRestante,
-                "totalVendidoRestante" => $totalVendidoRestante,
-                "totalVidasVendidasRestante" => $totalVidasVendidasRestante,
-                "totalVidasVendidasIndividualRestante" => $totalVidasVendidasIndividualRestante,
-                "totalComissaoRestante" => $totalComissaoRestante,
-                "totalComissaoIndividualRestante" => $totalComissaoIndividualRestante,
-                'totalVendidoCotacaoIndividualRestante' => $totalVendidoCotacaoIndividualRestante,
-                "totalComissaoColetivoRestante" => $totalComissaoColetivoRestante,
-                'totalVendidoCotacaoColetivoRestante' => $totalVendidoCotacaoColetivoRestante, 
-                'totalVidasVendidasColetivoRestante' => $totalVidasVendidasColetivoRestante,
-                'aguardando_boleto_coletivo' => $aguardando_boleto_coletivo,
-                'aguardando_boleto_coletivo_total' => $aguardando_boleto_coletivo_total, 
-                'aguardando_boleto_coletivo_vidas' => $aguardando_boleto_coletivo_vidas,
-                'aguardando_pagamento_adesao_coletivo' => $aguardando_pagamento_adesao_coletivo,
-                'aguardando_pagamento_boleto_coletivo_total' => $aguardando_pagamento_boleto_coletivo_total,
-                'aguardando_pagamento_boleto_coletivo_vidas' => $aguardando_pagamento_boleto_coletivo_vidas,
-                'aguardando_pagamento_vigencia' => $aguardando_pagamento_vigencia, 
-                'aguardando_pagamento_vigencia_total' => $aguardando_pagamento_vigencia_total, 
-                'aguardando_pagamento_vigencia_vidas' => $aguardando_pagamento_vigencia_vidas,                
+                // "totalPremiacaoRestante" => $totalPremiacaoRestante,
+                // "totalPremiacaoIndividualRestante" => $totalPremiacaoIndividualRestante,
+                // "totalPremiacaoColetivoRestante" => $totalPremiacaoColetivoRestante,
+                // "totalVendidoRestante" => $totalVendidoRestante,
+                // "totalVidasVendidasRestante" => $totalVidasVendidasRestante,
+                // "totalVidasVendidasIndividualRestante" => $totalVidasVendidasIndividualRestante,
+                // "totalComissaoRestante" => $totalComissaoRestante,
+                // "totalComissaoIndividualRestante" => $totalComissaoIndividualRestante,
+                // 'totalVendidoCotacaoIndividualRestante' => $totalVendidoCotacaoIndividualRestante,
+                // "totalComissaoColetivoRestante" => $totalComissaoColetivoRestante,
+                // 'totalVendidoCotacaoColetivoRestante' => $totalVendidoCotacaoColetivoRestante, 
+                // 'totalVidasVendidasColetivoRestante' => $totalVidasVendidasColetivoRestante,
+                // 'aguardando_boleto_coletivo' => $aguardando_boleto_coletivo,
+                // 'aguardando_boleto_coletivo_total' => $aguardando_boleto_coletivo_total, 
+                // 'aguardando_boleto_coletivo_vidas' => $aguardando_boleto_coletivo_vidas,
+                // 'aguardando_pagamento_adesao_coletivo' => $aguardando_pagamento_adesao_coletivo,
+                // 'aguardando_pagamento_boleto_coletivo_total' => $aguardando_pagamento_boleto_coletivo_total,
+                // 'aguardando_pagamento_boleto_coletivo_vidas' => $aguardando_pagamento_boleto_coletivo_vidas,
+                // 'aguardando_pagamento_vigencia' => $aguardando_pagamento_vigencia, 
+                // 'aguardando_pagamento_vigencia_total' => $aguardando_pagamento_vigencia_total, 
+                // 'aguardando_pagamento_vigencia_vidas' => $aguardando_pagamento_vigencia_vidas,                
                 "totalMes" => $totalComissao + $totalPremiacao,
                 "tarefasProximas" => $tarefasProximas,
                 "tarefasHoje" => $tarefasHoje,
                 "tarefasAtrasadas" => $tarefasAtrasadas,
                 "tarefaSemana" => $tarefaSemana,
-                "aguardando_individual_qtd" => $aguardando_individual_qtd,
-                "aguardando_individual_total" => $aguardando_individual_total,
-                "aguardando_individual_vidas" => $aguardando_individual_vidas,
-                "qtd_leads" => $qtd_leads,
-                "aguardando_pagamento_empresarial" => $aguardando_pagamento_empresarial,
-                "valor_aguardando_pagamento_empresarial" => $valor_aguardando_pagamento_empresarial,
-                "qtd_vidas_aguardando_pagamento_empresarial" => $qtd_vidas_aguardando_pagamento_empresarial
+                // "aguardando_individual_qtd" => $aguardando_individual_qtd,
+                // "aguardando_individual_total" => $aguardando_individual_total,
+                // "aguardando_individual_vidas" => $aguardando_individual_vidas,
+                // "qtd_leads" => $qtd_leads,
+                // "aguardando_pagamento_empresarial" => $aguardando_pagamento_empresarial,
+                // "valor_aguardando_pagamento_empresarial" => $valor_aguardando_pagamento_empresarial,
+                // "qtd_vidas_aguardando_pagamento_empresarial" => $qtd_vidas_aguardando_pagamento_empresarial
             ]);
     }
 
@@ -1039,7 +1076,27 @@ class HomeController extends Controller
 
     public function searchHome()
     {      
-        
+        $tabelas = DB::select('SELECT faixas,administradora,card,cidade,plano,odontos,apartamento_com_coparticipacao_com_odonto,enfermaria_com_coparticipacao_com_odonto,apartamento_sem_coparticipacao_com_odonto,enfermaria_sem_coparticipacao_com_odonto FROM (
+                SELECT 
+                (SELECT nome FROM faixas_etarias WHERE faixas_etarias.id = fora.faixa_etaria) AS faixas,
+                (SELECT nome FROM administradoras as aa WHERE aa.id = fora.administradora_id) AS administradora,
+                (SELECT nome FROM cidades as cc WHERE cc.id = fora.cidade_id) AS cidade,
+                (SELECT nome FROM planos as pp WHERE pp.id = fora.plano_id) AS plano,
+                (SELECT if(dentro.odonto = 0,"Sem Odonto","Com Odonto") AS odontos  FROM tabelas AS dentro WHERE dentro.administradora_id = fora.administradora_id AND dentro.plano_id = fora.plano_id AND dentro.coparticipacao = fora.coparticipacao AND dentro.odonto = fora.odonto AND dentro.cidade_id = fora.cidade_id AND dentro.faixa_etaria = fora.faixa_etaria LIMIT 1) AS odontos,
+
+
+
+
+                    (SELECT 
+                        CONCAT((SELECT nome FROM administradoras as aa WHERE aa.id = dentro.administradora_id),"_",dentro.plano_id,"_",dentro.cidade_id,"_",dentro.coparticipacao,"_",dentro.odonto) FROM tabelas AS dentro WHERE dentro.administradora_id = fora.administradora_id AND dentro.plano_id = fora.plano_id AND dentro.coparticipacao = fora.coparticipacao AND dentro.odonto = fora.odonto AND dentro.cidade_id = fora.cidade_id AND dentro.faixa_etaria = fora.faixa_etaria LIMIT 1) AS card,
+                        (SELECT valor FROM tabelas AS dentro where dentro.administradora_id = fora.administradora_id AND dentro.plano_id = fora.plano_id AND dentro.cidade_id = fora.cidade_id AND modelo = "Apartamento" AND dentro.faixa_etaria = fora.faixa_etaria AND dentro.coparticipacao = 1 AND dentro.odonto = fora.odonto GROUP BY dentro.coparticipacao) AS apartamento_com_coparticipacao_com_odonto,
+                        (SELECT valor FROM tabelas AS dentro where dentro.administradora_id = fora.administradora_id AND dentro.plano_id = fora.plano_id AND dentro.cidade_id = fora.cidade_id AND modelo = "Enfermaria" AND dentro.faixa_etaria = fora.faixa_etaria AND dentro.coparticipacao = 1 AND dentro.odonto = fora.odonto GROUP BY dentro.coparticipacao) AS enfermaria_com_coparticipacao_com_odonto,
+                        (SELECT valor FROM tabelas AS dentro where dentro.administradora_id = fora.administradora_id AND dentro.plano_id = fora.plano_id AND dentro.cidade_id = fora.cidade_id AND modelo = "Apartamento" AND dentro.faixa_etaria = fora.faixa_etaria AND dentro.coparticipacao = 0 AND dentro.odonto = fora.odonto GROUP BY dentro.coparticipacao) AS apartamento_sem_coparticipacao_com_odonto,
+                        (SELECT valor FROM tabelas AS dentro where dentro.administradora_id = fora.administradora_id AND dentro.plano_id = fora.plano_id AND dentro.cidade_id = fora.cidade_id AND modelo = "Enfermaria" AND dentro.faixa_etaria = fora.faixa_etaria AND dentro.coparticipacao = 0 AND dentro.odonto = fora.odonto GROUP BY dentro.coparticipacao) AS enfermaria_sem_coparticipacao_com_odonto		
+                    from tabelas AS fora 
+                    GROUP BY faixa_etaria,administradora_id,plano_id,cidade_id,odonto ORDER BY id) 
+                AS full_tabela');
+                                 
         $operadoras = Operadora::all();
         $administradoras = Administradora::all();
         $tipos = Planos::all();    
@@ -1048,29 +1105,32 @@ class HomeController extends Controller
                 "operadoras" => $operadoras,
                 "administradoras" => $administradoras,
                 "tipos" => $tipos,
-                "modelos" => $modelos
+                "modelos" => $modelos,
+                "tabelas" => $tabelas,
+                "card_inicial" => $tabelas[0]->card,
+                
             ]);  
     }
 
     public function storeSearch(Request $request)
     {
-        $rules = [
-            "operadora_search" => "required",
-            "administradora_search" => "required",
-            "planos_search" => "required",
-            "coparticipacao_search" => "required",
-            "odonto_search" => "required",
-            "cidade_search" => "required"
-        ];
-        $message = [
-            "operadora_search.required" => "Operadora e obrigatorio",
-            "administradora_search.required" => "Administradora e obrigatorio",
-            "planos_search.required" => "Plano e campo obrigatorio",
-            "coparticipacao_search.required" => "Coparticipacao e obrigatorio",
-            "odonto_search.required" => "Odonto e obrigatorio",
-            "cidade_search.required" => "Cidade e obrigatorio"
-        ];
-        $request->validate($rules,$message);
+        // $rules = [
+        //     "operadora_search" => "required",
+        //     "administradora_search" => "required",
+        //     "planos_search" => "required",
+        //     "coparticipacao_search" => "required",
+        //     "odonto_search" => "required",
+        //     "cidade_search" => "required"
+        // ];
+        // $message = [
+        //     "operadora_search.required" => "Operadora e obrigatorio",
+        //     "administradora_search.required" => "Administradora e obrigatorio",
+        //     "planos_search.required" => "Plano e campo obrigatorio",
+        //     "coparticipacao_search.required" => "Coparticipacao e obrigatorio",
+        //     "odonto_search.required" => "Odonto e obrigatorio",
+        //     "cidade_search.required" => "Cidade e obrigatorio"
+        // ];
+        // $request->validate($rules,$message);
         $operadora = $request->operadora_search;
         $administradora = $request->administradora_search;
         $planos = $request->planos_search;
@@ -1092,7 +1152,7 @@ class HomeController extends Controller
         $administradoras = Administradora::all();
         $tipos = Planos::all();    
         $modelos = Acomodacao::all();
-        return view("admin.pages.home.search",[
+        return view("admin.pages.home.resultado",[
             "header" => "",
             "tabelas" => $tabelas,
             "operadoras" => $operadoras,

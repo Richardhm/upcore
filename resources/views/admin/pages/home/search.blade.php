@@ -1,7 +1,12 @@
 @extends('adminlte::page')
 @section('title', 'Pesquisar')
 @section('content_header')
-    <h1>Resultado pesquisa</h1>
+    <!-- <h1>Resultado pesquisa</h1> -->
+    
+        <div class="btns mx-auto">
+            <button class="btn-search"><i class="fas fa-search"></i></button>
+        </div>
+    
 @stop
 
 @section('content_top_nav_right')
@@ -43,150 +48,269 @@
 
 
 @section('content')
-    <ol class="breadcrumb">
+    <!-- <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{route('admin.home')}}">Sua Dashboard</a></li>
         <li class="breadcrumb-item">Pesquisa</li>
-    </ol>
-    <div class="card">
+    </ol> -->
+
+    <!-----CARD SEARCH------->
+    
+    
+
+
+
+    <div class="card form-search">
         <div class="card-body">
-        <form action="{{route('admin.home.search.post')}}" method="POST" name="pesquisar_modal">
+            <form action="" method="POST" name="pesquisar_modal">
+                @csrf
                 <input type="hidden" name="city" id="city" value="{{$cidade_id ?? old('cidade_search')}}">
                 <input type="hidden" name="plans" id="plans" value="{{$plano_id ?? old('planos_search')}}">
+                <input type="hidden" name="old_operadora" id="old_operadora">
                 
-                        @csrf
-                        <input type="hidden" name="old_operadora" id="old_operadora">
-                        <div class="form-row">
-                            <div class="col-md-3 mb-3">
-                                <label for="operadora_search">Operadora:</label>
-                                <select name="operadora_search" id="operadora_search" class="form-control">
-                                    <option value="">--Escolher a Operadora--</option>
-                                    @foreach($operadoras as $oo)
-                                        <option value="{{$oo->id}}" {{old('operadora_search') == $oo->id ? 'selected' :  (!empty($operadora_id) && $operadora_id == $oo->id ? 'selected' : '')}} >{{$oo->nome}}</option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('operadora_search'))
-                                    <p class="alert alert-danger">{{$errors->first('operadora_search')}}</p>
-                                @endif
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="administradora_search">Administradora:</label>
-                                <select name="administradora_search" id="administradora_search" class="form-control">
-                                    <option value="">--Escolher a Administradora--</option>
-                                    @foreach($administradoras as $aa)
-                                        <option value="{{$aa->id}}" {{$aa->id == old('administradora_search') ? 'selected' : (!empty($administradora_id) && $administradora_id == $aa->id ? 'selected' : '')}}>{{$aa->nome}}</option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('administradora_search'))
-                                    <p class="alert alert-danger">{{$errors->first('administradora_search')}}</p>
-                                @endif
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="planos_search">Planos:</label>
-                                <select name="planos_search" id="planos_search" class="form-control">
-                                    <option value="">--Escolher o Plano--</option>
-                                    <option value="">--Antes escolher a administradora--</option>
-                                </select>
-                                @if($errors->has('planos_search'))
-                                    <p class="alert alert-danger">{{$errors->first('planos_search')}}</p>
-                                @endif
-                            </div>
-                            
-                            <div class="col-md-3 mb-3">
-                                <label for="cidade_search">Cidade:</label><br />
-                                <select name="cidade_search" id="cidade_search" class="form-control">
-                                    <option value="">--Escolher a Cidade--</option>
-                                </select>  
-                                @if($errors->has('cidade_search'))
-                                    <p class="alert alert-danger">{{$errors->first('cidade_search')}}</p>
-                                @endif 
-                            </div>    
+                <div class="d-flex">
 
+                    <div style="flex-basis:18%;">
+                        <span class="text-bold">Operadora:</span>
+                        <select name="operadora_search" id="operadora_search" class="form-control">
+                            <option value="">--Escolher a Operadora--</option>
+                            @foreach($operadoras as $oo)
+                                <option value="{{$oo->id}}" {{old('operadora_search') == $oo->id ? 'selected' :  (!empty($operadora_id) && $operadora_id == $oo->id ? 'selected' : '')}} >{{$oo->nome}}</option>
+                            @endforeach
+                        </select>
+                        @if($errors->has('operadora_search'))
+                            <p class="alert alert-danger">{{$errors->first('operadora_search')}}</p>
+                        @endif
+                    </div>
 
+                    <div style="flex-basis:18%;margin:0 1%;">
+                        <span class="text-bold">Administradora:</span>
+                        
+                        <select name="administradora_search" id="administradora_search" class="form-control">
+                            <option value="">--Escolher a Administradora--</option>
+                            @foreach($administradoras as $aa)
+                                <option value="{{$aa->id}}" {{$aa->id == old('administradora_search') ? 'selected' : (!empty($administradora_id) && $administradora_id == $aa->id ? 'selected' : '')}}>{{$aa->nome}}</option>
+                            @endforeach
+                        </select>
+                        @if($errors->has('administradora_search'))
+                            <p class="alert alert-danger">{{$errors->first('administradora_search')}}</p>
+                        @endif
+                    </div>
 
-                        </div>
-                        <div class="form-row">
-                            <div class="col-3 col-md-3">
-                                <div class="form-group">
-                                    <label for="coparticipacao">Coparticipação:</label><br />
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_sim">
-                                            <input type="radio" name="coparticipacao_search" id="coparticipacao_radio_sim" value="sim" {{old('coparticipacao_search') == "sim" ? 'checked' : (isset($coparticipacao) && !empty($coparticipacao) == 1 ? 'checked' : '')}}> Sim
-                                        </label>
-                                        <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_nao">
-                                            <input type="radio" name="coparticipacao_search" id="coparticipacao_radio_nao" value="nao" {{old('coparticipacao_search') == "nao" ? 'checked' : (isset($coparticipacao) && !empty($coparticipacao) == 0 ? 'checked' : '')}}> Não
-                                        </label>
-                                        
-                                    </div>
-                                    @if($errors->has('coparticipacao_search'))
-                                        <p class="alert alert-danger">{{$errors->first('coparticipacao_search')}}</p>
-                                    @endif
-                                </div>
-                            </div>    
-                            <div class="col-3 col-md-3">
-                                <div class="form-group">
-                                    <label for="odonto">Odonto:</label><br />
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-outline-secondary btn-lg" id="odonto_sim">
-                                            <input type="radio" name="odonto_search" id="odonto_radio_sim" value="sim" {{old('odonto_search') == "sim" ? 'checked' : (isset($odonto) && !empty($odonto) == 1 ? 'checked' : '')}}> Sim
-                                        </label>
-                                        <label class="btn btn-outline-secondary btn-lg" id="odonto_nao">
-                                            <input type="radio" name="odonto_search" id="odonto_radio_nao" value="nao" {{old('odonto_search') == "nao" ? 'checked' : (isset($odonto) && !empty($odonto) == 0 ? 'checked' : '')}}> Não
-                                        </label>
-                                    </div>
-                                    @if($errors->has('odonto_search'))
-                                        <p class="alert alert-danger">{{$errors->first('odonto_search')}}</p>
-                                    @endif
-                                </div>
-                            </div>                         
-                        </div>
-                        <input type="submit" name="Enviar" value="Pesquisar" class="btn btn-block btn-primary mt-3">
-                    </div>                                     
-                </form>
-   </div>
-    
-   @if(isset($tabelas) && count($tabelas) >= 1)
-        <div class="card" style="width: 30rem;margin:0 auto;">
-            
-            <div class="card-body">
-                <table class="table table-sm table-striped table-hover table-bordered">
-                    <thead>
-                        <tr class="border-bottom border-top">
-                            <td colspan="4" align="center"><b>{{$administradora_texto}}</b></td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td colspan="4" align="center"><b>{{$coparticipacao_texto}} - {{$odonto_texto}}</b></td>
-                        </tr>
-                        <tr>
-                            <th align="center">Faixa</th>
-                            <th align="center">Apartamento</th>
-                            <th align="center">Enfermaria</th>
-                            <th align="center">Ambulatorial</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($tabelas as $t)
-                        <tr>
-                            <td align="center">{{$t->faixas}}</td>
-                            <td align="center">{{number_format($t->apartamento,2,",",".")}}</td>
-                            <td align="center">{{number_format($t->enfermaria,2,",",".")}}</td>
-                            <td align="center">{{number_format($t->ambulatorial,2,",",".")}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
+                    <div style="flex-basis:18%;">
+                        <span class="text-bold">Planos:</span>
+                        
+                        <select name="planos_search" id="planos_search" class="form-control">
+                            <option value="">--Escolher o Plano--</option>
+                            <option value="">--Antes escolher a administradora--</option>
+                        </select>
+                        @if($errors->has('planos_search'))
+                            <p class="alert alert-danger">{{$errors->first('planos_search')}}</p>
+                        @endif
+                    </div>
                     
+                    <div style="flex-basis:18%;margin:0 1%;">
+                        <span class="text-bold">Cidade:</span>
+                        <select name="cidade_search" id="cidade_search" class="form-control">
+                            <option value="">--Escolher a Cidade--</option>
+                        </select>  
+                        @if($errors->has('cidade_search'))
+                            <p class="alert alert-danger">{{$errors->first('cidade_search')}}</p>
+                        @endif 
+                    </div>    
+
+                    <div style="flex-basis:10%;margin:0 1% 0 0;">
+                        <div class="form-group">
+                            <span class="text-bold">Coparticipação:</span>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_sim" style="padding:0.21rem 0.75rem;">
+                                    <input type="radio" name="coparticipacao_search" id="coparticipacao_radio_sim" value="sim" {{old('coparticipacao_search') == "sim" ? 'checked' : (isset($coparticipacao) && !empty($coparticipacao) == 1 ? 'checked' : '')}}> Sim
+                                </label>
+                                <label class="btn btn-outline-secondary btn-lg" id="coparticipacao_nao" style="padding:0.21rem 0.75rem;">
+                                    <input type="radio" name="coparticipacao_search" id="coparticipacao_radio_nao" value="nao" {{old('coparticipacao_search') == "nao" ? 'checked' : (isset($coparticipacao) && !empty($coparticipacao) == 0 ? 'checked' : '')}}> Não
+                                </label>
+                                
+                            </div>
+                            @if($errors->has('coparticipacao_search'))
+                                <p class="alert alert-danger">{{$errors->first('coparticipacao_search')}}</p>
+                            @endif
+                        </div>
+                    </div> 
+                    
+                    <div style="flex-basis:10%;">
+                        <div class="form-group">
+                            <span class="text-bold">Odonto:</span>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-secondary btn-lg" id="odonto_sim" style="padding:0.21rem 0.75rem;">
+                                    <input type="radio" name="odonto_search" id="odonto_radio_sim" value="sim" {{old('odonto_search') == "sim" ? 'checked' : (isset($odonto) && !empty($odonto) == 1 ? 'checked' : '')}}> Sim
+                                </label>
+                                <label class="btn btn-outline-secondary btn-lg" id="odonto_nao" style="padding:0.21rem 0.75rem;">
+                                    <input type="radio" name="odonto_search" id="odonto_radio_nao" value="nao" {{old('odonto_search') == "nao" ? 'checked' : (isset($odonto) && !empty($odonto) == 0 ? 'checked' : '')}}> Não
+                                </label>
+                            </div>
+                            @if($errors->has('odonto_search'))
+                                <p class="alert alert-danger">{{$errors->first('odonto_search')}}</p>
+                            @endif
+                        </div>
+                    </div>                   
+
+
+                </div>
+                
+                <input type="submit" name="Enviar" value="Pesquisar" class="btn btn-block btn-primary mt-1">
+            </div>                                     
+        </form>
+   </div>
+   <!-----FIM CARD SEARCH------->
+
+    @php
+        $inicial = $card_inicial;
+        $atual = "";
+        $ii=0;$cadeado = true;
+    @endphp
+    <div id="resultado" style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+
+    @for($i=0;$i < count($tabelas); $i++) 
+            
+                @if($ii==0)
+                    <div class="card" style="flex-basis:33%;padding:7px;">
+                   
+
+                    <div class="d-flex" style="flex-wrap:wrap;">
+                        <div class="w-50 my-auto">
+                            {{$tabelas[$i]->administradora}}
+                        </div>
+
+                        <div class="w-50 d-flex flex-column text-center">
+                            <span>{{$tabelas[$i]->plano}}</span>
+                            <span>{{$tabelas[$i]->odontos}}</span>
+                        </div>
+
+                        <div class="w-100 text-center">
+                            <span>{{$tabelas[$i]->cidade}}</span>
+                        </div>
+                    </div>            
+
+
+
+
+
+                    <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <td class="text-nowrap" rowspan="2" style="width:5%;text-align:center;vertical-align: middle;background-color:#D3D3D3;">Faixas</td>
+                                    <td colspan="2">Com Copart.</td>
+                                    <td colspan="2">Sem Copart.</td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td class="text-nowrap" style="width:5%;">Enfer.</td>
+                                    <td class="text-nowrap" style="width:5%;">Apart.</td>
+                                    <td class="text-nowrap" style="width:5%;">Enfer.</td>
+                                    <td class="text-nowrap" style="width:5%;">Apart.</td>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                @endif
+                @if($tabelas[$i]->card == $inicial)
+                    
+                    <tr>
+                        <td class="text-nowrap" style="width:5%;">{{$tabelas[$i]->faixas}}</td>
+                        <td class="text-nowrap" style="width:5%;">{{number_format($tabelas[$i]->enfermaria_com_coparticipacao_com_odonto,2,",",".")}}</td>
+                        <td class="text-nowrap" style="width:5%;">{{number_format($tabelas[$i]->apartamento_com_coparticipacao_com_odonto,2,",",".")}}</td>
+                        <td class="text-nowrap" style="width:5%;">{{number_format($tabelas[$i]->enfermaria_sem_coparticipacao_com_odonto,2,",",".")}}</td>
+                        <td class="text-nowrap" style="width:5%;">{{number_format($tabelas[$i]->apartamento_sem_coparticipacao_com_odonto,2,",",".")}}</td>
+                        
+                    </tr>
+                    @php $ii++ @endphp
+            @else
+                    </tbody>
                 </table>
-            </div>
-        </div>
-    @endif       
-    @if(isset($tabelas) && count($tabelas) == 0) 
-    <p class="alert alert-danger text-center">Sem Resultados com esses parametros, tente outros</p>
-    @endif
-</div>  
+                </div>
+
+                @php
+                    $ii=0;
+                    $inicial = $tabelas[$i]->card;
+                    $i--;
+                @endphp
+
+            @endif
+
+        @endfor
+
+
+
+
+
+ 
+    </div>
+        
+
+
+
+
+   
+
+   
+
+    
+ 
 @stop
+
+@section('css')
+    <style>
+        table tbody tr:nth-child(even) {
+            background-color:#696969;
+            color:#FFF;
+        }
+        .form-search {
+            display:none;
+        }
+        .btns {
+            
+            display: flex;
+            justify-content: end;
+            padding:5px 0; 
+        }
+        .btn-search {
+            border:none;
+            background-color: white;
+        }
+
+    </style>   
+@stop
+
+
+
 @section('js')
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     <script>
         $(function(){
+
+                $("form[name='pesquisar_modal']").on('submit',function(){
+                    
+                    $.ajax({
+                        url:"{{route('admin.home.search.post')}}",
+                        method:"POST",
+                        data:$(this).serialize(),
+                        success:function(res){
+                            $('#resultado').slideUp('slow',function(){
+                                $("#resultado").html(res).slideDown('slow')
+                            });        
+                        }
+                    });
+                    return false;
+                });
+
+
+
+
+
+                $('.btn-search').on('click',function(){
+                    $(".form-search").slideToggle('slow')
+                });
+
+
 
                 $.ajaxSetup({
                     headers: {
@@ -263,10 +387,4 @@
             verificar_administradora($("#administradora_search").val(),$('input[name="city"]').val(),$('input[name="plans"]').val());
         });
     </script>    
-@stop
-
-@section('css')
-    <style>
-
-    </style>        
 @stop

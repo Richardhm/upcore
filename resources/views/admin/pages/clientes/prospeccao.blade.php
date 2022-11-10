@@ -840,10 +840,11 @@
             $( ".plantao_vendas" ).trigger( "click");
 
             $(".atendimento_inciado").on('click',function(){
+                
                 $('div[class*="prospeccao"]').removeClass('fundo');
                 $('div[class*="plantao_vendas"]').removeClass('fundo');
                 $('div[class*="atendimento_inciado"]').addClass('fundo');
-                $('#menu_clicado').val("menu_3");
+                // $('#menu_clicado').val("menu_3");
                 $(".atrasada").removeClass('fundo');
                 $(".hoje").removeClass('fundo');
                 $(".semana").removeClass('fundo');
@@ -855,7 +856,7 @@
                 $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
-                $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').
+                $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                 $("#checkbox-pai").prop('checked',false);
                 $('tr').removeClass('textoforte');
                 return false;

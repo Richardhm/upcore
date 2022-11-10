@@ -76,15 +76,15 @@ class EventServiceProvider extends ServiceProvider
                     'icon'    => 'fas fa-user',
                     'classes' => 'text-white ml-3',
                     'label'       => $event->qtdContratosPF(),
-                    'label_color' => 'primary',     
+                    'label_color' => 'info',     
                 ],
                 [
                     "text" => "Pessoa Juridica",
                     "url" => "admin/contratos/pj/pendentes",
                     'icon'    => 'fas fa-user-tie',
                     'classes' => 'text-white ml-3',
-                    'label'       => 0,
-                    'label_color' => 'danger',     
+                    'label'       => $event->qtdContratosPJ(),
+                    'label_color' => 'warning',     
                 ]
         );
 

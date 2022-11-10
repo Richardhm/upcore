@@ -100,11 +100,14 @@
                     data:"id="+id,
                     url:"{{route('financeiro.setAguardandoPagamentoboletocoletivo')}}",
                     success:function(res) {
-                        if(res == 0) {
-                            $('.card').fadeOut('slow',function(){
-                                $("#resultado").html('<h3 class="alert alert-secondary border text-center">Sem Dados a serem listados!</h3>')
-                            });
-                        }
+                        $("tr[data-linha='"+id+"']").fadeOut("fast",function(){
+                            if(res == 0) {
+                                $('.card').fadeOut('slow',function(){
+                                    $("#resultado").html('<h3 class="alert alert-secondary border text-center">Sem Dados a serem listados!</h3>')
+                                });
+                            }
+                        })
+                       
                     }
                 });
                 $(this).closest('tr').fadeOut('slow');

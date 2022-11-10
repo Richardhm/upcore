@@ -172,7 +172,10 @@
                 $.ajax({
                     method:"POST",
                     data:"id="+id,
-                    url:"{{route('comissoes.mudarStatusPremiacao')}}"      
+                    url:"{{route('comissoes.mudarStatusPremiacao')}}",
+                    success:function(res) {
+                        console.log(res);
+                    }      
                 })
            });
 

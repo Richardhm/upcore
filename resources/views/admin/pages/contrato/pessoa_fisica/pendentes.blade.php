@@ -94,7 +94,7 @@
 
                     <div style="flex-basis:32%;" id="status">
                         <span class="text-white">Status:</span>
-                        <select name="estagio_contrato" id="estagio_contrato" class="form-control-sm">
+                        <select name="estagio_contrato" id="estagio_contrato" class="form-control-sm" readonly>
                             <option value="">--Estagio do Contrato--</option>
                             <option value="">Pagamento Adesão</option>
                             <option value="">Pagamento Vigência</option>
@@ -472,5 +472,12 @@
     .coluna-right::-webkit-scrollbar {width: 12px;}
     .coluna-right::-webkit-scrollbar-track {background: orange;}
     .coluna-right::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;} 
+
+
+    select[readonly] {
+  background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+  pointer-events: none;
+  touch-action: none;
+}
     </style>
 @stop

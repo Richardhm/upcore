@@ -366,66 +366,123 @@ class TarefaController extends Controller
 
     public function cadastrarTarefaAjax(Request $request)
     {
-        
+        $nows = (new \DateTime());
+        $sema = (new \DateTime($request->data));    
+        $resultado = "";
+        if($request->data == date("Y-m-d")) {
+            $resultado = "hoje";
+        } elseif($request->data < date("Y-m-d")) {
+            $resultado = "atrasada";
+        } elseif($nows->format('W') == $sema->format('W')) {
+                $resultado = "semana";    
+        } elseif($nows->format('m') == $nows->format('m')) {
+            $resultado = "mes";
+        } else {
+            $resultado = "";
+        }        
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->ultimo_contato = date("Y-m-d");
-        $cliente->star = $request->star;
+        $cliente->estagio_id = $request->star;
         $cliente->save();
-        
-        
-        $tarefa_cliente = Tarefa::where("cliente_id",$request->cliente_id)->update(['status'=>1,'visivel'=>0]);
-
+        Tarefa::where("cliente_id",$request->cliente_id)->update(['status'=>1,'visivel'=>0]);
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
         $data['visivel'] = 1;    
+        $tarefa = Tarefa::create($data);        
+
+        $qtdAtrasado = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('lead',0)
+            ->where("visivel",1)
+            ->where("pessoa_fisica",1)
+            ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+            })
+            ->whereHas('tarefas',function($query){
+                $query->whereDate('data','<',date('Y-m-d'));
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->where("visivel",1);
+            })->count();
+
+        $qtdHoje = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('lead',0)
+            ->where("visivel",1)
+            ->where("pessoa_fisica",1)
+            ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+            })
+            ->whereHas('tarefas',function($query){
+                $query->whereDate('data','=',date('Y-m-d'));
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->where("visivel",1);
+            })->count(); 
         
+        
+        $qtdSemana = Cliente::
+            where("user_id",auth()->user()->id)
+            ->where("pessoa_fisica",1)
+            ->where("lead",0)
+            ->where('visivel',1)
+            ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+            })
+            ->whereHas('tarefas',function($query){
+                $query->where("visivel",1);
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
+            })
+           ->count();
+
+        $qtdMes = Cliente::
+           where("user_id",auth()->user()->id)
+           ->where("pessoa_fisica",1)
+           ->where("lead",0)
+           ->where('visivel',1)
+           ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+           })
+           ->whereHas('tarefas',function($query){
+               $query->where("visivel",1);
+               $query->where("user_id",auth()->user()->id);
+               $query->whereRaw("motivo_id IS NULL");
+               $query->whereRaw("MONTH(data) = MONTH(NOW())");
+           })
+          ->count();    
+        
+        $qtdTodos = Cliente::
+          where("user_id",auth()->user()->id)
+          ->where("pessoa_fisica",1)
+          ->where("lead",0)
+          ->where('visivel',1)
+          ->whereHas('cotacao',function($query){
+               $query->whereRaw("financeiro_id IS NULL");
+          })
+          ->whereHas('tarefas',function($query){
+              $query->where("visivel",1);
+              $query->where("user_id",auth()->user()->id);
+              $query->whereRaw("motivo_id IS NULL");
+              
+          })
+         ->count();      
 
 
-        $tarefa = Tarefa::create($data);
-        $hoje = date("Y-m-d");
-        $data_form = $request->data;
-        $data_form_explode = explode("-",$data_form);
-        $numeroSemanaDataHoje=intval( date('z', mktime(0,0,0,date("m"),date('d'),date("Y")) ) / 7 ) + 1;
-        $numeroSemanaDataForm=intval( date('z', mktime(0,0,0,$data_form_explode[1],$data_form_explode[2],$data_form_explode[0]) ) / 7 ) + 1;
-        // $titulo = "";
-        // if($data_form < $hoje) {
-        //     $titulo = "atraso";
-        // } elseif(date('m') == date("m",strtotime($data_form)) && date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje != $numeroSemanaDataForm) {
-        //     $titulo = "mes";
-        // } elseif(date("d") ==  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
-        //     $titulo = "hoje";
-        // } elseif(date("d") !=  date("d",strtotime($data_form)) && $numeroSemanaDataHoje == $numeroSemanaDataForm) {
-        //     $titulo = "semana";
-        // } else {
-        //     $titulo = "personalizado";
-        // }
-        // $tarefas = null;
-        // switch($titulo) {
-        //     case "atraso":
-        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("data < now()")->with('cliente')->get();
-        //     break;
-        //     case "hoje":
-        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereDate('data',"=",date('Y-m-d'))->with('cliente')->get();
-        //     break;
-        //     case "semana":
-        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->with('cliente')->get();
-        //     break;    
-        //     case "mes":
-        //         $tarefas = Tarefa::where("user_id",auth()->user()->id)->whereRaw("MONTH(data) = MONTH(NOW())")->get();
-        //     break;
-        // }
+        return [
+            "qtdAtrasado" => $qtdAtrasado,
+            "qtdHoje" => $qtdHoje,
+            "qtdSemana" => $qtdSemana,
+            "qtdMes" => $qtdMes,
+            "qtdTodos" => $qtdTodos,
+            "cliente" => $cliente,
+            "resultado" => $resultado
 
-        // if($tarefas != null  && count($tarefas) >= 1) {
-        //     return view('admin.pages.tarefas.ajax.listar-por-categoria',[
-        //         "tarefas" => $tarefas,
-        //         "titulo" => $titulo,
-        //         "tarefa" => $tarefa->id
-        //     ]);
-        // } else {
-        //     return $tarefas;
-        // }
+        ];
 
-        return $request->cliente_id;
+
+        //return $request->cliente_id;
     }
 
     public function cadastrarTarefaAjaxCliente(Request $request)

@@ -64,31 +64,31 @@
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
                     <span class="ml-2">Atrasadas</span>
-                    <span class="mr-2">{{$tarefas->atrasada}}</span>
+                    <span class="mr-2" id="quantidade_atrasada">{{$tarefas->atrasada ?? 0}}</span>
                 </a>
             </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 hoje">
                     <span class="ml-2">Hoje</span>
-                    <span class="mr-2">{{$tarefas->hoje}}</span>
+                    <span class="mr-2" id="quantidade_hoje">{{$tarefas->hoje ?? 0}}</span>
                 </a>    
             </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 semana">
                     <span class="ml-2">Semana</span>
-                    <span class="mr-2">{{$tarefas->semana}}</span>
+                    <span class="mr-2" id="quantidade_semana">{{$tarefas->semana ?? 0}}</span>
                 </a>
             </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 mes">
                     <span class="ml-2">Mês</span>
-                    <span class="mr-2">{{$tarefas->mes}}</span>
+                    <span class="mr-2" id="quantidade_mes">{{$tarefas->mes ?? 0}}</span>
                 </a>
             </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 todos">
                     <span class="ml-2">Todos</span>
-                    <span class="mr-2">{{$tarefas->todas}}</span>
+                    <span class="mr-2" id="quantidade_todos">{{$tarefas->todas ?? 0}}</span>
                 </a>
             </li>
 
@@ -104,7 +104,7 @@
         <ul style="margin:0px;padding:0px;" id="estagios">
             <li class="d-flex justify-content-between text-white py-1 total_geral">
                 <span class="ml-2">Total Geral</span>
-                <span class="mr-2">{{$clientes_total}}</span>
+                <span class="mr-2">{{$clientes_total ?? 0}}</span>
             </li>
 
             @foreach($estagios as $e)
@@ -334,8 +334,8 @@
                 <select name="titulo_id" id="titulo_id" class="form-control">
                     <option value="">--Titulo Da Tarefa--</option>
                    
-                    @foreach($estagios as $e)
-                       <option value="{{$e->id}}">{{$e->nome}}</option>
+                    @foreach($titulos as $e)
+                       <option value="{{$e->id}}">{{$e->titulo}}</option>
                     @endforeach
                     
                 </select>
@@ -458,28 +458,7 @@
 
             
 
-            $('.estagios-clientes').on('change',function(){
-                let id = $(this).val();
-               
-                let cliente = $("#cliente_id_cadastrado_aqui").val();
-                if(id != 6) {
-                    $.ajax({
-                        url:"{{route('clientes.mudarestagiocliente')}}",
-                        method:"POST",
-                        data:"id="+id+"&cliente="+cliente,
-                        success:function(res) {
-                            $("#estagios").find('li:eq(1)').find('.quantidade').text(res.qtd_frio);   
-                            $("#estagios").find('li:eq(2)').find('.quantidade').text(res.qtd_morno);   
-                            $("#estagios").find('li:eq(3)').find('.quantidade').text(res.qtd_quente);   
-                            $("#estagios").find('li:eq(4)').find('.quantidade').text(res.qtd_aguardando_doc);   
-                            $("#estagios").find('li:eq(5)').find('.quantidade').text(res.qtd_aguardando_inte_futuro);   
-                            $("#estagios").find('li:eq(6)').find('.quantidade').text(res.qtd_aguardando_sem_interesse);   
-                        }
-                    })
-                } else {
-                    $("#motivoDaPerda").modal('show');
-                }
-            });    
+            
 
 
             $("#frio").rateYo({rating:1,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
@@ -557,8 +536,9 @@
 
         // var table = $("body").find("#tabela").DataTable();
         $('table').on('click', 'tbody tr', function () {
+            table.ajax.reload();
             let data = table.row(this).data();
-            
+            //console.log(data);
             $('select[name="estagios-clientes"]').removeAttr('readonly');
             if(data.estagio_id) {
                 $('option[value="'+data.estagio_id+'"]').prop('selected',true);
@@ -640,7 +620,29 @@
             $(this).addClass('fundo');
         });
 
-
+        $('.estagios-clientes').on('change',function(){
+                let id = $(this).val();
+               
+                let cliente = $("#cliente_id_cadastrado_aqui").val();
+                if(id != 6) {
+                    $.ajax({
+                        url:"{{route('clientes.mudarestagiocliente')}}",
+                        method:"POST",
+                        data:"id="+id+"&cliente="+cliente,
+                        success:function(res) {
+                            $("#estagios").find('li:eq(1)').find('.quantidade').text(res.qtd_frio);   
+                            $("#estagios").find('li:eq(2)').find('.quantidade').text(res.qtd_morno);   
+                            $("#estagios").find('li:eq(3)').find('.quantidade').text(res.qtd_quente);   
+                            $("#estagios").find('li:eq(4)').find('.quantidade').text(res.qtd_aguardando_doc);   
+                            $("#estagios").find('li:eq(5)').find('.quantidade').text(res.qtd_aguardando_inte_futuro);   
+                            $("#estagios").find('li:eq(6)').find('.quantidade').text(res.qtd_aguardando_sem_interesse);   
+                        }
+                    })
+                } else {
+                    $("#motivoDaPerda").modal('show');
+                }
+                table.ajax.reload();
+            });    
 
 
 
@@ -819,6 +821,7 @@
         });
 
         $("form[name='nova_atividade']").on('submit',function(e){
+            // e.preventDefault();
             var form = $(this);
             $.ajax({
                 url:"{{route('tarefas.cadastrarTarefasAjax')}}",
@@ -850,15 +853,76 @@
                     }
                 },
                 success:function(res) {
-                    // console.log(res);
+                    console.log(res);
                     $("#cadastrarClienteClienteEspecifico").modal('hide');
-                    ta.ajax.reload();
+                    // // ta.ajax.reload();
                     form.find('#title').val('');
                     form.find('#cliente_id').val('');
                     form.find('#data').val('');
                     form.find('#descricao').val('');
-                    historicoCliente(res)
+                    $("#quantidade_atrasada").text(res.qtdAtrasado);
+                    $("#quantidade_hoje").text(res.qtdHoje);
+                    $("#quantidade_semana").text(res.qtdSemana);
+                    $("#quantidade_mes").text(res.qtdMes);
+                    $("#quantidade_todos").text(res.qtdTodos);
 
+                    if(res.resultado == "hoje") {
+                        $('.total_geral').removeClass('fundo');
+                        $('.link_page').removeClass('fundo');
+                        $('.atrasada').removeClass('fundo');
+                        $('.semana').removeClass('fundo');
+                        $('.mes').removeClass('fundo');
+                        $('.todos').removeClass('fundo');
+                        $("#title").html("<h4>Hoje</h4>");
+                        $('.hoje').addClass('fundo');
+                        ta.ajax.url("{{ route('cliente.getTarefasParaHoje') }}").load();
+                        historicoCliente(res.cliente.id);
+                    } else if(res.resultado == "atrasada") {
+                        $('.total_geral').removeClass('fundo');
+                        $('.link_page').removeClass('fundo');
+                        $('.hoje').removeClass('fundo');
+                        $('.semana').removeClass('fundo');
+                        $('.mes').removeClass('fundo');
+                        $('.todos').removeClass('fundo');
+                        $("#title").html("<h4>Atrasada</h4>");
+                        $('.atrasada').addClass('fundo');
+                        ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjax') }}").load();
+                        historicoCliente(res.cliente.id);
+                    } else if(res.resultado == "semana") {
+                        $('.total_geral').removeClass('fundo');
+                        $('.link_page').removeClass('fundo');
+                        $('.hoje').removeClass('fundo');
+                        $('.atrasada').removeClass('fundo');
+                        $('.mes').removeClass('fundo');
+                        $('.todos').removeClass('fundo');
+                        $("#title").html("<h4>Semana</h4>");
+                        $('.semana').addClass('fundo');
+                        ta.ajax.url("{{ route('cliente.listarClientesSemanaAjax') }}").load();
+                        historicoCliente(res.cliente.id);
+                    } else if(res.resultado == "mes") {
+                        $('.total_geral').removeClass('fundo');
+                        $('.link_page').removeClass('fundo');
+                        $('.atrasada').removeClass('fundo');
+                        $('.semana').removeClass('fundo');
+                        $('.hoje').removeClass('fundo');
+                        $('.todos').removeClass('fundo');
+                        $("#title").html("<h4>Mês</h4>");    
+                        $('.mes').addClass('fundo');
+                        ta.ajax.url("{{ route('cliente.listarClienteMesAjax') }}").load();
+                        historicoCliente(res.cliente.id);
+                    } else {
+                        $('.total_geral').removeClass('fundo');
+                        $('.link_page').removeClass('fundo');
+                        $('.atrasada').removeClass('fundo');
+                        $('.semana').removeClass('fundo');
+                        $('.hoje').removeClass('fundo');
+                        $('.mes').removeClass('fundo');
+                        $("#title").html("<h4>Mês</h4>");    
+                        $('.todos').addClass('fundo');
+                        ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
+                        historicoCliente(res.cliente.id);
+                    }
+                     
                 }
             });    
             return false;

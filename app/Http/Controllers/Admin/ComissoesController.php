@@ -13,6 +13,7 @@ use App\Models\{
     PremiacaoCorretoraLancadas,
     User
 };
+use COM;
 use Illuminate\Support\Facades\DB;
 
 class ComissoesController extends Controller
@@ -43,18 +44,13 @@ class ComissoesController extends Controller
     {
         $comissoes = ComissoesCorretorLancados::where('comissao_id',$id)->get();
         $premiacao = PremiacaoCorretoresLancados::where('comissao_id',$id)->first();
-
         $comissoesCorretora = "";
         $premiacaoCorretora = "";
-
-
-
         $user = User::where("id",auth()->user()->id)->first();
         if($user->hasPermission('configuracoes') || $user->isAdmin()) {  
             $comissoesCorretora = ComissoesCorretoraLancadas::where('comissao_id',$id)->get();
             $premiacaoCorretora = PremiacaoCorretoraLancadas::where('comissao_id',$id)->first();
         } 
-
         return view('admin.pages.comissoes.detalhes',[
             'comissoes' => $comissoes,
             "premiacao" => $premiacao,
@@ -65,29 +61,38 @@ class ComissoesController extends Controller
 
     public function mudarStatus(Request $request)
     {
-        // return $request->all();
+        
         $id = $request->id;
+        
         $comissao = ComissoesCorretorLancados::where("id",$id)->first();
         $comissao->status = $comissao->status ? false : true;
         $comissao->save();
-        // $comissao_id = $comissao->comissao_id;
-        $all_comissao = ComissoesCorretorLancados::where("comissao_id",$comissao->comissao_id)->get();
         
-        $cadeado_comissao = true;
-        foreach($all_comissao as $cc) {
-            if($cc->status == 0) $cadeado_comissao = false;
+        $comissao_id = $comissao->comissao_id;
+        $cotacao_id = Comissao::find($comissao_id)->cotacao_id;
+
+        
+        
+        
+        $comissoes = ComissoesCorretorLancados::where("comissao_id",$comissao_id)->where("status",0)->count();
+        $premiacoes = PremiacaoCorretoresLancados::where("comissao_id",$comissao_id)->where("status",0)->count();
+
+        
+
+
+        if($comissoes == 0 && $premiacoes == 0) {
+            $cotacao = Cotacao::find($cotacao_id);
+            $cotacao->financeiro_id = 7;
+            $cotacao->save();
+           
         }
-        if($cadeado_comissao) {
-            $comissao = Comissao::find($comissao->id);
-            return $comissao;
-        }
-        // if(!$comissao) {
-        //     return false;
-        // }
-        // $comissao->status = $comissao->status ? false : true;
-        // $comissao->save();
-        // return $comissao->status;
+        
+        return $comissao->status;
+        
+    
     }
+
+
 
     public function mudarStatusPremiacao(Request $request)
     {
@@ -99,6 +104,24 @@ class ComissoesController extends Controller
         $comissao->status = $comissao->status ? false : true;
         $comissao->data = date("Y-m-d");
         $comissao->save();
+
+        $comissao_id = $comissao->comissao_id;
+        $cotacao_id = Comissao::find($comissao_id)->cotacao_id;
+
+        
+
+        $comissoes = ComissoesCorretorLancados::where("comissao_id",$comissao_id)->where("status",0)->count();
+        $premiacoes = PremiacaoCorretoresLancados::where("comissao_id",$comissao_id)->where("status",0)->count();
+
+        //return $comissoes." - ".$premiacoes;
+
+        if($comissoes == 0 && $premiacoes == 0) {
+            
+            $cotacao = Cotacao::find($cotacao_id);
+            $cotacao->financeiro_id = 7;
+            $cotacao->save();
+            // return $cotacao;
+        }
 
         return $comissao->status;
     }

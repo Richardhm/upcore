@@ -40,7 +40,7 @@ class FinanceiroController extends Controller
     public function planoIndividual()
     {
         
-        $dados = Cotacao::where("financeiro_id",1)->where("plano_id",1)->with(['administradora','plano','clientes','user'])->get();
+        $dados = Cotacao::where("financeiro_id",3)->where("plano_id",1)->with(['administradora','plano','clientes','user'])->get();
         return view('admin.pages.financeiros.aguardandoIndividual',[
             "dados" => $dados
         ]);    
@@ -52,7 +52,7 @@ class FinanceiroController extends Controller
             $cotacao = Cotacao::where("id",$request->id)->first();
             $cotacao->financeiro_id = 6;
             $cotacao->save();
-            return Cotacao::where("financeiro_id",1)->count();
+            return Cotacao::where("financeiro_id",3)->count();
         }
     }
 

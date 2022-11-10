@@ -35,6 +35,7 @@ class CotacaoController extends Controller
 {
     public function orcamento($id)
     {
+        
         $cliente = Cliente::where("id",$id)->first();
         if(!$cliente) {
             return redirect()->back();
@@ -123,7 +124,9 @@ class CotacaoController extends Controller
         ]);
 
         $cliente = Cliente::find($cliente);
-        
+        $cliente->lead = ($cliente->lead == 0 ? 1 : 0);
+        $cliente->save();
+
         Mail::to($cliente->email)->send(new MensagemTesteMail($pdf->output(),$cliente->nome));
 
         return redirect()->route('cotacao.orcamento',$cliente)->with('message', 'Email enviado com sucesso');
@@ -134,6 +137,11 @@ class CotacaoController extends Controller
 
     public function criarPDF($cotacao,$administradora,$plano,$odonto,$cliente,$cidade)
     {
+        $alt = Cliente::find($cliente);
+        $alt->lead = ($alt->lead == 0 ? 1 : 0);
+        $alt->save();
+
+
         $planos = DB::table('cotacao_faixa_etarias as cfe')
         ->selectRaw("CONCAT('card_',ta.odonto,'_',ta.coparticipacao,'_',ta.administradora_id) AS card,cfe.cotacao_id,fe.id,cfe.quantidade,fe.nome,fe.id,ta.odonto,ta.coparticipacao,ta.administradora_id,ta.faixa_etaria,ta.plano_id")
         ->selectRaw("(SELECT nome FROM planos WHERE ta.plano_id = planos.id) AS plano")
@@ -242,7 +250,7 @@ class CotacaoController extends Controller
                 
                 $cliente->etiqueta_id = 2;
                 $cliente->ultimo_contato = date("Y-m-d");
-                $cliente->lead = ($cliente->lead == 0 ? 1 : 0);
+                
                 $cliente->save();          
 
 

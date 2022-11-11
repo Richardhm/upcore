@@ -98,19 +98,58 @@
 
             <!-----GRAFICOS--------->
             <div class="graficos bg-white">
-                
+                <div style="flex-basis:33%;border-right:1px solid black;">
+                    <p class="text-center border-bottom">Vendas</p>
+                    <canvas id="vendido" width="90%" top="30%" class="mt-2" data-needle-value-vendido="45"></canvas>
+                </div>
+
+                <div style="flex-basis:33%;border-right:1px solid black;">
+                    <p class="text-center border-bottom">Cadastrado</p>
+                    <canvas id="cadastrado" width="90%" top="30%" class="mt-2" data-needle-value-cadastrado="85"></canvas>
+                </div>
+
+                <div style="flex-basis:33%;">
+                    <p class="text-center border-bottom">Media</p>
+                    <canvas id="previsao" width="90%" top="30%" class="mt-2" data-needle-value-previsao="25"></canvas>
+                </div>
             </div>
             <!-----FIM GRAFICOS----->
 
             <!-----CARDS--------->
             <div class="cards">
 
-                <div class="vendas_mes">
+                <div class="box-body" style="flex-basis:48%;padding:5px;background-color:rgba(0,0,0,0.5);color:#FFF;border-radius:5px;">
+                    <h5 class="text-center border-bottom">Vendas Mês</h5>
+                    <div>
+                        <h6>{{$vendas_mes_quadro[0]->total_finalizado}} / {{$vendas_mes_quadro[0]->total_cadastrado}}</h6>
 
+                        @foreach($vendas_mes_quadro as $vvq)
+                            <div style="margin-bottom:10px;">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{$vvq->nome}}</span>
+                                    <span class="mr-1">{{$vvq->quantidade}} ({{$vvq->porcentagem}}%)</span>
+                                </div>
+                                
+                                <div class="progress progress-xxs">
+                                    <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{$vvq->porcentagem}}%">
+                                        <span class="sr-only">60% Complete (warning)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+
+                        
+                       
+                        
+                    </div>
                 </div>
                 
-                <div class="cancelados_mes">
+                <div class="box-body" style="flex-basis:48%;padding:5px;background-color:rgba(0,0,0,0.5);color:#FFF;border-radius:5px;">
+                    <h5 class="text-center border-bottom">Cancelados Mês</h5>     
+                    <div>
                         
+                    </div>
                 </div>
 
             </div>
@@ -396,19 +435,19 @@
              <div class="cards-detalhes">
                 <h6 class="text-center py-1 border-bottom">TICKET MÈDIO MÊS</h6>
                 <div class="detalhes-grafico">
-                    <canvas id="ticket_medio_mes" width="330" height="200"></canvas>
+                    <canvas id="ticket_medio_mes" width="330" height="200" 
+                        data-ticket-medio-label="{{$ticketMedioLabel}}"
+                        data-ticket-media-quantidade="{{$ticketMedioQuantidade}}"    
+                    ></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
-                    <div>
-                        <p>Individual</p> 
-                        <p>15</p> 
-                        <p>+55%</p> 
-                    </div>
-                    <div>
-                        <p>Coletivo Por Adesão</p> 
-                        <p>15</p> 
-                        <p>+25%</p> 
-                    </div>
+                    @foreach($ticketMedio as $tk)
+                        <div class="d-flex justify-content-between">
+                            <p style="flex-basis:40%;font-size:1em;" class="ml-1">{{$tk->plano}}</p> 
+                            <p>R$ {{number_format($tk->media,2,",",".")}}</p> 
+                            <p class="mr-1">+55%</p> 
+                        </div>
+                    @endforeach
                     <div>
                         <p>Empresarial</p> 
                         <p>23</p> 
@@ -442,29 +481,20 @@
              <div class="cards-detalhes">
                 <h6 class="text-center py-1 border-bottom">TAXA CONVERSÃO</h6>
                 <div class="detalhes-grafico">
-                    <canvas id="taxa_conversao" width="330" height="200"></canvas>
+                    <canvas id="taxa_conversao" width="330" height="200"
+                    data-taxa-conversao-label="{{$taxaConversaoLabel}}"
+                    data-taxa-conversao-quantidade="{{$taxaConversaoQuantidade}}"
+                    ></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
-                    <div>
-                        <p>Facebook</p> 
-                        <p>15</p> 
-                        <p>+55%</p> 
-                    </div>
-                    <div>
-                        <p>Instagram</p> 
-                        <p>15</p> 
-                        <p>+25%</p> 
-                    </div>
-                    <div>
-                        <p>Indicação</p> 
-                        <p>23</p> 
-                        <p>+15%</p> 
-                    </div>    
-                    <div>
-                        <p>Google</p> 
-                        <p>14</p> 
-                        <p>+5%</p> 
-                    </div>
+                   @foreach($taxaConversao as $tc)
+                        <div class="d-flex justify-content-between">
+                            <p style="flex-basis:40%;font-size:1em;" class="ml-1">{{$tc->nome}}</p> 
+                            <p>{{$tc->quantidade_vendida}}/{{$tc->quantidade_recebida}}</p> 
+                            <p class="mr-1">{{$tc->porcentagem}}%</p> 
+                        </div>
+                    @endforeach
+
 
                 </div>
              </div>   
@@ -473,7 +503,11 @@
 
         <section class="grafico_anual" style="width:100%;height:400px;margin-bottom:20px;background-color:rgba(0,0,0,0.5);">
             <h3 class="text-center text-white">VENDA ANUAL</h3>
-            <canvas id="anual" width="1400" height="350"></canvas>
+            <canvas id="anual" width="1400" height="350" 
+                data-label-anual="{{$anualLabel}}" 
+                data-label-anual-coletivo="{{$anualLabelQuantidadeColetivo}}"
+                data-label-anual-individual="{{$anualLabelQuantidadeIndividual}}"
+            ></canvas>
         </section>
 
     
@@ -493,43 +527,36 @@
             new Chart(anual, {
                 type: 'bar',
                 data: {
-                    labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun","Jul","Ago","Set","Out","Nov","Dez"],
+                    labels: anual.data('label-anual').split("|"),
                     datasets: [{
-                        label: 'Vendas',
-                        data: [12, 19, 3, 5, 10, 3,25,30,7,9,4,15],
+                        label: 'Individual',
+                        data: [anual.data('label-anual-individual')],
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(80, 255, 0, 0.2)',
-                            'rgba(0, 255, 40, 0.2)',
-                            'rgba(255, 225, 95, 0.2)',
-                            'rgba(75, 80, 70, 0.2)',
-                            'rgba(152, 125, 50, 0.2)',
                             'rgba(80, 200, 30, 0.2)'
                         ],
                         borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(80, 255, 0, 1)',
-                            'rgba(0, 255, 40, 1)',
-                            'rgba(255, 225, 95, 1)',
-                            'rgba(75, 80, 70, 1)',
-                            'rgba(152, 125, 50, 1)',
-                            'rgba(80, 200, 30, 1)'
+                            'rgba(255,99,132,1)'
+                            
                         ],
                         borderWidth: 1
-                    }]
+                    },
+                    {
+                        label: 'Coletivo',
+                        data: [anual.data('label-anual-coletivo')],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                            
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)'
+                        ],
+                        borderWidth: 1
+                    }
+                    ]
                 },
                 options: {
-                    responsive: false
+                    responsive: false,
+                    scales: {}
                 }
             });
 
@@ -634,15 +661,17 @@
             )
             
             
+            let ticketMedio = $("#ticket_medio_mes");
             new Chart(
-                document.getElementById("ticket_medio_mes"),
+                ticketMedio,
                 {   
                     "type":"doughnut",
                     "data":{
+                        "labels": ticketMedio.data('ticket-medio-label').split("|"),
                         "datasets":[{
-                            "label":"My First Dataset",
-                            "data":[300,50,100],
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"]}
+                            "label":"Ticket Media",
+                            "data":ticketMedio.data('ticket-media-quantidade').split("|"),
+                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)"]}
                         ]
                     },
                     options: {
@@ -670,14 +699,16 @@
                 }
             )
             
+            let taxa_conversao = $("#taxa_conversao");
             new Chart(
-                document.getElementById("taxa_conversao"),
+                taxa_conversao,
                 {   
                     "type":"doughnut",
                     "data":{
+                        "labels": taxa_conversao.data("taxa-conversao-label").split("|"),
                         "datasets":[{
                             "label":"My First Dataset",
-                            "data":[300,50,100],
+                            "data":taxa_conversao.data('taxa-conversao-quantidade').split("|"),
                             "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"]}
                         ]
                     },
@@ -686,6 +717,241 @@
                     }
                 }
             )
+
+           /************************************************************ 1º Velocimetro ***********************************************************************************/
+            const vendido = $("#vendido");            
+            new Chart(
+                vendido,
+                {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["Ruim","Regular","Bom","Otimo"],
+                        datasets: [{
+                            label: 'Cadastrados',
+                            data: [25,25,25,25],
+                            backgroundColor: [
+                                'rgba(255, 26, 104, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(50, 205, 50, 1)',
+                            ],
+		                    needleValue:vendido.data('needle-value-vendido'),
+                            borderColor: 'white',
+                            borderWidth: 2,
+                            cutout:'95%',
+                            circumference:180,
+                            rotation:270,
+                            borderRadius:5
+                        }]
+                    },
+                    options: {
+                        scales: {},
+		                plugins: {
+                            // legend: {
+                            // 	display:false
+                            // },
+                            // tooltip: {
+                            // 	yAlign:'bottom',
+                            // 	displayColors:false,
+                            // 	callbacks: {
+                            // 		label: function(tooltipItem,data,value) {
+                            // 			const tracker = tooltipItem.dataset.needleValue;
+                            // 			return `Tracker Score: ${tracker} %`;
+                            // 		}
+                            // 	}
+                            // }
+		                }
+	                },
+	                plugins: [{
+		                afterDatasetDraw(chart,args,options) {
+                            const { ctx,config,data,chartArea: {top,bottom,left,right,width,height} } = chart;
+                            ctx.save();		
+                            const needleValue = data.datasets[0].needleValue;
+                            const dataTotal = data.datasets[0].data.reduce((a,b)=>a+b,0);
+                            const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI)
+                            const cx = width / 2;
+                            const cy = chart._metasets[0].data[0].y;			
+                            ctx.translate(cx,cy);
+                            ctx.rotate(angle);
+                            ctx.beginPath();
+                            ctx.moveTo(0,-2);
+                            ctx.lineTo(height - (ctx.canvas.offsetTop - 110),0);
+                            ctx.lineTo(0,2);
+                            ctx.fillStyle = "#444";
+                            ctx.fill();
+                            ctx.restore();
+                            ctx.beginPath();
+                            ctx.arc(cx,cy,5,0,10);	
+                            ctx.fill();
+                            ctx.restore();
+                            ctx.font = '5px Helvetica';
+                            ctx.margin = "30px 0 0 0";
+                            ctx.fillStyle = '#444';
+                            ctx.fillText(needleValue +'%',cx,cy);
+                            ctx.textAlign = 'center';
+                            ctx.restore();
+                        }
+                    }]
+                }
+            );
+           /*************************************************************Fim **********************************************************************************/     
+    
+
+        const cadastrado = $("#cadastrado");
+        
+        new Chart(
+            cadastrado,
+            {
+                type: 'doughnut',
+                data: {
+                    labels: ["Ruim","Regular","Bom","Otimo"],
+                    datasets: [{
+                        label: 'Cadastrados',
+                        data: [25,25,25,25],
+                        backgroundColor: [
+                            'rgba(255, 26, 104, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(50, 205, 50, 1)',
+                        ],
+		                needleValue:65,
+                        borderColor: 'white',
+                        borderWidth: 2,
+                        cutout:'95%',
+                        circumference:180,
+                        rotation:270,
+                        borderRadius:5
+                    }]
+                },
+                options: {
+                    scales: {},
+		            plugins: {
+                    // legend: {
+                    // 	display:false
+                    // },
+                    // tooltip: {
+                    // 	yAlign:'bottom',
+                    // 	displayColors:false,
+                    // 	callbacks: {
+                    // 		label: function(tooltipItem,data,value) {
+                    // 			const tracker = tooltipItem.dataset.needleValue;
+                    // 			return `Tracker Score: ${tracker} %`;
+                    // 		}
+                    // 	}
+                    // }
+		        }
+	        },
+	        plugins: [{
+		        afterDatasetDraw(chart,args,options) {
+                    const { ctx,config,data,chartArea: {top,bottom,left,right,width,height} } = chart;
+                    ctx.save();		
+                    const needleValue = data.datasets[0].needleValue;
+                    const dataTotal = data.datasets[0].data.reduce((a,b)=>a+b,0);
+                    const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI)
+                    const cx = width / 2;
+                    const cy = chart._metasets[0].data[0].y;			
+                    ctx.translate(cx,cy);
+                    ctx.rotate(angle);
+                    ctx.beginPath();
+                    ctx.moveTo(0,-2);
+                    ctx.lineTo(height - (ctx.canvas.offsetTop - 110),0);
+                    ctx.lineTo(0,2);
+                    ctx.fillStyle = "#444";
+                    ctx.fill();
+                    ctx.restore();
+                    ctx.beginPath();
+                    ctx.arc(cx,cy,5,0,10);	
+                    ctx.fill();
+                    ctx.restore();
+                    ctx.font = '5px Helvetica';
+                    ctx.margin = "30px 0 0 0";
+                    ctx.fillStyle = '#444';
+                    ctx.fillText(needleValue +'%',cx,cy);
+                    ctx.textAlign = 'center';
+                    ctx.restore();
+                }
+            }]
+        }
+        );    
+
+
+        let previsao = $("#previsao");
+        new Chart(
+            previsao,
+            {
+                type: 'doughnut',
+                data: {
+                    labels: ["Ruim","Regular","Bom","Otimo"],
+                    datasets: [{
+                        label: 'Previsao',
+                        data: [25,25,25,25],
+                        backgroundColor: [
+                            'rgba(255, 26, 104, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(50, 205, 50, 1)',
+                        ],
+		                needleValue:65,
+                        borderColor: 'white',
+                        borderWidth: 2,
+                        cutout:'95%',
+                        circumference:180,
+                        rotation:270,
+                        borderRadius:5
+                    }]
+                },
+                options: {
+                    scales: {},
+		            plugins: {
+                    // legend: {
+                    // 	display:false
+                    // },
+                    // tooltip: {
+                    // 	yAlign:'bottom',
+                    // 	displayColors:false,
+                    // 	callbacks: {
+                    // 		label: function(tooltipItem,data,value) {
+                    // 			const tracker = tooltipItem.dataset.needleValue;
+                    // 			return `Tracker Score: ${tracker} %`;
+                    // 		}
+                    // 	}
+                    // }
+		        }
+	        },
+	        plugins: [{
+		        afterDatasetDraw(chart,args,options) {
+                    const { ctx,config,data,chartArea: {top,bottom,left,right,width,height} } = chart;
+                    ctx.save();		
+                    const needleValue = data.datasets[0].needleValue;
+                    const dataTotal = data.datasets[0].data.reduce((a,b)=>a+b,0);
+                    const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI)
+                    const cx = width / 2;
+                    const cy = chart._metasets[0].data[0].y;			
+                    ctx.translate(cx,cy);
+                    ctx.rotate(angle);
+                    ctx.beginPath();
+                    ctx.moveTo(0,-2);
+                    ctx.lineTo(height - (ctx.canvas.offsetTop - 110),0);
+                    ctx.lineTo(0,2);
+                    ctx.fillStyle = "#444";
+                    ctx.fill();
+                    ctx.restore();
+                    ctx.beginPath();
+                    ctx.arc(cx,cy,5,0,10);	
+                    ctx.fill();
+                    ctx.restore();
+                    ctx.font = '5px Helvetica';
+                    ctx.margin = "30px 0 0 0";
+                    ctx.fillStyle = '#444';
+                    ctx.fillText(needleValue +'%',cx,cy);
+                    ctx.textAlign = 'center';
+                    ctx.restore();
+                }
+            }]
+        }
+        );    
+
+
 
 
 
@@ -701,13 +967,13 @@
 @section('css')
     <style>   
         .header {display:flex;justify-content: space-between;}
-        .tabela {flex-basis:30%;margin-bottom: 0 !important;}
+        .tabela {flex-basis:15%;margin-bottom: 0 !important;}
         .tabela table {flex-basis:100%;}
-        .graficos {border:1px solid black;margin:0 2%;flex-basis:30%;}
-        .cards {flex-basis:30%;border:1px solid black;display: flex;justify-content: space-between;}
+        .graficos {border:1px solid black;margin:0 2%;flex-basis:45%;display: flex;}
+        .cards {flex-basis:30%;display: flex;justify-content: space-between;}
 
-        .vendas_mes {background-color: white;flex-basis:45%;display: flex;}
-        .cancelados_mes {background-color: white;flex-basis: 45%;display: flex;}
+        .vendas_mes {background-color: white;flex-basis:49%;display: flex;flex-direction: column;}
+        .cancelados_mes {background-color: white;flex-basis: 49%;display: flex;}
 
         .lembretes {margin-top: 10px;display:flex;justify-content: space-between;flex-direction: column;}
         .lembretes article {margin-top: 5px;flex-basis: 100%;display: flex;justify-content: space-between;}

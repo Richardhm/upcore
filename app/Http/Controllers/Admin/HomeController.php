@@ -773,6 +773,33 @@ class HomeController extends Controller
                 ->whereRaw("cotacao_id IN(SELECT id FROM cotacoes WHERE financeiro_id = 7 AND user_id = ?)",[auth()->user()->id])
                 ->groupBy("faixa_etaria_id")
                 ->get()->pluck('quantidade')->toArray();
+
+
+            $ticketMedio = DB::table('cotacao_faixa_etarias')
+                ->join('cotacoes', 'cotacoes.id', '=', 'cotacao_faixa_etarias.cotacao_id')
+                ->selectRaw("(SELECT nome FROM planos WHERE planos.id = cotacoes.plano_id) AS plano")
+                ->selectRaw("SUM(quantidade) AS quantidade")
+                ->selectRaw("(SELECT SUM(valor) FROM cotacoes as dentro WHERE dentro.plano_id =  cotacoes.plano_id) AS valor")
+                ->selectRaw("(SELECT SUM(valor) FROM cotacoes as dentro WHERE dentro.plano_id =  cotacoes.plano_id) / SUM(quantidade) AS media")
+                ->whereRaw("cotacao_id IN(SELECT id FROM cotacoes WHERE financeiro_id = 7)")
+                ->groupBy("plano_id")
+                ->get();     
+
+            $ticketMedioQuantidade = DB::table('cotacao_faixa_etarias')
+                ->join('cotacoes', 'cotacoes.id', '=', 'cotacao_faixa_etarias.cotacao_id')
+                ->selectRaw("(SELECT SUM(valor) FROM cotacoes as dentro WHERE dentro.plano_id =  cotacoes.plano_id) / SUM(quantidade) AS media")
+                ->whereRaw("cotacao_id IN(SELECT id FROM cotacoes WHERE financeiro_id = 7)")
+                ->groupBy("plano_id")
+                ->get()->pluck('media')->toArray();       
+             
+           
+             
+                
+
+                
+
+
+
             
             
                 $qtdAtrasado = Cliente
@@ -781,14 +808,13 @@ class HomeController extends Controller
                 ->where("visivel",1)
                 ->where("pessoa_fisica",1)
                 ->whereHas('cotacao',function($query){
-                    // $query->where("financeiro_id","!=",7);
                     $query->whereRaw("financeiro_id IS NULL");
                 })
                 ->whereHas('tarefas',function($query){
                     $query->whereDate('created_at','<',date('Y-m-d'));
                     $query->where("visivel",1);
                 })->count();
-            // dd($qtdAtrasado);    
+            
     
             $qtdHoje = Cliente
             ::where("user_id",auth()->user()->id)
@@ -796,7 +822,6 @@ class HomeController extends Controller
             ->where("visivel",1)
             ->where("pessoa_fisica",1)
             ->whereHas('cotacao',function($query){
-                
                 $query->whereRaw("financeiro_id IS NULL");
             })
             ->whereHas('tarefas',function($query){
@@ -879,11 +904,79 @@ class HomeController extends Controller
                 ->first(); 
                 
             $clientePerdidos = Cliente::where("user_id",auth()->user()->id)->where("visivel",0)->whereMonth('updated_at', date('m'))->count();    
+
+            $anualLabel = DB::table('cotacoes')
+                ->selectRaw("DATE_FORMAT(updated_at, '%M') AS label")
+                ->whereRaw("financeiro_id = 7")
+                ->groupByRaw("MONTH(updated_at)")
+                ->get();
+
+              
+            $anualLabelQuantidadeIndividual = DB::table('cotacao_faixa_etarias')
+                ->join("cotacoes","cotacoes.id","=","cotacao_faixa_etarias.cotacao_id")
+                //->selectRaw("(SELECT nome FROM planos WHERE planos.id = cotacoes.plano_id) AS label")
+                ->selectRaw("SUM(cotacao_faixa_etarias.quantidade) AS vidas")
+                //->selectRaw("DATE_FORMAT(cotacoes.updated_at, '%M') AS mes")
+                ->whereRaw("financeiro_id = 7")
+                ->whereRaw("cotacoes.user_id = ?",[auth()->user()->id])
+                ->whereRaw("cotacoes.plano_id = 1")
+                ->groupByRaw("MONTH(cotacoes.updated_at)")
+                ->get()->pluck('vidas')->toArray();
+             
+            $anualLabelQuantidadeColetivo = DB::table('cotacao_faixa_etarias')
+                ->join("cotacoes","cotacoes.id","=","cotacao_faixa_etarias.cotacao_id")
+                //->selectRaw("(SELECT nome FROM planos WHERE planos.id = cotacoes.plano_id) AS label")
+                ->selectRaw("SUM(cotacao_faixa_etarias.quantidade) AS vidas")
+                //->selectRaw("DATE_FORMAT(cotacoes.updated_at, '%M') AS mes")
+                ->whereRaw("financeiro_id = 7")
+                ->whereRaw("cotacoes.user_id = ?",[auth()->user()->id])
+                ->whereRaw("cotacoes.plano_id = 3")
+                ->groupByRaw("MONTH(cotacoes.updated_at)")
+                ->get()->pluck('vidas')->toArray();    
+
+               
+            
+
+            $taxaConversao = DB::table('origems')
+                ->selectRaw("id")
+                ->selectRaw("nome")
+                ->selectRaw("(SELECT COUNT(id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.visivel = 1 AND clientes.user_id = 2) AS quantidade_recebida")
+                ->selectRaw("(SELECT COUNT(cotacoes.id) FROM cotacoes INNER JOIN clientes ON clientes.id = cotacoes.cliente_id  WHERE cotacoes.financeiro_id = 7 AND cotacoes.user_id = 2 AND clientes.visivel = 1  AND clientes.origem_id = origems.id) AS quantidade_vendida")
+                ->selectRaw("floor(((SELECT COUNT(cotacoes.id) FROM cotacoes INNER JOIN clientes ON clientes.id = cotacoes.cliente_id WHERE cotacoes.financeiro_id = 7 AND cotacoes.user_id = 2 AND clientes.visivel = 1 AND clientes.origem_id = origems.id) / (SELECT COUNT(id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.visivel = 1 AND clientes.user_id = 2)) * 100) as porcentagem")
+                ->get(); 
+            
+            $taxaConversaoQuantidade = DB::table('origems')
+                //->selectRaw("id")
+                //->selectRaw("nome")
+                //->selectRaw("(SELECT COUNT(id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.visivel = 1 AND clientes.user_id = 2) AS quantidade_recebida")
+                //->selectRaw("(SELECT COUNT(cotacoes.id) FROM cotacoes INNER JOIN clientes ON clientes.id = cotacoes.cliente_id  WHERE cotacoes.financeiro_id = 7 AND cotacoes.user_id = 2 AND clientes.visivel = 1  AND clientes.origem_id = origems.id) AS quantidade_vendida")
+                ->selectRaw("floor(((SELECT COUNT(cotacoes.id) FROM cotacoes INNER JOIN clientes ON clientes.id = cotacoes.cliente_id WHERE cotacoes.financeiro_id = 7 AND cotacoes.user_id = 2 AND clientes.visivel = 1 AND clientes.origem_id = origems.id) / (SELECT COUNT(id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.visivel = 1 AND clientes.user_id = 2)) * 100) as porcentagem")
+                ->get()->pluck("porcentagem")->toArray();     
+            
+            $vendas_mes_quadro = DB::table('administradoras')
+                ->selectRaw("id")
+                ->selectRaw("(SELECT COUNT(*) FROM cotacoes WHERE user_id = 2) AS total_cadastrado")
+                ->selectRaw("(SELECT COUNT(*) FROM cotacoes WHERE financeiro_id = 7 AND user_id = 2) AS total_finalizado")
+                ->selectRaw("nome")
+                ->selectRaw("(SELECT COUNT(*) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.financeiro_id = 7) AS quantidade")
+                ->selectRaw("floor(((SELECT COUNT(*) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.financeiro_id = 7) * 100) / (SELECT COUNT(*) FROM cotacoes WHERE financeiro_id = 7 AND user_id = 2)) AS porcentagem")
+                ->get();
+
+                
             
             
             
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
             return view('admin.pages.home.colaborador',[
+
+                "vendas_mes_quadro" => $vendas_mes_quadro,
+                
+                "anualLabel" => implode("|",$anualLabel->pluck('label')->toArray()),
+                "anualLabelQuantidadeColetivo" => implode("|",$anualLabelQuantidadeColetivo),
+                "anualLabelQuantidadeIndividual" => implode("|",$anualLabelQuantidadeIndividual),
+
+                
+                
                 "coresHexadecimais" => $coresHexadecimais,
 
                 "leads_grafico" => $leads_grafico,
@@ -912,6 +1005,10 @@ class HomeController extends Controller
                 "vendas_por_faixa_etaria_quantidade" => implode("|",$vendas_por_faixa_etaria_quantidade),
                 "vendas_por_faixa_etaria_label" => implode("|",$vendas_por_faixa_etaria->pluck('faixa')->toArray()),
 
+                "ticketMedio" => $ticketMedio,
+                "ticketMedioQuantidade" => implode("|",$ticketMedioQuantidade),
+                "ticketMedioLabel" => implode("|",$ticketMedio->pluck("plano")->toArray()),
+
 
 
                 'qtdHoje' => $qtdHoje,
@@ -933,7 +1030,12 @@ class HomeController extends Controller
                 "qtdPagamentoIndividual" => $qtdPagamentoIndividual,
                 "contratosPendentes" => $contratosPendentes,
                 "contratosFinalizados" => $contratosFinalizados,
-                "clientePerdidos" => $clientePerdidos
+                "clientePerdidos" => $clientePerdidos,
+
+                "taxaConversao" => $taxaConversao,
+                "taxaConversaoLabel" => implode("|",$taxaConversao->pluck('nome')->toArray()),
+                "taxaConversaoQuantidade" => implode("|",$taxaConversaoQuantidade)
+                
 
 
                 // "totalCliente" => $totalCliente,

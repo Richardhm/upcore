@@ -963,12 +963,23 @@ class HomeController extends Controller
                 ->get();
 
                 
-            
+            $tabelas = DB::table('administradoras')
+                ->selectRaw("id")
+                ->selectRaw("nome")
+                ->selectRaw("(SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id IS NOT NULL) AS quantidade")
+                ->selectRaw("(SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id AND cotacoes.financeiro_id = 7) AS vendido")
+                ->selectRaw("((SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id IS NOT NULL) + (SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id AND cotacoes.financeiro_id = 7)) AS soma")
+                ->get();
+
+                
+
+
+
             
             
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
             return view('admin.pages.home.colaborador',[
-
+                "tabelas" => $tabelas,
                 "vendas_mes_quadro" => $vendas_mes_quadro,
                 
                 "anualLabel" => implode("|",$anualLabel->pluck('label')->toArray()),

@@ -54,14 +54,26 @@
                         </tr>
                         <tr>
                             <th>Plano</th>
-                            <th>Meta</th>
+                            <!-- <th>Meta</th> -->
                             <th>CAD.</th>
                             <th>Real.</th>
                             <th>Prev.</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+
+                        @foreach($tabelas as $tt)
+                            <tr>
+                                <td>{{$tt->nome}}</td>
+                                <td>{{$tt->quantidade}}</td>
+                                <td>{{$tt->vendido}}</td>
+                                <td>{{$tt->soma}}</td>
+
+                            </tr>    
+                        @endforeach
+
+
+                        <!-- <tr>
                             <th>Individual</th>
                             <td>10</td>
                             <td>20</td>
@@ -88,7 +100,7 @@
                             <td>20</td>
                             <td>30</td>
                             <td>40</td>
-                        </tr>    
+                        </tr>     -->
                             
                         
                     </tbody>

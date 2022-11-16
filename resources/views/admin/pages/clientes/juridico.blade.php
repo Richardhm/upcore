@@ -130,7 +130,7 @@
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 todos">
                     <span class="ml-2">Total Leads</span>
-                    <span class="mr-2">{{$qtdTotal}}</span>
+                    <span class="mr-2" id="quantidade_total">{{$qtdTotal}}</span>
                 </a>
             </li>
         </ul>
@@ -369,14 +369,30 @@
     </div>
     <div class="modal-body">
     <form action="" method="post" name="editar_lead">
-            @csrf
-            <input type="hidden" name="editar_cliente_id" id="editar_cliente_id">
-            <div class="form-row mb-2">
+        @csrf
+        <input type="hidden" name="editar_cliente_id" id="editar_cliente_id">
+        <div class="form-row mb-2">
                 <div class="col-6">
-                    <span class="text-white">Nome:</span>
-                    <input type="text" name="editar_nome" id="editar_nome" class="form-control" placeholder="Nome Cliente">    
-                    
+                    <span class="text-white">CNPJ:</span>
+                    <input type="text" name="editar_cnpj" id="editar_cnpj" class="form-control" placeholder="CNPJ">    
+                    <div class="errorcnpj"></div>
                 </div>
+
+                <div class="col-6">
+                    <span class="text-white">Nome Empresa:</span>
+                    <input type="text" name="editar_nome_empresa" id="editar_nome_empresa" class="form-control" placeholder="Empresa">    
+                    <div class="errornomeempresa"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+
+                <div class="col-6">
+                    <span class="text-white">Contato(Responsavel):</span>
+                    <input type="text" name="edotar_nome_responsavel" id="editar_nome_responsavel" class="form-control" placeholder="Nome do Responsavel">    
+                    <div class="errornomeresponsavel"></div>
+                </div>
+
                 <div class="col-6">
                     <span class="text-white">Cidade:</span>
                     <select name="editar_cidade_id" id="editar_cidade_id" class="form-control">
@@ -385,38 +401,32 @@
                             <option value="{{$c->id}}">{{$c->nome}}</option>
                         @endforeach
                     </select>
-                    
+                    <div class="errorcidadeempresa"></div>
                 </div>    
             </div>
 
             <div class="form-row mb-2">
-                <div class="col-6">
+                <div class="col-4">
                     <span class="text-white">Celular:</span>
-                    <input type="text" name="editar_telefone" id="editar_telefone" class="form-control" placeholder="Telefone">  
-                    
-                    
+                    <input type="text" name="telefone" id="editar_celular_empresa" class="form-control" placeholder="Telefone">  
+                    <div class="errorcelularempresa"></div>  
                 </div>
 
-                <div class="col-6">
+                <div class="col-4">
+                    <span class="text-white">Telefone(Opicional):</span>
+                    <input type="text" name="editar_telefone_empresa" id="editar_telefone_empresa" class="form-control" placeholder="Telefone Empresa">  
+                    <div class="errortelefoneempresa"></div>  
+                </div>
+
+                <div class="col-4">
                     <span class="text-white">Email:</span>
-                    <input type="text" name="editar_email" id="editar_email" class="form-control" placeholder="Email">    
-                    
+                    <input type="text" name="email" id="editar_email_empresa" class="form-control" placeholder="Email">    
+                    <div class="erroremailempresa"></div>  
                 </div>
             </div>
 
-            <div class="form-group">
-                <span class="text-white">Origem:</span>
-                
-                <select name="editar_origem_id" id="editar_origem_id" class="form-control">
-                    <option value="">-- Escolher a Origem --</option>
-                    @foreach($origem as $o) 
-                        <option value="{{$o->id}}">{{$o->nome}}</option>
-                    @endforeach
-                </select>
-
-                
-            </div>              
-            <input type="submit" class="btn btn-primary btn-block mt-3" value="Cadastrar">
+            <input type="submit" class="btn btn-primary btn-block mt-3" value="Editar Pessoa Jurídico">
+           
     </form>
  
     </div>
@@ -459,12 +469,9 @@
 
             $("#checkbox-pai").on('change',function(){
                 if($(this).is(":checked")) {
-                    // $('.marcar_cliente').attr("checked",'checked');
-                    // $('.marcar_cliente').removeAttr("checked");
                     $("#marcar_cliente").prop('checked', true); 
                     $(".marcar_cliente").prop('checked', true); 
                     $('input[type="checkbox"]').prop("checked",true);
-                    // $('#marcar_cliente').removeAttr("checked",false);
                     $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                     $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                     $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
@@ -476,7 +483,6 @@
                     $(".marcar_cliente").prop('checked', false); 
                     $('input[type="checkbox"]').prop("checked",false);
                     $('#marcar_cliente').removeAttr("checked",false);
-
                     $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
                     $('tr').removeClass('textoforte'); 
                 }
@@ -487,14 +493,15 @@
             $('#telefone').mask('(00) 0 0000-0000');
             $('#telefone_empresa').mask('(00) 0 0000-0000');
             $('#celular_empresa').mask('(00) 0 0000-0000');
-            $('#cnpj').mask('00.000.000/0000-00');
-        
+            $('#editar_celular_empresa').mask('(00) 0 0000-0000');
+            $('#editar_telefone_empresa').mask('(00) 0 0000-0000');
+            $('#cnpj').mask('00.000.000/0000-00');      
+            $('#editar_cnpj').mask('00.000.000/0000-00');      
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
             var ta = $(".listarclientes").DataTable({
                 dom: '<"d-flex justify-content-between"<"#title">ft><t><"d-flex justify-content-between"lp>',
                 "language": {
@@ -527,21 +534,16 @@
                             $(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
                         }},
                         {
-                        "targets": 2,
-                        "createdCell": function (td, cellData, rowData, row, col) {
-                            //console.log(row);
-                            let datas = cellData.split("T")[0]
-                            let alvo = datas.split("-").reverse().join("/")
-                            $(td).html(alvo);
-                        }
-                    }],
-
+                            "targets": 2,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                let datas = cellData.split("T")[0]
+                                let alvo = datas.split("-").reverse().join("/")
+                                $(td).html(alvo);
+                            }
+                        }],
                 rowCallback: function (row, data,displayNum,displayIndex,dataIndex) {
                     let alvo_id = $("#pessoa_juridica_cadastrada").val();
-                    
-                    
-
-                    if ( $(row).hasClass('odd') ) {
+                    if($(row).hasClass('odd')) {
                         $(row).addClass('table-cell-edit').attr("id",data.id);
                     } else {
                         $(row).addClass('alvo').attr("id",data.id)
@@ -559,36 +561,13 @@
                     }
                     
                 },
-                // "createdRow":function(row, data, dataIndex) {
-                    // console.log($(row))
-                    // const now = new Date(Date.now()).toISOString().split("T")[0];    
-                    // let criacao = new Date(data.created_at.split("T")[0]).toISOString().split("T")[0];
-                    // if(criacao == now) {
-                    //     $(row).addClass('green-color');
-                    // } else if(criacao < now) {
-                    //     $(row).addClass('red-color');
-                    // } else {
-
-                    // }
-                // },
                 "initComplete": function( settings, json ) {
                     $('#title').html("<h4>Plantão de Vendas</h4>");
-                    //table.row('#77').nodes().to$().addClass('mynewclass');
-                            //console.log(last_row);
-                            //last_row = table.row(':last').addClass('textoforte')
-                            //ta.$('tr').attr('data-id',77).addClass('textoforte')
-                    //$("tr").attr('id',77).addClass('textoforte');
+                    
                 }
             });
-
-           
-
-            //$('tr').attr('data-id',73).addClass("textoforte");
-
-
             var table = $("#tabela").DataTable();
-            $('table').on('click', 'tbody tr', function (e) {
-                
+            $('table').on('click', 'tbody tr', function (e) {                
                 let data = table.row(this).data();
                 $("#cliente_clidado").val(data.id);
                 if(!$(e.target).hasClass('marcar_cliente')) {
@@ -596,32 +575,21 @@
                     let telefone = $(this).closest('tr').find("td:eq(5)").text().replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","");
                     let email = $(this).closest('tr').find("td:eq(6)").text();
                     let marcados = $(this).closest("table").find("input[type=checkbox]:checked");
-                
-                
                     if($(this).closest('tr').find('.marcar_cliente').prop('checked')) {
                         $(this).closest('tr').find('.marcar_cliente').prop('checked',false);
                         $(this).closest('tr').removeClass('textoforte');
-
                         ta.$('tr').removeClass('textoforte');
-                        ta.$('tr').find('.marcar_cliente').prop('checked',false);
-                    
+                        ta.$('tr').find('.marcar_cliente').prop('checked',false);                
                         $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                         $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id').removeAttr('target');
                         $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
                         $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id');
-
                         $("#editar_cliente_id").val('');
                         $("#editar_cidade_id").val('');
                         $("#editar_origem_id").val('');
-                        // $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
-
-
-
-
                     } else {
                         ta.$('tr').removeClass('textoforte');
                         ta.$('tr').find('.marcar_cliente').prop('checked',false);
-                        
                         $(this).closest('tr').find('.marcar_cliente').prop('checked',true);
                         $(this).closest('tr').addClass('textoforte');
                         $(".orcamento").attr('style','cursor:pointer').attr("href","/admin/cotacao/orcamento/"+id);
@@ -629,22 +597,10 @@
                         $(".email").attr('style','cursor:pointer').attr('data-id',id).attr("href","mailto:"+email);  
                         $(".editar").attr('style','cursor:pointer').attr('data-id',id);                            
                     }
-
-
-
-
-
-
                 }
               });
 
-             
-
-
-
-
-            $("form[name='cadastrar_pessoa_jurica']").on('submit',function(){
-                
+            $("form[name='cadastrar_pessoa_jurica']").on('submit',function(){                
                 let form = $(this);
                 $.ajax({
                     url:"{{route('leads.prospeccao.store.pj')}}",
@@ -692,7 +648,7 @@
                         //console.log(res);
                         if(res != "error") {
                             ta.ajax.reload();
-                            toastr["success"](res.id + " cadastrado com sucesso")
+                            toastr["success"](res.nome + " cadastrado com sucesso")
                             toastr.options = {
                                 "closeButton": false,
                                 "debug": false,
@@ -729,21 +685,8 @@
                             $("#quantidade_hoje").html(res.quantidade_hoje);
                             $("#quantidade_semana").html(res.quantidade_semana);
                             $("#quantidade_mes").html(res.quantidade_mes);
-                            // var tr = table.rows( ':eq(4)' ).data();
-                            // console.log($(tr));
-                            //last_row = ta.row(':last').data();
-                            // last_row = ta.rows(':eq(4)').data();
-                            //last_row = table.rows( ':nth-child(5)' ).data();
-                            
-                            //table.row('#77').nodes().to$().addClass('mynewclass');
-                            //console.log(last_row);
-                            //last_row = table.row(':last').addClass('textoforte')
-                            //ta.$('tr').attr('data-id',77).addClass('textoforte')
-                           // $("tr").attr('id',77).addClass('textoforte');
+                            $("#quantidade_total").html(res.quantidade_total);
                             ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPJ') }}").load();
-                            //ta.page.len( 200 ).draw();
-                            //table.page(1).draw();
-                            
                         }
                     }
                 });
@@ -754,16 +697,25 @@
             $('form[name="editar_lead"]').on('submit',function(){
                 let menu = $("#menu_clicado").val();
                 $.ajax({
-                    url:"{{route('cliente.editarajax')}}",
+                    url:"{{route('cliente.editarajax.juridico')}}",
                     method:"POST",
                     data:$(this).serialize(),
                     success:function(res) {
-                        $("#editar_nome").val('');
-                        $("#editar_telefone").val('');
-                        $("#editar_email").val('');
-                        //$("#editar_nome").val('');
+                        
+                        $("#editar_cnpj").val('');
+                        $("#editar_nome_empresa").val('');
+                        $("#editar_nome_responsavel").val('');
+                        $("#editar_cidade_id").val('');
+                        $("#editar_celular_empresa").val('');
+                        $("#editar_telefone_empresa").val('');
+                        $("#editar_email_empresa").val('');
                         $("#editarLead").modal('hide');
                         ta.ajax.reload();
+                        $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                        $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id').removeAttr('target');
+                        $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id')
+                        $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
+                        $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id');
                         
                     }
                 });
@@ -773,18 +725,21 @@
             $(".editar").on('click',function(){
                 let id = $(this).attr('data-id');
                 $("#editar_cliente_id").val(id);
+               
                 $.ajax({
                     url:"{{route('clientes.ajaxclienteslistaporidpost')}}",
                     method:"POST",
                     data:"id="+id,
                     success:function(res) {
-                        $("#editar_nome").val(res.nome);
-                        $("#editar_telefone").val(res.telefone);
-                        $("#editar_email").val(res.email);
-                        $('#editar_cidade_id option[value="'+res.cidade_id+'"]').prop('selected',true);
-                        $('#editar_origem_id option[value="'+res.origem_id+'"]').prop('selected',true);
                         
-
+                        $("#editar_cnpj").val(res.cnpj);
+                        $("#editar_nome_empresa").val(res.nome_empresa);
+                        $("#editar_nome_responsavel").val(res.nome);
+                        $("#editar_celular_empresa").val(res.telefone);
+                        $("#editar_telefone_empresa").val(res.telefone_empresa);
+                        $("#editar_email_empresa").val(res.email);
+                        $('#editar_cidade_id option[value="'+res.cidade_id+'"]').prop('selected',true);
+                       
                     }
                 });
                 $('#editarLead').modal('show');
@@ -843,7 +798,6 @@
                 $(".hoje").removeClass('fundo');
                 $(".mes").removeClass('fundo');
                 $(".todos").removeClass('fundo');
-                // $("li").removeClass('fundo');
                 $(this).addClass('fundo');
                 $("#title").html("<h4>Semana</h4>");
                 ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxProspeccaoPJ') }}").load();
@@ -925,20 +879,6 @@
                 $("#editar_cliente_id").val('');
                 $("#editar_cidade_id").val('');
                 $("#editar_origem_id").val('');
-
-
-                // ta.page('last').draw();
-                // table.page('last').draw();
-
-                // ta.page('last').draw('page');
-                // table.page('last').draw('page');
-                // ta.page(2).draw('page');
-                // table.page(2).draw('page');
-
-                // var page1=table.page();
-                // var page2=table.page();
-                // console.log(page1);
-                // console.log(page2);
                 return false;
             });
 
@@ -1005,15 +945,7 @@
                 return arr
             }       
             
-            // function selecionados() {
-            //     var itens = $('input[type=checkbox]:checked');
-            //     $.each(itens,function(e,i){
-                    
-            //         $(i).addClass('textoforte');
-            //         console.log(i)
-            //     });
-            // }    
-
+          
 
             $("body").on('change','input[name="marcar_cliente"]',function(){
                 let marcados = $('input[type=checkbox]:checked').length;

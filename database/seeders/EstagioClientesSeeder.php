@@ -33,7 +33,9 @@ class EstagioClientesSeeder extends Seeder
             [
                 "nome" => "Sem Interesse",
             ],
-           
+            [
+                "nome" => "Sem Contato",
+            ],
            
         ];
         EstagioClientes::insert($dados);

@@ -580,9 +580,13 @@
                         $("#editar_nome").val('');
                         $("#editar_telefone").val('');
                         $("#editar_email").val('');
-                        //$("#editar_nome").val('');
                         $("#editarLead").modal('hide');
                         ta.ajax.reload();
+                        $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                        $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id').removeAttr('target');
+                        $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id')
+                        $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
+                        $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#").removeAttr('data-id');
                         
                     }
                 });

@@ -631,6 +631,43 @@ return [
                 ],
             ],
         ],
+        "anyChart" => [
+            "active" => false,
+            "files" => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/anychart/anychart-ui.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/anychart/anychart-base.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/anychart/anychart-circular-gauge.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/anychart/anychart-exports.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/anychart/anychart-exports.min.js'
+                ]
+
+            ]    
+
+        ]
+
+
+
+
+
     ],
 
     /*

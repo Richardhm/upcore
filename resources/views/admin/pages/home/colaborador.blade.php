@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Dashboard')
 @section('plugins.Chartjs', true)
+@section('plugins.anyChart', true)
 @section('content_header')
     <h1 class="text-white">Dashboard</h1>
 @stop
@@ -159,8 +160,23 @@
                 
                 <div class="box-body" style="flex-basis:48%;padding:5px;background-color:rgba(0,0,0,0.5);color:#FFF;border-radius:5px;">
                     <h5 class="text-center border-bottom">Cancelados Mês</h5>     
-                    <div>
+                    <div id="cancelados">
                         
+
+                        <div class="boxer">
+                            <div class="boxer-circle">
+                                <svg>
+                                    <circle cx="70" cy="70" r="70"></circle>
+                                    <circle id="circleProgress" cx="70" cy="70" r="70"></circle>
+                                </svg>
+                            </div>
+                            <div class="number">
+                                <h2></h2>
+                            </div>
+                        </div>
+
+
+
                     </div>
                 </div>
 
@@ -534,6 +550,15 @@
 
 @section('js')
     <script>
+
+            let circle = document.querySelector("#circleProgress");
+			let number = 70;
+			document.querySelector('.number').innerHTML = number + "%"
+			circle.style.strokeDashoffset = 440 - (440 * number) / 100;
+
+
+
+
         $(function(){
             let anual = $("#anual") 
             new Chart(anual, {
@@ -963,12 +988,18 @@
         }
         );    
 
+           
+   
+
+
+    });  
 
 
 
-
-
-    });         
+      
+    
+    
+    
 
     </script>
 @stop        
@@ -986,7 +1017,7 @@
 
         .vendas_mes {background-color: white;flex-basis:49%;display: flex;flex-direction: column;}
         .cancelados_mes {background-color: white;flex-basis: 49%;display: flex;}
-
+        
         .lembretes {margin-top: 10px;display:flex;justify-content: space-between;flex-direction: column;}
         .lembretes article {margin-top: 5px;flex-basis: 100%;display: flex;justify-content: space-between;}
         .lembretes article div {display: flex;flex-direction: column;flex-basis: 24%;background-color: white;}
@@ -1025,6 +1056,60 @@
 
 
         .grafico_anual {height:300px;background-color: #FFF;margin-top: 5px;}
+
+        #cancelados {
+            position:relative;
+        }
+
+
+        .boxer {
+                
+				position:absolute;
+				top:50%;
+				left:50%;
+				transform:translate(-50%,5%);
+				/* background:rgba(0,0,0,0.6); */
+				border-radius:5px;
+				padding:15px;
+			}
+			.boxer-circle svg {
+				width:150px;
+				height:150px;
+				position:relative;
+			}
+			circle {
+				width:150px;
+				height:150px;
+				fill:none;
+				stroke:black;
+				stroke-width:10;
+				transform:translate(5px,5px);
+				stroke-dasharray:440;
+				stroke-dashoffset:440;
+			}
+			circle:nth-child(1) {
+				stroke-dashoffset:0;
+				stroke:rgb(102,102,102);
+			}
+			circle:nth-child(2) {
+				stroke:dodgerblue;
+				transition: stroke-dashoffset 0.8s;
+			}
+			.number {
+				position:absolute;
+				top:0;
+				left:0;
+				width:100%;
+				height:100%;
+				display:flex;
+				justify-content:center;
+				align-items:center;
+				color:white;
+			}
+
+
+
+
     
     </style>
 @stop

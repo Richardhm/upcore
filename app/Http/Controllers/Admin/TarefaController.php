@@ -214,24 +214,17 @@ class TarefaController extends Controller
 
     public function motivoPerdaTarefa(Request $request)
     {
-        // return $request->all();
         $cli = Cliente::find($request->motivo_cliente_id);
         $cli->visivel = 0;
         $cli->estagio_id = 6;
         $cli->ultimo_contato = date("Y-m-d");
         $cli->save();
-
-        $tarefa = Tarefa::find($request->tarefa_id_cadastrado_aqui);
-
-        $tarefa->motivo_id = $request->perda_cliente;
         
+        $tarefa = Tarefa::find($request->tarefa_id_cadastrado_aqui);
+        $tarefa->motivo_id = $request->perda_cliente;       
         if($request->descricao_motivo) {
             $tarefa->descricao_motivo = $request->descricao_motivo;
         }
-
-
-
-
         if($tarefa->save()) {
             return $cli->id;
         } else {

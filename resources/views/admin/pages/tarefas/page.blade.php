@@ -104,7 +104,7 @@
         <ul style="margin:0px;padding:0px;" id="estagios">
             <li class="d-flex justify-content-between text-white py-1 total_geral">
                 <span class="ml-2">Total Geral</span>
-                <span class="mr-2">{{$clientes_total ?? 0}}</span>
+                <span class="mr-2" id="quantidade_total">{{$clientes_total ?? 0}}</span>
             </li>
 
             @foreach($estagios as $e)
@@ -274,47 +274,19 @@
                 <a href="#" data-email class="mx-2">Email</a>
                 <a href="#" data-orcamento class="mr-2">Orçamento</a>
                 <a href="#" data-contrato>Contrato</a>
-                
-               
             </div>
-
-            <!-- <div class="d-flex">
-                <div style="flex-basis:98%;margin-left:5px;">
-                    <span class="text-white">Descrição:</span>
-                    <textarea name="descricao_tarefa" id="descricao_tarefa" name="descricao_tarefa" class="form-control form-control-sm" readonly></textarea>
-                </div>
-            </div> -->
-
-
-            <!-- <div style="display:flex;margin:5px 0 0 0;" class="d-flex justify-content-center">
-                <a href="#" data-tarefa data-toggle="modal" data-target="#cadastrarClienteClienteEspecifico" style="pointer-events: none;background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;">Nova Tarefa</a>
-                <a href="#" data-orcamento style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Orçamento</a>
-                <a href="#" data-contrato style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Contrato</a>
-                <a href="#" data-perda data-toggle="modal" data-target="#motivoDaPerda" style="background-color:rgba(0,0,0,0.4);width:22%;border:2px solid #FFF;border-radius:10px;text-align:center;color:#FFF;margin:0 0 0 5px;pointer-events: none;">Perda</a>
-            </div> -->
-
-            
-
         </form>
     </div>
     <!---FIM FORM--->
 
     <!--TIMELINE--->
-    <div class="timelines" id="historico">
-        
-        
-        
+    <div class="timelines" id="historico">      
     </div>
 
 
     <!--FIM TIMELINE--->
-
-    
-   
-
 </div>
 <!--FIM Coluna RIGHT-->
-
 
 <!--Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
 <div class="modal fade" id="cadastrarClienteClienteEspecifico" tabindex="-1" role="dialog" aria-labelledby="cadastrarClienteClienteEspecificoLabel" aria-hidden="true">
@@ -426,40 +398,9 @@
 </section>
 @stop
 
-@section('css')
-    <style>        
-        select[readonly] {background: #eee;pointer-events: none;touch-action: none;}
-        ul {list-style: none;}
-        .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
-        .alvo {cursor:pointer;}       
-        textarea {resize: none;}   
-        .timelines {overflow-y:scroll;background-color:rgba(0,0,0,0.5);border-radius:5px;height:calc(100% - 230px);flex-basis:100%;}
-        .timelines::-webkit-scrollbar {width: 12px;}
-        .timelines::-webkit-scrollbar-track {background: orange;}
-        .timelines::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
-        .grupo-botoes {margin-top: 10px;display: flex;}
-        .grupo-botoes > a {font-size:0.875em;width:15%;padding:5px 0;background-color:rgba(0,0,0,0.4);border:2px solid #FFF;text-align:center;color:#FFF;}
-        .grupo-botoes > a:hover {background-color:rgba(255,255,255,0.5) !important;cursor:pointer !important;}
-        .link_page:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
-        .links_tarefas:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
-        .fundo {background: rgba(255,255,255,0.5);}
-        .total_geral{cursor: pointer;}
-        .total_geral:hover{
-            background: rgba(255,255,255,0.5);
-        }
-    </style>
-@stop
-
-
-
 @section('js')
     <script>
         $(function(){
-
-            
-
-            
-
 
             $("#frio").rateYo({rating:1,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
             $("#normo").rateYo({rating:2,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
@@ -615,31 +556,55 @@
 
         $('.total_geral').on('click',function(){
             $('#title').html("<h4>Total Geral</h4>");
-            ta.ajax.url("{{route('cliente.pegartodososclientespf')}}").load();
+            ta.ajax.url("{{route('clientes.ajaxclienteslistapf')}}").load();
             $("#estagios").find(".link_page").removeClass('fundo');
             $(this).addClass('fundo');
         });
 
         $('.estagios-clientes').on('change',function(){
                 let id = $(this).val();
-               
                 let cliente = $("#cliente_id_cadastrado_aqui").val();
-                if(id != 6) {
+                if(id == 6) {
+                    $("#motivoDaPerda").modal('show');
+                } else {
                     $.ajax({
                         url:"{{route('clientes.mudarestagiocliente')}}",
                         method:"POST",
                         data:"id="+id+"&cliente="+cliente,
                         success:function(res) {
-                            $("#estagios").find('li:eq(1)').find('.quantidade').text(res.qtd_frio);   
-                            $("#estagios").find('li:eq(2)').find('.quantidade').text(res.qtd_morno);   
-                            $("#estagios").find('li:eq(3)').find('.quantidade').text(res.qtd_quente);   
-                            $("#estagios").find('li:eq(4)').find('.quantidade').text(res.qtd_aguardando_doc);   
-                            $("#estagios").find('li:eq(5)').find('.quantidade').text(res.qtd_aguardando_inte_futuro);   
-                            $("#estagios").find('li:eq(6)').find('.quantidade').text(res.qtd_aguardando_sem_interesse);   
+                            $("#quantidade_total").text(res.qtd_total_geral);
+                            $("#estagios").find('li:eq(1) .quantidade').text(res.qtd_frio);   
+                            $("#estagios").find('li:eq(2) .quantidade').text(res.qtd_morno);   
+                            $("#estagios").find('li:eq(3) .quantidade').text(res.qtd_quente);   
+                            $("#estagios").find('li:eq(4) .quantidade').text(res.qtd_aguardando_doc);   
+                            $("#estagios").find('li:eq(5) .quantidade').text(res.qtd_aguardando_inte_futuro);   
+                            $("#estagios").find('li:eq(6) .quantidade').text(res.qtd_aguardando_sem_interesse);   
+                            if(id == 7) {
+                                $('input[name="nome"]').val('');
+                                $('input[name="cidade"]').val('');
+                                $("select[name='estagios-clientes']").val('').prop('readonly',true);
+                                $('input[name="telefone"]').val('');
+                                $('input[name="email"]').val('');
+                                $('input[name="quantidade_vidas"]').val('');
+                                $('input[name="data_cadastro"]').val('');
+                                $('input[name="dias_contato"]').val('');                               
+                                $('input[name="ultimo_contato"]').val('');
+                                $('input[name="dias_cadastro"]').val('');
+                                $("#historico").html("");
+                                $("a[data-orcamento]").attr("href","#");
+                                $("a[data-contrato]").attr("href","#");
+                                $("a[data-email]").attr("href","#");
+                                $("a[data-whatsapp]").attr("href","#").removeAttr('target');
+                                $("a[data-tarefa]").removeAttr('data-toggle').removeAttr('data-target');
+                                $('#quantidade_atrasada').text(res.tarefas.atrasada);
+                                $('#quantidade_hoje').text(res.tarefas.hoje);
+                                $('#quantidade_semana').text(res.tarefas.semana);
+                                $('#quantidade_mes').text(res.tarefas.mes);
+                                $('#quantidade_todos').text(res.tarefas.todas);  
+                            }
+                            
                         }
                     })
-                } else {
-                    $("#motivoDaPerda").modal('show');
                 }
                 table.ajax.reload();
             });    
@@ -782,7 +747,7 @@
                 },
 
                 success:function(res) {
-                   
+                    // console.log(res);
                     if(res != "error") {
                         $("#motivoDaPerda").modal('hide');
                         $("input[name='nome']").val('');
@@ -799,18 +764,13 @@
                         $('input[name="motivo"]').prop('checked', false);
                         $("#descricao_motivo").val('');
                         $("#motivo_textarea").html("");
-
                         $("a[data-orcamento]").attr("href","#");
                         $("a[data-contrato]").attr("href","#");
                         $("a[data-email]").attr("href","#");
                         $("a[data-whatsapp]").attr("href","#");
                         $("a[data-tarefa]").removeAttr('data-toggle','modal').removeAttr('data-target','#cadastrarClienteClienteEspecifico');
-
-
                         location.reload();
-
                         $("#historico").html("");
-                        
                         ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
                     } else {
 
@@ -938,23 +898,32 @@
                 }
             })
         }
-        
-        //$.fn.dataTable.ext.classes.sPageButton = 'paginate_button page-item btn-sm';    
-
     });
     $('.pagination').addClass('pagination-sm')
-    
-    
-    
-    
-    
-    
-    
-    //$('.dataTables_filter').addClass('btn btn-sm btn-dark');
-    //$('.dataTables_paginate').addClass('btn btn-sm btn-dark');
-    // $.fn.dataTable.ext.classes.sPageButton = 'btn-sm';
-    //$.fn.dataTable.ext.classes.sPageButton = 'paginate_button page-item btn-sm'; 
-    </script>
+   </script>
+@stop
+
+
+@section('css')
+    <style>        
+        select[readonly] {background: #eee;pointer-events: none;touch-action: none;}
+        ul {list-style: none;}
+        .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
+        .alvo {cursor:pointer;}       
+        textarea {resize: none;}   
+        .timelines {overflow-y:scroll;background-color:rgba(0,0,0,0.5);border-radius:5px;height:calc(100% - 230px);flex-basis:100%;}
+        .timelines::-webkit-scrollbar {width: 12px;}
+        .timelines::-webkit-scrollbar-track {background: orange;}
+        .timelines::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;}  
+        .grupo-botoes {margin-top: 10px;display: flex;}
+        .grupo-botoes > a {font-size:0.875em;width:15%;padding:5px 0;background-color:rgba(0,0,0,0.4);border:2px solid #FFF;text-align:center;color:#FFF;}
+        .grupo-botoes > a:hover {background-color:rgba(255,255,255,0.5) !important;cursor:pointer !important;}
+        .link_page:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
+        .links_tarefas:hover {background: rgba(255,255,255,0.5);cursor: pointer;}
+        .fundo {background: rgba(255,255,255,0.5);}
+        .total_geral{cursor: pointer;}
+        .total_geral:hover{background: rgba(255,255,255,0.5);}
+    </style>
 @stop
 
 

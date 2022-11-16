@@ -57,7 +57,7 @@
         <!--FIM COLUNA LEFT-->
 
         <!--COLUNA CENTRO-->
-        <div class="text-white p-2 align-self-start mx-auto" style="flex-basis:50%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
+        <div class="text-white p-2 align-self-start mx-auto" style="flex-basis:59%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
             <div id="table" class="py-3">
                 <table id="tabela" class="table listarcontratos">
                     <thead>
@@ -96,10 +96,12 @@
                         <span class="text-white">Status:</span>
                         <select name="estagio_contrato" id="estagio_contrato" class="form-control-sm" readonly>
                             <option value="">--Estagio do Contrato--</option>
-                            <option value="">Pagamento Adesão</option>
-                            <option value="">Pagamento Vigência</option>
-                            <option value="">Pagamento Comissão</option>
-                            <option value="">Pagamento Premiação</option>
+                            <option value="1">Pagamento Adesão</option>
+                            <option value="2">Pagamento Vigência</option>
+                            <option value="3">Pagamento Comissão</option>
+                            <option value="4">Pagamento Premiação</option>
+                            <option value="5">Finalizado</option>
+
                         </select>
                     </div>    
 
@@ -125,7 +127,7 @@
 
                     <div style="flex-basis:32%;">
                         <span class="text-white">Data Nascimento:</span>
-                        <input type="text" name="data" id="data" class="form-control form-control-sm" readonly>
+                        <input type="text" name="data_nascimento" id="data_nascimento" class="form-control form-control-sm" readonly>
                     </div>
 
 
@@ -175,12 +177,12 @@
                 <div class="d-flex mb-2">
 
                     <div style="flex-basis:19%;">
-                        <span class="text-white">Data Contrato:</span>
+                        <span class="text-white" style="font-size:0.95em">Data Contrato:</span>
                         <input type="text" name="data_contrato" id="data_contrato" class="form-control form-control-sm" readonly>
                     </div>
 
                     <div style="flex-basis:19%;margin:0 2%;">
-                        <span class="text-white">Valor Contrato:</span>
+                        <span class="text-white" style="font-size:0.95em">Valor Contrato:</span>
                         <input type="text" name="valor_contrato" id="valor_contrato" class="form-control  form-control-sm" readonly>
                     </div>
 
@@ -281,174 +283,197 @@
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     <script>
         $(function(){
-            // $("#coparticipacao_radio_sim").css({"background-color":"#FFF"});
-
-            
-
-        
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        var ta = $(".listarcontratos").DataTable({
-            dom: '<"d-flex justify-content-between"<"#title">ft><t><"d-flex justify-content-between"lp>',
-            "language": {
-                "url": "{{asset('traducao/pt-BR.json')}}"
-            },
-            ajax: {
-                "url":"{{ route('contratos.pf.listarpendentes') }}",
-                "dataSrc": ""
-            },
-            "lengthMenu": [10,20,30,40,100],
-            "ordering": false,
-            "paging": true,
-            "searching": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            columns: [
-                
-                {data:"created_at",name:"data","width":"18px"},
-                //{data:"origem.nome",name:"origem"},
-                {data:"codigo_externo",name:"codigo_externo","width":"95px"},
-                {data:"clientes.nome",name:"cliente"},
-                {data:"administradora.nome",name:"administradora","width":"40px"},
-                {data:"financeiro.nome",name:"administradora"},
-            ],
-            "columnDefs": [ {
-                    "targets": 0,
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                        let datas = cellData.split("T")[0]
-                        let alvo = datas.split("-").reverse().join("/")
-                        $(td).html(alvo)    
-                    }
-                }],
-            rowCallback: function (row, data) {
-                if ( $(row).hasClass('odd') ) {
-                    $(row).addClass('table-cell-edit');
-                } else {
-                    $(row).addClass('alvo');
+                 
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            },
-            
-            drawCallback: function () {
-                $('.page-link').addClass('btn-sm border-0');
-                // $('.form-control').addClass('bg-dark');
-            },
-            "initComplete": function( settings, json ) {
-                $('#title').html("<h4>Contratos Pessoa Fisica</h4>");
-            },
-        });
+            });
 
-        var table = $('#tabela').DataTable();
-        $('table').on('click', 'tbody tr', function () {
-            let data = table.row(this).data();
-            
-            let criacao = data.created_at.split("T")[0].split("-").reverse().join("/");
-            let nascimento = data.clientes.data_nascimento.split("T")[0].split("-").reverse().join("/");
-            let data_vigencia = data.clientes.data_vigente.split("T")[0].split("-").reverse().join("/");
-            let data_boleto = data.clientes.data_boleto.split("T")[0].split("-").reverse().join("/");
-            //let coparticipacao = data.coparticipacao == 1 ? "sim" : "nao";
-            //let odonto = data.odonto == 1 ? "sim" : "nao";
-            let valor_contrato = Number(data.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-            let valor_adesao = Number(data.clientes.valor_adesao).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});           
-            let vidas = data.somar_cotacao_faixa_etaria[0].soma;
-
-              
-
-            $("#cliente").val(data.clientes.nome);
-            $("#cidade").val(data.cidade.nome);
-            $("#status_contrato").val(data.financeiro.nome);
-
-            $("#telefone").val(data.clientes.telefone);
-            $("#email").val(data.clientes.email);
-            $("#data_nascimento").val(nascimento);
-
-            $("#cpf").val(data.clientes.cpf);
-
-            $("#endereco").val(data.clientes.endereco)
-            $("#administradora").val(data.administradora.nome);
-
-
-            
-            $("#codigo_externo").val(data.codigo_externo);
-            
-            $("#data_contrato").val(criacao);
-
-            $("#valor_contrato").val(valor_contrato);
-            $("#data_vigencia").val(data_vigencia);
-            $("#data_boleto").val(data_boleto);
-            $("#valor_adesao").val(valor_adesao);
-            
-            $("#coparticipacao_sim").attr("style","padding:0.21rem 0.75rem;");
-            $("#coparticipacao_nao").attr("style","padding:0.21rem 0.75rem;");
-            $("#odonto_sim").attr("style","padding:0.21rem 0.75rem;");
-            $("#odonto_nao").attr("style","padding:0.21rem 0.75rem;");
-
-
-            if(data.coparticipacao) {
-       
-                $("#coparticipacao_sim").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
-            } else {
-       
-                $("#coparticipacao_nao").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
-            }
-
-            if(data.odonto) {
-           
-                $("#odonto_sim").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
-
-            } else {
-               
-                $("#odonto_nao").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
-            }
-
-            $("#quantidade_vidas").val(vidas);
-            $("#tipo_plano").val(data.plano.nome);
-            
-            // if(data.clientes.pessoa_juridica) {
-            //     $("#estagio_contrato").append("<option value=''>Pagamento Adesão</option><option value=''>Pagamento Comissão</option>")     
-            // } else {
-            //     if(data.plano_id == 3) {
-            //         console.log("Olaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            //         $("#estagio_contrato").append("<option value=''>Pagamento Adesão</option><option value=''>Pagamento Vigência</option><option value=''>Pagamento Comissão</option><option value=''>Pagamento Premiação</option>")   
-            //     }
-            // }
-
-
-
-            
-            // $("#plano_com_coparticipacao").val(coparticipacao);
-            // $("#plano_com_odonto").val(odonto);
-            // $("#valor_contrato").val(valor_contrato);
-            // $("#tipo_plano").val(data.acomodacao.nome);
-
-            comissoes_premiacoes(data.id,data.financeiro_id)
-
-        });
-
-
-
-
-        function comissoes_premiacoes(id,financeiro) {
-            if(financeiro == 6) {
-                $.ajax({
-                    url:"{{route('comissoes.cliente.detalhes')}}",
-                    method:"POST",
-                    data:"cotacao="+id,
-                    success:function(res) {
-                        $(".comissoes").html(res)
+            var ta = $(".listarcontratos").DataTable({
+                dom: '<"d-flex justify-content-between"<"#title">ft><t><"d-flex justify-content-between"lp>',
+                "language": {
+                    "url": "{{asset('traducao/pt-BR.json')}}"
+                },
+                ajax: {
+                    "url":"{{ route('contratos.pf.listarpendentes') }}",
+                    "dataSrc": ""
+                },
+                "lengthMenu": [10,20,30,40,100],
+                "ordering": false,
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                columns: [
+                    
+                    {data:"created_at",name:"data"},
+                    {data:"codigo_externo",name:"codigo_externo"},
+                    {data:"clientes.nome",name:"cliente"},
+                    {data:"administradora.nome",name:"administradora"},
+                    {data:"financeiro.nome",name:"administradora"},
+                ],
+                "columnDefs": [ 
+                        {
+                            /** Data*/
+                            "targets": 0,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                let datas = cellData.split("T")[0]
+                                let alvo = datas.split("-").reverse().join("/")
+                                $(td).html(alvo)    
+                            },
+                            "width":"4%"
+                        },
+                        {
+                            /** Codigo Externo */
+                            "targets": 1,
+                            "width":"4%"
+                        },
+                        {
+                            /** Cliente */
+                            "targets": 2,
+                            "width":"38%"
+                        },
+                        {
+                            /** Administradora */
+                            "targets": 3,
+                            "width":"4%"
+                        },
+                        {
+                            /** Status */
+                            "targets": 4,
+                            "width":"50%"
+                        }
+                ],
+                rowCallback: function (row, data) {
+                    if ( $(row).hasClass('odd') ) {
+                        $(row).addClass('table-cell-edit');
+                    } else {
+                        $(row).addClass('alvo');
                     }
-                });
+                },
+                
+                drawCallback: function () {
+                    $('.page-link').addClass('btn-sm border-0');
+                    // $('.form-control').addClass('bg-dark');
+                },
+                "initComplete": function( settings, json ) {
+                    $('#title').html("<h4>Contratos Pessoa Fisica</h4>");
+                },
+            });
+
+            var table = $('#tabela').DataTable();
+            $('table').on('click', 'tbody tr', function () {
+                let data = table.row(this).data();
+                
+                if(data.financeiro_id == 1 || data.financeiro_id == 2) {
+                    $('select option[value="1"]').prop('selected',true)
+                } else if(data.financeiro_id == 4) {
+                    $('select option[value="2"]').prop('selected',true)    
+                } else if(data.financeiro_id == 6) {
+
+                    let comissao = false;
+                    $( data.comissao.comissao_lancadas ).each(function( index,value ) {
+                        if(value.status == 0) {
+                            comissao = true
+                        } else {
+                            comissao = false
+                        }
+                    });
+
+                    let premiacao = false;
+                    $( data.comissao.premiacao_lancadas ).each(function( index,value ) {
+                        if(value.status == 0) {
+                            premiacao = true
+                        } else {
+                            premiacao = false
+                        }
+                    });
+
+
+                    if(comissao && premiacao) {
+                        
+                        $('select option[value="3"]').prop('selected',true)
+                    } else if(comissao && !premiacao) {
+                        $('select option[value="3"]').prop('selected',true)
+                        
+                    } else if(!comissao && premiacao) {
+                        $('select option[value="4"]').prop('selected',true)
+                    } else {
+                        
+                        $('select option[value="3"]').prop('selected',true)
+                    } 
+
+                    
+
+                    
+
+
+
+                } else if(data.financeiro_id == 7) {
+                    $('select option[value="5"]').prop('selected',true)
+                } else {
+                    $('select option[value=""]').prop('selected',true)
+                }
+
+
+                let criacao = data.created_at.split("T")[0].split("-").reverse().join("/");
+                let nascimento = data.clientes.data_nascimento.split("T")[0].split("-").reverse().join("/");
+                console.log(nascimento);
+                let data_vigencia = data.clientes.data_vigente.split("T")[0].split("-").reverse().join("/");
+                let data_boleto = data.clientes.data_boleto.split("T")[0].split("-").reverse().join("/");
+                let valor_contrato = Number(data.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                let valor_adesao = Number(data.clientes.valor_adesao).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});           
+                let vidas = data.somar_cotacao_faixa_etaria[0].soma;
+                $("#cliente").val(data.clientes.nome);
+                $("#cidade").val(data.cidade.nome);
+                $("#status_contrato").val(data.financeiro.nome);
+                $("#telefone").val(data.clientes.telefone);
+                $("#email").val(data.clientes.email);
+                $("#data_nascimento").val(nascimento);
+                $("#cpf").val(data.clientes.cpf);
+                $("#endereco").val(data.clientes.endereco)
+                $("#administradora").val(data.administradora.nome);
+                $("#codigo_externo").val(data.codigo_externo);              
+                $("#data_contrato").val(criacao);
+                $("#valor_contrato").val(valor_contrato);
+                $("#data_vigencia").val(data_vigencia);
+                $("#data_boleto").val(data_boleto);
+                $("#valor_adesao").val(valor_adesao);
+                $("#coparticipacao_sim").attr("style","padding:0.21rem 0.75rem;");
+                $("#coparticipacao_nao").attr("style","padding:0.21rem 0.75rem;");
+                $("#odonto_sim").attr("style","padding:0.21rem 0.75rem;");
+                $("#odonto_nao").attr("style","padding:0.21rem 0.75rem;");
+                if(data.coparticipacao) {       
+                    $("#coparticipacao_sim").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
+                } else {
+                    $("#coparticipacao_nao").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
+                }
+                if(data.odonto) {
+                    $("#odonto_sim").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
+                } else {
+                    $("#odonto_nao").attr("style","padding:0.21rem 0.75rem;background-color:white;color:black;").attr("disabled",true);
+                }
+                $("#quantidade_vidas").val(vidas);
+                $("#tipo_plano").val(data.plano.nome);               
+                comissoes_premiacoes(data.id,data.financeiro_id)
+            });
+
+            function comissoes_premiacoes(id,financeiro) {
+                if(financeiro == 6 || financeiro == 7) {
+                    $.ajax({
+                        url:"{{route('comissoes.cliente.detalhes')}}",
+                        method:"POST",
+                        data:"cotacao="+id,
+                        success:function(res) {
+                            $(".comissoes").html(res)
+                        }
+                    });
+                } else {
+                    $(".comissoes").html('')
+                }
             }
-        }
-
-
-       
-
-
        
     });
     </script>
@@ -457,27 +482,15 @@
 @section('css')
     <style>
         th { font-size: 0.875em;}
-        table.dataTable td {
-            font-size: 0.875em;
-        }
-         .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
-    .alvo {cursor:pointer;}
-
-    textarea {resize: none;}   
-
-    .coluna-right {
-        overflow-y:scroll;flex-basis:45%;flex-wrap: wrap;background-color:rgba(0,0,0,0.5);border-radius:5px;height:720px;
-    }
-
-    .coluna-right::-webkit-scrollbar {width: 12px;}
-    .coluna-right::-webkit-scrollbar-track {background: orange;}
-    .coluna-right::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;} 
-
-
-    select[readonly] {
-  background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
-  pointer-events: none;
-  touch-action: none;
-}
+        table.dataTable td {font-size: 0.875em;}
+        .table-cell-edit{background-color: rgba(0,0,0,0.5);color:#FFF;cursor: pointer;}
+        .alvo {cursor:pointer;}
+        textarea {resize: none;}   
+        .coluna-right {overflow-y:scroll;flex-basis:40%;flex-wrap: wrap;background-color:rgba(0,0,0,0.5);border-radius:5px;height:720px;}
+        .coluna-right::-webkit-scrollbar {width: 12px;}
+        .coluna-right::-webkit-scrollbar-track {background: orange;}
+        .coluna-right::-webkit-scrollbar-thumb {background-color: blue;border-radius: 20px;border: 3px solid orange;} 
+        select[readonly] {background: #eee;pointer-events: none;touch-action: none;}
+        table.dataTable td {font-size: 0.830em;}
     </style>
 @stop

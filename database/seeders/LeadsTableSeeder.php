@@ -23,6 +23,9 @@ class LeadsTableSeeder extends Seeder
             ],
             [
                 "nome" => "Atendimento Iniciado"
+            ],
+            [
+                "nome" => "Sem Contato"
             ]
         ];
         Leads::insert($dados);

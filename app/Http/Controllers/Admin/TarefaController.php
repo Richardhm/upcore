@@ -8,6 +8,7 @@ use App\Models\{
     Cidade,
     Cliente,
     Cotacao,
+    EstagioClientes,
     Tarefa,
     TarefaMotivoPerda,
     TarefasTitulo,
@@ -460,7 +461,13 @@ class TarefaController extends Controller
               $query->whereRaw("motivo_id IS NULL");
               
           })
-         ->count();      
+         ->count(); 
+         
+         
+         $estagios = EstagioClientes::
+         selectRaw('id,nome')
+         ->selectRaw('(SELECT COUNT(*) FROM clientes WHERE clientes.estagio_id = estagio_clientes.id AND lead = 0 AND pessoa_fisica = 1 AND id IN(SELECT cliente_id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id AND financeiro_id IS NULL)) AS quantidade')
+         ->get();
 
 
         return [
@@ -470,13 +477,147 @@ class TarefaController extends Controller
             "qtdMes" => $qtdMes,
             "qtdTodos" => $qtdTodos,
             "cliente" => $cliente,
-            "resultado" => $resultado
+            "resultado" => $resultado,
+            "estagios" => $estagios
+        ];
+
+
+        //return $request->cliente_id;
+    }
+
+    public function cadastrarTarefaAjaxPJ(Request $request)
+    {
+        $nows = (new \DateTime());
+        $sema = (new \DateTime($request->data));    
+        $resultado = "";
+        if($request->data == date("Y-m-d")) {
+            $resultado = "hoje";
+        } elseif($request->data < date("Y-m-d")) {
+            $resultado = "atrasada";
+        } elseif($nows->format('W') == $sema->format('W')) {
+                $resultado = "semana";    
+        } elseif($nows->format('m') == $nows->format('m')) {
+            $resultado = "mes";
+        } else {
+            $resultado = "";
+        }        
+        $cliente = Cliente::where("id",$request->cliente_id)->first();
+        $cliente->ultimo_contato = date("Y-m-d");
+        $cliente->estagio_id = $request->star;
+        $cliente->save();
+        Tarefa::where("cliente_id",$request->cliente_id)->update(['status'=>1,'visivel'=>0]);
+        $data = $request->all();
+        $data['user_id'] = auth()->user()->id;
+        $data['visivel'] = 1;    
+        Tarefa::create($data);        
+
+        $qtdAtrasado = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('lead',0)
+            ->where("visivel",1)
+            ->where("pessoa_juridica",1)
+            ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+            })
+            ->whereHas('tarefas',function($query){
+                $query->whereDate('data','<',date('Y-m-d'));
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->where("visivel",1);
+            })->count();
+
+        $qtdHoje = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('lead',0)
+            ->where("visivel",1)
+            ->where("pessoa_juridica",1)
+            ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+            })
+            ->whereHas('tarefas',function($query){
+                $query->whereDate('data','=',date('Y-m-d'));
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->where("visivel",1);
+            })->count(); 
+        
+        
+        $qtdSemana = Cliente::
+            where("user_id",auth()->user()->id)
+            ->where("pessoa_juridica",1)
+            ->where("lead",0)
+            ->where('visivel',1)
+            ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+            })
+            ->whereHas('tarefas',function($query){
+                $query->where("visivel",1);
+                $query->where("user_id",auth()->user()->id);
+                $query->whereRaw("motivo_id IS NULL");
+                $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()");
+            })
+           ->count();
+
+        $qtdMes = Cliente::
+           where("user_id",auth()->user()->id)
+           ->where("pessoa_juridica",1)
+           ->where("lead",0)
+           ->where('visivel',1)
+           ->whereHas('cotacao',function($query){
+                $query->whereRaw("financeiro_id IS NULL");
+           })
+           ->whereHas('tarefas',function($query){
+               $query->where("visivel",1);
+               $query->where("user_id",auth()->user()->id);
+               $query->whereRaw("motivo_id IS NULL");
+               $query->whereRaw("MONTH(data) = MONTH(NOW())");
+           })
+          ->count();    
+        
+        $qtdTodos = Cliente::
+          where("user_id",auth()->user()->id)
+          ->where("pessoa_juridica",1)
+          ->where("lead",0)
+          ->where('visivel',1)
+          ->whereHas('cotacao',function($query){
+               $query->whereRaw("financeiro_id IS NULL");
+          })
+          ->whereHas('tarefas',function($query){
+              $query->where("visivel",1);
+              $query->where("user_id",auth()->user()->id);
+              $query->whereRaw("motivo_id IS NULL");
+              
+          })
+         ->count(); 
+         
+         $estagios = EstagioClientes::
+         selectRaw('id,nome')
+         ->selectRaw('(SELECT COUNT(*) FROM clientes WHERE clientes.estagio_id = estagio_clientes.id AND lead = 0 AND pessoa_juridica = 1 AND id IN(SELECT cliente_id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id AND financeiro_id IS NULL)) AS quantidade')
+         ->get();
+          
+
+
+
+
+
+        return [
+            "qtdAtrasado" => $qtdAtrasado,
+            "qtdHoje" => $qtdHoje,
+            "qtdSemana" => $qtdSemana,
+            "qtdMes" => $qtdMes,
+            "qtdTodos" => $qtdTodos,
+            "cliente" => $cliente,
+            "resultado" => $resultado,
+            'estagios' => $estagios
 
         ];
 
 
         //return $request->cliente_id;
     }
+
+
+
 
     public function cadastrarTarefaAjaxCliente(Request $request)
     {

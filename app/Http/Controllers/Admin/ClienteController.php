@@ -135,6 +135,8 @@ class ClienteController extends Controller
 
     public function listarPessoaFisica()
     {
+        
+        
         $titulos = TarefasTitulo::where("id","!=",1)->get();
         $clientes_total = Cliente::where("user_id",auth()->user()->id)
                                 ->where('pessoa_fisica',1)
@@ -188,6 +190,7 @@ class ClienteController extends Controller
             selectRaw('id,nome')
             ->selectRaw('(SELECT COUNT(*) FROM clientes WHERE clientes.estagio_id = estagio_clientes.id AND lead = 0 AND pessoa_juridica = 1 AND id IN(SELECT cliente_id FROM cotacoes WHERE cotacoes.cliente_id = clientes.id AND financeiro_id IS NULL)) AS quantidade')
             ->get();
+            
         return view('admin.pages.tarefas.juridico',[           
             'clientes_total' => $clientes_total,
             'tarefas' => $tarefas,
@@ -227,6 +230,7 @@ class ClienteController extends Controller
             ->with('titulo');
         })
         ->with(['cidade','origem','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+        ->orderBy('clientes.updated_at','DESC')
         ->get();
         return $clientes;
     }
@@ -254,6 +258,7 @@ class ClienteController extends Controller
                 ->with('titulo');
             })
             ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+            ->orderBy('clientes.updated_at','DESC')
             ->get();
             return $clientes;
     }
@@ -356,6 +361,12 @@ class ClienteController extends Controller
         if($id == 7) {
             $cliente->lead = 1;
             $cliente->estagio_id = null;
+            $cliente->lead_id = 4;
+
+            DB::table('cotacoes')->where('cliente_id', $ci)->delete();
+            DB::table('tarefas')->where('cliente_id', $ci)->delete();
+
+
         } else {
             $cliente->estagio_id = $id;
         } 
@@ -408,6 +419,7 @@ class ClienteController extends Controller
         if($id == 7) {
             $cliente->lead = 1;
             $cliente->estagio_id = null;
+            $cliente->lead_id = 4;
         } else {
             $cliente->estagio_id = $id;
         } 
@@ -553,14 +565,6 @@ class ClienteController extends Controller
 
 
 
-
-
-
-
-
-
-
-
     public function prospeccao()
     {
         
@@ -576,7 +580,8 @@ class ClienteController extends Controller
         $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_fisica",1)->count();
         $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_fisica",1)->count();
         $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_fisica",1)->count();
-
+        $qtdSemContato = Cliente::where("lead_id",4)->where('lead',1)->where("pessoa_fisica",1)->count();
+       
         return view('admin.pages.clientes.prospeccao',[
             "cidades" => $cidades,
             "origem" => $origens,
@@ -587,43 +592,46 @@ class ClienteController extends Controller
             "qtdTotal" => $qtdTotal,
             "qtdProps" => $qtdProps,
             "qtdVendas" => $qtdVendas,
-            "qtdAtendimento" => $qtdAtendimento
+            "qtdAtendimento" => $qtdAtendimento,
+            "qtdSemContato" => $qtdSemContato
         ]);   
     }
 
     public function leadsPJ()
     {
-       
-        $cidades = Cidade::all();
-        $origens = Origem::all();
-        $qtdTotal = Cliente::where("lead",1)->where("visivel",1)->where('pessoa_juridica',1)->count();
         
-        $qtdAtrasado = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','<',date('Y-m-d'))->count();
-        $qtdHoje = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','=',date('Y-m-d'))->count();    
-        $qtdSemana = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();        
-        $qtdMes = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();        
+        $cidades            = Cidade::all();
+        $origens            = Origem::all();
+        $qtdTotal           = Cliente::where("lead",1)->where("visivel",1)->where('pessoa_juridica',1)->count();
+        
+        $qtdAtrasado        = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','<',date('Y-m-d'))->count();
+        $qtdHoje            = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereDate('created_at','=',date('Y-m-d'))->count();    
+        $qtdSemana          = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND created_at > now()")->count();        
+        $qtdMes             = Cliente::where("user_id",auth()->user()->id)->where('lead',1)->where("etiqueta_id","!=",3)->where("visivel",1)->where("pessoa_juridica",1)->whereRaw("MONTH(created_at) = MONTH(NOW())")->count();        
 
-        $qtdProps = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_juridica",1)->count();
-        $qtdVendas = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_juridica",1)->count();
-        $qtdAtendimento = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_juridica",1)->count();
+        $qtdProps           = Cliente::where("lead_id",2)->where('lead',1)->where("pessoa_juridica",1)->count();
+        $qtdVendas          = Cliente::where("lead_id",1)->where('lead',1)->where("pessoa_juridica",1)->count();
+        $qtdAtendimento     = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_juridica",1)->count();
+        $qtdSemContato     = Cliente::where("lead_id",4)->where('lead',1)->where("pessoa_juridica",1)->count();
 
         return view('admin.pages.clientes.juridico',[
-            "cidades" => $cidades,
-            "origem" => $origens,
-            "qtdAtrasado" => $qtdAtrasado,
-            "qtdHoje" => $qtdHoje,
-            "qtdSemana" => $qtdSemana,
-            "qtdMes" => $qtdMes,
-            "qtdTotal" => $qtdTotal,
-            "qtdProps" => $qtdProps,
-            "qtdVendas" => $qtdVendas,
-            "qtdAtendimento" => $qtdAtendimento
+            "cidades"        => $cidades,
+            "origem"         => $origens,
+            "qtdAtrasado"    => $qtdAtrasado,
+            "qtdHoje"        => $qtdHoje,
+            "qtdSemana"      => $qtdSemana,
+            "qtdMes"         => $qtdMes,
+            "qtdTotal"       => $qtdTotal,
+            "qtdProps"       => $qtdProps,
+            "qtdVendas"      => $qtdVendas,
+            "qtdAtendimento" => $qtdAtendimento,
+            "qtdSemContato"  => $qtdSemContato
         ]);   
     }
 
 
 
-
+                                                                                                                          
 
     public function prospeccaoExportar(Request $request)
     {
@@ -808,7 +816,7 @@ class ClienteController extends Controller
             ->where('pessoa_fisica',1)
             ->where("lead",1)
             ->where("lead_id",2)
-            ->orderBy("created_at","ASC")
+            ->orderBy("id","DESC")
             ->selectRaw("id,nome,telefone,email,created_at,origem_id")
             ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
             ->with('origem')
@@ -825,7 +833,7 @@ class ClienteController extends Controller
             ->where('pessoa_juridica',1)
             ->where("lead",1)
             ->where("lead_id",2)
-            ->orderBy("created_at","ASC")
+            ->orderBy("id","DESC")
             ->selectRaw("id,nome,telefone,email,created_at,origem_id")
             ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
             ->with('origem')
@@ -850,6 +858,40 @@ class ClienteController extends Controller
             ->get();
         return $clientes;
     }
+
+    public function leadSemContatoPF()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_fisica',1)
+            ->where("lead",1)
+            ->where("lead_id",4)
+            ->with('origem')
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), updated_at)>0,concat(DATEDIFF(NOW(), updated_at),' dias'),TIMEDIFF(now(), updated_at)) AS tempo")
+            ->with('origem')
+            ->get();
+        return $clientes;
+    }
+
+    public function leadSemContatoPJ()
+    {
+        $clientes = Cliente
+            ::where("user_id",auth()->user()->id)
+            ->where('pessoa_juridica',1)
+            ->where("lead",1)
+            ->where("lead_id",4)
+            ->with('origem')
+            ->orderBy("created_at","ASC")
+            ->selectRaw("id,nome,telefone,email,created_at,origem_id")
+            ->selectRaw("if(DATEDIFF(NOW(), updated_at)>0,concat(DATEDIFF(NOW(), updated_at),' dias'),TIMEDIFF(now(), updated_at)) AS tempo")
+            ->with('origem')
+            ->get();
+        return $clientes;
+    }    
+
+
 
     public function leadAtendimentoPJ()
     {
@@ -893,7 +935,9 @@ class ClienteController extends Controller
                 $query->whereDate('data','=',date('Y-m-d'))->with('titulo');
             })
             
-        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
+        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])
+        ->orderBy("clientes.updated_at",'desc')
+        ->get();
         return $clientes;                
     } 
 
@@ -1013,7 +1057,9 @@ class ClienteController extends Controller
             })
             
 
-        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
+        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])
+        ->orderBy('clientes.updated_at','DESC')
+        ->get();
         return $clientes;                
 
             // $tarefas = Tarefa::where("user_id",auth()->user()->id)
@@ -1118,7 +1164,9 @@ class ClienteController extends Controller
                 $query->where("status",0);
                 $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()")->with('titulo');
             })
-            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
+            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])
+            ->orderBy('clientes.updated_at','DESC')
+            ->get();
         return $clientes;      
     }
 
@@ -1209,7 +1257,9 @@ class ClienteController extends Controller
                 $query->where("status",0);
                 $query->whereRaw("MONTH(data) = MONTH(NOW())")->with('titulo');
             })
-            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])->get();
+            ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])
+            ->orderBy('clientes.updated_at','DESC')
+            ->get();
             // ->with(['cidade','etiqueta','origem'])->get();
         return $clientes; 
     }
@@ -1235,7 +1285,9 @@ class ClienteController extends Controller
                 $query->whereRaw("MONTH(created_at) = MONTH(NOW())")->with('titulo');
             })
             
-            ->with(['cidade','etiqueta','origem'])->get();
+            ->with(['cidade','etiqueta','origem'])
+            ->orderBy('clientes.updated_at','DESC')
+            ->get();
         return $clientes; 
     }
 
@@ -1265,7 +1317,7 @@ class ClienteController extends Controller
             ->where("lead",1)
             ->where('visivel',1)
             ->whereRaw("MONTH(created_at) = MONTH(NOW())")
-            ->orderBy("created_at","ASC")
+            ->orderBy("id","DESC")
             ->selectRaw("id,nome,telefone,email,created_at,origem_id")
             ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
             ->with('origem')
@@ -1815,27 +1867,6 @@ class ClienteController extends Controller
         ]);
     }
 
-
-
-
     /********* FIM Contratos ********/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+   
 }

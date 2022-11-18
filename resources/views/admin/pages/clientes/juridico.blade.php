@@ -97,6 +97,16 @@
             @endif
             
         </div>
+
+        <div class="d-flex py-2 justify-content-between links sem_contato" id="menu_4">
+            <a href="" class="text-white  ml-1">Sem Contato</a>
+            
+            @if($qtdSemContato == 0)
+                <span class="badge badge-danger  mr-1" id="qtdSemContato">{{$qtdSemContato}}</span>
+            @else
+                <span class="badge badge-info  mr-1" id="qtdSemContato">{{$qtdSemContato}}</span>
+            @endif
+        </div>
                                 
     </div>
 
@@ -106,31 +116,59 @@
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
                     <span class="ml-2">Atrasadas</span>
-                    <span class="mr-2" id="quantidade_atrasadas">{{$qtdAtrasado}}</span>
+                    @if($qtdAtrasado >= 1)
+                        <span class="mr-2 badge badge-info" id="quantidade_atrasadas">{{$qtdAtrasado}}</span>
+                    @else
+                        <span class="mr-2 badge badge-danger" id="quantidade_atrasadas">{{$qtdAtrasado}}</span>
+                    @endif
+
+
+                    
                 </a>
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 hoje">
                     <span class="ml-2">Hoje</span>
-                    <span class="mr-2" id="quantidade_hoje">{{$qtdHoje}}</span>
+                    @if($qtdHoje >= 1) 
+                        <span class="mr-2 badge badge-info" id="quantidade_hoje">{{$qtdHoje}}</span>
+                    @else
+                        <span class="mr-2 badge badge-info" id="quantidade_hoje">{{$qtdHoje}}</span>
+                    @endif
+
+                    
                 </a>    
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 semana">
                     <span class="ml-2">Semana</span>
-                    <span class="mr-2" id="quantidade_semana">{{$qtdSemana}}</span>
+                    @if($qtdSemana >= 1)
+                        <span class="mr-2 badge badge-info" id="quantidade_semana">{{$qtdSemana}}</span>
+                    @else
+                        <span class="mr-2 badge badge-danger" id="quantidade_semana">{{$qtdSemana}}</span>
+                    @endif
+                    
                 </a>
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 mes">
                     <span class="ml-2">Mês</span>
-                    <span class="mr-2" id="quantidade_mes">{{$qtdMes}}</span>
+                    @if($qtdMes >= 1)
+                        <span class="mr-2 badge badge-info" id="quantidade_mes">{{$qtdMes}}</span>
+                    @else
+                        <span class="mr-2 badge badge-danger" id="quantidade_mes">{{$qtdMes}}</span>
+                    @endif
+                    
                 </a>
             </li>
             <li class="links">
                 <a href="" class="d-flex justify-content-between text-white py-1 todos">
                     <span class="ml-2">Total Leads</span>
-                    <span class="mr-2" id="quantidade_total">{{$qtdTotal}}</span>
+                    @if($qtdTotal >= 1)
+                        <span class="mr-2 badge badge-info" id="quantidade_total">{{$qtdTotal}}</span>
+                    @else
+                        <span class="mr-2 badge badge-danger" id="quantidade_total">{{$qtdTotal}}</span>
+                    @endif
+                    
                 </a>
             </li>
         </ul>
@@ -143,7 +181,7 @@
 <!--FIM COLUNA LEFT-->
 
 <!--COLUNA CENTRO-->
-<div class="text-white p-2 align-self-start" style="flex-basis:74%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
+<div class="text-white p-2 align-self-start" style="flex-basis:76%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
     <div id="table" class="py-3">
         <table id="tabela" class="table listarclientes">
             <thead>
@@ -155,6 +193,7 @@
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Email</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -164,7 +203,7 @@
 <!--FIM COLUNA CENTRO-->
 
 <!--COLUNA RIGHT-->
-<div class="mr-1" style="flex-basis:10%;flex-wrap: wrap;background-color:rgba(0,0,0,0.5);border-radius:5px;">
+<div class="mr-1" style="flex-basis:8%;flex-wrap: wrap;background-color:rgba(0,0,0,0.5);border-radius:5px;">
     <div class="d-flex flex-column align-items-center justify-content-center">
         <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column justify-content-center mx-auto text-center mt-4 mb-3 border border-white w-75 text-white orcamento">
             <i class="fas fa-money-check-alt fa-lg"></i>
@@ -186,14 +225,14 @@
             <i class="fas fa-sms fa-lg"></i>
             SMS
         </a>-->
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
+        <!-- <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
             <i class="fas fa-exchange-alt fa-lg"></i>
             Transferir
         </a>           
         <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white exportar" style="background-color:rgba(0,0,0,0.4);">
             <i class="fas fa-file-csv fa-lg"></i>
             Exportar
-        </a>    
+        </a>     -->
         
         <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white editar" style="background-color:rgba(0,0,0,0.4);">
             <i class="far fa-edit"></i>
@@ -527,20 +566,70 @@
                     {data:"nome",name:"nome"},
                     {data:"telefone",name:"telefone"},
                     {data:"email",name:"email"},
+                    {data:"created_at",name:"status"}
                 ],
-                "columnDefs": [ {
-                        "targets": 0,
-                        "createdCell": function (td, cellData, rowData, row, col) {
-                            $(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
-                        }},
+                "columnDefs": [ 
+                        {
+                            "targets": 0,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                $(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
+                            },
+                            "width":"1%" 
+                        },
+                        {
+                            "targets":1,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                
+                                if(cellData.indexOf("dias") === -1) {
+                                    $(td).html(cellData.substr(0,5));
+                                } 
+                                //$(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
+                            },
+                            "width":"3%"    
+                        },
                         {
                             "targets": 2,
                             "createdCell": function (td, cellData, rowData, row, col) {
                                 let datas = cellData.split("T")[0]
                                 let alvo = datas.split("-").reverse().join("/")
                                 $(td).html(alvo);
-                            }
-                        }],
+                            },
+                            "width":"5%" 
+                        },
+                        {
+                            "taregets":3,
+                            "width":"7%"
+                        },
+                        {
+                            "taregets":4,
+                            "width":"40%"
+                        },
+                        {
+                            "taregets":5,
+                            "width":"8%"
+                        },
+                        {
+                            "targets":6,
+                            "width":"28%"
+                        },
+                        
+                        {
+                            "targets": 7,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                //console.log(cellData);
+                                const now = new Date(Date.now()).toISOString().split("T")[0];    
+                                let criacao = new Date(cellData.split("T")[0]).toISOString().split("T")[0];
+                                if(criacao == now) {
+                                    $(td).html('<span class="badge badge-success" style="width:90%;">Hoje</span>')
+                                    
+                                } else {
+                                    $(td).html('<span class="badge badge-danger" style="width:90%;">Atrasado</span>')
+                                }
+
+                            },
+                            "width":"8%"
+                        }    
+                ],
                 rowCallback: function (row, data,displayNum,displayIndex,dataIndex) {
                     let alvo_id = $("#pessoa_juridica_cadastrada").val();
                     if($(row).hasClass('odd')) {
@@ -687,6 +776,7 @@
                             $("#quantidade_mes").html(res.quantidade_mes);
                             $("#quantidade_total").html(res.quantidade_total);
                             ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPJ') }}").load();
+                            $("#title").html("<h4>Prospecção</h4>");
                         }
                     }
                 });
@@ -929,6 +1019,29 @@
                 $("#editar_cliente_id").val('');
                 $("#editar_cidade_id").val('');
                 $("#editar_origem_id").val('');
+                return false;
+            });
+
+            $('.sem_contato').on('click',function(){
+                $('div[class*="prospeccao"]').removeClass('fundo');
+                $('div[class*="plantao_vendas"]').removeClass('fundo');
+                $('div[class*="atendimento_inciado"]').removeClass('fundo');
+                $('div[class*="sem_contato"]').addClass('fundo');
+                // $('#menu_clicado').val("menu_3");
+                $(".atrasada").removeClass('fundo');
+                $(".hoje").removeClass('fundo');
+                $(".semana").removeClass('fundo');
+                $(".mes").removeClass('fundo');
+                $(".todos").removeClass('fundo');
+                ta.ajax.url("{{ route('leads.prospeccao.semContatoPJ') }}").load();
+                $("#title").html("<h4>Sem Contato</h4>");
+                $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
+                $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $("#checkbox-pai").prop('checked',false);
+                $('tr').removeClass('textoforte');
                 return false;
             });
 

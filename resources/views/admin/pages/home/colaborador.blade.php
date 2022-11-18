@@ -73,44 +73,13 @@
                             </tr>    
                         @endforeach
 
-
-                        <!-- <tr>
-                            <th>Individual</th>
-                            <td>10</td>
-                            <td>20</td>
-                            <td>30</td>
-                            <td>40</td>
-                        </tr>
-                        <tr>
-                            <th>Coletivo</th>
-                            <td>10</td>
-                            <td>20</td>
-                            <td>30</td>
-                            <td>40</td>
-                        </tr>    
-                        <tr>
-                            <th>Empresarial</th>
-                            <td>10</td>
-                            <td>20</td>
-                            <td>30</td>
-                            <td>40</td>
-                        </tr>    
-                        <tr>
-                            <th>Total</th>
-                            <td>10</td>
-                            <td>20</td>
-                            <td>30</td>
-                            <td>40</td>
-                        </tr>     -->
-                            
-                        
                     </tbody>
                 </table>
             </div>    
             <!-----FIM TABLE----->
 
             <!-----GRAFICOS--------->
-            <div class="graficos bg-white">
+            <div class="graficos" style="background-color:rgba(0,0,0,0.6);color:white;">
                 <div style="flex-basis:33%;border-right:1px solid black;">
                     <p class="text-center border-bottom">Vendas</p>
                     <canvas id="vendido" width="90%" top="30%" class="mt-2" data-needle-value-vendido="45"></canvas>
@@ -782,8 +751,18 @@
                         }]
                     },
                     options: {
+                        
                         scales: {},
 		                plugins: {
+
+                            legend: {
+                                labels: {
+                                    fontColor: "red"
+                                }
+                            }
+
+
+
                             // legend: {
                             // 	display:false
                             // },
@@ -814,7 +793,7 @@
                             ctx.moveTo(0,-2);
                             ctx.lineTo(height - (ctx.canvas.offsetTop - 110),0);
                             ctx.lineTo(0,2);
-                            ctx.fillStyle = "#444";
+                            ctx.fillStyle = "#FFF";
                             ctx.fill();
                             ctx.restore();
                             ctx.beginPath();
@@ -823,7 +802,7 @@
                             ctx.restore();
                             ctx.font = '5px Helvetica';
                             ctx.margin = "30px 0 0 0";
-                            ctx.fillStyle = '#444';
+                            ctx.fillStyle = '#FFF';
                             ctx.fillText(needleValue +'%',cx,cy);
                             ctx.textAlign = 'center';
                             ctx.restore();
@@ -893,7 +872,7 @@
                     ctx.moveTo(0,-2);
                     ctx.lineTo(height - (ctx.canvas.offsetTop - 110),0);
                     ctx.lineTo(0,2);
-                    ctx.fillStyle = "#444";
+                    ctx.fillStyle = "#FFF";
                     ctx.fill();
                     ctx.restore();
                     ctx.beginPath();
@@ -902,7 +881,7 @@
                     ctx.restore();
                     ctx.font = '5px Helvetica';
                     ctx.margin = "30px 0 0 0";
-                    ctx.fillStyle = '#444';
+                    ctx.fillStyle = '#FFF';
                     ctx.fillText(needleValue +'%',cx,cy);
                     ctx.textAlign = 'center';
                     ctx.restore();
@@ -939,21 +918,7 @@
                 },
                 options: {
                     scales: {},
-		            plugins: {
-                    // legend: {
-                    // 	display:false
-                    // },
-                    // tooltip: {
-                    // 	yAlign:'bottom',
-                    // 	displayColors:false,
-                    // 	callbacks: {
-                    // 		label: function(tooltipItem,data,value) {
-                    // 			const tracker = tooltipItem.dataset.needleValue;
-                    // 			return `Tracker Score: ${tracker} %`;
-                    // 		}
-                    // 	}
-                    // }
-		        }
+		            plugins: {}
 	        },
 	        plugins: [{
 		        afterDatasetDraw(chart,args,options) {
@@ -970,7 +935,7 @@
                     ctx.moveTo(0,-2);
                     ctx.lineTo(height - (ctx.canvas.offsetTop - 110),0);
                     ctx.lineTo(0,2);
-                    ctx.fillStyle = "#444";
+                    ctx.fillStyle = "#FFF";
                     ctx.fill();
                     ctx.restore();
                     ctx.beginPath();
@@ -979,7 +944,7 @@
                     ctx.restore();
                     ctx.font = '5px Helvetica';
                     ctx.margin = "30px 0 0 0";
-                    ctx.fillStyle = '#444';
+                    ctx.fillStyle = '#FFF';
                     ctx.fillText(needleValue +'%',cx,cy);
                     ctx.textAlign = 'center';
                     ctx.restore();

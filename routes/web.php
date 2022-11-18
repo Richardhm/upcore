@@ -211,6 +211,7 @@ Route::middleware('auth')->prefix("admin")->group(function(){
 
 
     Route::get("/clientes/ajaxclientes","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPF")->name("clientes.ajaxclienteslistapf");  
+    Route::get("/clientes/ajaxclientes/pj","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPJ")->name("clientes.ajaxclienteslistapj");  
 
     Route::get("/clientes/ajaxclientesporid","App\Http\Controllers\Admin\ClienteController@pegarClientesAjaxId")->name("clientes.ajaxclienteslistaporid");
     Route::get("/clientes/ajaxclientesporid/pj","App\Http\Controllers\Admin\ClienteController@pegarClientesAjaxIdPJ")->name("clientes.ajaxclienteslistaporidpj");
@@ -225,21 +226,34 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     
     Route::get("/leads/lerdados","App\Http\Controllers\Admin\ClienteController@leadPlantaoVendasPF")->name('leads.prospeccao.leadPlantaoVendasPF');
     Route::get("/leads/lerdadospj","App\Http\Controllers\Admin\ClienteController@leadPlantaoVendasPJ")->name('leads.prospeccao.leadPlantaoVendasPJ');
+    
     Route::get("/leads/leadProspeccaoPF","App\Http\Controllers\Admin\ClienteController@leadProspeccaoPF")->name('leads.prospeccao.leadProspeccaoPF');
     Route::get("/leads/leadProspeccaoPJ","App\Http\Controllers\Admin\ClienteController@leadProspeccaoPJ")->name('leads.prospeccao.leadProspeccaoPJ');
+    
     Route::get("/leads/leadAtendimentoPF","App\Http\Controllers\Admin\ClienteController@leadAtendimentoPF")->name('leads.prospeccao.leadAtendimentoPF');
     Route::get("/leads/leadAtendimentoPJ","App\Http\Controllers\Admin\ClienteController@leadAtendimentoPJ")->name('leads.prospeccao.leadAtendimentoPJ');
+
+    Route::get("/leads/leadSemContato","App\Http\Controllers\Admin\ClienteController@leadSemContatoPF")->name("leads.prospeccao.semContatoPF");
+    Route::get("/leads/leadSemContatopj","App\Http\Controllers\Admin\ClienteController@leadSemContatoPJ")->name("leads.prospeccao.semContatoPJ");
+
+
     Route::post("/leads/mudarStatusLeads","App\Http\Controllers\Admin\ClienteController@mudarStatusLeads")->name('leads.prospeccao.mudarStatus');
     Route::post("/leads/mudarStatusLeadsPJ","App\Http\Controllers\Admin\ClienteController@mudarStatusLeadsPJ")->name('leads.prospeccao.mudarStatusPJ');
+    
     Route::get("/clientes/para/gettarefasHojeProspeccao","App\Http\Controllers\Admin\ClienteController@getClientesParaHojeProspeccao")->name("cliente.getClientesParaHojeProspeccao");
     Route::get("/clientes/para/gettarefasHojeProspeccaoPJ","App\Http\Controllers\Admin\ClienteController@getClientesParaHojeProspeccaoPJ")->name("cliente.getClientesParaHojeProspeccaoPJ");  
+    
     Route::get("/cliente/getClientesTarefasAtrasadasProspeccao","App\Http\Controllers\Admin\ClienteController@getClienteAtrasadasAjaxProspeccao")->name("cliente.getClienteAtrasadasAjaxProspeccao");
     Route::get("/cliente/getClientesTarefasAtrasadasProspeccaoPJ","App\Http\Controllers\Admin\ClienteController@getClienteAtrasadasAjaxProspeccaoPJ")->name("cliente.getClienteAtrasadasAjaxProspeccaoPJ");
+    
     Route::get("/cliente/getClientesTarefasSemanaProspeccao","App\Http\Controllers\Admin\ClienteController@listarClientesSemanaAjaxProspeccao")->name("cliente.listarClientesSemanaAjaxProspeccao");
     Route::get("/cliente/getClientesTarefasSemanaProspeccaoPJ","App\Http\Controllers\Admin\ClienteController@listarClientesSemanaAjaxProspeccaoPJ")->name("cliente.listarClientesSemanaAjaxProspeccaoPJ");
+    
     Route::get("/clientes/listarClienteMesAjaxProspeccao","App\Http\Controllers\Admin\ClienteController@listarClienteMesAjaxProspeccao")->name('cliente.listarClienteMesAjaxProspeccao');
     Route::get("/clientes/listarClienteMesAjaxProspeccaoPJ","App\Http\Controllers\Admin\ClienteController@listarClienteMesAjaxProspeccaoPJ")->name('cliente.listarClienteMesAjaxProspeccaoPJ');
-    Route::get("/clientes/ajaxclientesProspeccao","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPFProspeccao")->name("clientes.ajaxclienteslistapfProspecacao");  
+    
+    
+    //Route::get("/clientes/ajaxclientesProspeccao","App\Http\Controllers\Admin\ClienteController@listarClientesAjaxPFProspeccao")->name("clientes.ajaxclienteslistapfProspecacao");  
 
     
     
@@ -270,8 +284,12 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     Route::post("/clientes/tarefas/pesquisar","App\Http\Controllers\Admin\TarefaController@pegarHistoricoDoCliente")->name("tarefa.pegarHisticoDoCliente");
     Route::post('/clientes/tarefas/search',"App\Http\Controllers\Admin\TarefaController@searchTarefas")->name("tarefas.personalizadas");
     Route::post("/clientes/tarefas/store","App\Http\Controllers\Admin\TarefaController@cadastrarTarefa")->name("clientes.cadastrarTarefa");
+
     Route::post("/clientes/tarefas/cadastrarAjax","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjax")->name("tarefas.cadastrarTarefasAjax");
+    Route::post("/clientes/tarefas/cadastrarAjax/pj","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjaxPJ")->name("tarefas.cadastrarTarefasAjaxPJ");
+    
     Route::post("/clientes/tarefas/cadastrarAjaxCliente","App\Http\Controllers\Admin\TarefaController@cadastrarTarefaAjaxCliente")->name("tarefas.cadastrarTarefasAjaxCliente");
+    
     Route::post("/clientes/fullClientesAjax","App\Http\Controllers\Admin\TarefaController@listarClientesAjax")->name("tarefas.listarClientesFull");
     Route::post("/clientes/fullcalendar/especifico","App\Http\Controllers\Admin\TarefaController@clienteTarefaEspecifica")->name("cliente.tarefaEspecifica");
     Route::put("/clientes/alterar/tarefa","App\Http\Controllers\Admin\TarefaController@alterarClienteTarefaEspecifica")->name("cliente.alterarClienteTarefaEspecifica");

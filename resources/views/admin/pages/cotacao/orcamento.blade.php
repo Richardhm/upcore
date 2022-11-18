@@ -12,6 +12,32 @@
     </div>
 @endif
 
+
+
+<div class="modal" tabindex="-1" id="teste-download">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Operações</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Deseja Realizar outra operação?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Sim</button>
+        <a type="button" class="btn btn-primary redirecionar" href="">Não</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
     <section>
 
         <!------------------------------CARD FORMULARIO ---------------------------------------------->    
@@ -26,6 +52,7 @@
                 @csrf 
                 
             <input type="hidden" name="cliente_id" id="cliente_id" value="{{$cliente->id}}">
+            <input type="hidden" name="tipo" id="tipo" value="{{$tipo}}">
             
            
                 <!-- <div class="form-group">
@@ -249,25 +276,18 @@
                         </div>
                     </div>
                     <!--Fim Faixa Etaria-->                      
-                </section> 
-                                
-                
-
-               
-
-                
+                </section>              
              <hr />
-              
                 <input type="submit" class="btn btn-block btn-light my-3" value="Ver Planos" name="verPlanos" />
             </form>
-
-
             </div>
 
         </div>
         <!------------------------------FIM CARD FORMULARIO ------------------------------------------>    
 
-
+        @if(Session::has('download-completo'))
+            
+        @endif
 
 
 
@@ -284,46 +304,25 @@
 
     <div id="aquiPlano"></div>
 
-    
-
-  
-  
-    
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
 @stop   
 @section('js')
     <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     
     <script>
         $(function(){
-
-            // $(".fa-bars").on('click',function(){
-            //     if($('body').hasClass('sidebar-collapse')) {
-            //         $('body').removeClass('sidebar-mini');
-            //         $('body').addClass('sidebar-hidden')
-            //     } else {
-            //         $('body').removeClass('sidebar-hidden');
-            //         $('body').addClass('sidebar-mini')
-            //     }
-            // });
-
-
-            
+            $('body').on('click','.pdf',function(){
+                let cliente_id = $('#cliente_id').val();
+                let tipo = $("#tipo").val();
+                if(tipo == 'pf') {
+                    $(".redirecionar").attr('href','/admin/clientes/pf?id='+cliente_id);     
+                } else {
+                    $(".redirecionar").attr('href','/admin/clientes/pj?id='+cliente_id);
+                }
+                setTimeout(function(){
+                    $('#teste-download').modal('show');
+                },3000);
+            });
+           
             $("body").on('click','.cards',function(){
                 $('.cards').css({"box-shadow":"none"});
                 $(this).css({"box-shadow":"10px 5px 5px orange"});
@@ -467,13 +466,9 @@
                         }                  
                     },
                     success(res) {
-                        // console.log(res);
-
-
                         if(res == "error") {
                             $('#collapseOne').collapse('show');
                         } else {
-                            
                             $('#aquiPlano').html(res)
                         }
                     }
@@ -482,7 +477,6 @@
             });
             $('#collapseOne').on('hidden.bs.collapse', function () {
                 $("#collapseTwo").collapse('show');
-                
             });
             $("#collapseOne").collapse({toggle: true});
 
@@ -499,7 +493,7 @@
                 let cidade = $('select[name="cidades"]').val();
 
                 var element = $('<div></div>');
-                element.html('<a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded" href="/admin/email/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-file-pdf fa-2x"></i></a>');
+                element.html('<a style="margin-right:15px;background-color:rgb(17,117,185);color:#FFF;" class="border p-1 border-dark rounded" href="/admin/email/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-envelope fa-2x"></i></a><a style="margin-right:15px;color:#FFF;" class="border p-1 border-dark rounded enviar_mensagem bg-danger pdf" href="/admin/criar/pdf/'+cotacao+'/'+administradora_id+'/'+plano_id+'/'+odonto+'/'+cliente+'/'+cidade+'"><i class="fas fa-file-pdf fa-2x"></i></a>');
                 element.addClass("cards_destaque_links")
                 element.hide();
 

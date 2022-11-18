@@ -48,35 +48,37 @@
     <div class="py-1" style="background-color:rgba(0,0,0,0.5);border-radius:5px;">
         <h5 class="text-center d-flex align-items-center justify-content-center border-bottom py-2">Tarefas</h5>
         <ul style="margin:0px;padding:0px;">
-           
-            <li class="links_tarefas">
-                <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
-                    <span class="ml-2">Atrasadas</span>
-                    <span class="mr-2" id="quantidade_atrasada">{{$tarefas->atrasada ?? 0}}</span>
-                </a>
-            </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 hoje">
-                    <span class="ml-2">Hoje</span>
-                    <span class="mr-2" id="quantidade_hoje">{{$tarefas->hoje ?? 0}}</span>
+                    <span class="ml-2 text-success">Hoje</span>
+                    <span class="mr-2 badge badge-success" id="quantidade_hoje">{{$tarefas->hoje ?? 0}}</span>
                 </a>    
+            </li>   
+
+
+            <li class="links_tarefas">
+                <a href="" class="d-flex justify-content-between text-white py-1 atrasada">
+                    <span class="ml-2 text-danger">Atrasadas</span>
+                    <span class="mr-2 badge badge-danger" id="quantidade_atrasada">{{$tarefas->atrasada ?? 0}}</span>
+                </a>
             </li>
+            
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 semana">
                     <span class="ml-2">Semana</span>
-                    <span class="mr-2" id="quantidade_semana">{{$tarefas->semana ?? 0}}</span>
+                    <span class="mr-2 badge badge-info" id="quantidade_semana">{{$tarefas->semana ?? 0}}</span>
                 </a>
             </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 mes">
                     <span class="ml-2">Mês</span>
-                    <span class="mr-2" id="quantidade_mes">{{$tarefas->mes ?? 0}}</span>
+                    <span class="mr-2 badge badge-info" id="quantidade_mes">{{$tarefas->mes ?? 0}}</span>
                 </a>
             </li>
             <li class="links_tarefas">
                 <a href="" class="d-flex justify-content-between text-white py-1 todos">
                     <span class="ml-2">Todos</span>
-                    <span class="mr-2" id="quantidade_todos">{{$tarefas->todas ?? 0}}</span>
+                    <span class="mr-2 badge badge-info" id="quantidade_todos">{{$tarefas->todas ?? 0}}</span>
                 </a>
             </li>
 
@@ -92,7 +94,13 @@
         <ul style="margin:0px;padding:0px;" id="estagios">
             <li class="d-flex justify-content-between text-white py-1 total_geral">
                 <span class="ml-2">Total Geral</span>
-                <span class="mr-2" id="quantidade_total">{{$clientes_total ?? 0}}</span>
+                
+                @if($clientes_total >= 1)
+                    <span class="mr-2 badge badge-info" id="quantidade_total">{{$clientes_total}}</span>
+                @else
+                    <span class="mr-2 badge badge-danger" id="quantidade_total">{{$clientes_total}}</span>
+                @endif
+
             </li>
 
             @foreach($estagios as $e)
@@ -104,7 +112,12 @@
                             Interessado   
                             <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>     
                         </span>
-                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                        @if($e->quantidade >= 1)
+                            <span class="mr-2 quantidade badge badge-info">{{$e->quantidade}}</span>
+                        @else
+                            <span class="mr-2 quantidade badge badge-danger">{{$e->quantidade}}</span>
+                        @endif
+                        
                     </li>
 
                 @elseif($e->nome == "Interessado Morno")
@@ -114,7 +127,12 @@
                             <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
                             <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>      
                         </span>
-                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                        @if($e->quantidade >= 1)
+                            <span class="mr-2 quantidade badge badge-info">{{$e->quantidade}}</span>
+                        @else
+                            <span class="mr-2 quantidade badge badge-danger">{{$e->quantidade}}</span>
+                        @endif
+                        
                     </li>
                 
                 @elseif($e->nome == "Interessado Quente")
@@ -125,15 +143,23 @@
                             <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
                             <i class="fas fa-star fa-xs" style="color:rgb(255,165,0);"></i>
                         </span>
-                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                        @if($e->quantidade >= 1)
+                            <span class="mr-2 quantidade badge badge-info">{{$e->quantidade}}</span>
+                        @else
+                            <span class="mr-2 quantidade badge badge-danger">{{$e->quantidade}}</span>
+                        @endif
+                        
                     </li>
                 @elseif($e->nome == "Sem Interesse")
                     <li class="d-flex justify-content-between text-white py-1">
                         <span class="ml-2 title">
                             Sem Interessado
-                            
                         </span>
-                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                        @if($e->quantidade >= 1)
+                            <span class="mr-2 quantidade badge badge-info">{{$e->quantidade}}</span>
+                        @else
+                            <span class="mr-2 quantidade badge badge-danger">{{$e->quantidade}}</span>
+                        @endif
                     </li>
                 @else
 
@@ -141,7 +167,15 @@
                         <span class="ml-2 title">
                             {{$e->nome}}        
                         </span>
-                        <span class="mr-2 quantidade">{{$e->quantidade}}</span>
+                        
+                        @if($e->quantidade >= 1)
+                            <span class="mr-2 quantidade badge badge-info">{{$e->quantidade}}</span>
+                        @else
+                            <span class="mr-2 quantidade badge badge-danger">{{$e->quantidade}}</span>
+                        @endif
+
+
+
                     </li>
 
                 @endif
@@ -256,12 +290,12 @@
             </div>
 
             <div class="grupo-botoes">
-                <a href="#" data-tarefa class="ml-1">Nova Tarefa</a>
-                <a href="#" data-ligar class="mx-2">Ligar</a>
-                <a href="#" data-whatsapp>Whatsapp</a>
-                <a href="#" data-email class="mx-2">Email</a>
-                <a href="#" data-orcamento class="mr-2">Orçamento</a>
-                <a href="#" data-contrato>Contrato</a>
+                <a href="#" data-tarefa class="ml-1 rounded">Nova Tarefa</a>
+                <a href="#" data-ligar class="mx-2 rounded">Ligar</a>
+                <a href="#" data-whatsapp class="rounded">Whatsapp</a>
+                <a href="#" data-email class="mx-2 rounded">Email</a>
+                <a href="#" data-orcamento class="mr-2 rounded">Orçamento</a>
+                <a href="#" data-contrato class="rounded">Contrato</a>
             </div>
         </form>
     </div>
@@ -409,7 +443,7 @@
                 "url": "{{asset('traducao/pt-BR.json')}}"
             },
             ajax: {
-                "url":"{{ route('cliente.getTarefasAtrasadasAjaxPJ') }}",
+                "url":"{{ route('cliente.getTarefasParaHojePJ') }}",
                 "dataSrc": ""
             },
             "lengthMenu": [50,100,150,200,300,500],
@@ -448,7 +482,7 @@
                 // $('.form-control').addClass('bg-dark');
             },
             "initComplete": function( settings, json ) {
-                $('#title').html("<h4>Atrasadas</h4>");
+                $('#title').html("<h4>Hoje</h4>");
             }
         });
         
@@ -465,7 +499,10 @@
 
         // var table = $("body").find("#tabela").DataTable();
         $('table').on('click', 'tbody tr', function () {
-            table.ajax.reload();
+            // table.ajax.reload();
+            ta.$('tr').removeClass('textoforte');
+            $(this).closest('tr').addClass('textoforte');
+            //
             let data = table.row(this).data();
             //console.log(data);
             $('select[name="estagios-clientes"]').removeAttr('readonly');
@@ -763,7 +800,7 @@
             // e.preventDefault();
             var form = $(this);
             $.ajax({
-                url:"{{route('tarefas.cadastrarTarefasAjax')}}",
+                url:"{{route('tarefas.cadastrarTarefasAjaxPJ')}}",
                 method:"POST",
                 data:$(this).serialize(),
                 beforeSend:function() {
@@ -785,14 +822,45 @@
                         $("#error_descricao").html("");
                     }
 
-                    if(form.find("#star").val() == "") {
-                        $("#error_star").html("<p class='alert alert-danger'>Escolha um nivel de interesse desse cliente</p>")
-                    } else {
-                        $("#error_star").html("");
-                    }
+                    // if(form.find("#star").val() == "") {
+                    //     $("#error_star").html("<p class='alert alert-danger'>Escolha um nivel de interesse desse cliente</p>")
+                    // } else {
+                    //     $("#error_star").html("");
+                    // }
                 },
                 success:function(res) {
-                    console.log(res);
+                    
+                    
+
+                    if(res.estagios[0].quantidade >= 1) {
+                        $("#estagios li:eq(1) span:eq(1)").removeClass().addClass('mr-2 quantidade badge badge-info');    
+                    } else {
+                        $("#estagios li:eq(1) span:eq(1)").removeClass().addClass('mr-2 quantidade badge badge-danger');
+                    }
+
+                    if(res.estagios[1].quantidade >= 1) {
+                        $("#estagios li:eq(2) span:eq(1)").removeClass().addClass('mr-2 quantidade badge badge-info');    
+                    } else {
+                        $("#estagios li:eq(2) span:eq(1)").removeClass().addClass('mr-2 quantidade badge badge-danger');
+                    }
+
+                    if(res.estagios[2].quantidade >= 1) {
+                        $("#estagios li:eq(3) span:eq(1)").removeClass().addClass('mr-2 quantidade badge badge-info');    
+                    } else {
+                        $("#estagios li:eq(3) span:eq(1)").removeClass().addClass('mr-2 quantidade badge badge-danger');
+                    }
+
+                    $("#estagios li:eq(1) .quantidade").text(res.estagios[0].quantidade);//Interessado Frio
+                    $("#estagios li:eq(2) .quantidade").text(res.estagios[1].quantidade);//Interessado Morno
+                    $("#estagios li:eq(3) .quantidade").text(res.estagios[2].quantidade);//Interessado Quente
+                    $("#estagios li:eq(4) .quantidade").text(res.estagios[3].quantidade);//Aguardando doc.
+                    $("#estagios li:eq(5) .quantidade").text(res.estagios[4].quantidade);//Interessado Futuro
+                    $("#estagios li:eq(6) .quantidade").text(res.estagios[5].quantidade);//Sem Interesse
+                    $("#estagios li:eq(7) .quantidade").text(res.estagios[6].quantidade);//Sem Contato
+
+
+
+
                     $("#cadastrarClienteClienteEspecifico").modal('hide');
                     // // ta.ajax.reload();
                     form.find('#title').val('');
@@ -814,7 +882,7 @@
                         $('.todos').removeClass('fundo');
                         $("#title").html("<h4>Hoje</h4>");
                         $('.hoje').addClass('fundo');
-                        ta.ajax.url("{{ route('cliente.getTarefasParaHoje') }}").load();
+                        ta.ajax.url("{{ route('cliente.getTarefasParaHojePJ') }}").load();
                         historicoCliente(res.cliente.id);
                     } else if(res.resultado == "atrasada") {
                         $('.total_geral').removeClass('fundo');
@@ -825,7 +893,7 @@
                         $('.todos').removeClass('fundo');
                         $("#title").html("<h4>Atrasada</h4>");
                         $('.atrasada').addClass('fundo');
-                        ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjax') }}").load();
+                        ta.ajax.url("{{ route('cliente.getTarefasAtrasadasAjaxPJ') }}").load();
                         historicoCliente(res.cliente.id);
                     } else if(res.resultado == "semana") {
                         $('.total_geral').removeClass('fundo');
@@ -836,7 +904,7 @@
                         $('.todos').removeClass('fundo');
                         $("#title").html("<h4>Semana</h4>");
                         $('.semana').addClass('fundo');
-                        ta.ajax.url("{{ route('cliente.listarClientesSemanaAjax') }}").load();
+                        ta.ajax.url("{{ route('cliente.listarClientesSemanaAjaxPJ') }}").load();
                         historicoCliente(res.cliente.id);
                     } else if(res.resultado == "mes") {
                         $('.total_geral').removeClass('fundo');
@@ -847,7 +915,7 @@
                         $('.todos').removeClass('fundo');
                         $("#title").html("<h4>Mês</h4>");    
                         $('.mes').addClass('fundo');
-                        ta.ajax.url("{{ route('cliente.listarClienteMesAjax') }}").load();
+                        ta.ajax.url("{{ route('cliente.listarClienteMesAjaxPJ') }}").load();
                         historicoCliente(res.cliente.id);
                     } else {
                         $('.total_geral').removeClass('fundo');
@@ -858,7 +926,7 @@
                         $('.mes').removeClass('fundo');
                         $("#title").html("<h4>Mês</h4>");    
                         $('.todos').addClass('fundo');
-                        ta.ajax.url("{{ route('clientes.ajaxclienteslistapf') }}").load();
+                        ta.ajax.url("{{ route('clientes.ajaxclienteslistapj') }}").load();
                         historicoCliente(res.cliente.id);
                     }
                      
@@ -902,6 +970,7 @@
         .fundo {background: rgba(255,255,255,0.5);}
         .total_geral{cursor: pointer;}
         .total_geral:hover{background: rgba(255,255,255,0.5);}
+        .textoforte {background-color:rgba(255,255,255,0.5);color:black;}
     </style>
 @stop
 

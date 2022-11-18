@@ -4,7 +4,7 @@
 @section('plugins.Toastr', true)
 @section('content_header')
     <div class="d-flex align-items-center">
-        <h4 class="text-white">Leads Pessoa Física</h4>     
+        <h4 class="text-white">Leads Pessoa Físicas</h4>     
         <i class="fas fa-user-plus text-white ml-3 cad" data-toggle="modal" data-target="#cadastrarPessoaFisica"></i> 
     </div>
     
@@ -99,7 +99,16 @@
             @else
                 <span class="badge badge-info  mr-1" id="qtdAtendimento">{{$qtdAtendimento}}</span>
             @endif
+        </div>
+
+        <div class="d-flex py-2 justify-content-between links sem_contato" id="menu_4">
+            <a href="" class="text-white  ml-1">Sem Contato</a>
             
+            @if($qtdSemContato == 0)
+                <span class="badge badge-danger  mr-1" id="qtdSemContato">{{$qtdSemContato}}</span>
+            @else
+                <span class="badge badge-info  mr-1" id="qtdSemContato">{{$qtdSemContato}}</span>
+            @endif
         </div>
                                 
     </div>
@@ -171,7 +180,7 @@
 <!--FIM COLUNA LEFT-->
 
 <!--COLUNA CENTRO-->
-<div class="text-white p-2 align-self-start" style="flex-basis:74%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
+<div class="text-white p-2 align-self-start" style="flex-basis:76%;background-color:rgba(0,0,0,0.5);border-radius:5px;">
     <div id="table" class="py-3">
         <table id="tabela" class="table listarclientes">
             <thead>
@@ -193,21 +202,21 @@
 <!--FIM COLUNA CENTRO-->
 
 <!--COLUNA RIGHT-->
-<div class="mr-1" style="flex-basis:10%;flex-wrap: wrap;background-color:rgba(0,0,0,0.5);border-radius:5px;">
+<div class="mr-1" style="flex-basis:8%;flex-wrap: wrap;background-color:rgba(0,0,0,0.5);border-radius:5px;">
     <div class="d-flex flex-column align-items-center justify-content-center">
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column justify-content-center mx-auto text-center mt-4 mb-3 border border-white w-75 text-white orcamento">
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="rounded py-2 d-flex flex-column justify-content-center mx-auto text-center mt-4 mb-3 border border-white w-75 text-white orcamento">
             <i class="fas fa-money-check-alt fa-lg"></i>
             <span style="font-size:0.875em;">Orçamentos</span>
         </a>           
-        <a href="" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);">
+        <a href="" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white rounded" style="background-color:rgba(0,0,0,0.4);pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);">
             <i class="fas fa-phone fa-lg"></i>
             <span style="font-size:0.875em;">Ligar</span>
         </a>           
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white whatsapp" style="background-color:rgba(0,0,0,0.4);">
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="rounded py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white whatsapp" style="background-color:rgba(0,0,0,0.4);">
             <i class="fab fa-whatsapp fa-lg"></i>
             <span style="font-size:0.875em;">Whatsapp</span>
         </a>           
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white email" style="background-color:rgba(0,0,0,0.4);">
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="rounded py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white email" style="background-color:rgba(0,0,0,0.4);">
             <i class="far fa-envelope fa-lg"></i>    
             <span style="font-size:0.875em;">Email</span>
         </a>           
@@ -215,16 +224,16 @@
             <i class="fas fa-sms fa-lg"></i>
             SMS
         </a>-->
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
+        <!-- <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white" style="background-color:rgba(0,0,0,0.4);">
             <i class="fas fa-exchange-alt fa-lg"></i>
             Transferir
         </a>           
         <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white exportar" style="background-color:rgba(0,0,0,0.4);">
             <i class="fas fa-file-csv fa-lg"></i>
             Exportar
-        </a>       
+        </a>        -->
         
-        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white editar" style="background-color:rgba(0,0,0,0.4);">
+        <a href="" style="pointer-events: none; display: inline-block;background-color:rgba(0,0,0,0.4);" class="rounded py-2 d-flex flex-column mx-auto text-center my-3 border border-white w-75 text-white editar" style="background-color:rgba(0,0,0,0.4);">
             <i class="far fa-edit"></i>
             Editar
         </a>       
@@ -276,7 +285,7 @@
 
                 <div class="col-6">
                     <span class="text-white">Email:</span>
-                    <input type="text" name="email" id="email" class="form-control" placeholder="Email">    
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email">    
                     <div class="erroremail"></div>  
                 </div>
             </div>
@@ -376,13 +385,7 @@
 </div>
 </div>
 
-
-
 <!----------------------FIM MODAL EDITAR-------------------------->
-
-
-
-
 
 </section>
 @stop
@@ -470,17 +473,19 @@
                             "targets": 0,
                             "createdCell": function (td, cellData, rowData, row, col) {
                                 $(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
-                            }    
+                            },
+                            "width":"1%"    
                         },
                         {
                             "targets":1,
                             "createdCell": function (td, cellData, rowData, row, col) {
-                                // console.log(cellData);
+                                
                                 if(cellData.indexOf("dias") === -1) {
                                     $(td).html(cellData.substr(0,5));
                                 } 
                                 //$(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
-                            }    
+                            },
+                            "width":"3%"    
                         },    
                         {
                             "targets": 2,
@@ -489,7 +494,24 @@
                                 let datas = cellData.split("T")[0]
                                 let alvo = datas.split("-").reverse().join("/")
                                 $(td).html(alvo);
-                            }    
+                            },
+                            "width":"5%"    
+                        },
+                        {
+                            "taregets":3,
+                            "width":"7%"
+                        },
+                        {
+                            "taregets":4,
+                            "width":"40%"
+                        },
+                        {
+                            "taregets":5,
+                            "width":"8%"
+                        },
+                        {
+                            "targets":6,
+                            "width":"28%"
                         },
                         {
                             "targets": 7,
@@ -504,7 +526,8 @@
                                     $(td).html('<span class="badge badge-danger" style="width:90%;">Atrasado</span>')
                                 }
 
-                            }
+                            },
+                            "width":"8%"
                         }    
                     ],
                 rowCallback: function (row, data) {
@@ -530,17 +553,12 @@
                 "initComplete": function( settings, json ) {
                     $('#title').html("<h4>Plantão de Vendas</h4>");
                 },
-
-                
-
-
-
-
             });
+
+
             var table = $("#tabela").DataTable();
             $('table').on('click', 'tbody tr', function (e) {
                 let data = table.row(this).data();
-                
                 $("#cliente_clidado").val(data.id);
                 if(!$(e.target).hasClass('marcar_cliente')) {
                     let id = $(this).closest('tr').find('.marcar_cliente').attr('data-id');
@@ -592,10 +610,6 @@
                 });
                 return false;
             });
-
-
-
-
 
             $(".atrasada").on('click',function(){
                 $("#checkbox-pai").prop('checked',false);
@@ -782,6 +796,7 @@
                             $('div[class*="plantao_vendas"]').removeClass('fundo');
                             $('div[class*="prospeccao"]').addClass('fundo');
                             ta.ajax.url("{{ route('leads.prospeccao.leadProspeccaoPF') }}").load();
+                            $("#title").html("<h4>Prospecção</h4>");
                             $("#qtdVendas").html(res.quantidade_plantao_vendas);
                             $("#prospeccao").html(res.quantidade_prospeccao);
                             $("#qtdAtendimento").html(res.quantidade_atendimento_iniciado);
@@ -802,6 +817,7 @@
             $(".prospeccao").on('click',function(){
                 $('div[class*="atendimento_inciado"]').removeClass('fundo');
                 $('div[class*="plantao_vendas"]').removeClass('fundo');
+                $('div[class*="sem_contato"]').removeClass('fundo');
                 $('div[class*="prospeccao"]').addClass('fundo');
                 $(".atrasada").removeClass('fundo');
                 $(".hoje").removeClass('fundo');
@@ -823,6 +839,7 @@
             $(".plantao_vendas").on('click',function(){
                 $('div[class*="prospeccao"]').removeClass('fundo');
                 $('div[class*="atendimento_inciado"]').removeClass('fundo');
+                $('div[class*="sem_contato"]').removeClass('fundo');
                 $('div[class*="plantao_vendas"]').addClass('fundo');
                 $('#menu_clicado').val("menu_1");
                 $(".atrasada").removeClass('fundo');
@@ -844,7 +861,7 @@
             $( ".plantao_vendas" ).trigger( "click");
 
             $(".atendimento_inciado").on('click',function(){
-                
+                $('div[class*="sem_contato"]').removeClass('fundo');
                 $('div[class*="prospeccao"]').removeClass('fundo');
                 $('div[class*="plantao_vendas"]').removeClass('fundo');
                 $('div[class*="atendimento_inciado"]').addClass('fundo');
@@ -865,6 +882,31 @@
                 $('tr').removeClass('textoforte');
                 return false;
             });
+
+            $('.sem_contato').on('click',function(){
+                $('div[class*="prospeccao"]').removeClass('fundo');
+                $('div[class*="plantao_vendas"]').removeClass('fundo');
+                $('div[class*="atendimento_inciado"]').removeClass('fundo');
+                $('div[class*="sem_contato"]').addClass('fundo');
+                // $('#menu_clicado').val("menu_3");
+                $(".atrasada").removeClass('fundo');
+                $(".hoje").removeClass('fundo');
+                $(".semana").removeClass('fundo');
+                $(".mes").removeClass('fundo');
+                $(".todos").removeClass('fundo');
+                ta.ajax.url("{{ route('leads.prospeccao.semContatoPF') }}").load();
+                $("#title").html("<h4>Sem Contato</h4>");
+                $(".orcamento").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $(".whatsapp").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $(".email").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $(".exportar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr('href','#');
+                $(".editar").attr('style','cursor:default;background-color:rgba(0,0,0,0.4);').attr("href","#");
+                $("#checkbox-pai").prop('checked',false);
+                $('tr').removeClass('textoforte');
+                return false;
+            });
+
+
 
             $("form[name='cadastrar_pessoa_jurica']").on('submit',function(){
                 let form = $(this);
@@ -992,35 +1034,46 @@
                     xhrFields: {
                         responseType: 'blob' 
                     },
-                    success:function(blob,status,xhr) {
+                    success:function(blob,status,xhr,ppp) {
+                        console.log(blob,status,xhr,ppp);
                         var filename = "";
                         var disposition = xhr.getResponseHeader('Content-Disposition');
                         if (disposition && disposition.indexOf('attachment') !== -1) {
                             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
                             var matches = filenameRegex.exec(disposition);
                             if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                            
                         }
                         if (typeof window.navigator.msSaveBlob !== 'undefined') {
                             window.navigator.msSaveBlob(blob, filename);
+                            
                         } else {
                             var URL = window.URL || window.webkitURL;
                             var downloadUrl = URL.createObjectURL(blob);
+                            
                             if (filename) {
                                 var a = document.createElement("a");
                                 if (typeof a.download === 'undefined') {
                                     window.location.href = downloadUrl;
+                                    
                                 } else {
                                     a.href = downloadUrl;
                                     a.download = filename;
                                     document.body.appendChild(a);
                                     a.click();
+                                    
                                 }
                             } else {
                                 window.location.href = downloadUrl;
+                                
                             }
-                            setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100);
+                            setTimeout(function () { 
+                                URL.revokeObjectURL(downloadUrl); 
+                                
+                            }, 100);
                         }
-                    }    
+                    }
+                    
                 });
                 return false;
             });

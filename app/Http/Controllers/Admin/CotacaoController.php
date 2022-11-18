@@ -35,8 +35,9 @@ class CotacaoController extends Controller
 {
     public function orcamento($id)
     {
-        
         $cliente = Cliente::where("id",$id)->first();
+        $tipo = $cliente->pessoa_fisica == 1 ? 'pf' : 'pj';
+        
         if(!$cliente) {
             return redirect()->back();
         }
@@ -55,7 +56,8 @@ class CotacaoController extends Controller
             "cliente" => $cliente,
             "faixas" => $faixas,
             "colunas" => $colunas,
-            "cidades" => Cidade::all()
+            "cidades" => Cidade::all(),
+            "tipo" => $tipo
         ]);
     }
 
@@ -137,8 +139,15 @@ class CotacaoController extends Controller
 
     public function criarPDF($cotacao,$administradora,$plano,$odonto,$cliente,$cidade)
     {
+        
+
+
+
         $alt = Cliente::find($cliente);
-        $alt->lead = ($alt->lead == 0 ? 1 : 0);
+        if($alt->lead == 1) {
+            $alt->lead = 0;
+        }
+        
         $alt->save();
 
 
@@ -205,7 +214,16 @@ class CotacaoController extends Controller
             "logo" => $logo
         ]);
         $nome_pdf = Str::slug(Cliente::where("id",$cliente)->first()->nome, '-')."-".date('d')."-".date('m')."-".date('Y')."-".substr(time(),0,5).".pdf";
+        //session()->
+        //orcamentosession(['download-completo' => "completo-pdf-".$cliente]);
+        //session()->put('download-completo',"completo-pdf-".$cliente);
+        //setcookie('download-pdf','download completado',time() + 86400,"/");
+        
         return $pdf->download($nome_pdf);
+
+        //return response()->download($pdf->download($nome_pdf));
+        //return redirect()->
+        //return redirect()->route('cotacao.orcamento',$cliente)->with('message', 'Email enviado com sucesso');
         
     }
 
@@ -238,23 +256,13 @@ class CotacaoController extends Controller
             $query->where("cidade_id",$request->cidade);   
         })->get();        
         if(count($verificarPlano) >= 1) {           
-           
             $cliente = Cliente::find($request->cliente_id);
-            
-
-
-
             $cot = Cotacao::where('cliente_id',$request->cliente_id)->first();
             /** Cliente Ja Possui Cotacao??? */    
             if(!$cot) {
-                
                 $cliente->etiqueta_id = 2;
-                $cliente->ultimo_contato = date("Y-m-d");
-                
+                $cliente->ultimo_contato = date("Y-m-d");               
                 $cliente->save();          
-
-
-
                 $tarefa = new Tarefa();
                 $tarefa->cliente_id = $request->cliente_id;
                 $tarefa->user_id = auth()->user()->id;
@@ -262,8 +270,6 @@ class CotacaoController extends Controller
                 $tarefa->data = date("Y-m-d");
                 $tarefa->descricao = "Envio de Orçamento para o cliente ".$cliente->nome;
                 $tarefa->save();
-
-
                 $cotacao = new Cotacao();
                 $cotacao->cliente_id = $request->cliente_id;
                 $cotacao->cidade_id = $request->cidade;

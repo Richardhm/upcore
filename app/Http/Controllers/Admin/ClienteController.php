@@ -135,8 +135,6 @@ class ClienteController extends Controller
 
     public function listarPessoaFisica()
     {
-        
-        
         $titulos = TarefasTitulo::where("id","!=",1)->get();
         $clientes_total = Cliente::where("user_id",auth()->user()->id)
                                 ->where('pessoa_fisica',1)
@@ -165,6 +163,18 @@ class ClienteController extends Controller
            
         ]);
     }
+
+    public function searchContratosPF(Request $request)
+    {
+        $id = $request->id;
+        return Cotacao
+            ::where("financeiro_id",$id)
+            ->where("user_id",auth()->user()->id)
+            ->get();
+    }
+
+
+
 
     public function listarPessoaJuridica()
     {
@@ -821,8 +831,6 @@ class ClienteController extends Controller
             ->selectRaw("if(DATEDIFF(NOW(), created_at)>0,concat(DATEDIFF(NOW(), created_at),' dias'),TIMEDIFF(now(), created_at)) AS tempo")
             ->with('origem')
             ->get();
-
-       
         return $clientes;
     }
 
@@ -962,7 +970,9 @@ class ClienteController extends Controller
                 $query->where("status",0);
                 $query->whereDate('data','=',date('Y-m-d'))->with('titulo');
             })
-        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])->get();
+        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+        ->orderBy('updated_at',"DESC")
+        ->get();
         return $clientes;                
     } 
 
@@ -1101,7 +1111,9 @@ class ClienteController extends Controller
             })
 
 
-        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])->get();
+        ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria'])
+        ->orderBy('updated_at',"DESC")
+        ->get();
         return $clientes;                
     }
 
@@ -1192,6 +1204,7 @@ class ClienteController extends Controller
                 $query->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1) AND data > now()")->with('titulo');
             })
             ->with(['cidade','etiqueta','cotacao.somarCotacaoFaixaEtaria','origem'])
+            ->orderBy('updated_at',"DESC")
             ->get();
         return $clientes;      
     }
@@ -1812,8 +1825,25 @@ class ClienteController extends Controller
 
     /********* Contratos ************/
     public function listarContratosPF(Request $request)
-    {
-        return view("admin.pages.contrato.pessoa_fisica.pendentes");
+    {   
+        $fisica = 1;
+        $qtdAguardandoBoletoColetivo = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",1)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        $qtdAguardandoPagAdesaoColetivo = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",2)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        $qtdAguardandoPagPlanoIndividual = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",3)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        $qtdPagVigencia = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",4)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        $qtdAguardandoPagEmpresarial = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",5)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        $qtdComissoes = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",6)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        $qtdFinalizado = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",7)->whereHas('clientes',function($query) use($fisica){$query->where('pessoa_fisica',$fisica);})->count();
+        
+        return view("admin.pages.contrato.pessoa_fisica.pendentes",[
+            "qtdAguardandoBoletoColetivo" => $qtdAguardandoBoletoColetivo,
+            "qtdAguardandoPagAdesaoColetivo" => $qtdAguardandoPagAdesaoColetivo,
+            "qtdAguardandoPagPlanoIndividual" => $qtdAguardandoPagPlanoIndividual,
+            "qtdPagVigencia" => $qtdPagVigencia,
+            "qtdAguardandoPagEmpresarial" => $qtdAguardandoPagEmpresarial,
+            "qtdComissoes" => $qtdComissoes,
+            "qtdFinalizado" => $qtdFinalizado
+        ]);
     }
 
     public function listarContratosPFPendentes()
@@ -1829,13 +1859,284 @@ class ClienteController extends Controller
                 $query->where('pessoa_fisica',$fisica);
             })
             ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->orderBy('updated_at','DESC')
             ->get();
         return $contratos;       
     }
 
+    public function aguardandoBoletoColetivo()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",1)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoAdesaoColetivo()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",2)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoPlanoIndividual()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",3)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoVigencia()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",4)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoEmpresarial()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",5)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function listarComissoes()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",6)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function listarFinalizado()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",7)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_fisica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    /*************************************************** */
+    public function aguardandoBoletoColetivoPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",1)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoAdesaoColetivoPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",2)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoPlanoIndividualPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",3)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoVigenciaPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",4)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function aguardandoPagamentoEmpresarialPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",5)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function listarComissoesPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",6)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+    public function listarFinalizadoPJ()
+    {
+        $fisica = 1;
+        $contratos = Cotacao::where("user_id",auth()->user()->id)
+            //->where("financeiro_id","!=",7)
+            ->where("financeiro_id","=",7)
+            ->whereHas('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with('clientes',function($query) use($fisica){
+                $query->where('pessoa_juridica',$fisica);
+            })
+            ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->get();
+        return $contratos;       
+    }
+
+
+    /*************************************************** */
+
+
+
+
+
+
     public function listarContratosPJ(Request $request)
     {
-        return view("admin.pages.contrato.pessoa_juridica.pendentes");
+        $juridico = 1;
+        $qtdAguardandoBoletoColetivo = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",1)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+        $qtdAguardandoPagAdesaoColetivo = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",2)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+        $qtdAguardandoPagPlanoIndividual = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",3)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+        $qtdPagVigencia = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",4)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+        $qtdAguardandoPagEmpresarial = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",5)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+        $qtdComissoes = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",6)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+        $qtdFinalizado = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","=",7)->whereHas('clientes',function($query) use($juridico){$query->where('pessoa_juridica',$juridico);})->count();
+
+
+
+        return view("admin.pages.contrato.pessoa_juridica.pendentes",[
+            "qtdAguardandoBoletoColetivo" => $qtdAguardandoBoletoColetivo,
+            "qtdAguardandoPagAdesaoColetivo" => $qtdAguardandoPagAdesaoColetivo,
+            "qtdAguardandoPagPlanoIndividual" => $qtdAguardandoPagPlanoIndividual,
+            "qtdPagVigencia" => $qtdPagVigencia,
+            "qtdAguardandoPagEmpresarial" => $qtdAguardandoPagEmpresarial,
+            "qtdComissoes" => $qtdComissoes,
+            "qtdFinalizado" => $qtdFinalizado            
+
+
+
+
+        ]);
     }
 
     public function listarContratosPJPendentes()
@@ -1851,6 +2152,7 @@ class ClienteController extends Controller
                 $query->where('pessoa_juridica',$juridica);
             })
             ->with(['administradora','financeiro','cidade','acomodacao','comissao','comissao.comissaoLancadas','comissao.premiacaoLancadas','somarCotacaoFaixaEtaria','plano'])
+            ->orderBy('updated_at','DESC')
             ->get();
         return $contratos;              
     }

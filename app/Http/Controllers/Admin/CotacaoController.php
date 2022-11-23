@@ -575,9 +575,14 @@ class CotacaoController extends Controller
 
         }
         if($cliente->pessoa_fisica == 1) {
-            return redirect()->route('contratos.pf.pendentes');
+            // return u
+            return redirect()->route('contratos.pf.pendentes')->with('cliente_id',$request->cliente_id);
+            //return redirect()->url('/admin/contratos/pf?id='.$request->cliente_id);
+            // return redirect()->route('/admin/contratos/pf?id='.$request->cliente_id);
+            //echo url("/admin/contratos/pf?id=".$request->cliente_id);
+        
         } else {
-            return redirect()->route('contratos.pj.pendentes');
+            return redirect()->route('contratos.pj.pendentes')->with('cliente_id',$request->cliente_id);
         }
         
     }

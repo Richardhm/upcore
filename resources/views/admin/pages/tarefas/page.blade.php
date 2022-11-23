@@ -228,17 +228,17 @@
         <form action="">
 
             <div class="form-row" style="margin-right: 0;margin-left:0;">
-                <div class="col">
+                <div class="col-4">
                     <span class="text-white">Cliente:</span>
                     <input type="text" name="nome" id="nome" class="form-control form-control-sm" readonly>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <span class="text-white">Cidade:</span>
                     <input type="text" name="cidade" id="cidade" class="form-control form-control-sm" readonly>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <span class="text-white">Status:</span>
-                    <select name="estagios-clientes" id="estagios-clientes" class="form-control-sm estagios-clientes" readonly="readonly"> 
+                    <select name="estagios-clientes" id="estagios-clientes" class="form-control form-control-sm estagios-clientes" readonly="readonly"> 
                         <option value="">--Escolher Status--</option>
                         @foreach($estagios as $e) 
                             @if($e->nome == "Interessado Frio")
@@ -256,16 +256,16 @@
             </div>
 
             <div class="form-row" style="margin-right: 0;margin-left:0;">
-                <div class="col">
+                <div class="col-4">
                     <span class="text-white">Telefone:</span>
                     <input type="text" name="telefone" id="telefone" class="form-control form-control-sm" readonly>
                 </div>
-                <div class="col">
+                <div class="col-6">
                     <span class="text-white">Email:</span>
                     <input type="text" name="email" id="email" class="form-control form-control-sm" readonly>
                 </div>
-                <div class="col">
-                    <span class="text-white">Quantidade de Vidas:</span>
+                <div class="col-2">
+                    <span class="text-white">Vidas:</span>
                     <input type="text" name="quantidade_vidas" id="quantidade_vidas" class="form-control form-control-sm" readonly>
                 </div>
             </div>
@@ -430,15 +430,9 @@
 
             let url = window.location.href.indexOf("?");
             if(url != -1) {
-
                 var b =  window.location.href.substring(url);
                 let id = b.split("=")[1];
-                // var c = window.location.href.replace(b,"");
-                // window.location.href = c;
-                
-                
                 $("#pessoa_fisica_cadastrada").val(id);
-
             }
             $("#frio").rateYo({rating:1,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
             $("#normo").rateYo({rating:2,readOnly: true,spacing: "10px",starWidth: "20px",numStars: 3,minValue: 0,maxValue: 3,ratedFill: 'orange',fullStar: true,});
@@ -502,8 +496,6 @@
                         let ultimo_contato = data.ultimo_contato.split("-").reverse().join("/");
                         let criacao = new Date(data.created_at.split("T")[0]);
 
-
-
                         const now = new Date(Date.now());
                         const hoje = new Date(now.toISOString().split("T")[0]);
                         const diferenca   = new Date(hoje) - new Date(criacao)
@@ -511,9 +503,7 @@
                         const diferencaEmDias = diferenca / (1000 * 60 * 60 * 24);
                         const ultimoEmDias = diferencaUltimo / (1000 * 60 * 60 * 24);    
 
-
-
-
+                        $("#cliente_id_cadastrado_aqui").val(data.id);
                        
                         $(row).addClass('textoforte');
                         $("#nome").val(data.nome);
@@ -528,7 +518,13 @@
                         $("#quantidade_vidas").val(data.cotacao.somar_cotacao_faixa_etaria[0].soma);
                         $("#dias_contato").val(ultimoEmDias);
 
+                        $("a[data-orcamento]").attr("href","/admin/cotacao/orcamento/"+data.id);
+                        $("a[data-contrato]").attr("href","/admin/cotacao/contrato/"+data.id);
+                        $("a[data-email]").attr("href","mailto:"+data.email);
+                        $("a[data-whatsapp]").attr("href","https://api.whatsapp.com/send?phone=55"+data.telefone.replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","")).attr('target',"_blank");
+                        $("a[data-tarefa]").attr('data-toggle','modal').attr('data-target','#cadastrarClienteClienteEspecifico');
 
+                        $("#estagios-clientes").removeAttr('readonly');
 
                         historicoCliente(data.id);
                     }

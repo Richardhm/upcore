@@ -169,13 +169,33 @@ Route::middleware('auth')->prefix("admin")->group(function(){
     // Route::get("/clientes/tarefas/{id}","App\Http\Controllers\Admin\ClienteController@listarClienteEspecifico")->name('cliente.especifico');
     Route::post("/contratos/pegarplanos","App\Http\Controllers\Admin\ClienteController@pegarPlanosPorAdministradora")->name("contratos.pegarPlanosPorAdministradoras");
 
-    Route::get("/contratos/pf/pendentes","App\Http\Controllers\Admin\ClienteController@listarContratosPF")->name("contratos.pf.pendentes");
+    Route::get("/contratos/pf","App\Http\Controllers\Admin\ClienteController@listarContratosPF")->name("contratos.pf.pendentes");
     Route::get("/contratos/pf/listarpendentesuser","App\Http\Controllers\Admin\ClienteController@listarContratosPFPendentes")->name("contratos.pf.listarpendentes");
     
-    Route::get("/contratos/pj/pendentes","App\Http\Controllers\Admin\ClienteController@listarContratosPJ")->name("contratos.pj.pendentes");
+    Route::get("/contratos/aguardando_boleto_coletivo","App\Http\Controllers\Admin\ClienteController@aguardandoBoletoColetivo")->name("contratos.pf.aguadandoBoletoColetivo");
+    Route::get("/contratos/aguardando_pagamento_adesao_coletivo","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoAdesaoColetivo")->name("contratos.pf.aguardandoPagamentoAdesaoColetivo");
+    Route::get("/contratos/aguardando_pagamento_plano_individual","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoPlanoIndividual")->name("contratos.pf.aguadandoPagamentoPlanoIndividual");
+    Route::get("/contratos/aguardando_pagamento_vigencia","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoVigencia")->name("contratos.pf.aguadandoPagamentoVigencia");
+    Route::get("/contratos/aguardando_pagamento_empresarial","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoEmpresarial")->name("contratos.pf.aguadandoPagamentoEmpresarial");
+    Route::get("/contratos/aguardando_comissoes","App\Http\Controllers\Admin\ClienteController@listarComissoes")->name("contratos.pf.listarComissoes");
+    Route::get("/contratos/aguardando_finalizado","App\Http\Controllers\Admin\ClienteController@listarFinalizado")->name("contratos.pf.listarFinalizado");
+
+
+    Route::get("/contratos/aguardando_boleto_coletivo/pj","App\Http\Controllers\Admin\ClienteController@aguardandoBoletoColetivoPJ")->name("contratos.pj.aguadandoBoletoColetivo");
+    Route::get("/contratos/aguardando_pagamento_adesao_coletivo/pj","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoAdesaoColetivoPJ")->name("contratos.pj.aguardandoPagamentoAdesaoColetivo");
+    Route::get("/contratos/aguardando_pagamento_plano_individual/pj","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoPlanoIndividualPJ")->name("contratos.pj.aguadandoPagamentoPlanoIndividual");
+    Route::get("/contratos/aguardando_pagamento_vigencia/pj","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoVigenciaPJ")->name("contratos.pj.aguadandoPagamentoVigencia");
+    Route::get("/contratos/aguardando_pagamento_empresarial/pj","App\Http\Controllers\Admin\ClienteController@aguardandoPagamentoEmpresarialPJ")->name("contratos.pj.aguadandoPagamentoEmpresarial");
+    Route::get("/contratos/aguardando_comissoes/pj","App\Http\Controllers\Admin\ClienteController@listarComissoesPJ")->name("contratos.pj.listarComissoes");
+    Route::get("/contratos/aguardando_finalizado/pj","App\Http\Controllers\Admin\ClienteController@listarFinalizadoPJ")->name("contratos.pj.listarFinalizado");
+
+
+
+
+    Route::get("/contratos/pj","App\Http\Controllers\Admin\ClienteController@listarContratosPJ")->name("contratos.pj.pendentes");
     Route::get("/contratos/pj/listarpendentesuser","App\Http\Controllers\Admin\ClienteController@listarContratosPJPendentes")->name("contratos.pj.listarpendentes");
 
-
+    Route::get("/contratos/search","App\Http\Controllers\Admin\ClienteController@searchContratosPF")->name("search.contratos.financeiro");
     
     Route::get("/leads/pessoa_fisica","App\Http\Controllers\Admin\ClienteController@prospeccao")->name('leads.prospeccao');
 

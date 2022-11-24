@@ -406,17 +406,7 @@ class CotacaoController extends Controller
        
        $valor = str_replace([".",","],["","."],$request->valor); 
        
-    //    $rules = [
-    //      "valor_adesao" => "required",
-    //      "cpf" => "unique:clientes,cpf"
-    //    ];
-
-    //    $message = [
-    //     "valor_adesao.required" => "E valor adesão e campo obrigatorio",
-    //     "cpf.unique" => "CPF já está cadastrado"
-    //    ];
-
-    //    $request->validate($rules,$message); 
+  
         /** Vai Na Tabela Cliente E acaba de realizar o cadastro */       
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->etiqueta_id = 3;
@@ -489,7 +479,6 @@ class CotacaoController extends Controller
         $comissao->data = date('Y-m-d');
         $comissao->save();    
 
-
         /** Comissao Corretor */
         $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
             ::where("plano_id",$request->plano)
@@ -522,8 +511,7 @@ class CotacaoController extends Controller
             ->where("user_id",auth()->user()->id)
             ->where("cidade_id",$request->cidade)
             ->get();
-        // dd($premiacao_configurada_corretor->valor);
-        // $dd = (float) $premiacao_configurada_corretor->valor * $totalVidas;
+        
         $premiacao_corretor_contagem = 0;
         if(count($premiacao_configurada_corretor)>=1) {
             foreach($premiacao_configurada_corretor as $k => $p) {
@@ -563,7 +551,6 @@ class CotacaoController extends Controller
                 $comissoes_corretora_contagem++;
             }
         }
-        
         /** Premiação Corretora */
         $premiacao_administradora_corretora = Administradora::where("id",$request->administradora)->first();
         if($premiacao_administradora_corretora) {
@@ -572,19 +559,12 @@ class CotacaoController extends Controller
             $premiacaoCorretoraLancadas->user_id = auth()->user()->id;
             $premiacaoCorretoraLancadas->total = (float) $premiacao_administradora_corretora->premiacao_corretora * $totalVidas;
             $premiacaoCorretoraLancadas->save();
-
         }
         if($cliente->pessoa_fisica == 1) {
-            // return u
             return redirect()->route('contratos.pf.pendentes')->with('cliente_id',$request->cliente_id);
-            //return redirect()->url('/admin/contratos/pf?id='.$request->cliente_id);
-            // return redirect()->route('/admin/contratos/pf?id='.$request->cliente_id);
-            //echo url("/admin/contratos/pf?id=".$request->cliente_id);
-        
         } else {
             return redirect()->route('contratos.pj.pendentes')->with('cliente_id',$request->cliente_id);
-        }
-        
+        }        
     }
 
 

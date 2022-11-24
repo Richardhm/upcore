@@ -341,395 +341,52 @@ class HomeController extends Controller
     }
 
     public function corretor()
-    {
+    {   
+        $google = "rgb(255, 99, 132)";
+        $facebook = "rgb(54, 162, 235)";
+        $instagram = "rgb(255, 205, 86)";
+        $indicacao = "rgb(255, 75, 86)";
+        $hapon = "rgb(85, 105, 95)";
         
-            $tarefasHoje = Tarefa::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereDate('data',date('Y-m-d'))
-                ->count();
-            
-            $tarefasAtrasadas = Tarefa::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereDate('data','<',date('Y-m-d'))
-                ->count();           
-        
-            $tarefasProximas = Tarefa::where("user_id",auth()->user()->id)
-                ->where("status",0)
-                ->whereMonth('data',date('m'))
-                ->count();
-            
-            // $tarefaSemana
+        $individual = "rgb(138,43,226)";
+        $coletivoPorAdesao = "rgb(75,0,130)";
+        $empresarial = "rgb(147,112,219)";
 
-            //clientesSemTarefas
+        $allcare = "rgb(255,255,120)";
+        $alter = "rgb(135,223,68)";
+        $qualicorp = "rgb(27,240,134)";
 
-            // $tarefaSemana = Cliente::where("user_id",auth()->user()->id)->whereNotIn('id',function($query){
-            //     $query->select('tarefas.cliente_id');
-            //     $query->from('tarefas');
-            //     $query->whereRaw("user_id=".auth()->user()->id);
-            // })->count();
+        $f0_18 = "rgb(0,206,209)";
+        $f19_23 = "rgb(64,224,208)";
+        $f24_28 = "rgb(72,209,204)";
+        $f29_33 = "rgb(32,178,170)";
+        $f34_38 = "rgb(0,139,139)";
+        $f39_43 = "rgb(0,128,128)";
+        $f44_48 = "rgb(127,255,212)";
+        $f49_53 = "rgb(240,248,255)";
+        $f54_58 = "rgb(102,205,170)";
+        $f59 = "rgb(95,158,160)";
 
-            $tarefaSemana = Tarefa::where("user_id",auth()->user()->id)->whereRaw("YEARWEEK(data, 1) = YEARWEEK(CURDATE(), 1)")->count();
+        $coresHexadecimaisRedes = "{$google}|{$facebook}|{$instagram}|{$indicacao}|{$hapon}";  
+        $coresHexadecimaisPlano = "{$individual}|{$coletivoPorAdesao}|{$empresarial}";
+        $coresHexadecimalAdministradoras = "{$allcare}|{$alter}|{$qualicorp}";
+        $coreHexadecimalFaixasEtarias = "{$f0_18}|{$f19_23}|{$f24_28}|{$f29_33}|{$f34_38}|{$f39_43}|{$f44_48}|{$f49_53}|{$f54_58}|{$f59}";        
 
-            
-
-
-
-            $etiquetas = Etiquetas::selectRaw('nome,id')
-                ->selectRaw('(SELECT count(id) FROM clientes WHERE clientes.etiqueta_id = etiquetas.id AND user_id = '.auth()->user()->id.') AS quantidade')
-                ->get();
-                
-
-
-            // $aguardando_boleto_coletivo = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->count();
-            // $aguardando_boleto_coletivo_total = Cotacao::where("financeiro_id",1)->where('plano_id',"!=",1)->where("user_id",auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
-            // $aguardando_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("financeiro_id",1);
-            //     $query->where("user_id",auth()->user()->id);
-            //     $query->where("plano_id","!=",1);
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-            // $aguardando_pagamento_adesao_coletivo = Cotacao::where("financeiro_id",2)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->count();
-            // $aguardando_pagamento_boleto_coletivo_total = Cotacao::where("financeiro_id",2)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
-            // $aguardando_pagamento_boleto_coletivo_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("financeiro_id",2);
-            //     $query->where("user_id",auth()->user()->id);
-            //     $query->where("plano_id","!=",1);
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-            // $aguardando_pagamento_vigencia = Cotacao::where("financeiro_id",4)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->count();
-            // $aguardando_pagamento_vigencia_total = Cotacao::where("financeiro_id",4)->where('plano_id',"!=",1)->where('user_id',auth()->user()->id)->selectRaw("sum(valor) as total")->first()->total;
-            // $aguardando_pagamento_vigencia_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("financeiro_id",4);
-            //     $query->where("user_id",auth()->user()->id);
-            //     $query->where("plano_id","!=",1);
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-            // $aguardando_individual_qtd = Cotacao::where("financeiro_id",1)->where("user_id",auth()->user()->id)->where("plano_id",1)->count();
-            // $aguardando_individual_total = Cotacao::where("financeiro_id",1)->where("user_id",auth()->user()->id)->where("plano_id",1)->selectRaw("sum(valor) as total")->first()->total;
-            // $aguardando_individual_vidas = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("financeiro_id",1);
-            //     $query->where("plano_id",1);
-            //     $query->where("user_id",auth()->user()->id);
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-            // $totalCliente    = Cliente::where("user_id",auth()->user()->id)->count();
-            // $totalVidasQuantidade = CotacaoFaixaEtaria::whereIn("cotacao_id",function($query){
-            //     $query->select('cotacoes.id');
-            //     $query->from('cotacoes');
-            //     $query->whereRaw("cotacoes.user_id=".auth()->user()->id);
-            // })->selectRaw("sum(quantidade) as quantidade_total_vidas")->first()->quantidade_total_vidas;
-
-            // $totalClientesNegociados = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('clientes',function($query){
-            //     $query->where('etiqueta_id','=',3);
-            // })->count();
-
-            // $totalVidasClientesNegociados = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("user_id",auth()->user()->id);
-            //     $query->where("financeiro_id",6);    
-            // })->selectRaw("SUM(quantidade) AS total_quantidade")->first()->total_quantidade;
-
-            // $totalClientesNegociacao = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id","!=",6)->count();
-            // $vidasTotalClientesNegociacao = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("financeiro_id","!=",6);
-            //     $query->where("user_id",auth()->user()->id);
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-            
-            // $clientesCadastradosEsseMes = DB::table('clientes')->whereRaw("user_id = ? AND MONTH(NOW()) = MONTH(created_at) AND YEAR(now()) = YEAR(created_at)",[auth()->user()->id])->count();
-            // $clientesCadastradosEsseMesVidas = CotacaoFaixaEtaria::whereHas('cotacao.clientes',function($query){
-            //     $query->where("user_id",auth()->user()->id);
-            //     $query->whereMonth('created_at',date('m'));
-            //     $query->whereYear('created_at',date('Y'));
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-            
-
-
-
-            /***********************Mes Atual**********************************************************************/
-            $totalVendido = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-                $query->where("status",1);
-                $query->where("user_id",auth()->user()->id);
-                $query->whereRaw("MONTH(data) = MONTH(NOW())");
-            })->selectRaw("sum(valor) as total")->first()->total;
-            
-            $totalVidasVendidas = CotacaoFaixaEtaria::whereHas('cotacao.comissao.comissaoLancadas',function($query){
-                $query->where("status",1);
-                $query->whereRaw("MONTH(data) = MONTH(now())");
-            })->selectRaw("sum(quantidade) as total")->first()->total;    
-
-
-            
-            
-
-            $totalVidasVendidasIndividual = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("plano_id",1);
-                $query->whereHas("comissao.comissaoLancadas",function($query){
-                    $query->where("status",1);
-                    $query->whereRaw("MONTH(data) = MONTH(now()) AND YEAR(data) = YEAR(now())");
-                });
-            })->selectRaw("sum(quantidade) as total")->first()->total;
-            
-            $totalVidasVendidasColetivo = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-                $query->where("plano_id",3);
-                $query->whereHas("comissao.comissaoLancadas",function($query){
-                    $query->where("status",1);
-                    $query->whereRaw("MONTH(data) = MONTH(now()) AND YEAR(data) = YEAR(now())");
-                });
-            })->selectRaw("sum(quantidade) as total")->first()->total;
-        
-            $totalVendidoCotacaoIndividual = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',1)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-                $query->where("status",1);
-                $query->whereRaw("MONTH(data) = MONTH(NOW())");
-            })->selectRaw("sum(valor) as total")->first()->total;
-
-            $totalVendidoCotacaoColetivo = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',3)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-                $query->where("status",1);
-                $query->whereRaw("MONTH(data) = MONTH(NOW()) AND YEAR(data) = YEAR(now())");
-            })->selectRaw("sum(valor) as total")->first()->total;                      
-
-            /************************Comissao do Mes***************************************** */
-            
-            $totalComissao = ComissoesCorretorLancados::where("user_id",auth()->user()->id)->where("status",1)->whereMonth("data",date('m'))->selectRaw("sum(valor) as total")->first()->total;
-            $totalComissaoIndividual = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-                ->where("status",1)
-                ->whereMonth("data",date('m'))
-                ->whereHas('comissao.cotacao',function($query){
-                    $query->where("plano_id",1);
-            })->selectRaw("sum(valor) as total_individual")->first()->total_individual;
-
-            $totalComissaoColetivo = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-                ->where("status",1)
-                ->whereMonth("data",date('m'))
-                ->whereHas('comissao.cotacao',function($query){
-                    $query->where("plano_id",3);
-            })->selectRaw("sum(valor) as total_coletivo")->first()->total_coletivo;
-
-            /************************Fim Comissao do Mes***************************************** */
-
-
-
-
-            /*********************PREMIAÇÔES DO MES*************************** */
-            $totalPremiacao = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)->where("status",1)->whereMonth("data",date('m'))->selectRaw("sum(total) as total")->first()->total;
-            $totalPremiacaoIndividual = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-            ->where("status",1)
-            ->whereMonth("data",date('m'))
-            ->whereHas('comissao.cotacao',function($query){
-                $query->where("plano_id",1);
-            })->selectRaw("sum(total) as total_individual")->first()->total_individual;
-            $totalPremiacaoColetivo = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-                ->where("status",1)
-                ->whereMonth("data",date('m'))
-                ->whereHas('comissao.cotacao',function($query){
-                    $query->where("plano_id",3);
-            })->selectRaw("sum(total) as total_coletivo")->first()->total_coletivo;
-            /*********************FIM PREMIAÇÔES DO MES*************************** */
-
-
-
-
-
-            /*****************************************************Fim Mes Atual**********************************************************************************/
-
-
-            /*****************************************************Total Restante*********************************************************************************/
-            // $totalVendidoRestante = Cotacao::where("user_id",auth()->user()->id)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-            //     $query->where("status",0);
-            //     $query->whereRaw("MONTH(data) != MONTH(NOW())");
-            // })->selectRaw("sum(valor) as total")->first()->total;
-            // $totalVidasVendidasRestante = CotacaoFaixaEtaria::whereHas('cotacao.comissao.comissaoLancadas',function($query){
-            //     $query->where("status",0);
-            //     $query->whereRaw("MONTH(data) != MONTH(now())");
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-            // $totalVendidoCotacaoIndividualRestante = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',1)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-            //     $query->where("status",0);
-            //     $query->whereRaw("MONTH(data) != MONTH(NOW())");
-            // })->selectRaw("sum(valor) as total")->first()->total;
-            // $totalVidasVendidasIndividualRestante = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("plano_id",1);
-            //     $query->whereHas("comissao.comissaoLancadas",function($query){
-            //         $query->where("status",0);
-            //         $query->whereRaw("MONTH(data) != MONTH(now())");
-            //     });
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-            // $totalVendidoCotacaoColetivoRestante = Cotacao::where("user_id",auth()->user()->id)->where('plano_id',3)->where("financeiro_id",6)->whereHas('comissao.comissaoLancadas',function($query){
-            //     $query->where("status",0);
-            //     $query->whereRaw("MONTH(data) != MONTH(NOW())");
-            // })->selectRaw("sum(valor) as total")->first()->total;
-            // $totalVidasVendidasColetivoRestante = CotacaoFaixaEtaria::whereHas('cotacao',function($query){
-            //     $query->where("plano_id",3);
-            //     $query->whereHas("comissao.comissaoLancadas",function($query){
-            //         $query->where("status",0);
-            //         $query->whereRaw("MONTH(data) != MONTH(now())");
-            //     });
-            // })->selectRaw("sum(quantidade) as total")->first()->total;
-
-
-
-            /*****************************************************Fim Total Restante*********************************************************************************/
-
-
-            /************************Comissao do Restante***********************************************/
-            // $totalComissaoRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-            //     ->where("status",0)
-            //     ->whereMonth("data","!=",date('m'))
-            //     ->selectRaw("sum(valor) as total")
-            //     ->first()
-            //     ->total;
-            // $totalComissaoIndividualRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-            //     ->where("status",0)
-            //     ->whereMonth("data","!=",date('m'))
-            //     ->whereHas('comissao.cotacao',function($query){
-            //         $query->where("plano_id",1);
-            // })
-            // ->selectRaw("sum(valor) as total_individual")
-            // ->first()
-            // ->total_individual;
-
-            // $totalComissaoColetivoRestante = ComissoesCorretorLancados::where("user_id",auth()->user()->id)
-            //     ->where("status",0)
-            //     ->whereMonth("data","!=",date('m'))
-            //     ->whereHas('comissao.cotacao',function($query){
-            //         $query->where("plano_id",3);
-            // })
-            // ->selectRaw("sum(valor) as total_coletivo")
-            // ->first()
-            // ->total_coletivo;
-
-            /************************Fim Comissao Restante**********************************************/
-
-            /*************************PREMIAÇÔES DO MES Restante****************************/
-            
-            // $totalPremiacaoRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-            // ->where("status",0)
-            // ->whereMonth("data","!=",date('m'))
-            // ->selectRaw("sum(total) as total")
-            // ->first()
-            // ->total;
-
-            // $totalPremiacaoIndividualRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-            // ->where("status",0)
-            // ->whereMonth("data","!=",date('m'))
-            // ->whereHas('comissao.cotacao',function($query){
-            //     $query->where("plano_id",0);
-            // })
-            // ->selectRaw("sum(total) as total_individual")
-            // ->first()
-            // ->total_individual;
-
-            // $totalPremiacaoColetivoRestante = PremiacaoCorretoresLancados::where("user_id",auth()->user()->id)
-            //     ->where("status",0)
-            //     ->whereMonth("data","!=",date('m'))
-            //     ->whereHas('comissao.cotacao',function($query){
-            //         $query->where("plano_id",3);
-            // })
-            // ->selectRaw("sum(total) as total_coletivo")
-            // ->first()
-            // ->total_coletivo;
-
-            
-
-            // $aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
-            //     ->whereRaw("status = 0")
-            //     ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
-            //     ->count();
-            
-            // $valor_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
-            //     ->whereRaw("status = 0")
-            //     ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
-            //     ->selectRaw("SUM(valor) as total")
-            //     ->first()
-            //     ->total;
-            
-            // $qtd_vidas_aguardando_pagamento_empresarial = DB::table('cotacao_juridicas')
-            //     ->whereRaw("status = 0")
-            //     ->whereRaw("cliente_id IN(SELECT id FROM clientes WHERE user_id = ? AND pessoa_juridica = 1)",[auth()->user()->id])
-            //     ->selectRaw("SUM(quantidade_vidas) as quantidade")
-            //     ->first()
-            //     ->quantidade;
-
-            // $qtd_leads = Cliente::where("user_id",auth()->user()->id)->where("lead",1)->where("visivel",1)->count();    
-                      
-            $coresHexadecimais = "rgb(255, 99, 132)|rgb(54, 162, 235)|rgb(255, 205, 86)|rgb(255, 75, 86)|rgb(85, 105, 95)";    
-            
-                
-
-
-            // $leads_grafico = Cliente::
-            //     where("user_id",auth()->user()->id)
-            //     ->where("visivel",1)
-            //     ->where("lead",1)
-            //     ->selectRaw("(SELECT nome FROM origems WHERE origems.id = clientes.origem_id) AS nome")
-            //     ->selectRaw("COUNT(origem_id) AS quantidade")    
-            //     ->groupBy("origem_id")
-            //     ->get();
-            //dd($leads_grafico);    
-
-            // $leads_grafico_quantidade = DB::table("origems")
-            //             ->selectRaw("nome")
-            //             ->selectRaw("
-            //                 (select COUNT(origem_id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 1 AND clientes.visivel = 1) AS quantidade ",[auth()->user()->id])
-            //             ->get()->pluck('quantidade')->toArray();
-            //dd($leads_grafico_quantidade);
-
-                        
-                
-             
-            //dd($leads_grafico);            
-
-            $leads_grafico = DB::table("origems")
-                    ->selectRaw("nome")
-                    ->selectRaw("(select COUNT(origem_id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 1 AND clientes.visivel = 1) AS quantidade ",[auth()->user()->id])
-                    ->get();
-                    
-            $leads_grafico_quantidade = DB::table("origems")
-                        
-                        ->selectRaw("
-                            (select COUNT(origem_id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 1 AND clientes.visivel = 1) AS quantidade ",[auth()->user()->id])
-                        ->get()->pluck('quantidade')->toArray();    
-            
-            $contratos_mes =  DB::table("origems")
-                    ->selectRaw("nome")
-                    ->selectRaw("(SELECT COUNT(id) FROM clientes WHERE id IN(SELECT cliente_id FROM cotacoes WHERE financeiro_id = 7 AND MONTH(updated_at) = MONTH(NOW())) 
+        $leads_grafico = DB::table("origems")->selectRaw("nome")->selectRaw("(select COUNT(origem_id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 1 AND clientes.visivel = 1) AS quantidade ",[auth()->user()->id])->get();                  
+        $leads_grafico_quantidade = DB::table("origems")->selectRaw("(select COUNT(origem_id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 1 AND clientes.visivel = 1) AS quantidade ",[auth()->user()->id])->get()->pluck('quantidade')->toArray();    
+        $contratos_mes =  DB::table("origems")->selectRaw("nome")->selectRaw("(SELECT COUNT(id) FROM clientes WHERE id IN(SELECT cliente_id FROM cotacoes WHERE financeiro_id = 7 AND MONTH(updated_at) = MONTH(NOW()))  AND clientes.origem_id = origems.id AND clientes.user_id = ? AND clientes.lead = 0  AND clientes.visivel = 1) as quantidade",[auth()->user()->id])->get();
+        $contratos_mes_quantidade = DB::table("origems")              
+                ->selectRaw("
+                    (SELECT COUNT(id) FROM clientes WHERE id IN(SELECT cliente_id FROM cotacoes WHERE financeiro_id = 7 AND MONTH(updated_at) = MONTH(NOW())) 
                     AND clientes.origem_id = origems.id
                     AND clientes.user_id = ?
                     AND clientes.lead = 0 
                     AND clientes.visivel = 1) as quantidade",[auth()->user()->id])
-                    ->get();
-                 
-
-            $contratos_mes_quantidade = DB::table("origems")              
-                    ->selectRaw("
-                        (SELECT COUNT(id) FROM clientes WHERE id IN(SELECT cliente_id FROM cotacoes WHERE financeiro_id = 7 AND MONTH(updated_at) = MONTH(NOW())) 
-                        AND clientes.origem_id = origems.id
-                        AND clientes.user_id = ?
-                        AND clientes.lead = 0 
-                        AND clientes.visivel = 1) as quantidade",[auth()->user()->id])
-                    ->get()->pluck('quantidade')->toArray();    
-                
-           
-
-
-
-
-            $vendas_por_planos_vidas = DB::table("cotacoes")
-                ->selectRaw("count(id) AS quantidade")
-                ->selectRaw("(SELECT nome FROM planos WHERE planos.id = cotacoes.plano_id) AS plano")
-                ->whereRaw("financeiro_id = 7")
-                ->whereRaw("user_id = ?",[auth()->user()->id])
-                ->groupByRaw("plano_id")
-                ->get();
+                ->get()->pluck('quantidade')->toArray();    
             
-            $vendas_por_planos_vidas_quantidade = DB::table("cotacoes")
-                ->selectRaw("count(id) AS quantidade")
-                
-                ->whereRaw("financeiro_id = 7")
-                ->whereRaw("user_id = ?",[auth()->user()->id])
-                ->groupByRaw("plano_id")
-                ->get()->pluck('quantidade')->toArray(); 
-
+            $vendas_por_planos_vidas = DB::table("cotacoes")->selectRaw("count(id) AS quantidade")->selectRaw("(SELECT nome FROM planos WHERE planos.id = cotacoes.plano_id) AS plano")->whereRaw("financeiro_id = 7")->whereRaw("user_id = ?",[auth()->user()->id])->groupByRaw("plano_id")->get();
             
+            $vendas_por_planos_vidas_quantidade = DB::table("cotacoes")->selectRaw("count(id) AS quantidade")->whereRaw("financeiro_id = 7")->whereRaw("user_id = ?",[auth()->user()->id])->groupByRaw("plano_id")->get()->pluck('quantidade')->toArray(); 
             $vendas_por_planos_vidas_valor = DB::table("cotacoes")
                 ->selectRaw("sum(valor) AS valor")
                 ->selectRaw("(SELECT nome FROM planos WHERE planos.id = cotacoes.plano_id) AS plano")
@@ -791,18 +448,8 @@ class HomeController extends Controller
                 ->whereRaw("cotacao_id IN(SELECT id FROM cotacoes WHERE financeiro_id = 7)")
                 ->groupBy("plano_id")
                 ->get()->pluck('media')->toArray();       
-             
-           
-             
-                
-
-                
-
-
-
             
-            
-                $qtdAtrasado = Cliente
+            $qtdAtrasado = Cliente
                 ::where("user_id",auth()->user()->id)
                 ->where('lead',0)
                 ->where("visivel",1)
@@ -837,7 +484,6 @@ class HomeController extends Controller
             $qtdAtendimentoIniciadoAtrasada = Cliente::where("lead_id",3)->where("user_id",auth()->user()->id)->where("visivel",1)->whereDate('updated_at','<',date('Y-m-d'))->count();
 
 
-            // SELECT * FROM clientes WHERE estagio_id = 2 AND user_id = 2 AND visivel = 1
             $qtdClienteInteressadoFrio = Cliente::where("estagio_id",1)->where("user_id",2)->whereHas('cotacao',function($query){
                 $query->whereRaw("financeiro_id IS NULL");
             })->where('visivel',1)->count();
@@ -946,22 +592,16 @@ class HomeController extends Controller
                 ->get(); 
             
             $taxaConversaoQuantidade = DB::table('origems')
-                //->selectRaw("id")
-                //->selectRaw("nome")
-                //->selectRaw("(SELECT COUNT(id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.visivel = 1 AND clientes.user_id = 2) AS quantidade_recebida")
-                //->selectRaw("(SELECT COUNT(cotacoes.id) FROM cotacoes INNER JOIN clientes ON clientes.id = cotacoes.cliente_id  WHERE cotacoes.financeiro_id = 7 AND cotacoes.user_id = 2 AND clientes.visivel = 1  AND clientes.origem_id = origems.id) AS quantidade_vendida")
                 ->selectRaw("floor(((SELECT COUNT(cotacoes.id) FROM cotacoes INNER JOIN clientes ON clientes.id = cotacoes.cliente_id WHERE cotacoes.financeiro_id = 7 AND cotacoes.user_id = 2 AND clientes.visivel = 1 AND clientes.origem_id = origems.id) / (SELECT COUNT(id) FROM clientes WHERE clientes.origem_id = origems.id AND clientes.visivel = 1 AND clientes.user_id = 2)) * 100) as porcentagem")
                 ->get()->pluck("porcentagem")->toArray();     
             
-            $vendas_mes_quadro = DB::table('administradoras')
-                ->selectRaw("id")
+            $vendas_mes_quadro = DB::table('administradoras')->selectRaw("id")
                 ->selectRaw("(SELECT COUNT(*) FROM cotacoes WHERE user_id = 2) AS total_cadastrado")
                 ->selectRaw("(SELECT COUNT(*) FROM cotacoes WHERE financeiro_id = 7 AND user_id = 2) AS total_finalizado")
                 ->selectRaw("nome")
                 ->selectRaw("(SELECT COUNT(*) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.financeiro_id = 7) AS quantidade")
                 ->selectRaw("floor(((SELECT COUNT(*) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.financeiro_id = 7) * 100) / (SELECT COUNT(*) FROM cotacoes WHERE financeiro_id = 7 AND user_id = 2)) AS porcentagem")
                 ->get();
-
                 
             $tabelas = DB::table('administradoras')
                 ->selectRaw("id")
@@ -970,11 +610,6 @@ class HomeController extends Controller
                 ->selectRaw("(SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id AND cotacoes.financeiro_id = 7) AS vendido")
                 ->selectRaw("((SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id IS NOT NULL) + (SELECT COUNT(id) FROM cotacoes WHERE cotacoes.administradora_id = administradoras.id AND cotacoes.administradora_id AND cotacoes.financeiro_id = 7)) AS soma")
                 ->get();
-
-                
-
-
-
             
             
             /************************FIM PREMIAÇÔES DO Mes Restante*************************** */
@@ -984,11 +619,13 @@ class HomeController extends Controller
                 
                 "anualLabel" => implode("|",$anualLabel->pluck('label')->toArray()),
                 "anualLabelQuantidadeColetivo" => implode("|",$anualLabelQuantidadeColetivo),
-                "anualLabelQuantidadeIndividual" => implode("|",$anualLabelQuantidadeIndividual),
+                "anualLabelQuantidadeIndividual" => implode("|",$anualLabelQuantidadeIndividual),              
+                
+                "coresHexadecimaisRedes" => $coresHexadecimaisRedes,
+                "coresHexadecimaisPlano" => $coresHexadecimaisPlano,
+                "coresHexadecimalAdministradoras" => $coresHexadecimalAdministradoras,
+                "coresHexadecimalFaixasEtarias" => $coreHexadecimalFaixasEtarias,                
 
-                
-                
-                "coresHexadecimais" => $coresHexadecimais,
 
                 "leads_grafico" => $leads_grafico,
                 "leads_grafico_quantidade" => implode("|",$leads_grafico_quantidade),

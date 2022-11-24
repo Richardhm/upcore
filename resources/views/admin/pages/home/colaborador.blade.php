@@ -317,7 +317,7 @@
                 <h6 class="text-center py-1 border-bottom">LEADS NO MÊS</h6>
                 <div class="detalhes-grafico">
                     <canvas id="leads_mes" width="330" height="200" 
-                        data-chart-background-color="{{$coresHexadecimais}}" 
+                        data-chart-background-color="{{$coresHexadecimaisRedes}}" 
                         data-chart-quantidade-valores="{{$leads_grafico_quantidade}}"
                         data-chart-label-leads="{{$leads_grafico_label}}"
                     ></canvas>
@@ -337,7 +337,7 @@
                 <h6 class="text-center py-1 border-bottom">CONTRATOS NO MÊS</h6>
                 <div class="detalhes-grafico">
                     <canvas id="contratos_mes" width="330" height="200"
-                        data-chart-background-color="{{$coresHexadecimais}}" 
+                        data-chart-background-color="{{$coresHexadecimaisRedes}}" 
                         data-contratos-mes="{{$contratos_mes_quantidade}}"
                         data-contratos-label="{{$contratos_mes_label}}"
                     ></canvas>
@@ -360,6 +360,7 @@
                     <canvas id="vendas_por_planos_vidas" 
                     data-vendas-por-planos-vidas-quantidade="{{$vendas_por_planos_vidas_quantidade}}"
                     data-vendas-por-planos-vidas-label="{{$vendas_por_planos_vidas_label}}"
+                    data-chart-background-color="{{$coresHexadecimaisPlano}}"
                     width="330" height="200"></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
@@ -386,6 +387,7 @@
                     <canvas id="vendas_por_planos_valor" width="330" height="200"
                     data-vendas-por-planos-valor-quantidade="{{$vendas_por_planos_vidas_valor_quantidade}}"
                     data-vendas-por-planos-valor-label="{{$vendas_por_planos_vidas_valor_label}}"
+                    data-chart-background-color="{{$coresHexadecimaisPlano}}"
                     
                     ></canvas>
                 </div>
@@ -410,13 +412,10 @@
              <div class="cards-detalhes">
                 <h6 class="text-center py-1 border-bottom">VENDA COLETIVO POR ADMINISTRADORA</h6>
                 <div class="detalhes-grafico">
-                
-
-
-
                     <canvas id="vendas_coletivo_por_administradora" width="330" height="200"
                         data-vendas-por-administradoras-quantidade="{{$vendas_por_administradoras_quantidade}}"
                         data-vendas-por-administradoras-label="{{$vendas_por_administradoras_label}}"
+                        data-chart-background-color="{{$coresHexadecimalAdministradoras}}"
                     ></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
@@ -434,7 +433,8 @@
                 <div class="detalhes-grafico">
                     <canvas id="ticket_medio_mes" width="330" height="200" 
                         data-ticket-medio-label="{{$ticketMedioLabel}}"
-                        data-ticket-media-quantidade="{{$ticketMedioQuantidade}}"    
+                        data-ticket-media-quantidade="{{$ticketMedioQuantidade}}"  
+                        data-chart-background-color="{{$coresHexadecimaisPlano}}"  
                     ></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
@@ -461,6 +461,7 @@
                     <canvas id="venda_por_faixa_etaria_mes" width="330" height="200"
                         data-vendas-por-faixa-etaria-label="{{$vendas_por_faixa_etaria_label}}"
                         data-vendas-por-faixa-etaria-quantidade="{{$vendas_por_faixa_etaria_quantidade}}"
+                        data-chart-background-color="{{$coresHexadecimalFaixasEtarias}}"  
                     ></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
@@ -481,6 +482,7 @@
                     <canvas id="taxa_conversao" width="330" height="200"
                     data-taxa-conversao-label="{{$taxaConversaoLabel}}"
                     data-taxa-conversao-quantidade="{{$taxaConversaoQuantidade}}"
+                    data-chart-background-color="{{$coresHexadecimaisRedes}}"  
                     ></canvas>
                 </div>
                 <div class="detalhes-porcentagem">
@@ -609,7 +611,7 @@
            
             let vendas_por_planos = $("#vendas_por_planos_vidas");
             new Chart(
-                vendas_por_planos,
+                vendas_por_planos,  
                 {   
                     "type":"doughnut",
                     "data":{
@@ -617,8 +619,8 @@
                         "datasets":[{
                             "label":"Vendas Por Planos",
                             "data":vendas_por_planos.data('vendas-por-planos-vidas-quantidade').split("|"),
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)"]}
-                        ]
+                            "backgroundColor":vendas_por_planos.data('chart-background-color').split('|')
+                        }]
                     },
                     options: {
                         responsive: false
@@ -638,8 +640,8 @@
                         "datasets":[{
                             "label":"Vendas Por Planos Valores",
                             "data":vendas_por_plano_valor.data('vendas-por-planos-valor-quantidade').split("|"),
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)"]}
-                        ]
+                            "backgroundColor":vendas_por_plano_valor.data('chart-background-color').split("|")
+                        }]
                     },
                     options: {
                         responsive: false
@@ -657,16 +659,15 @@
                         "datasets":[{
                             "label":"Vendas Coletivas Por Administradora",
                             "data":vendas_coletivo_por_administradora.data('vendas-por-administradoras-quantidade').split("|"),
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"]}
-                        ]
+                            "backgroundColor":vendas_coletivo_por_administradora.data('chart-background-color').split("|")
+                        }]
                     },
                     options: {
                         responsive: false
                     }
                 }
             )
-            
-            
+                        
             let ticketMedio = $("#ticket_medio_mes");
             new Chart(
                 ticketMedio,
@@ -677,8 +678,8 @@
                         "datasets":[{
                             "label":"Ticket Media",
                             "data":ticketMedio.data('ticket-media-quantidade').split("|"),
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)"]}
-                        ]
+                            "backgroundColor":ticketMedio.data('chart-background-color').split("|")
+                    }]
                     },
                     options: {
                         responsive: false
@@ -696,8 +697,8 @@
                         "datasets":[{
                             "label":"Vendas Por Faixa Etaria",
                             "data":vendas_por_faixa_etaria.data('vendas-por-faixa-etaria-quantidade').split("|"),
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)","rgb(255, 255, 86)","rgb(85, 105, 95)","rgb(5, 125, 95)"]}
-                        ]
+                            "backgroundColor":vendas_por_faixa_etaria.data('chart-background-color').split("|")
+                        }]
                     },
                     options: {
                         responsive: false
@@ -713,10 +714,10 @@
                     "data":{
                         "labels": taxa_conversao.data("taxa-conversao-label").split("|"),
                         "datasets":[{
-                            "label":"My First Dataset",
+                            "label":"Taxa Conversão",
                             "data":taxa_conversao.data('taxa-conversao-quantidade').split("|"),
-                            "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"]}
-                        ]
+                            "backgroundColor":taxa_conversao.data('chart-background-color').split("|")
+                        }]
                     },
                     options: {
                         responsive: false

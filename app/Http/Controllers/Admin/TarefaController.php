@@ -360,6 +360,7 @@ class TarefaController extends Controller
 
     public function cadastrarTarefaAjax(Request $request)
     {
+        
         $nows = (new \DateTime());
         $sema = (new \DateTime($request->data));    
         $resultado = "";
@@ -376,7 +377,10 @@ class TarefaController extends Controller
         }        
         $cliente = Cliente::where("id",$request->cliente_id)->first();
         $cliente->ultimo_contato = date("Y-m-d");
-        $cliente->estagio_id = $request->star;
+        if($request->star && $request->star != null) {
+            $cliente->estagio_id = $request->star;
+        }
+        
         $cliente->save();
         Tarefa::where("cliente_id",$request->cliente_id)->update(['status'=>1,'visivel'=>0]);
         $data = $request->all();

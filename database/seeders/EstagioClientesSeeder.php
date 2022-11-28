@@ -25,7 +25,7 @@ class EstagioClientesSeeder extends Seeder
                 "nome" => "Interessado Frio",
             ],
             [
-                "nome" => "Aguardando Documentação",
+                "nome" => "Aguardando Doc.",
             ],
             [
                 "nome" => "Interesse Futuro",

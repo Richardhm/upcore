@@ -640,6 +640,11 @@
 
         $('.total_geral').on('click',function(){
             $('#title').html("<h4>Total Geral</h4>");
+            $(".atrasada").removeClass('fundo');
+            $(".hoje").removeClass('fundo');
+            $(".semana").removeClass('fundo');
+            $(".mes").removeClass('fundo');
+            $(".todos").removeClass('fundo');
             ta.ajax.url("{{route('clientes.ajaxclienteslistapf')}}").load();
             $("#estagios").find(".link_page").removeClass('fundo');
             $(this).addClass('fundo');

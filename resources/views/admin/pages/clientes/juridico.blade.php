@@ -247,7 +247,7 @@
 
 <!--Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
 <div class="modal fade" id="cadastrarPessoaFisica" tabindex="-1" role="dialog" aria-labelledby="cadastrarPessoaFisicaLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" style="background-color:rgba(0,0,0,0.5);">
     <div class="modal-header">
         <h5 class="modal-title" id="cadastrarPessoaFisicaLabel" style="color:#FFF;">Cadastrar PF</h5>
@@ -319,7 +319,7 @@
 
 <!--Modal de cadastro Pessoa Juridica-->
 <div class="modal fade" id="cadastrarPessoaJuridica" tabindex="-1" role="dialog" aria-labelledby="cadastrarPessoaJuridicaLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" style="background-color:rgba(0,0,0,0.5);">
     <div class="modal-header">
         <h5 class="modal-title" id="cadastrarPessoaJuridicaLabel" style="color:#FFF;">Cadastrar PJ</h5>
@@ -734,7 +734,6 @@
                         }
                     },  
                     success:function(res) {
-                        //console.log(res);
                         if(res != "error") {
                             ta.ajax.reload();
                             toastr["success"](res.nome + " cadastrado com sucesso")

@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Leads Pessoa Fisica')
+@section('title', 'Leads Pessoa Fisicasss')
 @section('plugins.Datatables', true)
 @section('plugins.Toastr', true)
 @section('content_header')
@@ -246,7 +246,7 @@
 
 <!--Modal de cadastro com cliente especifico Cadastrar Nova Atividade-->
 <div class="modal fade" id="cadastrarPessoaFisica" tabindex="-1" role="dialog" aria-labelledby="cadastrarPessoaFisicaLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" style="background-color:rgba(0,0,0,0.5);">
     <div class="modal-header">
         <h5 class="modal-title" id="cadastrarPessoaFisicaLabel" style="color:#FFF;">Cadastrar PF</h5>
@@ -485,7 +485,7 @@
                                 } 
                                 //$(td).html('<input type="checkbox" name="marcar_cliente" class="marcar_cliente" data-id="'+cellData+'" />');
                             },
-                            "width":"3%"    
+                            "width":"2%"    
                         },    
                         {
                             "targets": 2,
@@ -498,16 +498,16 @@
                             "width":"5%"    
                         },
                         {
-                            "taregets":3,
+                            "targets":3,
                             "width":"7%"
                         },
                         {
-                            "taregets":4,
-                            "width":"40%"
+                            "targets":4,
+                            "width":"32%"
                         },
                         {
-                            "taregets":5,
-                            "width":"8%"
+                            "targets":5,
+                            "width":"17%"
                         },
                         {
                             "targets":6,
@@ -538,7 +538,6 @@
                         $(row).addClass('alvo');
                     }
                     if(data.id == alvo_id) {
-                        //console.log(row);
                         let telefone = data.telefone.replace(" ","").replace("(","").replace(")","").replace("  ","").replace(" ","").replace("-","")
                         $(row).find("input[type='checkbox']").prop('checked',true)
                         $(row).addClass('textoforte');
@@ -766,6 +765,34 @@
                         }             
                     },  
                     success:function(res) {
+                        
+                        if(res == "ja_existe")  {
+                            toastr["error"]("Ja Existe esse cliente cadastrado")
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+                            return false;
+                        }   
+
+
+
+
+
+
                         if(res != "error") {
                             ta.ajax.reload();
                             toastr["success"](res.nome + " cadastrado com sucesso")
@@ -806,9 +833,7 @@
                             $("#quantidade_mes").html(res.mes);
                             $("#quantidade_total").html(res.mes);
                             $("#pessoa_fisica_cadastrada").val(res.id);
-                        } else {
-                            
-                        }
+                        } 
                     }
                 });
                 return false;

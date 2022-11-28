@@ -135,6 +135,7 @@ class ClienteController extends Controller
 
     public function listarPessoaFisica()
     {
+        
         $titulos = TarefasTitulo::where("id","!=",1)->get();
         $clientes_total = Cliente::where("user_id",auth()->user()->id)
                                 ->where('pessoa_fisica',1)
@@ -624,6 +625,10 @@ class ClienteController extends Controller
         $qtdAtendimento     = Cliente::where("lead_id",3)->where('lead',1)->where("pessoa_juridica",1)->count();
         $qtdSemContato     = Cliente::where("lead_id",4)->where('lead',1)->where("pessoa_juridica",1)->count();
 
+        
+
+
+
         return view('admin.pages.clientes.juridico',[
             "cidades"        => $cidades,
             "origem"         => $origens,
@@ -656,6 +661,38 @@ class ClienteController extends Controller
         //return $clientes;
     }
 
+    private function verificarEmail($email) 
+    {
+        $email = Cliente::where("email",$email)->count();
+        if($email >= 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private function verificarFone($telefone)
+    {
+        $telefone = Cliente::where("telefone",$telefone)->count();
+        if($telefone >= 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private function verificarNome($nome)
+    {
+        $nome = Cliente::where("nome",$nome)->count();
+        if($nome >= 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    
+
 
     public function prospeccaoStorePF(Request $request)
     {
@@ -671,6 +708,12 @@ class ClienteController extends Controller
         $cliente->lead_id = 2;
         $cliente->ultimo_contato = date("Y-m-d");
         $cliente->email = $request->email;
+        
+        if(!$this->verificarEmail($request->email) || !$this->verificarFone($request->telefone) || !$this->verificarNome($request->nome)) {
+            return "ja_existe";
+        } 
+        
+        
         if($cliente->save()) {
             $qtd_plantao_vendas = Cliente::where("lead",1)->where("user_id",auth()->user()->id)->where("pessoa_fisica",1)->where('visivel',1)->where("etiqueta_id","!=",3)->where("lead_id",1)->count();
             $qtd_prospeccao = Cliente::where("lead",1)->where("user_id",auth()->user()->id)->where("pessoa_fisica",1)->where('visivel',1)->where("etiqueta_id","!=",3)->where("lead_id",2)->count();
